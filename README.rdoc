@@ -1,0 +1,28 @@
+= musicality
+
+* {Homepage}[https://github.com/jamestunnell/musicality]
+* {Issues}[https://github.com/jamestunnell/musicality/issues]
+* {Documentation}[http://rubydoc.info/gems/musicality/frames]
+* {Email}[mailto:jamestunnell at lavabit.com]
+
+== Description
+
+TODO: Description
+
+== Features
+
+== Examples
+
+  require 'musicality'
+
+== Requirements
+
+== Install
+
+  $ gem install musicality
+
+== Copyright
+
+Copyright (c) 2012 James Tunnell
+
+See LICENSE.txt for details.
