@@ -6,7 +6,13 @@ Gem::Specification.new do |gem|
   gem.name          = "musicality"
   gem.version       = Musicality::VERSION
   gem.summary       = %q{Library for music composition, transcription, generation, and rendering}
-  gem.description   = %q{TODO: Description}
+  gem.description   = <<DESCRIPTION
+The core of musicality is the abstract representation of musical constructs 
+such as pitch, note, etc. Having established a representation, it is possible 
+to follow the process of composition, transcription, or generation to 
+represent music in software. Then, music can be either rendered as audio or 
+translated to performance instructions (MIDI, sheet music).
+DESCRIPTION
   gem.license       = "MIT"
   gem.authors       = ["James Tunnell"]
   gem.email         = "jamestunnell@lavabit.com"
