@@ -6,14 +6,18 @@ class Chord
   def initialize args={}
     
     if args[:notes]
-      raise ArgumentError, "args[:notes] is not an Array" if !args[:notes].is_a?(Array)
+      raise ArgumentError, "args[:notes] is not an Enumerable" if !args[:notes].is_a?(Enumerable)
       
       if !args[:notes].empty?
-        for i in 0...args[:notes].length do
-          raise ArgumentError, "note #{args[:notes][i]} in args[:notes] is not a note" if !args[:notes][i].is_a?(Note)
+        duration = nil
+        
+        args[:notes].each do |note|
+          raise ArgumentError, "#{note} in args[:notes] is not a Note" if !note.is_a?(Note)
           
-          if i > 0
-            raise ArgumentError, "length of note #{i} in #{args[:notes]} is not the same as length of first note." if args[:notes][i].duration != args[:notes][0].duration
+          if duration.nil?
+            duration = note.duration 
+          else
+            raise ArgumentError, "length of note #{note} in #{args[:notes]} is not the same as length of first note." if note.duration != duration
           end
         end
       end      

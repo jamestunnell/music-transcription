@@ -31,8 +31,8 @@ describe Musicality::Chord do
     lambda { Musicality::Chord.new :notes => notes }.should_not raise_error ArgumentError
   end
 
-  it "should raise ArgumentError if a non-Array is given for :notes" do
-    lambda { Musicality::Chord.new :notes => { "a" => "b"} }.should raise_error ArgumentError
+  it "should raise ArgumentError if a non-Enumerable is given for :notes" do
+    lambda { Musicality::Chord.new :notes => "b" }.should raise_error ArgumentError
   end
 
   it "should raise ArgumentError if a non-Note is part of the Array given for :notes" do
@@ -49,7 +49,8 @@ describe Musicality::Chord do
     ]
     
     lambda { Musicality::Chord.new :notes => notes }.should raise_error ArgumentError
-  end
+  end
+
   it "should set arpeggiate to false if not given during construction" do
     chord = Musicality::Chord.new
     chord.arpeggiate.should be false
