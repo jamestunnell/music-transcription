@@ -2,24 +2,6 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Pitch do
 
-  RSpec::Matchers.define :be_almost do |expected|
-    match do |actual|
-      (actual - expected).abs < 0.01
-    end
-  end
-  
-  RSpec::Matchers.define :be_less_than do |expected|
-    match do |actual|
-      actual < expected
-    end
-  end
-  
-  RSpec::Matchers.define :be_more_than do |expected|
-    match do |actual|
-      actual > expected
-    end
-  end
-  
   before :each do
     @cases = 
     [
@@ -43,14 +25,14 @@ describe Musicality::Pitch do
   
   it "should use default octave, semitone, and cent in none is given" do
     p = Musicality::Pitch.new
-    p.ratio.should be_almost(1.0)
+    p.ratio.should be_within(0.01).of(1.0)
     p.total_cent.should eq(0)
   end
   
   it "should use the octave, semitone, and cent given during construction" do
     @cases.each do |case_data|
       p = Musicality::Pitch.new :octave => case_data[:octave], :semitone => case_data[:semitone], :cent => case_data[:cent]
-      p.ratio.should be_almost case_data[:ratio]
+      p.ratio.should be_within(0.01).of case_data[:ratio]
       p.total_cent.should be case_data[:total_cent]
     end
   end
@@ -86,12 +68,12 @@ describe Musicality::Pitch do
     p2.should eq(Musicality::Pitch.new :semitone => 2)
     p3.should eq(Musicality::Pitch.new :semitone => 3)
     
-    p1.should be_less_than p2
-    p1.should be_less_than p3
-    p2.should be_less_than p3
-    p3.should be_more_than p2
-    p3.should be_more_than p1
-    p2.should be_more_than p1
+    (p1 < p2).should be_true
+    (p1 < p3).should be_true
+    (p2 < p3).should be_true
+    (p3 > p2).should be_true
+    (p3 > p1).should be_true
+    (p2 > p1).should be_true
   end
 
   it "should be addable and subtractable with other pitches" do
