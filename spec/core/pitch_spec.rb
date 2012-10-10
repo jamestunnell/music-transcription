@@ -68,12 +68,12 @@ describe Musicality::Pitch do
     p2.should eq(Musicality::Pitch.new :semitone => 2)
     p3.should eq(Musicality::Pitch.new :semitone => 3)
     
-    (p1 < p2).should be_true
-    (p1 < p3).should be_true
-    (p2 < p3).should be_true
-    (p3 > p2).should be_true
-    (p3 > p1).should be_true
-    (p2 > p1).should be_true
+    p1.should be < p2
+    p1.should be < p3
+    p2.should be < p3
+    p3.should be > p2
+    p3.should be > p1
+    p2.should be > p1
   end
 
   it "should be addable and subtractable with other pitches" do
