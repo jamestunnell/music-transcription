@@ -3,7 +3,7 @@ module Musicality
   class Pitch
 	include Comparable
   
-	attr_reader :octave, :semitone, :cent, :semitones_per_octave, :cents_per_octave
+	attr_reader :octave, :semitone, :cent, :cents_per_octave
 
 	SEMITONES_PER_OCTAVE = 12
 	CENTS_PER_SEMITONE = 100
