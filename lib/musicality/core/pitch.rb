@@ -42,20 +42,24 @@ class Pitch
   include Comparable
   
   attr_reader :octave, :semitone, :cent, :cents_per_octave
-
+  
+  #The default number of semitones per octave is 12, corresponding to 
+  # the twelve-tone equal temperment tuning system.
   SEMITONES_PER_OCTAVE = 12
+
+  #The default number of cents per semitone is 100 (hence the name cent,
+  # as in percent).
   CENTS_PER_SEMITONE = 100
 
   # A new instance of Pitch.
-  # @param [Hash] options Optional arguments. Valid keys are :octave, 
-  #                       :semitone, :cent, :total_cent, and :ratio.
-  #                       When :total_cent is set, it will override all 
-  #                       other arguments.
-  #                       When :ratio is set, it will override all 
-  #                       other arguments except :total_cent.
-  #                       Otherwise, when :octave, :semitone, and :cent 
-  #                       are set, each will override the default of 
-  #                       zero.
+  # @param [Hash] opts Optional arguments. Valid keys are :octave, 
+  #                    :semitone, :cent, :total_cent, and :ratio.
+  #                    When :total_cent is set, it will override all 
+  #                    other arguments.
+  #                    When :ratio is set, it will override all other
+  #                    arguments except :total_cent.
+  #                    Otherwise, when :octave, :semitone, and :cent 
+  #                    are set, each will override the default of zero.
   # @raise [ArgumentError] if any of :octave, :semitone, or :cent is
   #                        not a Fixnum.
   def initialize opts={}
@@ -86,6 +90,9 @@ class Pitch
     
   end
 
+  # Calculate the total cent count. Converts octave and semitone count
+  # to cent count before adding to existing cent count.
+  # @return [Fixnum] total cent count
   def total_cent
     return (@octave * @cents_per_octave) +
             (@semitone * CENTS_PER_SEMITONE) + @cent
@@ -100,6 +107,9 @@ class Pitch
     normalize
   end
 
+  # Calculate the pitch ratio. Raises 2 to the power of the total cent 
+  # count divided by cents-per-octave.
+  # @return [Float] ratio
   def ratio
     2.0**(self.total_cent.to_f / @cents_per_octave)
   end

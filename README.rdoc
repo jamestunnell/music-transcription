@@ -3,7 +3,7 @@
 * {Homepage}[https://github.com/jamestunnell/musicality]
 * {Issues}[https://github.com/jamestunnell/musicality/issues]
 * {Documentation}[http://rubydoc.info/gems/musicality/frames]
-* {Email}[mailto:jamestunnell at lavabit.com]
+* {Email}[mailto:jamestunnell@lavabit.com]
 
 == Description
 
