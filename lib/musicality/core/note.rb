@@ -42,11 +42,11 @@ class Note
     raise ArgumentError, "options[:loudness] is not a Float" if !@loudness.is_a?(Float)
     raise RangeError, "options[:loudness] is outside the range 0.0..1.0" if !(0.0..1.0).include?(@loudness)
 
-	  @intensity = opts[:intensity]	
+    @intensity = opts[:intensity]	
     raise ArgumentError, "options[:intensity] is not a Numeric" if !@intensity.is_a?(Float)
     raise RangeError, "options[:intensity] is outside the range 0.0..1.0" if !(0.0..1.0).include?(@intensity)
 	    
-	  @seperation = opts[:seperation]
+    @seperation = opts[:seperation]
     raise ArgumentError, "options[:seperation] is not a Numeric" if !@seperation.is_a?(Float)
     raise RangeError, "options[:seperation] is outside the range 0.0..1.0" if !(0.0..1.0).include?(@seperation)
   end
