@@ -24,7 +24,7 @@ class NoteGroup
   NOTE_GROUP_TRIPLET = :noteGroupTriplet
 
   # The valid (accepted) note groups
-  VALID_GROUP_TYPES = [ 
+  VALID_NOTE_GROUPS = [ 
     NOTE_GROUP_CHORD,
     NOTE_GROUP_GLISSANDO, 
     NOTE_GROUP_PHRASE, 
@@ -47,8 +47,8 @@ class NoteGroup
     end
 
     @notes = notes
-        
-    raise ArgumentError, "type #{type} is not valid (one of #{VALID_GROUP_TYPES.inspect}" if !VALID_GROUP_TYPES.include?(type)
+
+    raise ArgumentError, "type #{type} is not valid (one of #{VALID_NOTE_GROUPS.inspect}" if !VALID_NOTE_GROUPS.include?(type)
     @type = type
   end
 end

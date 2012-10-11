@@ -38,7 +38,7 @@ describe Musicality::NoteGroup do
   end
 
   it "should not raise ArgumentError if a valid note group type is given during construction" do
-    Musicality::NoteGroup::VALID_GROUP_TYPES.each do |type|
+    Musicality::NoteGroup::VALID_NOTE_GROUPS.each do |type|
       lambda { Musicality::NoteGroup.new [ @note1, @note2 ], type }.should_not raise_error ArgumentError
     end
   end

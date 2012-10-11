@@ -73,8 +73,10 @@ class Note
   # Set the note duration.
   # @param [Rational] duration The duration of the note.
   # @raise [ArgumentError] if duration is not a Rational.
+  # @raise [RangeError] if duration is less than zero.
   def duration= duration
   	raise ArgumentError, "duration is not a Rational" if !duration.is_a?(Rational)    
+  	raise RangeError, "duration is less than 0." if duration < 0
   	@duration = duration
   end
 
