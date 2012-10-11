@@ -20,8 +20,8 @@ class NoteGroup
   NOTE_GROUP_PORTAMENTO = :noteGroupPortamento
   # a phrase connects notes (no releases) without rearticulation
   NOTE_GROUP_SLUR = :noteGroupSlur
-  # a tuple presents notes to be played in an off-meter fashion (e.g. a triplet).
-  NOTE_GROUP_TUPLE = :noteGroupTuple
+  # a triplet gorups three notes to be played in an off-meter fashion (2/3 normal note value).
+  NOTE_GROUP_TRIPLET = :noteGroupTriplet
 
   # The valid (accepted) note groups
   VALID_GROUP_TYPES = [ 
@@ -30,7 +30,7 @@ class NoteGroup
     NOTE_GROUP_PHRASE, 
     NOTE_GROUP_PORTAMENTO, 
     NOTE_GROUP_SLUR, 
-    NOTE_GROUP_TUPLE 
+    NOTE_GROUP_TRIPLET
   ]
 
   attr_reader :notes, :type
@@ -40,7 +40,7 @@ class NoteGroup
   def initialize notes, type
     raise ArgumentError, "notes is not an Enumerable" if !notes.is_a?(Enumerable)
     raise ArgumentError, "notes is empty" if notes.empty?
-    raise ArgumentError, "notes has less than two Note objects" if notes.length < 2
+    raise ArgumentError, "notes has less than two Note objects" if notes.count < 2
 
     notes.each do |note|
       raise ArgumentError, "#{note} in notes is not a Note" if !note.is_a?(Note)
