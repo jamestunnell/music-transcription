@@ -32,22 +32,17 @@ module Musicality
 #                        continuously with the following note of the 
 #                        same pitch (if such a note exists).
 #
-# @!attribute [rw] slur
-#   @return [true/false] Indicates the following note (if such a note 
-#                        exists) should be played without rearticulation
-#                        (i.e. no attack).
-#
 class Note
 
   attr_reader :pitch, :duration, :loudness, :intensity, :seperation
-  attr_accessor :tie, :slur
+  attr_accessor :tie
   
   # A new instance of Note.
   # @param [Pitch] pitch The pitch of the note.
   # @param [Rational] duration The duration of the note, in note lengths
   #                   (e.g. whole note => 1/1, quarter note => 1/4).
   # @param [Hash] options Optional arguments. Valid keys are :loudness,
-  #               :intensity, :seperation, :tie, and :slur.
+  #               :intensity, :seperation, and :tie.
   def initialize pitch, duration, options={}
     self.pitch = pitch
     self.duration = duration
@@ -57,16 +52,14 @@ class Note
       :intensity => 0.5,
       :seperation => 0.5,
       :tie => false,
-      :slur => false,
     }.merge options
 	  
     # The loudness, intensity, and seperation will be used to form the envelope profile for the note.
 
     self.loudness = opts[:loudness]
     self.intensity = opts[:intensity]	
-	self.seperation = opts[:seperation]
+    self.seperation = opts[:seperation]
     self.tie = opts[:tie]
-    self.slur = opts[:slur]
   end
   
   # Set the note pitch.

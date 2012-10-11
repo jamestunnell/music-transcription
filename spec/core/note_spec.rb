@@ -23,14 +23,12 @@ describe Musicality::Note do
     note.seperation.should eq(0.3)
   end
 
-  it "should assign :tie and :slur parameters if given during construction" do
-    note = Musicality::Note.new @pitch, 2.to_r, :tie => false, :slur => false
+  it "should assign :tie and parameter if given during construction" do
+    note = Musicality::Note.new @pitch, 2.to_r, :tie => false
     note.tie.should be_false
-    note.slur.should be_false
 
-    note = Musicality::Note.new @pitch, 2.to_r, :tie => true, :slur => true
+    note = Musicality::Note.new @pitch, 2.to_r, :tie => true
     note.tie.should be_true
-    note.slur.should be_true
   end
   
   it "should assign pitch" do
@@ -69,12 +67,5 @@ describe Musicality::Note do
     note.tie.should be_false
     note.tie = true
     note.tie.should be_true
-  end
-  
-  it "should assign slur" do
-    note = Musicality::Note.new @pitch, 2.to_r
-    note.slur.should be_false
-    note.slur = true
-    note.slur.should be_true
   end
 end
