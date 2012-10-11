@@ -12,31 +12,21 @@ module Musicality
 # @!attribute [r] arpeggiation_duration
 #   @return [Rational] The desired duration of arpeggiation, which can be less than or equal to the chord notes' durations.
 
-class Chord
-  attr_reader :notes, :arpeggiate, :arpeggiation_duration
+class Chord < NoteGroup
+  attr_reader :arpeggiate, :arpeggiation_duration
   
-  # A new instance of Note.
-  # @param [Enumerable] notes a non-empty Enumerable containing only Note objects of the same duration.
+  # A new instance of Chord.
+  # @param [Enumerable] notes Enumerable containing at least two Note objects of the same duration.
   # @param [Hash] options Optional arguments. Valid keys are :arpeggiate and :arpeggiation_duration
   def initialize notes, options={}
 
-    raise ArgumentError, "notes is not an Enumerable" if !notes.is_a?(Enumerable)
-    raise ArgumentError, "notes is empty" if notes.empty?
-
-    duration = nil
+    super notes, NOTE_GROUP_CHORD
+    
+    duration = notes.first.duration
     notes.each do |note|
-      raise ArgumentError, "#{note} in notes is not a Note" if !note.is_a?(Note)
-      
-      if duration.nil?
-        duration = note.duration
-      else
-        raise ArgumentError, "length of note #{note} in #{notes} is not the same as length of first note." if note.duration != duration
-      end
+      raise ArgumentError, "duration of note #{note} in #{notes} is not the same as duration of first note." if note.duration != duration
     end
 
-    @notes = notes
-    duration = notes.first.duration
-    
     opts = { 
       :arpeggiate => false,
       :arpeggiation_duration => duration 

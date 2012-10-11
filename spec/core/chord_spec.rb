@@ -14,41 +14,14 @@ describe Musicality::Chord do
     lambda { Musicality::Chord.new @notes }.should_not raise_error ArgumentError
   end  
 
-  it "should raise ArgumentError if notes given during construction contains nothing" do
-    lambda { Musicality::Chord.new [] }.should raise_error ArgumentError
-  end  
-  
-  it "should assign the :notes given during construction" do
-    chord = Musicality::Chord.new @notes
-    chord.notes.should eq(@notes.clone)
-  end
-
-  it "should raise ArgumentError if notes are not the same length" do
-    notes = 
-    lambda { Musicality::Chord.new notes }.should raise_error ArgumentError
-  end
-
-  it "should raise ArgumentError if a non-Enumerable is given for :notes" do
-    lambda { Musicality::Chord.new :notes => "b" }.should raise_error ArgumentError
-  end
-
-  it "should raise ArgumentError if a non-Note is part of the Array given for :notes" do
-    notes = 
-    [
-      Musicality::Note.new(Musicality::Pitch.new( :ratio => 15.0 ), 1.to_r),
-      5
-    ]
-    lambda { Musicality::Chord.new notes }.should raise_error ArgumentError
+  it "should not raise ArgumentError if notes are the same length" do
+    lambda { Musicality::Chord.new @notes }.should_not raise_error ArgumentError
   end
     
   it "should raise ArgumentError if notes are not the same length" do
-    notes = 
-    [
-      Musicality::Note.new(Musicality::Pitch.new( :ratio => 15.0 ), 1.to_r),
-      Musicality::Note.new(Musicality::Pitch.new( :ratio => 30.0 ), 2.to_r),
-      Musicality::Note.new(Musicality::Pitch.new( :ratio => 25.0 ), 2.to_r),
-    ]
-    
+    notes = @notes.clone
+    notes << Musicality::Note.new(Musicality::Pitch.new( :ratio => 15.0 ), 1.to_r)
+
     lambda { Musicality::Chord.new notes }.should raise_error ArgumentError
   end
 
