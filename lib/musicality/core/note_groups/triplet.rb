@@ -5,13 +5,12 @@ module Musicality
 # @author James Tunnell
 #
 class Triplet < NoteGroup
-  attr_reader :arpeggiate, :arpeggiation_duration
   
   # A new instance of Triplet.
   # @param [Enumerable] notes Enumerable containing exactly three Note objects of the same duration.
   def initialize notes
 
-    super notes, NOTE_GROUP_TRIPLET
+    super notes
     
     raise ArgumentError, "notes does not have exactly three Note objects" if notes.count != 3
     

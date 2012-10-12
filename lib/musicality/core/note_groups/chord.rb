@@ -20,7 +20,7 @@ class Chord < NoteGroup
   # @param [Hash] options Optional arguments. Valid keys are :arpeggiate and :arpeggiation_duration
   def initialize notes, options={}
 
-    super notes, NOTE_GROUP_CHORD
+    super notes
     
     duration = notes.first.duration
     notes.each do |note|
