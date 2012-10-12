@@ -36,7 +36,7 @@ class Transition
   end
   
   # Set the transition duration.
-  # @param [Rational] duration The transition duration (in note length).
+  # @param [Numeric] duration The transition duration (in note length).
   # @raise [ArgumentError] if duration is not a Rational and does not respond to :to_r
   # @raise [RangeError] if duration is less than zero.
   def duration= duration

@@ -13,17 +13,17 @@ module Musicality
 #                      whole note => 1/1, quarter note => 1/4).
 #
 # @!attribute [rw] intensity
-#   @return [Float] Affects the loudness (envelope) during the attack 
+#   @return [Numeric] Affects the loudness (envelope) during the attack 
 #                   portion of the note. From 0.0 (less attack) to 1.0 
 #                   (more attack).
 #
 # @!attribute [rw] loudness
-#   @return [Float] Affects the loudness (envelope) during the sustain 
+#   @return [Numeric] Affects the loudness (envelope) during the sustain 
 #                   portion of the note. From 0.0 (less sustain) to 1.0 
 #                   (more sustain).
 #
 # @!attribute [rw] seperation
-#   @return [Float] Shift the note release towards or away the beginning
+#   @return [Numeric] Shift the note release towards or away the beginning
 #                   of the note. From 0.0 (towards end of the note) to 
 #                   1.0 (towards beginning of the note).
 #
@@ -71,41 +71,45 @@ class Note
   end
 
   # Set the note duration.
-  # @param [Rational] duration The duration of the note.
-  # @raise [ArgumentError] if duration is not a Rational.
+  # @param [Numeric] duration The duration of the note.
+  # @raise [ArgumentError] if duration is not a Rational and does not respond to :to_r.
   # @raise [RangeError] if duration is less than zero.
   def duration= duration
-  	raise ArgumentError, "duration is not a Rational" if !duration.is_a?(Rational)    
+    if !duration.is_a?(Rational)
+  	  raise ArgumentError, "duration is not a Rational and does not respond to :to_r" if !duration.respond_to?(:to_r)
+  	  duration = duration.to_r
+  	end
+
   	raise RangeError, "duration is less than 0." if duration < 0
   	@duration = duration
   end
 
   # Set the note loudness.
-  # @param [Float] loudness The loudness of the note.
-  # @raise [ArgumentError] if loudness is not a Float.
+  # @param [Numeric] loudness The loudness of the note.
+  # @raise [ArgumentError] if loudness is not a Numeric.
   # @raise [RangeError] if loudness is outside the range 0.0..1.0.
   def loudness= loudness
-    raise ArgumentError, "loudness is not a Float" if !loudness.is_a?(Float)
+    raise ArgumentError, "loudness is not a Numeric" if !loudness.is_a?(Numeric)
     raise RangeError, "loudness is outside the range 0.0..1.0" if !(0.0..1.0).include?(loudness)
   	@loudness = loudness
   end
 
   # Set the note intensity.
-  # @param [Float] intensity The intensity of the note.
-  # @raise [ArgumentError] if intensity is not a Float.
+  # @param [Numeric] intensity The intensity of the note.
+  # @raise [ArgumentError] if intensity is not a Numeric.
   # @raise [RangeError] if intensity is outside the range 0.0..1.0.
   def intensity= intensity
-    raise ArgumentError, "intensity is not a Float" if !intensity.is_a?(Float)
+    raise ArgumentError, "intensity is not a Numeric" if !intensity.is_a?(Numeric)
     raise RangeError, "intensity is outside the range 0.0..1.0" if !(0.0..1.0).include?(intensity)
 	@intensity = intensity
   end
 
   # Set the note seperation.
-  # @param [Float] seperation The seperation of the note.
-  # @raise [ArgumentError] if seperation is not a Float.
+  # @param [Numeric] seperation The seperation of the note.
+  # @raise [ArgumentError] if seperation is not a Numeric.
   # @raise [RangeError] if seperation is outside the range 0.0..1.0.
   def seperation= seperation
-    raise ArgumentError, "seperation is not a Float" if !seperation.is_a?(Float)
+    raise ArgumentError, "seperation is not Numeric" if !seperation.is_a?(Numeric)
     raise RangeError, "seperation is outside the range 0.0..1.0" if !(0.0..1.0).include?(seperation)
     @seperation = seperation
   end
