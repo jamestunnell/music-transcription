@@ -8,40 +8,23 @@ module Musicality
 # @!attribute [rw] loudness
 #   @return [Float] Determine loudness or softness in a part or score.
 #
-# @!attribute [rw] transition_duration
-#   @return [Rational] Duration of the transition from the current loudness to what
-#                      is specified in this object.
-#
-# @!attribute [rw] transition_type
-#   @return [Symbol] 
-#
+# @!attribute [rw] transition
+#   @return [Transition] Determine the length and shape of transition
+##
 class Dynamic
 
-  # a simple linear transition between dynamic levels
-  TRANSITION_LINEAR = :dynamicTransitionLinear
-  # a smooth natural 'S' transition between dynamic levels
-  TRANSITION_SIGMOID = :dynamicTransitionSigmoid
-
-  #allowed transitions between dynamic levels
-  VALID_TRANSITIONS = 
-  [
-    TRANSITION_LINEAR,
-    TRANSITION_SIGMOID
-  ]
-
-  attr_reader :loudness, :transition_duration, :transition_type
+  attr_reader :loudness, :transition
   
   # A new instance of Dynamic.
   # @param [Float] loudness The loudness or softness
   # @param [Rational] transition_duration The time to transition to the desired 
   #                                       loudness. Zero by default.
-  # @param [Symbol] transition_type The type of transition to employ (see 
-  #                                 VALID_DYNAMIC_TRANSITIONS for the permitted 
-  #                                 transition types). Linear by default.
-  def initialize loudness, transition_duration = 0.to_r, transition_type = TRANSITION_LINEAR
+  # @param [Symbol] transition_type The type of transition to employ (e.g. 
+  #                                 linear, sigmoid). See VALID_TRANSITIONS for
+  #                                 the permitted types). Linear by default.
+  def initialize loudness, transition_duration = 0.to_r, transition_type = Transition::SHAPE_LINEAR
     self.loudness = loudness
-    self.transition_duration = transition_duration
-    self.transition_type = transition_type
+    self.transition = Transition.new transition_duration, transition_type
   end
   
   # Set the dynamic loudness.
@@ -54,24 +37,14 @@ class Dynamic
   	@loudness = loudness
   end
 
-  # Set the duration of transition to the desired loudness.
-  # @param [Rational] transition_duration The time to transition to the desired loudness
-  # @raise [ArgumentError] if transition_duration is not a Rational.
-  # @raise [RangeError] if transition_duration is less than zero.
-  def transition_duration= transition_duration
-  	raise ArgumentError, "transition_duration is not a Rational" if !transition_duration.is_a?(Rational)
-  	raise RangeError, "transition_duration is less than 0." if transition_duration < 0
-  	@transition_duration = transition_duration
+  # Set the dynamic transition.
+  # @param [Transition] transition The transition to this dynamic.
+  # @raise [ArgumentError] if transition is not a Transition.
+  def transition= transition
+    raise ArgumentError, "transition is not a Transition" if !transition.is_a?(Transition)
+  	@transition = transition
   end
 
-  # Set the dynamic loudness.
-  # @param [Float] loudness The loudness or softness of the part.
-  # @raise [ArgumentError] if loudness is not a Float.
-  # @raise [RangeError] if loudness is outside the range 0.0..1.0.
-  def transition_type= transition_type
-    raise ArgumentError, "transition_type #{transition_type} is not valid (one of #{VALID_TRANSITIONS.inspect}" if !VALID_TRANSITIONS.include?(transition_type)
-    @transition_type = transition_type
-  end
 end
 
 end

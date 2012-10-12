@@ -39,8 +39,8 @@ describe Musicality::Part do
   end
   
   it "should assign note groups given during construction" do
-    part = Musicality::Part.new :notes => @note_groups
-    part.notes.should eq(@note_groups.clone)
+    part = Musicality::Part.new :note_groups => @note_groups
+    part.note_groups.should eq(@note_groups.clone)
   end
   
   it "should assign dynamics given during construction" do
