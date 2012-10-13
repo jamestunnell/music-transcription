@@ -14,10 +14,10 @@ describe Musicality::Part do
       1.to_r => @whole_note
     }
     
-    @note_groups =
+    @note_sequences =
     {
       2.to_r => Musicality::Chord.new( [@whole_note, @whole_note, @whole_note] ),
-      3.to_r => Musicality::Triplet.new( [@quarter_note, @quarter_note, @quarter_note] )
+      3.to_r => Musicality::Tuplet.new( [@quarter_note, @quarter_note, @quarter_note] )
     }
     
     @dynamics = 
@@ -29,7 +29,7 @@ describe Musicality::Part do
   
   describe Musicality::Part.new do
     its(:notes) { should be_empty }
-    its(:note_groups) { should be_empty }
+    its(:note_sequences) { should be_empty }
     its(:dynamics) { should be_empty }
   end
   
@@ -38,9 +38,9 @@ describe Musicality::Part do
     part.notes.should eq(@notes.clone)
   end
   
-  it "should assign note groups given during construction" do
-    part = Musicality::Part.new :note_groups => @note_groups
-    part.note_groups.should eq(@note_groups.clone)
+  it "should assign note sequences given during construction" do
+    part = Musicality::Part.new :note_sequences => @note_sequences
+    part.note_sequences.should eq(@note_sequences.clone)
   end
   
   it "should assign dynamics given during construction" do

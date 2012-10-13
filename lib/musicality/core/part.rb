@@ -1,34 +1,34 @@
 module Musicality
 
-# Abstraction of a musical part. Contains notes, note groups, and dynamics
+# Abstraction of a musical part. Contains notes, note sequences, and dynamics
 #
 # @author James Tunnell
 # 
 # @!attribute [rw] notes
 #   @return [Hash] Maps notes to offsets (in note duration).
 #
-# @!attribute [rw] note_groups
-#   @return [Hash] Maps note groups to offsets (in note duration).
+# @!attribute [rw] note_sequences
+#   @return [Hash] Maps note sequences to offsets (in note duration).
 #
 # @!attribute [rw] dynamics
 #   @return [Hash] Maps dynamics to offsets (in note duration).
 #
 class Part
 
-  attr_reader :notes, :note_groups, :dynamics
+  attr_reader :notes, :note_sequences, :dynamics
   
   # A new instance of Part.
   # @param [Hash] options Optional arguments. Valid keys are :notes, 
-  #               :note_groups, :dynamics
+  #               :note_sequences, :dynamics
   def initialize options={}
     opts = {
       :notes => {},
-      :note_groups => {},
+      :note_sequences => {},
       :dynamics => {},
     }.merge options
 	  
     self.notes = opts[:notes]
-    self.note_groups = opts[:note_groups]	
+    self.note_sequences = opts[:note_sequences]	
     self.dynamics = opts[:dynamics]
   end
   
@@ -46,18 +46,18 @@ class Part
     @notes = notes
   end
 
-  # Set the part note groups.
-  # @param [Hash] note_groups The note groups, mapped to offsets (in note duration).
-  # @raise [ArgumentError] if note_groups is not a Hash.
-  # @raise [ArgumentError] if note_groups contain a non-NoteGroup object.
-  def note_groups= note_groups
-    raise ArgumentError, "note_groups is not a Hash" if !note_groups.is_a?(Hash)
+  # Set the part note sequences.
+  # @param [Hash] note_sequences The note sequences, mapped to offsets (in note duration).
+  # @raise [ArgumentError] if note_sequences is not a Hash.
+  # @raise [ArgumentError] if note_sequences contain a non-NoteSequence object.
+  def note_sequences= note_sequences
+    raise ArgumentError, "note_sequences is not a Hash" if !note_sequences.is_a?(Hash)
     
-    note_groups.values.each do |note_group|
-      raise ArgumentError, "note_groups contain a non-NoteGroup #{note_group}" if !note_group.is_a?(NoteGroup)
+    note_sequences.values.each do |note_group|
+      raise ArgumentError, "note_sequences contain a non-NoteSequence #{note_group}" if !note_group.is_a?(NoteSequence)
     end
         
-  	@note_groups = note_groups
+  	@note_sequences = note_sequences
   end
 
   # Set the part dynamics.

@@ -1,6 +1,6 @@
 module Musicality
 
-# Abstraction of a musical score. Contains parts, notes, note groups, dynamics,
+# Abstraction of a musical score. Contains parts, notes, note sequences, dynamics,
 # and tempos.
 #
 # @author James Tunnell
@@ -17,7 +17,7 @@ class Score < Part
   
   # A new instance of Score.
   # @param [Hash] options Optional arguments. Valid keys are :parts, :notes, 
-  #               :note_groups, :dynamics, :tempos
+  #               :note_sequences, :dynamics, :tempos
   def initialize options={}
     opts = {
       :parts => {},

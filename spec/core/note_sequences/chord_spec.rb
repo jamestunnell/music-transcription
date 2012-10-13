@@ -24,29 +24,17 @@ describe Musicality::Chord do
 
     lambda { Musicality::Chord.new notes }.should raise_error ArgumentError
   end
-
-  it "should set arpeggiate to false if not given during construction" do
-    chord = Musicality::Chord.new @notes
-    chord.arpeggiate.should be false
-  end
   
-  it "should assign the :arpeggiate flag as given during construction" do
-    chord = Musicality::Chord.new @notes, :arpeggiate => true
-    chord.arpeggiate.should be true
-    chord = Musicality::Chord.new @notes, :arpeggiate => false
-    chord.arpeggiate.should be false
-  end
-
   it "should assign the :arpeggiation_duration as given during construction" do
-    chord = Musicality::Chord.new @notes, :arpeggiation_duration => @notes.first.duration
+    chord = Musicality::Chord.new @notes, @notes.first.duration
     chord.arpeggiation_duration.should eq(@notes.first.duration)
   end
   
   it "should not raise ArgumentError if :arpeggiation_duration is less than or equal to note duration" do
-    lambda { Musicality::Chord.new @notes, :arpeggiation_duration => 1.99.to_r }.should_not raise_error ArgumentError
+    lambda { Musicality::Chord.new @notes, 1.99.to_r }.should_not raise_error ArgumentError
   end
 
   it "should raise ArgumentError if :arpeggiation_duration is more than note duration" do
-    lambda { Musicality::Chord.new @notes, :arpeggiation_duration => 2.01.to_r }.should raise_error ArgumentError
+    lambda { Musicality::Chord.new @notes, 2.01.to_r }.should raise_error ArgumentError
   end
 end

@@ -1,14 +1,14 @@
 module Musicality
 
-# Abstraction of a musical phrase, which connects notes to be played without 
-# releases but with rearticulation.
+# Abstraction of a musical slur, which connects notes to be played without 
+# releases and without rearticulation.
 #
 # @author James Tunnell
 # 
 # @!attribute [r] notes
 #   @return [Enumerable] The chord notes, contained in an Enumerable object (e.g. Array, Hash, etc.).
 #
-class Phrase < NoteGroup
+class Slur < NoteSequence
   
   # A new instance of Phrase.
   # @param [Enumerable] notes Enumerable containing at least two Note objects.

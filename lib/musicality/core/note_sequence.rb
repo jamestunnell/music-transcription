@@ -8,11 +8,11 @@ module Musicality
 # @!attribute [r] notes
 #   @return [Enumerable] Two or more notes contained in an Enumerable object (e.g. Array, Hash, etc.).
 #
-class NoteGroup
+class NoteSequence
   
   attr_reader :notes
   
-  # A new instance of NoteGroup.
+  # A new instance of NoteSequence.
   # @param [Enumerable] notes Enumerable containing at least two Note objects
   def initialize notes
     raise ArgumentError, "notes is not an Enumerable" if !notes.is_a?(Enumerable)

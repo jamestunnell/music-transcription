@@ -1,7 +1,7 @@
 module Musicality
 
-# Abstraction of a musical glissando. Contains a collection of notes, all of the
-# pitches between which are to be played in a discrete manner (if instrument 
+# Abstraction of a musical portamento. Contains a collection of notes, all of the
+# pitches between which are to be played in a continuous manner (if instrument 
 # allows).
 #
 # @author James Tunnell
@@ -9,9 +9,9 @@ module Musicality
 # @!attribute [r] notes
 #   @return [Enumerable] The chord notes, contained in an Enumerable object (e.g. Array, Hash, etc.).
 #
-class Glissando < NoteGroup
+class Portamento < NoteSequence
   
-  # A new instance of Glissando.
+  # A new instance of Portamento.
   # @param [Enumerable] notes Enumerable containing at least two Note objects.
   def initialize notes
     super notes

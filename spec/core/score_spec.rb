@@ -14,10 +14,10 @@ describe Musicality::Score do
       1.to_r => @whole_note
     }
     
-    @note_groups =
+    @note_sequences =
     {
       2.to_r => Musicality::Chord.new( [@whole_note, @whole_note, @whole_note] ),
-      3.to_r => Musicality::Triplet.new( [@quarter_note, @quarter_note, @quarter_note] )
+      3.to_r => Musicality::Tuplet.new( [@quarter_note, @quarter_note, @quarter_note] )
     }
     
     @dynamics = 
@@ -28,8 +28,8 @@ describe Musicality::Score do
 
     @parts = 
     {
-      "piano (LH)" => Musicality::Part.new( :notes => @notes, :note_groups => @note_groups, :dynamics => @dynamics ),
-      "piano (RH)" => Musicality::Part.new( :notes => @notes, :note_groups => @note_groups, :dynamics => @dynamics ),
+      "piano (LH)" => Musicality::Part.new( :notes => @notes, :note_sequences => @note_sequences, :dynamics => @dynamics ),
+      "piano (RH)" => Musicality::Part.new( :notes => @notes, :note_sequences => @note_sequences, :dynamics => @dynamics ),
     }    
 
     @tempos = 
@@ -42,7 +42,7 @@ describe Musicality::Score do
   describe Musicality::Score.new do
     its(:parts) { should be_empty }
     its(:notes) { should be_empty }
-    its(:note_groups) { should be_empty }
+    its(:note_sequences) { should be_empty }
     its(:dynamics) { should be_empty }
     its(:tempos) { should be_empty }    
   end
@@ -57,9 +57,9 @@ describe Musicality::Score do
     score.notes.should eq(@notes.clone)
   end
   
-  it "should assign note groups given during construction" do
-    score = Musicality::Score.new :note_groups => @note_groups
-    score.note_groups.should eq(@note_groups.clone)
+  it "should assign note sequences given during construction" do
+    score = Musicality::Score.new :note_sequences => @note_sequences
+    score.note_sequences.should eq(@note_sequences.clone)
   end
   
   it "should assign dynamics given during construction" do
