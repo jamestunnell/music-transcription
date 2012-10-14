@@ -9,7 +9,7 @@ require 'musicality/core/tempo'
 require 'musicality/core/part'
 require 'musicality/core/score'
 
-require 'musicality/core/note_sequences/chord'
+require 'musicality/core/note_sequences/broken_chord'
 require 'musicality/core/note_sequences/glissando'
 require 'musicality/core/note_sequences/phrase'
 require 'musicality/core/note_sequences/portamento'

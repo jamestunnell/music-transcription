@@ -16,7 +16,7 @@ describe Musicality::Score do
     
     @note_sequences =
     {
-      2.to_r => Musicality::Chord.new( [@whole_note, @whole_note, @whole_note] ),
+      2.to_r => Musicality::BrokenChord.new( [@whole_note, @whole_note, @whole_note] ),
       3.to_r => Musicality::Tuplet.new( [@quarter_note, @quarter_note, @quarter_note] )
     }
     
