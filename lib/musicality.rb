@@ -16,3 +16,5 @@ require 'musicality/core/note_sequences/portamento'
 require 'musicality/core/note_sequences/slur'
 require 'musicality/core/note_sequences/tuplet'
 
+require 'musicality/util/piecewise_function'
+
