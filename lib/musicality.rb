@@ -6,6 +6,7 @@ require 'musicality/core/note_sequence'
 require 'musicality/core/transition'
 require 'musicality/core/dynamic'
 require 'musicality/core/tempo'
+require 'musicality/core/instrument'
 require 'musicality/core/part'
 require 'musicality/core/score'
 

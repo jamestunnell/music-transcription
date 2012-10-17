@@ -5,31 +5,35 @@ module Musicality
 # @author James Tunnell
 # 
 # @!attribute [rw] notes
-#   @return [Hash] Maps notes to offsets (in note duration).
+#   @return [Hash] Maps notes by note offset.
 #
 # @!attribute [rw] note_sequences
-#   @return [Hash] Maps note sequences to offsets (in note duration).
+#   @return [Hash] Maps note sequences by note offset.
 #
 # @!attribute [rw] dynamics
-#   @return [Hash] Maps dynamics to offsets (in note duration).
+#   @return [Hash] Maps dynamics by note offset.
 #
+# @!attribute [rw] instrument
+#   @return [Instrument] The instrument to be used in playing the part.
 class Part
 
-  attr_reader :notes, :note_sequences, :dynamics
+  attr_reader :notes, :note_sequences, :dynamics, :instrument
   
   # A new instance of Part.
   # @param [Hash] options Optional arguments. Valid keys are :notes, 
-  #               :note_sequences, :dynamics
+  #               :note_sequences, :dynamics, and :instrument
   def initialize options={}
     opts = {
       :notes => {},
       :note_sequences => {},
       :dynamics => {},
+      :instrument => Instrument.new
     }.merge options
 	  
     self.notes = opts[:notes]
     self.note_sequences = opts[:note_sequences]	
     self.dynamics = opts[:dynamics]
+    self.instrument = opts[:instrument]
   end
   
   # Set the part notes.
@@ -72,6 +76,14 @@ class Part
     end
       	
   	@dynamics = dynamics
+  end
+
+  # Set the part instrument.
+  # @param [Instrument] instrument The instrument to be used in playing the part.
+  # @raise [ArgumentError] if instrument is not an Instrument.
+  def instrument= instrument
+    raise ArgumentError, "instrument is not a Hash" if !instrument.is_a?(Instrument)
+  	@instrument = instrument
   end
 
 end

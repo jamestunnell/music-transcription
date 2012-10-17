@@ -6,25 +6,22 @@ module Musicality
 # @author James Tunnell
 #
 # @!attribute [rw] parts
-#   @return [Hash] Maps parts to instruments (by name).
+#   @return [Hash] Maps parts by name.
 # 
 # @!attribute [rw] tempos
-#   @return [Hash] Maps tempos to offsets (in note duration).
+#   @return [Hash] Maps tempos by offset in note duration.
 #
-class Score < Part
+class Score
 
   attr_reader :parts, :tempos
   
   # A new instance of Score.
-  # @param [Hash] options Optional arguments. Valid keys are :parts, :notes, 
-  #               :note_sequences, :dynamics, :tempos
+  # @param [Hash] options Optional arguments. Valid keys are :parts, :tempos
   def initialize options={}
     opts = {
       :parts => {},
       :tempos => {}
     }.merge options
-	  
-	  super opts
 
 	  self.parts = opts[:parts]
     self.tempos = opts[:tempos]
