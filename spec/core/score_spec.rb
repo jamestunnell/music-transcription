@@ -2,41 +2,33 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Score do
   before :each do
-    @quarter_note = Musicality::Note.new( Pitch.new, 0.25.to_r )
-    @whole_note = Musicality::Note.new( Pitch.new, 1.to_r )
+    @note1 = Musicality::Note.new(:pitch => Pitch.new, :duration => 0.25.to_r, :offset => 0.to_r )
+    @note2 = Musicality::Note.new(:pitch => Pitch.new, :duration => 0.25.to_r, :offset => 0.25.to_r )
+    @note3 = Musicality::Note.new(:pitch => Pitch.new, :duration => 0.25.to_r, :offset => 0.50.to_r )
 
-    @notes = 
-    {
-      0.to_r => @quarter_note,
-      0.25.to_r => @quarter_note,
-      0.5.to_r => @quarter_note,
-      0.75.to_r => @quarter_note,
-      1.to_r => @whole_note
-    }
+    @notes = [ @note1, @note2, @note3 ]
     
-    @note_sequences =
-    {
-      2.to_r => Musicality::BrokenChord.new( [@whole_note, @whole_note, @whole_note] ),
-      3.to_r => Musicality::Tuplet.new( [@quarter_note, @quarter_note, @quarter_note] )
-    }
-
-    @dynamics = 
-    {
-      0.to_r => Musicality::Dynamic.new( 0.5 ),
-      1.to_r => Musicality::Dynamic.new( 1.0, 2.to_r ),
-    }
+    @note_sequences = [ 
+      Musicality::BrokenChord.new( [@note1, @note2, @note3] ),
+      Musicality::Tuplet.new( [@note1, @note2, @note3] )
+    ]
+    
+    @dynamics = [
+      Musicality::Dynamic.new( :loudness => 0.5, :offset => 0.to_r ),
+      Musicality::Dynamic.new( :loudness => 1.0, :duration => 2.to_r, :offset => 1.to_r),
+    ]
     
     @parts = 
-    {
-      "piano (LH)" => Musicality::Part.new( :notes => @notes, :note_sequences => @note_sequences, :dynamics => @dynamics ),
-      "piano (RH)" => Musicality::Part.new( :notes => @notes, :note_sequences => @note_sequences, :dynamics => @dynamics ),
-    }    
+    [
+      Musicality::Part.new( :notes => @notes, :note_sequences => @note_sequences, :dynamics => @dynamics, :name => "piano (LH)" ),
+      Musicality::Part.new( :notes => @notes, :note_sequences => @note_sequences, :dynamics => @dynamics, :name => "piano (RH)" ),
+    ]
 
     @tempos = 
-    {
-      0.to_r => Musicality::Tempo.new( 100, 0.25.to_r ),
-      2.to_r => Musicality::Tempo.new( 130, 0.25.to_r ),
-    }
+    [
+      Musicality::Tempo.new( :beats_per_minute => 100, :beat_duration => 0.25.to_r, :offset => 0.to_r ),
+      Musicality::Tempo.new( :beats_per_minute => 130, :beat_duration => 0.25.to_r, :offset => 2.to_r ),
+    ]
   end
   
   describe Musicality::Score.new do

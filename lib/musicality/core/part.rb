@@ -5,28 +5,29 @@ module Musicality
 # @author James Tunnell
 # 
 # @!attribute [rw] notes
-#   @return [Hash] Maps notes by note offset.
+#   @return [Array] The notes to be played.
 #
 # @!attribute [rw] note_sequences
-#   @return [Hash] Maps note sequences by note offset.
+#   @return [Array] The note sequences to be played.
 #
 # @!attribute [rw] dynamics
-#   @return [Hash] Maps dynamics by note offset.
+#   @return [Array] The dynamics which control part loudness.
 #
 # @!attribute [rw] instrument
 #   @return [Instrument] The instrument to be used in playing the part.
+#
 class Part
 
   attr_reader :notes, :note_sequences, :dynamics, :instrument
   
   # A new instance of Part.
   # @param [Hash] options Optional arguments. Valid keys are :notes, 
-  #               :note_sequences, :dynamics, and :instrument
+  #                       :note_sequences, :dynamics, and :instrument
   def initialize options={}
     opts = {
-      :notes => {},
-      :note_sequences => {},
-      :dynamics => {},
+      :notes => [],
+      :note_sequences => [],
+      :dynamics => [],
       :instrument => Instrument.new
     }.merge options
 	  
@@ -37,41 +38,41 @@ class Part
   end
   
   # Set the part notes.
-  # @param [Hash] notes The notes, mapped to offsets (in note duration).
-  # @raise [ArgumentError] if notes is not a Hash.
-  # @raise [ArgumentError] if notes contain a non-Note object.
+  # @param [Array] notes Contains notes to be played.
+  # @raise [ArgumentError] if notes is not an Array.
+  # @raise [ArgumentError] if notes contain a non-Note objects.
   def notes= notes
-    raise ArgumentError, "notes is not a Hash" if !notes.is_a?(Hash)
+    raise ArgumentError, "notes is not an Array" if !notes.is_a?(Array)
     
-    notes.values.each do |note|
-      raise ArgumentError, "notes contain a non-Note #{note}" if !note.is_a?(Note)
+    notes.each do |note|
+      raise ArgumentError, "notes contain a non-Note" if !note.is_a?(Note)
     end
     
     @notes = notes
   end
 
   # Set the part note sequences.
-  # @param [Hash] note_sequences The note sequences, mapped to offsets (in note duration).
-  # @raise [ArgumentError] if note_sequences is not a Hash.
-  # @raise [ArgumentError] if note_sequences contain a non-NoteSequence object.
+  # @param [Array] note_sequences Contains note sequences to be played.
+  # @raise [ArgumentError] if note_sequences is not an Array.
+  # @raise [ArgumentError] if note_sequences contain a non-NoteSequence objects.
   def note_sequences= note_sequences
-    raise ArgumentError, "note_sequences is not a Hash" if !note_sequences.is_a?(Hash)
+    raise ArgumentError, "note_seqeuences is not an Array" if !note_sequences.is_a?(Array)
     
-    note_sequences.values.each do |note_group|
-      raise ArgumentError, "note_sequences contain a non-NoteSequence #{note_group}" if !note_group.is_a?(NoteSequence)
+    note_sequences.each do |note_seqeuence|
+      raise ArgumentError, "note_seqeuences contain a non-NoteSequence" if !note_seqeuence.is_a?(NoteSequence)
     end
-        
+    
   	@note_sequences = note_sequences
   end
 
   # Set the part dynamics.
-  # @param [Hash] dynamics The dynamics, mapped to offsets (in note duration).
-  # @raise [ArgumentError] if dynamics is not a Hash.
+  # @param [Array] dynamics The part dynamics.
+  # @raise [ArgumentError] if dynamics is not an Array.
   # @raise [ArgumentError] if dynamics contain a non-Dynamic object.
   def dynamics= dynamics
-    raise ArgumentError, "dynamics is not a Hash" if !dynamics.is_a?(Hash)
+    raise ArgumentError, "dynamics is not an Array" if !dynamics.is_a?(Array)
   	
-    dynamics.values.each do |dynamic|
+    dynamics.each do |dynamic|
       raise ArgumentError, "dynamics contain a non-Dynamic #{dynamic}" if !dynamic.is_a?(Dynamic)
     end
       	

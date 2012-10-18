@@ -8,23 +8,24 @@ module Musicality
 # @!attribute [rw] loudness
 #   @return [Float] Determine loudness or softness in a part or score.
 #
-# @!attribute [rw] transition
-#   @return [Transition] Determine the length and shape of transition
-##
-class Dynamic
+class Dynamic < Event
 
-  attr_reader :loudness, :transition
+  attr_reader :loudness
   
   # A new instance of Dynamic.
-  # @param [Float] loudness The loudness or softness
-  # @param [Rational] transition_duration The time to transition to the desired 
-  #                                       loudness. Zero by default.
-  # @param [Symbol] transition_type The type of transition to employ (e.g. 
-  #                                 linear, sigmoid). See VALID_TRANSITIONS for
-  #                                 the permitted types). Linear by default.
-  def initialize loudness, transition_duration = 0.to_r, transition_type = Transition::SHAPE_LINEAR
-    self.loudness = loudness
-    self.transition = Transition.new transition_duration, transition_type
+  # @param [Hash] args Hash arguments. Required keys are :loudness and :offset.
+  #                    Optional key is :duration.
+  def initialize args = {}
+    raise ArgumentError, ":loudness key not present in args Hash" if !args.has_key?(:loudness)
+    raise ArgumentError, ":offset key not present in args Hash" if !args.has_key?(:offset)
+    
+    self.loudness = args[:loudness]
+  
+    opts = {
+      :duration => 0.to_r
+    }.merge args
+    
+    super opts[:offset], opts[:duration]
   end
   
   # Set the dynamic loudness.
@@ -36,15 +37,6 @@ class Dynamic
     raise RangeError, "loudness is outside the range 0.0..1.0" if !(0.0..1.0).include?(loudness)
   	@loudness = loudness
   end
-
-  # Set the dynamic transition.
-  # @param [Transition] transition The transition to this dynamic.
-  # @raise [ArgumentError] if transition is not a Transition.
-  def transition= transition
-    raise ArgumentError, "transition is not a Transition" if !transition.is_a?(Transition)
-  	@transition = transition
-  end
-
 end
 
 end

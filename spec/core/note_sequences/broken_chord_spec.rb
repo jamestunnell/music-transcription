@@ -4,9 +4,9 @@ describe Musicality::BrokenChord do
   before :all do
     @notes = 
     [
-      Musicality::Note.new(Musicality::Pitch.new( :ratio => 15.0 ), 2.to_r),
-      Musicality::Note.new(Musicality::Pitch.new( :ratio => 30.0 ), 2.to_r),
-      Musicality::Note.new(Musicality::Pitch.new( :ratio => 25.0 ), 2.to_r),
+      Musicality::Note.new(:pitch => Musicality::Pitch.new( :ratio => 15.0 ), :duration => 2.to_r, :offset => 0.to_r),
+      Musicality::Note.new(:pitch => Musicality::Pitch.new( :ratio => 30.0 ), :duration => 2.to_r, :offset => 0.to_r),
+      Musicality::Note.new(:pitch => Musicality::Pitch.new( :ratio => 25.0 ), :duration => 2.to_r, :offset => 0.to_r),
     ]
   end
 
@@ -20,7 +20,7 @@ describe Musicality::BrokenChord do
     
   it "should raise ArgumentError if notes are not the same length" do
     notes = @notes.clone
-    notes << Musicality::Note.new(Musicality::Pitch.new( :ratio => 15.0 ), 1.to_r)
+    notes << Musicality::Note.new(:pitch => Musicality::Pitch.new( :ratio => 15.0 ), :duration => 1.to_r, :offset => 0.to_r)
 
     lambda { Musicality::BrokenChord.new notes }.should raise_error ArgumentError
   end

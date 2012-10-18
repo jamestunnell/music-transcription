@@ -2,10 +2,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Musicality::Tuplet do
   before :all do
-    @note1 = Musicality::Note.new(Musicality::Pitch.new( :ratio => 15.0 ), 2.to_r)
-    @note2 = Musicality::Note.new(Musicality::Pitch.new( :ratio => 30.0 ), 2.to_r)
-    @note3 = Musicality::Note.new(Musicality::Pitch.new( :ratio => 30.0 ), 2.to_r)
-    @note4 = Musicality::Note.new(Musicality::Pitch.new( :ratio => 25.0 ), 1.to_r)
+    @note1 = Musicality::Note.new(:pitch => Musicality::Pitch.new( :ratio => 15.0 ), :duration => 2.to_r, :offset => 0.to_r)
+    @note2 = Musicality::Note.new(:pitch => Musicality::Pitch.new( :ratio => 30.0 ), :duration => 2.to_r, :offset => 0.to_r)
+    @note3 = Musicality::Note.new(:pitch => Musicality::Pitch.new( :ratio => 25.0 ), :duration => 2.to_r, :offset => 0.to_r)
+    @note4 = Musicality::Note.new(:pitch => Musicality::Pitch.new( :ratio => 25.0 ), :duration => 1.to_r, :offset => 0.to_r)
   end
 
   it "should not raise ArgumentError if notes are the same length" do

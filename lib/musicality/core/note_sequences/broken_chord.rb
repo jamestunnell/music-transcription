@@ -19,7 +19,7 @@ class BrokenChord < NoteSequence
   
   # A new instance of BrokenChord.
   # @param [Enumerable] notes Enumerable containing at least two Note objects of the same duration.
-  # @param [Hash] options Optional arguments. Valid keys are :arpeggiate and :arpeggiation_duration
+  # @param [Numeric] strum_duration The duration of the broken chord strum.
   def initialize notes, strum_duration = 0.to_r
 
     super notes

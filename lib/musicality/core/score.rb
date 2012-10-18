@@ -6,10 +6,10 @@ module Musicality
 # @author James Tunnell
 #
 # @!attribute [rw] parts
-#   @return [Hash] Maps parts by name.
+#   @return [Array] Score parts.
 # 
 # @!attribute [rw] tempos
-#   @return [Hash] Maps tempos by offset in note duration.
+#   @return [Array] Score tempos.
 #
 class Score
 
@@ -19,8 +19,8 @@ class Score
   # @param [Hash] options Optional arguments. Valid keys are :parts, :tempos
   def initialize options={}
     opts = {
-      :parts => {},
-      :tempos => {}
+      :parts => [],
+      :tempos => []
     }.merge options
 
 	  self.parts = opts[:parts]
@@ -28,13 +28,13 @@ class Score
   end
   
   # Set the score parts.
-  # @param [Hash] parts The parts, mapped to instruments (by name).
-  # @raise [ArgumentError] if notes is not a Hash.
+  # @param [Array] parts The score parts.
+  # @raise [ArgumentError] if notes is not an Array.
   # @raise [ArgumentError] if parts contain a non-Part object.
   def parts= parts
-    raise ArgumentError, "parts is not a Hash" if !parts.is_a?(Hash)
+    raise ArgumentError, "parts is not an Array" if !parts.is_a?(Array)
 
-    parts.values.each do |part|
+    parts.each do |part|
       raise ArgumentError, "parts contain a non-Part #{part}" if !part.is_a?(Part)
     end
     
@@ -42,13 +42,13 @@ class Score
   end
 
   # Set the part tempos.
-  # @param [Hash] tempos The tempos, mapped to offsets (in note duration).
-  # @raise [ArgumentError] if tempos is not a Hash.
+  # @param [Array] tempos The score tempos.
+  # @raise [ArgumentError] if tempos is not an Array.
   # @raise [ArgumentError] if tempos contain a non-Tempo object.
   def tempos= tempos
-    raise ArgumentError, "tempos is not a Hash" if !tempos.is_a?(Hash)
+    raise ArgumentError, "tempos is not an Array" if !tempos.is_a?(Array)
 
-    tempos.values.each do |tempo|
+    tempos.each do |tempo|
       raise ArgumentError, "tempos contain a non-Tempo #{tempo}" if !tempo.is_a?(Tempo)
     end
     

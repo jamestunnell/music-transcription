@@ -6,7 +6,8 @@ module Musicality
 # @author James Tunnell
 # 
 # @!attribute [r] notes
-#   @return [Enumerable] Two or more notes contained in an Enumerable object (e.g. Array, Hash, etc.).
+#   @return [Enumerable] Two or more notes contained in an Enumerable object 
+#                        (e.g. Array, Hash, etc.).
 #
 class NoteSequence
   
@@ -14,6 +15,10 @@ class NoteSequence
   
   # A new instance of NoteSequence.
   # @param [Enumerable] notes Enumerable containing at least two Note objects
+  # @raise [ArgumentError] if notes is not an Enumerable
+  # @raise [ArgumentError] if notes is empty
+  # @raise [ArgumentError] if notes has less than two objects
+  # @raise [ArgumentError] if notes contains a non-Note
   def initialize notes
     raise ArgumentError, "notes is not an Enumerable" if !notes.is_a?(Enumerable)
     raise ArgumentError, "notes is empty" if notes.empty?

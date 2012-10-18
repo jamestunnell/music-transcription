@@ -10,25 +10,26 @@ module Musicality
 # @!attribute [rw] beat_duration
 #   @return [Rational] The length of each beat (in note length)
 #
-# @!attribute [rw] transition
-#   @return [Transition] Determine the length and shape of transition
-#
-class Tempo
+class Tempo < Event
 
-  attr_reader :beat_duration, :beats_per_minute, :transition
+  attr_reader :beat_duration, :beats_per_minute
   
   # A new instance of Tempo.
-  # @param [Numeric] beats_per_minute tempo in beats per minute (bpm)
-  # @param [Rational] beat_duration The length of each beat (in note length)
-  # @param [Rational] transition_duration The time to transition to the desired 
-  #                                       tempo. Zero by default.
-  # @param [Symbol] transition_shape The shape of transition to employ (e.g. 
-  #                                  linear, sigmoid). See VALID_TRANSITIONS for
-  #                                  the permitted types). Linear by default.
-  def initialize beats_per_minute, beat_duration, transition_duration = 0.to_r, transition_shape = Transition::SHAPE_LINEAR
-    self.beats_per_minute = beats_per_minute
-    self.beat_duration = beat_duration
-    self.transition = Transition.new transition_duration, transition_shape
+  # @param [Hash] args Hashed arguments. Required keys are :beats_per_minute, 
+  #                    :beat_duration, and :offset. Optional key is :duration.
+  def initialize args = {}
+    raise ArgumentError, ":beats_per_minute key not present in args Hash" if !args.has_key?(:beats_per_minute)
+    raise ArgumentError, ":beat_duration key not present in args Hash" if !args.has_key?(:beat_duration)
+    raise ArgumentError, ":offset key not present in args Hash" if !args.has_key?(:offset)
+    
+    self.beats_per_minute = args[:beats_per_minute]
+    self.beat_duration = args[:beat_duration]
+  
+    opts = {
+      :duration => 0.to_r
+    }.merge args
+    
+    super opts[:offset], opts[:duration]
   end
   
   # Set the beats per minute
@@ -52,15 +53,6 @@ class Tempo
   	raise RangeError, "duration is less than 0." if duration < 0
   	@beat_duration = duration
   end
-
-  # Set the temp transition.
-  # @param [Transition] transition The transition to this temp.
-  # @raise [ArgumentError] if transition is not a Transition.
-  def transition= transition
-    raise ArgumentError, "transition is not a Transition" if !transition.is_a?(Transition)
-  	@transition = transition
-  end
-
 end
 
 end
