@@ -48,7 +48,7 @@ class TempoComputer
     note_offset = tempo.offset
     raise RangeError, "tempo note offset is less than zero!" if note_offset < 0
     
-    notes_per_sec = (tempo.beats_per_minute / 60.to_r) * tempo.beat_duration
+    notes_per_sec = ((tempo.beats_per_minute / 60.to_r) * tempo.beat_duration).to_r
     func = nil      
     
     if tempo.duration == 0

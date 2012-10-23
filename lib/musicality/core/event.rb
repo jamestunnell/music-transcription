@@ -13,7 +13,7 @@ module Musicality
 class Event
 
   # the minimum event offset allowed
-  MIN_OFFSET = 0.to_r
+  MIN_OFFSET = -(2 **(0.size * 8 - 2))
   # the maximum event offset allowed
   MAX_OFFSET = (2 **(0.size * 8 - 2) - 2)
 

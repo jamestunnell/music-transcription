@@ -19,6 +19,7 @@ require 'musicality/core/note_sequences/slur'
 require 'musicality/core/note_sequences/tuplet'
 
 require 'musicality/rendering/tempo_computer'
+require 'musicality/rendering/note_time_converter'
 
 require 'musicality/util/piecewise_function'
 
