@@ -26,7 +26,7 @@ class Tempo < Event
     self.beat_duration = args[:beat_duration]
   
     opts = {
-      :duration => 0.to_r
+      :duration => 0.0
     }.merge args
     
     super opts[:offset], opts[:duration]

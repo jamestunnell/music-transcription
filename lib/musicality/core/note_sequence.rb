@@ -9,7 +9,7 @@ module Musicality
 #   @return [Enumerable] Two or more notes contained in an Enumerable object 
 #                        (e.g. Array, Hash, etc.).
 #
-class NoteSequence
+class NoteSequence < Event
   
   attr_reader :notes
   
@@ -19,7 +19,11 @@ class NoteSequence
   # @raise [ArgumentError] if notes is empty
   # @raise [ArgumentError] if notes has less than two objects
   # @raise [ArgumentError] if notes contains a non-Note
-  def initialize notes
+  def initialize notes  
+    self.notes = notes
+  end
+  
+  def notes= notes    
     raise ArgumentError, "notes is not an Enumerable" if !notes.is_a?(Enumerable)
     raise ArgumentError, "notes is empty" if notes.empty?
     raise ArgumentError, "notes has less than two Note objects" if notes.count < 2
@@ -29,6 +33,8 @@ class NoteSequence
     end
 
     @notes = notes
+    @offset = notes.first.offset
+    @duration = notes.inject(0) {|duration, note| duration + note.duration }
   end
 end
 

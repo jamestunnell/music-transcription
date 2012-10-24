@@ -20,8 +20,8 @@ class Event
   attr_reader :offset, :duration
 
   # New instance of Event.
-  # @param [Rational] offset The offset of the event.
-  # @param [Rational] duration The duration of the event.
+  # @param [Numeric] offset The offset of the event.
+  # @param [Numeric] duration The duration of the event.
   def initialize offset, duration
     self.offset = offset
     self.duration = duration
@@ -33,11 +33,6 @@ class Event
   # @raise [RangeError] if offset is less than MIN_OFFSET or greater than MAX_OFFSET.
   def offset= offset
     raise ArgumentError, "offset is not a Numeric" if !offset.is_a?(Numeric)
-    
-    if !offset.is_a?(Rational)
-  	  offset = offset.to_r
-  	end
-
   	raise RangeError, "offset is outside the range #{MIN_OFFSET}..#{MAX_OFFSET}." if !(MIN_OFFSET..MAX_OFFSET).include?(offset)
   	
   	@offset = offset
@@ -49,11 +44,6 @@ class Event
   # @raise [RangeError] if duration is less than MIN_OFFSET or greater than MAX_OFFSET.
   def duration= duration
     raise ArgumentError, "duration is not a Numeric" if !duration.is_a?(Numeric)
-    
-    if !duration.is_a?(Rational)
-  	  duration = duration.to_r
-  	end
-
   	raise RangeError, "duration is outside the range #{MIN_OFFSET}..#{MAX_OFFSET}." if !(MIN_OFFSET..MAX_OFFSET).include?(duration)
   	
   	@duration = duration

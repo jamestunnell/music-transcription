@@ -20,6 +20,8 @@ require 'musicality/core/note_sequences/tuplet'
 
 require 'musicality/rendering/tempo_computer'
 require 'musicality/rendering/note_time_converter'
+require 'musicality/rendering/part_player'
+require 'musicality/rendering/score_renderer'
 
 require 'musicality/util/piecewise_function'
 

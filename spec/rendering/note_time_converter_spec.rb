@@ -4,38 +4,41 @@ describe Musicality::NoteTimeConverter do
   
   context "constant tempo" do
     before :each do 
-      tempo = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25.to_r, :offset => 0.to_r
+      tempo = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0
       @tempo_computer = Musicality::TempoComputer.new Event.hash_events_by_offset([tempo])
       sample_rate = 48
       @converter = Musicality::NoteTimeConverter.new @tempo_computer, sample_rate
     end
 
     it "should return a time of zero when note end is zero." do
-      @converter.time_elapsed(0.to_r).should eq(0.to_r)
+      @converter.time_elapsed(0, 0).should eq(0)
     end
     
     it "should return a time of 1 second when note end is equal to the initial notes-per-second" do
-      note_end = @tempo_computer.notes_per_second_at(0.to_r)
-      @converter.time_elapsed(note_end).should eq(1.to_r)
+      note_end = @tempo_computer.notes_per_second_at(0)
+      @converter.time_elapsed(0, note_end).should eq(1)
     end
   end
   
   context "linear tempo-change" do
     before :each do 
-      tempo = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25.to_r, :offset => 0.to_r
-      tempo2 = Musicality::Tempo.new :beats_per_minute => 60, :beat_duration => 0.25.to_r, :offset => 1.to_r, :duration => 1.to_r
+      tempo = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0
+      tempo2 = Musicality::Tempo.new :beats_per_minute => 60, :beat_duration => 0.25, :offset => 1.0, :duration => 1.0
       
-      tempo_computer = Musicality::TempoComputer.new Event.hash_events_by_offset([tempo, tempo2])
-      sample_rate = 48
-      @converter = Musicality::NoteTimeConverter.new tempo_computer, sample_rate
+      @tempo_computer = Musicality::TempoComputer.new Musicality::Event.hash_events_by_offset([tempo, tempo2])
+      sample_rate = 200
+      @converter = Musicality::NoteTimeConverter.new @tempo_computer, sample_rate
     end
 
     it "should return a time of zero when note end is zero." do
-      @converter.time_elapsed(0.to_r).should eq(0.to_r)
+      @converter.time_elapsed(0.0, 0.0).should eq(0.0)
     end
 
-    it "should return a time of 2 sec during a 1-note long transition from 120bpm to 60bpm" do
-      @converter.time_elapsed(2.to_r, 1.to_r).should eq(2.to_r)
+    it "should return a time of 3 sec during a 1-note long transition from 120bpm to 60bpm" do
+      @tempo_computer.notes_per_second_at(1.0).should eq(0.5)
+      @tempo_computer.notes_per_second_at(2.0).should eq(0.25)
+
+      @converter.time_elapsed(1.0, 2.0).should be_within(0.05).of(2.77)
     end
 
   end

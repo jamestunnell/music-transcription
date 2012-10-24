@@ -87,6 +87,21 @@ class Part
   	@instrument = instrument
   end
 
+  def find_end
+    eop = 0.0
+    @notes.each do |note|
+      eon = note.offset + note.duration
+      eop = eon if eon > eop
+    end
+    
+    @note_sequences.each do |sequence|
+      eos = sequence.offset + sequence.duration
+      eop = eos if eos > eop
+    end
+
+    return eop
+  end
+
 end
 
 end

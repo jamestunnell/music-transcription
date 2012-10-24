@@ -54,7 +54,17 @@ class Score
     
   	@tempos = tempos
   end
-
+  
+  def find_end
+    eos = 0.0
+    
+    @parts.each do |part|
+      eop = part.find_end
+      eos = eop if eop > eos
+    end
+    
+    return eos
+  end
 end
 
 end

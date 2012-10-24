@@ -18,8 +18,8 @@ class TempoComputer
   # @raise [ArgumentError] if the starting tempo has a non-zero duration.
   def initialize tempos
     raise ArgumentError, "tempos is not a Hash" if !tempos.is_a?(Hash)
-    raise ArgumentError, "there is no starting tempo (tempo at offset 0)" if tempos[0.to_r].nil?
-    raise ArgumentError, "starting tempo cannot have a non-zero event duration" if tempos[0.to_r].duration != 0
+    raise ArgumentError, "there is no starting tempo (tempo at offset 0.0)" if tempos[0.0].nil?
+    raise ArgumentError, "starting tempo cannot have a non-zero event duration" if tempos[0.0].duration != 0
     
     @piecewise_function = Musicality::PiecewiseFunction.new
     
@@ -35,7 +35,7 @@ class TempoComputer
   def notes_per_second_at note_offset
     @piecewise_function.evaluate_at note_offset
   end
-
+  
   private
 
   # Add a function piece to the piecewise function, which will to compute tempo
@@ -45,30 +45,29 @@ class TempoComputer
   # @param [Tempo] tempo The Tempo object which contains offset, duration, and
   #                      tempo information.
   def add_to_piecewise_function tempo
-    note_offset = tempo.offset
-    raise RangeError, "tempo note offset is less than zero!" if note_offset < 0
+    raise RangeError, "tempo note offset is less than zero!" if tempo.offset < 0
     
-    notes_per_sec = ((tempo.beats_per_minute / 60.to_r) * tempo.beat_duration).to_r
+    notes_per_sec = (tempo.beats_per_minute / 60.0) * tempo.beat_duration
     func = nil      
     
     if tempo.duration == 0
-      func = lambda {|note_offset| notes_per_sec }
+      func = lambda {|x| notes_per_sec }
     else
-      b = @piecewise_function.evaluate_at note_offset
+      b = @piecewise_function.evaluate_at tempo.offset
       m = (notes_per_sec - b) / tempo.duration
       
       func = lambda do |x|
-        raise RangeError, "#{x} is not in the domain" if x < note_offset
+        raise RangeError, "#{x} is not in the domain" if x < tempo.offset
         
-        if x < (note_offset + tempo.duration)
-          ((m * (x - note_offset)) + b).to_r
+        if x < (tempo.offset + tempo.duration)
+          (m * (x - tempo.offset)) + b
         else
           notes_per_sec
         end
       end
     end
     
-    @piecewise_function.add_piece note_offset...(Note::MAX_OFFSET + 1), func
+    @piecewise_function.add_piece tempo.offset...(Note::MAX_OFFSET + 1), func
   end
 end
 
