@@ -1,35 +1,5 @@
 module Musicality
 
-class VerySimpleInstrument
-  
-  attr_reader :pitches
-  
-  def initialize sample_rate
-    @sample_rate = sample_rate
-    @pitches = {}
-  end
-  
-  def start_pitch pitch
-    phase_incr = (pitch.ratio * Math::PI * 2.0) / @sample_rate.to_f
-    @pitches[pitch] = { :phase_incr => phase_incr, :phase => 0.0 }
-  end
-  
-  def end_pitch pitch
-    @pitches.delete pitch
-  end
-  
-  def render_sample
-    sample = 0
-    
-    @pitches.each do |pitch, state|
-      sample += Math::sin state[:phase]
-      state[:phase] += state[:phase_incr]
-    end
-    
-    return sample
-  end
-end
-
 class PartPlayer
 
   attr_reader :part, :instrument, :notes_not_yet_played, :notes_being_played, :notes_played
@@ -38,7 +8,7 @@ class PartPlayer
     @part = part
     @note_time_converter = note_time_converter
     
-    @instrument = VerySimpleInstrument.new sample_rate
+    @instrument = SquareWave.new sample_rate
     
     @notes_not_yet_played = []
     @notes_being_played = []

@@ -23,5 +23,11 @@ require 'musicality/rendering/note_time_converter'
 require 'musicality/rendering/part_player'
 require 'musicality/rendering/score_renderer'
 
+require 'musicality/rendering/instruments/oscillator'
+require 'musicality/rendering/instruments/sawtooth_wave'
+require 'musicality/rendering/instruments/sine_wave'
+require 'musicality/rendering/instruments/square_wave'
+require 'musicality/rendering/instruments/triangle_wave'
+
 require 'musicality/util/piecewise_function'
 
