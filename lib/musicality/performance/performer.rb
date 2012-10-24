@@ -1,6 +1,6 @@
 module Musicality
 
-class PartPlayer
+class Performer
 
   attr_reader :part, :instrument, :notes_not_yet_played, :notes_being_played, :notes_played
   
@@ -15,13 +15,13 @@ class PartPlayer
     @notes_played = []
   end
 
-  def init_render_at note_offset
+  def prepare_to_perform note_offset
     @notes_not_yet_played = @part.notes.keep_if { |note| note.offset >= note_offset }
     @notes_being_played.clear
     @notes_played.clear
   end
   
-  def render_sample note_counter, time_counter
+  def perform_sample note_counter, time_counter
     notes_to_start_now = @notes_not_yet_played.select { |note| note.offset <= note_counter }
     @notes_not_yet_played = @notes_not_yet_played.select { |note| note.offset > note_counter }
     

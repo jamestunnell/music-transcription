@@ -18,16 +18,15 @@ require 'musicality/core/note_sequences/portamento'
 require 'musicality/core/note_sequences/slur'
 require 'musicality/core/note_sequences/tuplet'
 
-require 'musicality/rendering/tempo_computer'
-require 'musicality/rendering/note_time_converter'
-require 'musicality/rendering/part_player'
-require 'musicality/rendering/score_renderer'
-
-require 'musicality/rendering/instruments/oscillator'
-require 'musicality/rendering/instruments/sawtooth_wave'
-require 'musicality/rendering/instruments/sine_wave'
-require 'musicality/rendering/instruments/square_wave'
-require 'musicality/rendering/instruments/triangle_wave'
-
+require 'musicality/util/tempo_computer'
+require 'musicality/util/note_time_converter'
 require 'musicality/util/piecewise_function'
 
+require 'musicality/performance/conductor'
+require 'musicality/performance/performer'
+
+require 'musicality/performance/instruments/oscillator'
+require 'musicality/performance/instruments/sawtooth_wave'
+require 'musicality/performance/instruments/sine_wave'
+require 'musicality/performance/instruments/square_wave'
+require 'musicality/performance/instruments/triangle_wave'
