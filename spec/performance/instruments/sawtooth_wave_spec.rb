@@ -13,7 +13,7 @@ describe Musicality::SawtoothWave do
   
   it "should produce positive increasing samples during first half-period, and negative increasing samples second half-period" do
     @pitches.each do |pitch|
-      wave = Musicality::SawtoothWave.new @sample_rate
+      wave = Musicality::SawtoothWave.new :sample_rate => @sample_rate
       wave.start_pitch pitch
       
       samples_in_half_period = @sample_rate / (2.0 * pitch.ratio)

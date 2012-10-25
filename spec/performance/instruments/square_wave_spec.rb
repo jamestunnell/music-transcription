@@ -13,7 +13,7 @@ describe Musicality::SquareWave do
   
   it "should produce ones during first half-period, and zeros during second half-period" do
     @pitches.each do |pitch|
-      wave = Musicality::SquareWave.new @sample_rate
+      wave = Musicality::SquareWave.new :sample_rate => @sample_rate
       wave.start_pitch pitch
       
       samples_in_half_period = @sample_rate / (2.0 * pitch.ratio)

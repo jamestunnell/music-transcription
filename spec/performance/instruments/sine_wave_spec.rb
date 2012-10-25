@@ -13,7 +13,7 @@ describe Musicality::SineWave do
   
   it "should produce zero during every half-period, and non-zeros between" do
     @pitches.each do |pitch|
-      wave = Musicality::SineWave.new @sample_rate
+      wave = Musicality::SineWave.new :sample_rate => @sample_rate
       wave.start_pitch pitch
       
       samples_in_half_period = @sample_rate / (2.0 * pitch.ratio)

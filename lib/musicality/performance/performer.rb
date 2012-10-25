@@ -5,10 +5,11 @@ class Performer
   attr_reader :part, :instrument, :notes_not_yet_played, :notes_being_played, :notes_played
   
   def initialize part, sample_rate, note_time_converter
+    @sample_rate = sample_rate
     @part = part
-    @note_time_converter = note_time_converter
     
-    @instrument = SquareWave.new sample_rate
+    settings = { :sample_rate => @sample_rate }.merge @part.instrument.settings
+    @instrument = @part.instrument.class.new settings
     
     @notes_not_yet_played = []
     @notes_being_played = []
@@ -41,7 +42,6 @@ class Performer
     #now actually render a sample
     return @instrument.render_sample
   end
-  
 end
 
 end

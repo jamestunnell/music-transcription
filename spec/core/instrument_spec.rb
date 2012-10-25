@@ -1,19 +1,32 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
+class MyInstrClass
+end
+
 describe Musicality::Instrument do
-  describe Instrument.new do
-    its(:name) { should == "default" }
-    its(:options) { should be_empty }
+  it "should assign the given class" do
+    instr = Instrument.new :class => MyInstrClass
+    instr.class.should eq(MyInstrClass)
+  end
+
+  it "should convert the given symbol and assign it to class" do
+    instr = Instrument.new :symbol => :SineWave
+    instr.class.should eq(Musicality::SineWave)
+  end
+
+  it "should convert the given string and assign it to class" do
+    instr = Instrument.new :string => "SineWave"
+    instr.class.should eq(Musicality::SineWave)
+  end
+
+  it "should assign the given class rather than using the given symbol or string" do
+    instr = Instrument.new :string => "SineWave", :class => MyInstrClass, :symbol => :SineWave
+    instr.class.should eq(MyInstrClass)
   end
   
-  it "should assign the given name" do
-    instr = Instrument.new "my_instr"
-    instr.name.should eq("my_instr")
-  end
-  
-  it "should assign the given options" do
-    options = { 1 => "a", 2 => "b" }
-    instr = Instrument.new "my_instr", options
-    instr.options.should eq(options.clone)
+  it "should assign the given settings" do
+    settings = { 1 => "a", 2 => "b" }
+    instr = Instrument.new :class => MyInstrClass, :settings => settings
+    instr.settings.should eq(settings.clone)
   end
 end

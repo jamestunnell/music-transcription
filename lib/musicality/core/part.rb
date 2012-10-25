@@ -28,7 +28,7 @@ class Part
       :notes => [],
       :note_sequences => [],
       :dynamics => [],
-      :instrument => Instrument.new
+      :instrument => Instrument.new( :class => SquareWave )
     }.merge options
 	  
     self.notes = opts[:notes]
@@ -83,7 +83,7 @@ class Part
   # @param [Instrument] instrument The instrument to be used in playing the part.
   # @raise [ArgumentError] if instrument is not an Instrument.
   def instrument= instrument
-    raise ArgumentError, "instrument is not a Hash" if !instrument.is_a?(Instrument)
+    raise ArgumentError, "instrument is not an Instrument" if !instrument.is_a?(Instrument)
   	@instrument = instrument
   end
 

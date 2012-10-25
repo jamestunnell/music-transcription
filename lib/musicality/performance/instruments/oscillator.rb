@@ -5,8 +5,8 @@ class Oscillator
   
   TWO_PI = Math::PI * 2.0
   
-  def initialize sample_rate
-    @sample_rate = sample_rate
+  def initialize args
+    @sample_rate = args[:sample_rate]
     @pitches = {}
   end
   
