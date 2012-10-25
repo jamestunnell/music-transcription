@@ -27,8 +27,11 @@ module Musicality
 #   @return [true/false] Indicates the note should be played 
 #                        continuously with the following note of the 
 #                        same pitch (if such a note exists).
-#
 class Note < Event
+
+  # default values for optional hashed arguments
+  DEFAULT_OPTIONS = { :loudness => 0.5, :intensity => 0.5, 
+                      :seperation => 0.5, :tie => false }
 
   attr_reader :pitch, :loudness, :intensity, :seperation
   attr_accessor :tie
@@ -45,12 +48,7 @@ class Note < Event
     self.pitch = args[:pitch]
     super args[:offset], args[:duration]
   
-    opts = {
-      :loudness => 0.5,
-      :intensity => 0.5,
-      :seperation => 0.5,
-      :tie => false,
-    }.merge args
+    opts = DEFAULT_OPTIONS.merge args
 	  
     # The loudness, intensity, and seperation will be used to form the envelope profile for the note.
 

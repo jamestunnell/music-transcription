@@ -18,19 +18,17 @@ module Musicality
 #
 class Part
 
+  # default values for optional hashed arguments
+  DEFAULT_OPTIONS = { :notes => [], :note_sequences => [], :dynamics => [],
+                      :instrument => Instrument.new(:class => SquareWave) }
+                      
   attr_reader :notes, :note_sequences, :dynamics, :instrument
   
   # A new instance of Part.
   # @param [Hash] options Optional arguments. Valid keys are :notes, 
   #                       :note_sequences, :dynamics, and :instrument
   def initialize options={}
-    opts = {
-      :notes => [],
-      :note_sequences => [],
-      :dynamics => [],
-      :instrument => Instrument.new( :class => SquareWave )
-    }.merge options
-	  
+    opts = DEFAULT_OPTIONS.merge options
     self.notes = opts[:notes]
     self.note_sequences = opts[:note_sequences]	
     self.dynamics = opts[:dynamics]
@@ -87,6 +85,8 @@ class Part
   	@instrument = instrument
   end
 
+  # Find the end of the part. The end will be at then end of whichever note or 
+  # note sequence ends last, or 0 if none have been added.
   def find_end
     eop = 0.0
     @notes.each do |note|

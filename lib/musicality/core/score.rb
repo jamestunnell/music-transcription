@@ -13,16 +13,15 @@ module Musicality
 #
 class Score
 
+  # default values for optional hashed arguments
+  DEFAULT_OPTIONS = { :parts => [], :tempos => [] }
+
   attr_reader :parts, :tempos
   
   # A new instance of Score.
   # @param [Hash] options Optional arguments. Valid keys are :parts, :tempos
   def initialize options={}
-    opts = {
-      :parts => [],
-      :tempos => []
-    }.merge options
-
+    opts = DEFAULT_OPTIONS.merge options
 	  self.parts = opts[:parts]
     self.tempos = opts[:tempos]
   end
@@ -55,6 +54,8 @@ class Score
   	@tempos = tempos
   end
   
+  # Find the end of a score. The end will be at then end of whichever part ends 
+  # last, or 0 if no parts have been added.
   def find_end
     eos = 0.0
     

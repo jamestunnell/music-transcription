@@ -1,13 +1,23 @@
 module Musicality
 
+# The conductor reads a score, assigns score parts to performers, prepares the 
+# performers to perform, and follows the score tempo as it directs the rendering
+# of performance samples.
+# 
+# @author James Tunnell
+# 
 class Conductor
 
+  # use this to set sample rate if none is given in construction.
   DEFAULT_SAMPLE_RATE = 48000.0
   
   attr_reader :score, :sample_rate, :end_of_score,
                :tempo_computer, :note_time_converter, :performers,
                :time_counter, :sample_counter, :note_counter
   
+  # A new instance of Conductor.
+  # @param [Score] score The score to be used during performance.
+  # @param [Numeric] sample_rate The sample rate used in rendering samples.
   def initialize score, sample_rate = DEFAULT_SAMPLE_RATE
     @score = score
     @tempo_computer = TempoComputer.new( Event.hash_events_by_offset @score.tempos )
@@ -28,6 +38,9 @@ class Conductor
     @note_counter = 0.0
   end
   
+  # Give the conductor a chance to set up counters, and for performers to figure
+  # which notes will be played. Must be called before any calls to 
+  # perform_sample.
   def prepare_to_perform note_offset = 0.0
     @time_counter = @note_time_converter.time_elapsed 0, note_offset
     @sample_counter = (@time_counter / @sample_rate).to_i
@@ -38,6 +51,10 @@ class Conductor
     end
   end
   
+  # Render an audio sample of the performance at the current note counter.
+  # Increments the note counter by the current notes per sample (computed from 
+  # current tempo). Increments the sample counter by 1 and the time counter by 
+  # the sample period.
   def perform_sample
     
     #raise "rendering past end of score!" if @note_counter > @end_of_score
