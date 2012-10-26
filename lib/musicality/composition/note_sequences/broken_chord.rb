@@ -20,7 +20,7 @@ class BrokenChord < NoteSequence
   # A new instance of BrokenChord.
   # @param [Enumerable] notes Enumerable containing at least two Note objects of the same duration.
   # @param [Numeric] strum_duration The duration of the broken chord strum.
-  def initialize notes, strum_duration = 0.to_r
+  def initialize notes, strum_duration = 0.0
 
     super notes
     
@@ -34,16 +34,12 @@ class BrokenChord < NoteSequence
   
   # Set the note duration.
   # @param [Numeric] duration The duration of the note.
-  # @raise [ArgumentError] if duration is not a Rational and does not respond to :to_r.
+  # @raise [ArgumentError] if duration is not a Numeric
   # @raise [RangeError] if duration is less than zero.
   # @raise [RangeError] if duration is greater than chord notes.
   def strum_duration= duration
-    if !duration.is_a?(Rational)
-  	  raise ArgumentError, "duration is not a Rational and does not respond to :to_r" if !duration.respond_to?(:to_r)
-  	  duration = duration.to_r
-  	end
-
-    raise ArgumentError, "duration is greater than chord duration" if duration > notes.first.duration
+    raise ArgumentError, "duration is not a Numeric" if !duration.is_a?(Numeric)
+  	raise ArgumentError, "duration is greater than chord duration" if duration > notes.first.duration
   	raise RangeError, "duration is less than 0." if duration < 0
   	@strum_duration = duration
   end

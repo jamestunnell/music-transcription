@@ -14,20 +14,16 @@ class Tuplet < NoteSequence
   # @param [Enumerable] notes Enumerable containing Note objects.
   # @param [Numeric] modifier Determines how much note duration is modified. 
   #                           Default is 2/3 (triplet)
-  def initialize notes, modifier = Rational(2,3)
+  def initialize notes, modifier = 2.0 / 3.0
     super notes
     self.modifier = modifier
   end
   
   # Set the duration modifier.
   # @param [Numeric] modifier The duration modifier for tuplet notes.
-  # @raise [ArgumentError] if modifier is not a Rational and does not respond to :to_r.
+  # @raise [ArgumentError] if modifier is not a Numeric
   def modifier= modifier
-    if !modifier.is_a?(Rational)
-  	  raise ArgumentError, "modifier is not a Rational and does not respond to :to_r" if !modifier.respond_to?(:to_r)
-  	  modifier = modifier.to_r
-  	end
-
+    raise ArgumentError, "modifier is not a Numeric" if !modifier.is_a?(Numeric)
     @modifier = modifier
   end
 end

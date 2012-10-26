@@ -41,15 +41,11 @@ class Tempo < Event
   end
 
   # Set the duration of a beat.
-  # @param [Rational] duration The length of each beat (in note length).
-  # @raise [ArgumentError] if duration is not a Rational and does not respond to :to_r
+  # @param [Numeric] duration The length of each beat (in note length).
+  # @raise [ArgumentError] if duration is not a Numeric
   # @raise [RangeError] if duration is less than zero.
   def beat_duration= duration
-    if !duration.is_a?(Rational)
-  	  raise ArgumentError, "duration is not a Rational and does not respond to :to_r" if !duration.respond_to?(:to_r)
-  	  duration = duration.to_r
-  	end
-
+    raise ArgumentError, "duration is not a Numeric" if !duration.is_a?(Numeric)
   	raise RangeError, "duration is less than 0." if duration < 0
   	@beat_duration = duration
   end
