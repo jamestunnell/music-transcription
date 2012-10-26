@@ -29,10 +29,12 @@ class Performer
     @notes_played = []
   end
 
-  # Figure which notes will be played. Must be called before any calls to 
-  # perform_sample.
-  def prepare_to_perform note_offset
-    @notes_to_be_played = @part.notes.keep_if { |note| note.offset >= note_offset }
+  # Figure which notes will be played, starting at the given note offset. Must 
+  # be called before any calls to perform_sample.
+  #
+  # @param [Numeric] note_offset The note offset to begin playing notes at.
+  def prepare_to_perform note_offset = 0.0
+    @notes_to_be_played = @part.notes.select { |note| note.offset >= note_offset }
     @notes_being_played.clear
     @notes_played.clear
   end
