@@ -40,8 +40,10 @@ module Musicality
 #                    SEMITONES_PER_OCTAVE (default 100).
 class Pitch
   include Comparable
-  
   attr_reader :octave, :semitone, :cent, :cents_per_octave
+  
+  # default values for optional hashed arguments
+  DEFAULT_OPTIONS = { :octave => 0, :semitone => 0, :cent => 0 }
   
   #The default number of semitones per octave is 12, corresponding to 
   # the twelve-tone equal temperment tuning system.
@@ -63,21 +65,11 @@ class Pitch
   # @raise [ArgumentError] if any of :octave, :semitone, or :cent is
   #                        not a Fixnum.
   def initialize opts={}
-    opts = {
-      :octave => 0,
-      :semitone => 0,
-      :cent => 0
-    }.merge opts
+    opts = DEFAULT_OPTIONS.merge opts
 
     @octave = opts[:octave]
-    raise ArgumentError, "args[:octave] #{opts[:octave]} is not a Fixnum" if !opts[:octave].is_a?(Fixnum)
-    
     @semitone = opts[:semitone]
-    raise ArgumentError, "args[:semitone] #{opts[:semitone]} is not a Fixnum" if !opts[:semitone].is_a?(Fixnum)
-      
     @cent = opts[:cent]
-    raise ArgumentError, "args[:cent] #{opts[:cent]} is not a Fixnum" if !opts[:cent].is_a?(Fixnum)
-        
     @cents_per_octave = CENTS_PER_SEMITONE * SEMITONES_PER_OCTAVE
       
     if opts[:total_cent]

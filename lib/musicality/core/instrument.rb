@@ -6,42 +6,30 @@ module Musicality
 # 
 class Instrument
 
-  attr_reader :class, :settings
+  attr_reader :class_name, :settings
+
+  # default values for optional hashed arguments
+  DEFAULT_OPTIONS = { :settings => {}, :class_name => "Musicality::SquareWave" }
 
   # A new instance of Instrument.
-  # @param [Hash] args Hashed arguments. Either :class, :symbol, or :string must 
-  #                    be specified. The :settings key can be used to specify 
-  #                    instrument-specific settings, which will be passed to the
-  #                    instrument's class when it is instantiated.
-  def initialize args = {}
-    
-    if args.has_key? :class
-      self.class = args[:class]
-    elsif args.has_key? :symbol
-      sym = args[:symbol]
-      raise ArgumentError, "The Musicality module does not contain the constant #{sym}" if !Musicality.constants.include?(sym)
-      self.class = Musicality.const_get sym
-    elsif args.has_key? :string
-      sym = args[:string].to_sym
-      raise ArgumentError, "The Musicality module does not contain the constant #{sym}" if !Musicality.constants.include?(sym)
-      self.class = Musicality.const_get sym
-    else
-      raise ArgumentError, "args does not have any of the keys :class, :symbol, or :string." 
-    end
-    
-    options = {
-      :settings => {}
-    }.merge args
-    
-    self.settings = options[:settings]
+  # @param [Hash] options Options hash. Valid keys are :settings, and :class_name.
+  #                       The :settings key can be used to specify instrument-
+  #                       specific settings, which will be passed to the
+  #                       instrument's class when it is instantiated. The 
+  #                       :class_name key will specify a certain Musicality 
+  #                       instrument class to use as the instrument.
+  def initialize options = {}
+    opts = DEFAULT_OPTIONS.merge options
+    self.class_name = opts[:class_name]
+    self.settings = opts[:settings]
   end
   
-  # Set the instrument class.
-  # @param [Class] clss The instrument class
-  # @raise [ArgumentError] if clss is not a Class.
-  def class= clss
-    raise ArgumentError, "clss is not a Class" if !clss.is_a?(Class)
-    @class = clss
+  # Set the instrument class name. Used later to make an instance of the instrument.
+  # @param [String] class_name The name of the dseired instrument class.
+  # @raise [ArgumentError] if class_name is not a String.
+  def class_name= class_name
+    raise ArgumentError, "class_name is not a String" if !class_name.is_a?(String)
+    @class_name = class_name
   end
 
   # Set the instrument-specific settings.

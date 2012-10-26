@@ -29,13 +29,13 @@ module Musicality
 #                        same pitch (if such a note exists).
 class Note < Event
 
+  attr_reader :pitch, :loudness, :intensity, :seperation
+  attr_accessor :tie
+  
   # default values for optional hashed arguments
   DEFAULT_OPTIONS = { :loudness => 0.5, :intensity => 0.5, 
                       :seperation => 0.5, :tie => false }
 
-  attr_reader :pitch, :loudness, :intensity, :seperation
-  attr_accessor :tie
-  
   # A new instance of Note.
   # @param [Hash] args Hashed arguments. Required keys are :pitch, :duration, 
   #                    and :offset. Optional keys are :loudness, :intensity, 

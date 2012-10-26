@@ -18,16 +18,16 @@ module Musicality
 #
 class Part
 
-  # default values for optional hashed arguments
-  DEFAULT_OPTIONS = { :notes => [], :note_sequences => [], :dynamics => [],
-                      :instrument => Instrument.new(:class => SquareWave) }
-                      
   attr_reader :notes, :note_sequences, :dynamics, :instrument
   
+  # default values for optional hashed arguments
+  DEFAULT_OPTIONS = { :notes => [], :note_sequences => [], :dynamics => [],
+                      :instrument => Instrument.new(:class_name => "Musicality::SquareWave") }
+                      
   # A new instance of Part.
   # @param [Hash] options Optional arguments. Valid keys are :notes, 
   #                       :note_sequences, :dynamics, and :instrument
-  def initialize options={}
+  def initialize options = {}
     opts = DEFAULT_OPTIONS.merge options
     self.notes = opts[:notes]
     self.note_sequences = opts[:note_sequences]	

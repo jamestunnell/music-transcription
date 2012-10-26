@@ -13,10 +13,10 @@ module Musicality
 #
 class Score
 
+  attr_reader :parts, :tempos
+
   # default values for optional hashed arguments
   DEFAULT_OPTIONS = { :parts => [], :tempos => [] }
-
-  attr_reader :parts, :tempos
   
   # A new instance of Score.
   # @param [Hash] options Optional arguments. Valid keys are :parts, :tempos

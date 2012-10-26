@@ -20,9 +20,9 @@ class Performer
   def initialize part, sample_rate, note_time_converter
     @sample_rate = sample_rate
     @part = part
-    
+
     settings = { :sample_rate => @sample_rate }.merge @part.instrument.settings
-    @instrument = @part.instrument.class.new settings
+    @instrument = ClassFinder.find_by_name(@part.instrument.class_name).new(settings)
     
     @notes_to_be_played = []
     @notes_being_played = []

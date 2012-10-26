@@ -11,6 +11,9 @@ module Musicality
 class Dynamic < Event
 
   attr_reader :loudness
+
+  # default values for optional hashed arguments
+  DEFAULT_OPTIONS = { :duration => 0.0 }
   
   # A new instance of Dynamic.
   # @param [Hash] args Hash arguments. Required keys are :loudness and :offset.
@@ -21,10 +24,7 @@ class Dynamic < Event
     
     self.loudness = args[:loudness]
   
-    opts = {
-      :duration => 0.to_r
-    }.merge args
-    
+    opts = DEFAULT_OPTIONS.merge args
     super opts[:offset], opts[:duration]
   end
   

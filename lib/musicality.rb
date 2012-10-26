@@ -18,6 +18,7 @@ require 'musicality/core/note_sequences/portamento'
 require 'musicality/core/note_sequences/slur'
 require 'musicality/core/note_sequences/tuplet'
 
+require 'musicality/util/class_finder'
 require 'musicality/util/tempo_computer'
 require 'musicality/util/note_time_converter'
 require 'musicality/util/piecewise_function'
