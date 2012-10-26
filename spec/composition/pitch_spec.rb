@@ -37,9 +37,10 @@ describe Musicality::Pitch do
     end
   end
 
-  it "should use the ratio given during construction" do
+  it "should allow setting by ratio" do
     @cases.each do |case_data|
-      p = Musicality::Pitch.new :ratio => case_data[:ratio]
+      p = Musicality::Pitch.new
+      p.ratio = case_data[:ratio]
             
       p.octave.should eq case_data[:octave]
       p.semitone.should eq case_data[:semitone]
@@ -48,9 +49,10 @@ describe Musicality::Pitch do
     end
   end
 
-  it "should use the total_cent given during construction" do    
+  it "should setting by total_cent" do    
     @cases.each do |case_data|
-      p = Musicality::Pitch.new :total_cent => case_data[:total_cent] 
+      p = Musicality::Pitch.new
+      p.total_cent = case_data[:total_cent] 
       
       p.octave.should eq case_data[:octave]
       p.semitone.should eq case_data[:semitone]

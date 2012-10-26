@@ -71,15 +71,6 @@ class Pitch
     @semitone = opts[:semitone]
     @cent = opts[:cent]
     @cents_per_octave = CENTS_PER_SEMITONE * SEMITONES_PER_OCTAVE
-      
-    if opts[:total_cent]
-      self.total_cent = opts[:total_cent] 
-    elsif opts[:ratio]
-      self.ratio = opts[:ratio]
-    else
-      normalize
-    end
-    
   end
 
   # Calculate the total cent count. Converts octave and semitone count
