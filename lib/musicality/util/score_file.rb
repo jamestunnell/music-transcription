@@ -14,6 +14,7 @@ module Musicality
 class ScoreFile
 
   # Load a Score from a YAML/hash file.
+  # @param [String] filename The filename to load from.
   def self.load filename
     hash = nil
     File.open(filename, "r") do |file|
@@ -22,6 +23,16 @@ class ScoreFile
     raise "Could not load score hash from file #{filename}" if hash.nil?
     
     return HashMake.make_from_hash Score, hash
+  end
+  
+  # Save a score to a YAML/hash file
+  # @param [String] filename The filename to save to.
+  def self.save score, filename
+    hash = HashMake.save_to_hash score
+    
+    File.open(filename, "w") do |file|
+      file.write hash.to_yaml
+    end
   end
 end
 

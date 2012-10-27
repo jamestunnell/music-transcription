@@ -48,7 +48,7 @@ class Pitch
   OPTIONAL_ARG_KEYS = [ :octave, :semitone, :cent ]  
   
   # default values for optional hashed arguments
-  DEFAULT_OPTIONS = { :octave => 0, :semitone => 0, :cent => 0 }
+  OPTIONAL_ARG_DEFAULTS = { :octave => 0, :semitone => 0, :cent => 0 }
   
   #The default number of semitones per octave is 12, corresponding to 
   # the twelve-tone equal temperment tuning system.
@@ -70,7 +70,7 @@ class Pitch
   # @raise [ArgumentError] if any of :octave, :semitone, or :cent is
   #                        not a Fixnum.
   def initialize opts={}
-    opts = DEFAULT_OPTIONS.merge opts
+    opts = OPTIONAL_ARG_DEFAULTS.merge opts
 
     @octave = opts[:octave]
     @semitone = opts[:semitone]

@@ -37,7 +37,7 @@ class Note < Event
   # optional hash-args (for hash-makeable idiom)
   OPTIONAL_ARG_KEYS = [ :loudness, :intensity, :seperation, :tie ]
   # default values for optional hashed arguments
-  DEFAULT_OPTIONS = { :loudness => 0.5, :intensity => 0.5, 
+  OPTIONAL_ARG_DEFAULTS = { :loudness => 0.5, :intensity => 0.5, 
                       :seperation => 0.5, :tie => false }
 
   # A new instance of Note.
@@ -52,7 +52,7 @@ class Note < Event
     self.pitch = args[:pitch]
     super args[:offset], args[:duration]
   
-    opts = DEFAULT_OPTIONS.merge args
+    opts = OPTIONAL_ARG_DEFAULTS.merge args
 	  
     # The loudness, intensity, and seperation will be used to form the envelope profile for the note.
 

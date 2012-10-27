@@ -23,8 +23,8 @@ describe Musicality::ScoreFile do
         ]
       ],
       :tempos => [
-        { :offset => 0.0, :duration => 0.0, :beats_per_minute => 300, :beat_duration => 0.25 },
-        { :offset => 1.0, :duration => 1.25, :beats_per_minute => 100, :beat_duration => 0.25 }
+        { :beats_per_minute => 300, :beat_duration => 0.25, :offset => 0.0 },
+        { :beats_per_minute => 100, :beat_duration => 0.25, :offset => 1.0, :duration => 1.25 }
       ]
     }
     
@@ -40,6 +40,21 @@ describe Musicality::ScoreFile do
     score.class.should eq(Score)
     score.parts.count.should be 1
     score.tempos.count.should be 2
+  end
+  
+  it "should save score to file" do
+    score = ScoreFile.load @score_hash_filename
+    
+    mod_filename = "x_" + @score_hash_filename
+    ScoreFile.save score, mod_filename
+    
+    f1 = File.open @score_hash_filename, "r"
+    f2 = File.open mod_filename, "r"
+    
+    f1.size.should eq(f2.size)
+    s1 = f1.read
+    s2 = f2.read
+    s1.should eq(s2)
   end
 end
 

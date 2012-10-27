@@ -17,7 +17,7 @@ class Dynamic < Event
   # optional hash-args (for hash-makeable idiom)
   OPTIONAL_ARG_KEYS = [ :duration ]
   # default values for optional hashed arguments
-  DEFAULT_OPTIONS = { :duration => 0.0 }
+  OPTIONAL_ARG_DEFAULTS = { :duration => 0.0 }
   
   # A new instance of Dynamic.
   # @param [Hash] args Hash arguments. Required keys are :loudness and :offset.
@@ -28,7 +28,7 @@ class Dynamic < Event
     
     self.loudness = args[:loudness]
   
-    opts = DEFAULT_OPTIONS.merge args
+    opts = OPTIONAL_ARG_DEFAULTS.merge args
     super opts[:offset], opts[:duration]
   end
   

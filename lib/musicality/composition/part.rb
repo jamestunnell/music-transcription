@@ -25,14 +25,14 @@ class Part
   # optional hash-args (for hash-makeable idiom)
   OPTIONAL_ARG_KEYS = [ :notes, :note_sequences, :dynamics, :instrument ]  
   # default values for optional hashed arguments
-  DEFAULT_OPTIONS = { :notes => [], :note_sequences => [], :dynamics => [],
+  OPTIONAL_ARG_DEFAULTS = { :notes => [], :note_sequences => [], :dynamics => [],
                       :instrument => Instrument.new }
                       
   # A new instance of Part.
   # @param [Hash] options Optional arguments. Valid keys are :notes, 
   #                       :note_sequences, :dynamics, and :instrument
   def initialize options = {}
-    opts = DEFAULT_OPTIONS.merge options
+    opts = OPTIONAL_ARG_DEFAULTS.merge options
     self.notes = opts[:notes]
     self.note_sequences = opts[:note_sequences]	
     self.dynamics = opts[:dynamics]

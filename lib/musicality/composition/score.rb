@@ -21,12 +21,12 @@ class Score
   OPTIONAL_ARG_KEYS = [ :parts, :tempos ]  
 
   # default values for optional hashed arguments
-  DEFAULT_OPTIONS = { :parts => [], :tempos => [] }
+  OPTIONAL_ARG_DEFAULTS = { :parts => [], :tempos => [] }
   
   # A new instance of Score.
   # @param [Hash] options Optional arguments. Valid keys are :parts, :tempos
   def initialize options={}
-    opts = DEFAULT_OPTIONS.merge options
+    opts = OPTIONAL_ARG_DEFAULTS.merge options
 	  self.parts = opts[:parts]
     self.tempos = opts[:tempos]
   end

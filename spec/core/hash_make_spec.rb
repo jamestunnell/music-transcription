@@ -8,7 +8,7 @@ class NotHashMakeable
 end
 
 class HashMakeA
-  attr_reader :b, :c, :d, :e
+  attr_reader :hash_make_b, :c, :d, :e
   
   REQUIRED_ARG_KEYS = [ :hash_make_b, :c ]
   OPTIONAL_ARG_KEYS = [ :d, :e ]
@@ -16,7 +16,7 @@ class HashMakeA
 
   def initialize args={}
     raise ArgumentError if !args.has_key?(:hash_make_b) || !args.has_key?(:c)
-    @b = args[:hash_make_b]
+    @hash_make_b = args[:hash_make_b]
     @c = args[:c]
     opts = OPTIONAL_ARG_DEFAULTS.merge args
     @d = opts[:d]
@@ -45,12 +45,6 @@ describe HashMakeA do
   it "should raise ArgumentError if class given is not hash-makeable" do
     lambda { Musicality::HashMake.make_from_hash("a", {}) }.should raise_error(ArgumentError)
   end
-
-#  it "should just build the class by passing the constructor the hash args if class is not hash-makeable" do
-#    args = { :my_var => "hello" }
-#    a = Musicality::HashMake.make_from_hash(NotHashMakeable, args )
-#    a.my_var.should eq("hello")
-#  end
   
   it "should raise ArgumentError if hash given is not a Hash" do
     lambda { Musicality::HashMake.make_from_hash(HashMakeA, "b") }.should raise_error(ArgumentError)
@@ -70,7 +64,17 @@ describe HashMakeA do
     args_b = { :anything => "ok" }
     args = { :hash_make_b => args_b, :c => "c" }
     hma = Musicality::HashMake.make_from_hash(HashMakeA, args)
-    hma.b.anything.should eq("ok")
+    hma.hash_make_b.anything.should eq("ok")
   end
 
+  it "should be able to save object to hash and then make from hash the same object" do
+    obj = HashMakeA.new :hash_make_b => HashMakeB.new( :anything => "ok"), :c => "c", :d => 1024, :e => false
+    hash = Musicality::HashMake.save_to_hash obj
+    obj2 = Musicality::HashMake.make_from_hash(HashMakeA, hash)
+    
+    obj.hash_make_b.anything.should eq(obj2.hash_make_b.anything)
+    obj.c.should eq(obj2.c)
+    obj.d.should eq(obj2.d)
+    obj.e.should eq(obj2.e)
+  end
 end

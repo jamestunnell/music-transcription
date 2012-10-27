@@ -20,7 +20,7 @@ class Tempo < Event
   OPTIONAL_ARG_KEYS = [ :duration ]
 
   # default values for optional hash-args
-  DEFAULT_OPTIONS = { :duration => 0.0 }
+  OPTIONAL_ARG_DEFAULTS = { :duration => 0.0 }
   
   # A new instance of Tempo.
   # @param [Hash] args Hashed arguments. Required keys are :beats_per_minute, 
@@ -33,7 +33,7 @@ class Tempo < Event
     self.beats_per_minute = args[:beats_per_minute]
     self.beat_duration = args[:beat_duration]
   
-    opts = DEFAULT_OPTIONS.merge args
+    opts = OPTIONAL_ARG_DEFAULTS.merge args
     super opts[:offset], opts[:duration]
   end
   

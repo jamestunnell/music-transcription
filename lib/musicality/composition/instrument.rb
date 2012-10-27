@@ -13,7 +13,7 @@ class Instrument
   # optional hash-args (for hash-makeable idiom)
   OPTIONAL_ARG_KEYS = [ :class_name, :settings ]
   # default values for optional hashed arguments
-  DEFAULT_OPTIONS = { :settings => {}, :class_name => "Musicality::SquareWave" }
+  OPTIONAL_ARG_DEFAULTS = { :settings => {}, :class_name => "Musicality::SquareWave" }
 
   # A new instance of Instrument.
   # @param [Hash] options Options hash. Valid keys are :settings, and :class_name.
@@ -23,7 +23,7 @@ class Instrument
   #                       :class_name key will specify a certain Musicality 
   #                       instrument class to use as the instrument.
   def initialize options = {}
-    opts = DEFAULT_OPTIONS.merge options
+    opts = OPTIONAL_ARG_DEFAULTS.merge options
     self.class_name = opts[:class_name]
     self.settings = opts[:settings]
   end
