@@ -19,10 +19,14 @@ module Musicality
 class Part
 
   attr_reader :notes, :note_sequences, :dynamics, :instrument
-  
+
+  # required hash-args (for hash-makeable idiom)
+  REQUIRED_ARG_KEYS = [ ]
+  # optional hash-args (for hash-makeable idiom)
+  OPTIONAL_ARG_KEYS = [ :notes, :note_sequences, :dynamics, :instrument ]  
   # default values for optional hashed arguments
   DEFAULT_OPTIONS = { :notes => [], :note_sequences => [], :dynamics => [],
-                      :instrument => Instrument.new(:class_name => "Musicality::SquareWave") }
+                      :instrument => Instrument.new }
                       
   # A new instance of Part.
   # @param [Hash] options Optional arguments. Valid keys are :notes, 

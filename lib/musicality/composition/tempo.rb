@@ -14,7 +14,12 @@ class Tempo < Event
 
   attr_reader :beat_duration, :beats_per_minute
 
-  # default values for optional hashed arguments
+  # required hash-args (for hash-makeable idiom)
+  REQUIRED_ARG_KEYS = [ :beats_per_minute, :beat_duration, :offset ]
+  # optional hash-args (for hash-makeable idiom)
+  OPTIONAL_ARG_KEYS = [ :duration ]
+
+  # default values for optional hash-args
   DEFAULT_OPTIONS = { :duration => 0.0 }
   
   # A new instance of Tempo.

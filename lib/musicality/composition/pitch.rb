@@ -41,6 +41,11 @@ module Musicality
 class Pitch
   include Comparable
   attr_reader :octave, :semitone, :cent, :cents_per_octave
+
+  # required hash-args (for hash-makeable idiom)
+  REQUIRED_ARG_KEYS = [ ]
+  # optional hash-args (for hash-makeable idiom)
+  OPTIONAL_ARG_KEYS = [ :octave, :semitone, :cent ]  
   
   # default values for optional hashed arguments
   DEFAULT_OPTIONS = { :octave => 0, :semitone => 0, :cent => 0 }

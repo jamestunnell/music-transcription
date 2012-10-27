@@ -12,6 +12,10 @@ class Dynamic < Event
 
   attr_reader :loudness
 
+  # required hash-args (for hash-makeable idiom)
+  REQUIRED_ARG_KEYS = [ :offset, :loudness ]
+  # optional hash-args (for hash-makeable idiom)
+  OPTIONAL_ARG_KEYS = [ :duration ]
   # default values for optional hashed arguments
   DEFAULT_OPTIONS = { :duration => 0.0 }
   

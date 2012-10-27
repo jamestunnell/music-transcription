@@ -8,6 +8,10 @@ class Instrument
 
   attr_reader :class_name, :settings
 
+  # required hash-args (for hash-makeable idiom)
+  REQUIRED_ARG_KEYS = [ ]
+  # optional hash-args (for hash-makeable idiom)
+  OPTIONAL_ARG_KEYS = [ :class_name, :settings ]
   # default values for optional hashed arguments
   DEFAULT_OPTIONS = { :settings => {}, :class_name => "Musicality::SquareWave" }
 

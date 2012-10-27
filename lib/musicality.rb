@@ -1,7 +1,9 @@
 require 'musicality/version'
 
+require 'musicality/core/event'
+require 'musicality/core/hash_make'
+
 require 'musicality/composition/pitch'
-require 'musicality/composition/event'
 require 'musicality/composition/note'
 require 'musicality/composition/note_sequence'
 require 'musicality/composition/transition'
@@ -18,6 +20,7 @@ require 'musicality/composition/note_sequences/portamento'
 require 'musicality/composition/note_sequences/slur'
 require 'musicality/composition/note_sequences/tuplet'
 
+require 'musicality/util/score_file'
 require 'musicality/util/class_finder'
 require 'musicality/util/tempo_computer'
 require 'musicality/util/note_time_converter'

@@ -31,7 +31,11 @@ class Note < Event
 
   attr_reader :pitch, :loudness, :intensity, :seperation
   attr_accessor :tie
-  
+
+  # required hash-args (for hash-makeable idiom)
+  REQUIRED_ARG_KEYS = [ :offset, :duration, :pitch ]
+  # optional hash-args (for hash-makeable idiom)
+  OPTIONAL_ARG_KEYS = [ :loudness, :intensity, :seperation, :tie ]
   # default values for optional hashed arguments
   DEFAULT_OPTIONS = { :loudness => 0.5, :intensity => 0.5, 
                       :seperation => 0.5, :tie => false }

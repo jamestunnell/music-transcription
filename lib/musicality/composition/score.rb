@@ -15,6 +15,11 @@ class Score
 
   attr_reader :parts, :tempos
 
+  # required hash-args (for hash-makeable idiom)
+  REQUIRED_ARG_KEYS = [ ]
+  # optional hash-args (for hash-makeable idiom)
+  OPTIONAL_ARG_KEYS = [ :parts, :tempos ]  
+
   # default values for optional hashed arguments
   DEFAULT_OPTIONS = { :parts => [], :tempos => [] }
   
