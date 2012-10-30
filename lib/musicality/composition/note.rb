@@ -7,7 +7,10 @@ module Musicality
 # 
 # @!attribute [rw] pitch
 #   @return [Pitch] The pitch of the note.
-
+#
+# @!attribute [rw] duration
+#   @return [Rational] The duration of the note in note lengths.
+#
 # @!attribute [rw] intensity
 #   @return [Numeric] Affects the loudness (envelope) during the attack 
 #                   portion of the note. From 0.0 (less attack) to 1.0 
@@ -27,13 +30,13 @@ module Musicality
 #   @return [true/false] Indicates the note should be played 
 #                        continuously with the following note of the 
 #                        same pitch (if such a note exists).
-class Note < Event
+class Note
 
-  attr_reader :pitch, :loudness, :intensity, :seperation
+  attr_reader :pitch, :duration, :loudness, :intensity, :seperation
   attr_accessor :tie
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ :offset, :duration, :pitch ]
+  REQUIRED_ARG_KEYS = [ :duration, :pitch ]
   # optional hash-args (for hash-makeable idiom)
   OPTIONAL_ARG_KEYS = [ :loudness, :intensity, :seperation, :tie ]
   # default values for optional hashed arguments
@@ -47,10 +50,9 @@ class Note < Event
   def initialize args={}
     raise ArgumentError, ":pitch key not present in args Hash" if !args.has_key?(:pitch)
     raise ArgumentError, ":duration key not present in args Hash" if !args.has_key?(:duration)
-    raise ArgumentError, ":offset key not present in args Hash" if !args.has_key?(:offset)
     
     self.pitch = args[:pitch]
-    super args[:offset], args[:duration]
+    self.duration = args[:duration]
   
     opts = OPTIONAL_ARG_DEFAULTS.merge args
 	  
@@ -70,6 +72,16 @@ class Note < Event
     @pitch = pitch
   end
 
+  # Set the note duration.
+  # @param [Numeric] duration The duration of the note.
+  # @raise [ArgumentError] if duration is not a Numeric.
+  # @raise [RangeError] if duration is negative or zero.
+  def duration= duration
+    raise ArgumentError, "duration is not a Numeric" if !duration.is_a?(Numeric)
+  	raise RangeError, "duration is negative or zero." if duration <= 0.0  	
+  	@duration = duration
+  end
+  
   # Set the note loudness.
   # @param [Numeric] loudness The loudness of the note.
   # @raise [ArgumentError] if loudness is not a Numeric.

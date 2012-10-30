@@ -2,15 +2,12 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Score do
   before :each do
-    @note1 = Musicality::Note.new(:pitch => Pitch.new, :duration => 0.25.to_r, :offset => 0.to_r )
-    @note2 = Musicality::Note.new(:pitch => Pitch.new, :duration => 0.25.to_r, :offset => 0.25.to_r )
-    @note3 = Musicality::Note.new(:pitch => Pitch.new, :duration => 0.25.to_r, :offset => 0.50.to_r )
+    @note1 = Musicality::Note.new :pitch => Pitch.new, :duration => 0.25
+    @note2 = Musicality::Note.new :pitch => Pitch.new, :duration => 0.25
+    @note3 = Musicality::Note.new :pitch => Pitch.new, :duration => 0.25
 
-    @notes = [ @note1, @note2, @note3 ]
-    
-    @note_sequences = [ 
-      Musicality::BrokenChord.new( [@note1, @note2, @note3] ),
-      Musicality::Tuplet.new( [@note1, @note2, @note3] )
+    @sequences = [ 
+      Musicality::Sequence.new( :offset => 0.0, :notes => [@note1, @note2, @note3] )
     ]
     
     @dynamics = [
@@ -20,8 +17,8 @@ describe Musicality::Score do
     
     @parts = 
     [
-      Musicality::Part.new( :notes => @notes, :note_sequences => @note_sequences, :dynamics => @dynamics, :name => "piano (LH)" ),
-      Musicality::Part.new( :notes => @notes, :note_sequences => @note_sequences, :dynamics => @dynamics, :name => "piano (RH)" ),
+      Musicality::Part.new( :sequences => @sequences, :dynamics => @dynamics, :name => "piano (LH)" ),
+      Musicality::Part.new( :sequences => @sequences, :dynamics => @dynamics, :name => "piano (RH)" ),
     ]
 
     @tempos = 

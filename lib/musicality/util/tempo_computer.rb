@@ -67,7 +67,7 @@ class TempoComputer
       end
     end
     
-    @piecewise_function.add_piece tempo.offset...(Note::MAX_OFFSET + 1), func
+    @piecewise_function.add_piece tempo.offset...(Event::MAX_OFFSET + 1), func
   end
 end
 

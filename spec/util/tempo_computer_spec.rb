@@ -22,14 +22,14 @@ describe Musicality::TempoComputer do
 
   it "should always return starting tempo if only tempo given" do
     tc = Musicality::TempoComputer.new 0.0 => @tempo
-    [0, 1, 5, 100, 10000, Musicality::Note::MAX_OFFSET].each do |offset|
+    [0, 1, 5, 100, 10000, Musicality::Event::MAX_OFFSET].each do |offset|
       tc.notes_per_second_at(offset).should eq(0.5)
     end
   end
 
   it "should return nil if offset is past max" do
     tc = Musicality::TempoComputer.new 0.0 => @tempo
-    tc.notes_per_second_at(Musicality::Note::MAX_OFFSET + 1).should be_nil
+    tc.notes_per_second_at(Musicality::Event::MAX_OFFSET + 1).should be_nil
   end
 
   context "two tempos, no transition" do
@@ -48,7 +48,7 @@ describe Musicality::TempoComputer do
     end
     
     it "should be at the second tempo for all time after" do
-      @tc.notes_per_second_at(Musicality::Note::MAX_OFFSET).should eq(0.25)
+      @tc.notes_per_second_at(Musicality::Event::MAX_OFFSET).should eq(0.25)
     end
   end
 

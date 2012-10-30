@@ -8,7 +8,7 @@ module Musicality
 # 
 class Performer
 
-  attr_reader :part, :instrument, :notes_to_be_played, :notes_being_played, :notes_played
+  attr_reader :part, :instrument, :sequencers
 
   # A new instance of Performer.
   # @param [Part] part The part to be used during performance.
@@ -24,9 +24,10 @@ class Performer
     settings = { :sample_rate => @sample_rate }.merge @part.instrument.settings
     @instrument = ClassFinder.find_by_name(@part.instrument.class_name).new(settings)
     
-    @notes_to_be_played = []
-    @notes_being_played = []
-    @notes_played = []
+    @sequencers = []
+    @part.sequences.each do |sequence|
+      @sequencers << Sequencer.new(sequence)
+    end
   end
 
   # Figure which notes will be played, starting at the given note offset. Must 
@@ -34,30 +35,28 @@ class Performer
   #
   # @param [Numeric] note_offset The note offset to begin playing notes at.
   def prepare_to_perform note_offset = 0.0
-    @notes_to_be_played = @part.notes.select { |note| note.offset >= note_offset }
-    @notes_being_played.clear
-    @notes_played.clear
+    @sequencers.each do |sequencer| 
+      sequencer.prepare_to_perform note_offset
+    end
   end
   
   # Render an audio sample of the part at the current note counter.
   # Start or end notes as needed.
   def perform_sample note_counter, time_counter
-    notes_to_start_now = @notes_to_be_played.select { |note| note.offset <= note_counter }
-    @notes_to_be_played = @notes_to_be_played.select { |note| note.offset > note_counter }
-    
-    notes_to_end_now = @notes_being_played.select { |note| (note.offset + note.duration) <= note_counter }
-    @notes_being_played = @notes_being_played.select { |note| (note.offset + note.duration) > note_counter }
-    
-    notes_to_start_now.each do |note|
-      @instrument.start_pitch note.pitch
-      @notes_being_played << note
+    @sequencers.each do |sequencer|
+      event_updates = sequencer.update_notes note_counter
+      
+      event_updates[:to_start].each do |event|
+        puts "starting pitch #{event.note.pitch}"
+        @instrument.start_pitch event.note.pitch
+      end
+
+      event_updates[:to_end].each do |event|
+        puts "ending pitch #{event.note.pitch}"
+        @instrument.end_pitch event.note.pitch
+      end
     end
-    
-    notes_to_end_now.each do |note|
-      @instrument.end_pitch note.pitch
-      @notes_played << note
-    end
-    
+
     #now actually render a sample
     return @instrument.render_sample
   end

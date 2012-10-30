@@ -28,18 +28,18 @@ class Event
   end
 
   # Set the event offset.
-  # @param [Numeric] offset The offset of the note.
+  # @param [Numeric] offset The offset of the event.
   # @raise [ArgumentError] if offset is not a Numeric.
   # @raise [RangeError] if offset is less than MIN_OFFSET or greater than MAX_OFFSET.
   def offset= offset
-    raise ArgumentError, "offset is not a Numeric" if !offset.is_a?(Numeric)
-  	raise RangeError, "offset is outside the range #{MIN_OFFSET}..#{MAX_OFFSET}." if !(MIN_OFFSET..MAX_OFFSET).include?(offset)
+    raise ArgumentError, "offset #{offset} is not a Numeric" if !offset.is_a?(Numeric)
+  	raise RangeError, "offset  #{offset} is outside the range #{MIN_OFFSET}..#{MAX_OFFSET}." if !(MIN_OFFSET..MAX_OFFSET).include?(offset)
   	
   	@offset = offset
   end
 
   # Set the event duration.
-  # @param [Numeric] duration The duration of the note.
+  # @param [Numeric] duration The duration of the event.
   # @raise [ArgumentError] if duration is not a Numeric.
   # @raise [RangeError] if duration is less than MIN_OFFSET or greater than MAX_OFFSET.
   def duration= duration

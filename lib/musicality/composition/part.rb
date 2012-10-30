@@ -1,13 +1,11 @@
 module Musicality
 
-# Abstraction of a musical part. Contains notes, note sequences, and dynamics
+# Abstraction of a musical part. Contains note sequences, dynamics, and the 
+# instrument spec.
 #
 # @author James Tunnell
-# 
-# @!attribute [rw] notes
-#   @return [Array] The notes to be played.
 #
-# @!attribute [rw] note_sequences
+# @!attribute [rw] sequences
 #   @return [Array] The note sequences to be played.
 #
 # @!attribute [rw] dynamics
@@ -18,53 +16,38 @@ module Musicality
 #
 class Part
 
-  attr_reader :notes, :note_sequences, :dynamics, :instrument
+  attr_reader :sequences, :dynamics, :instrument
 
   # required hash-args (for hash-makeable idiom)
   REQUIRED_ARG_KEYS = [ ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :notes, :note_sequences, :dynamics, :instrument ]  
+  OPTIONAL_ARG_KEYS = [ :sequences, :dynamics, :instrument ]  
   # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { :notes => [], :note_sequences => [], :dynamics => [],
+  OPTIONAL_ARG_DEFAULTS = { :sequences => [], :dynamics => [],
                       :instrument => Instrument.new }
                       
   # A new instance of Part.
-  # @param [Hash] options Optional arguments. Valid keys are :notes, 
-  #                       :note_sequences, :dynamics, and :instrument
+  # @param [Hash] options Optional arguments. Valid keys are :sequences, 
+  #                       :dynamics, and :instrument.
   def initialize options = {}
     opts = OPTIONAL_ARG_DEFAULTS.merge options
-    self.notes = opts[:notes]
-    self.note_sequences = opts[:note_sequences]	
+    self.sequences = opts[:sequences]	
     self.dynamics = opts[:dynamics]
     self.instrument = opts[:instrument]
   end
   
-  # Set the part notes.
-  # @param [Array] notes Contains notes to be played.
-  # @raise [ArgumentError] if notes is not an Array.
-  # @raise [ArgumentError] if notes contain a non-Note objects.
-  def notes= notes
-    raise ArgumentError, "notes is not an Array" if !notes.is_a?(Array)
-    
-    notes.each do |note|
-      raise ArgumentError, "notes contain a non-Note" if !note.is_a?(Note)
-    end
-    
-    @notes = notes
-  end
-
   # Set the part note sequences.
-  # @param [Array] note_sequences Contains note sequences to be played.
-  # @raise [ArgumentError] if note_sequences is not an Array.
-  # @raise [ArgumentError] if note_sequences contain a non-NoteSequence objects.
-  def note_sequences= note_sequences
-    raise ArgumentError, "note_seqeuences is not an Array" if !note_sequences.is_a?(Array)
+  # @param [Array] sequences Contains note sequences to be played.
+  # @raise [ArgumentError] if sequences is not an Array.
+  # @raise [ArgumentError] if sequences contain a non-Sequence objects.
+  def sequences= sequences
+    raise ArgumentError, "seqeuences is not an Array" if !sequences.is_a?(Array)
     
-    note_sequences.each do |note_seqeuence|
-      raise ArgumentError, "note_seqeuences contain a non-NoteSequence" if !note_seqeuence.is_a?(NoteSequence)
+    sequences.each do |seqeuence|
+      raise ArgumentError, "seqeuences contain a non-Sequence" if !seqeuence.is_a?(Sequence)
     end
     
-  	@note_sequences = note_sequences
+  	@sequences = sequences
   end
 
   # Set the part dynamics.
@@ -93,12 +76,8 @@ class Part
   # note sequence ends last, or 0 if none have been added.
   def find_end
     eop = 0.0
-    @notes.each do |note|
-      eon = note.offset + note.duration
-      eop = eon if eon > eop
-    end
-    
-    @note_sequences.each do |sequence|
+ 
+    @sequences.each do |sequence|
       eos = sequence.offset + sequence.duration
       eop = eos if eos > eop
     end

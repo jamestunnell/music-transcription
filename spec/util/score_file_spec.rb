@@ -6,21 +6,26 @@ describe Musicality::ScoreFile do
   before :all do 
     @score_hash = {
       :parts => [
-        :notes => [
-          { :offset => 0.00, :duration => 0.25, :pitch => { :octave => 9 } },
-          { :offset => 0.25, :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
-          { :offset => 0.50, :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
-          { :offset => 0.75, :duration => 0.25, :pitch => { :octave => 9 } },
-          { :offset => 1.00, :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
-          { :offset => 1.25, :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
-          { :offset => 1.50, :duration => 0.25, :pitch => { :octave => 9 } },
-          { :offset => 1.75, :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
-          { :offset => 2.00, :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
-          { :offset => 2.25, :duration => 0.25, :pitch => { :octave => 9 } },
-          { :offset => 2.50, :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
-          { :offset => 2.75, :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
-          { :offset => 3.00, :duration => 0.75, :pitch => { :octave => 9 } },
-        ]
+        {
+          :sequences => [
+            { :offset => 0.0, :notes => [
+                { :duration => 0.25, :pitch => { :octave => 9 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
+                { :duration => 0.25, :pitch => { :octave => 9 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
+                { :duration => 0.25, :pitch => { :octave => 9 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
+                { :duration => 0.25, :pitch => { :octave => 9 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
+                { :duration => 0.75, :pitch => { :octave => 9 } },
+              ]
+            }
+          ]
+        }
       ],
       :tempos => [
         { :beats_per_minute => 300, :beat_duration => 0.25, :offset => 0.0 },
