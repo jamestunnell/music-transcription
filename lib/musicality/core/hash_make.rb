@@ -127,16 +127,16 @@ module Musicality
         
         #because val is an array, we expect the key to be a plural (e.g. :notes)
         key_sing = ActiveSupport::Inflector.singularize key.to_s
-        clss = nil
-        begin
-          clss = key_name_to_class key_sing
-        rescue
-        end
+        clss = key_name_to_class key_sing
         
-        if !clss.nil? && self.is_hash_makeable?(clss)
+        if self.is_hash_makeable?(clss)
           ary = []
           val.each do |item|
-            ary << self.make_from_hash(clss, item)
+            if item.class == clss
+              ary << item
+            else            
+              ary << self.make_from_hash(clss, item)
+            end
           end
           val = ary
         end

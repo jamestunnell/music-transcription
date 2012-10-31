@@ -47,13 +47,17 @@ class Performer
       event_updates = sequencer.update_notes note_counter
       
       event_updates[:to_start].each do |event|
-        puts "starting pitch #{event.note.pitch}"
-        @instrument.start_pitch event.note.pitch
+#        puts "starting pitch #{event.note.pitch}"
+        event.note.pitches.each do |pitch|
+          @instrument.start_pitch pitch
+        end
       end
 
       event_updates[:to_end].each do |event|
-        puts "ending pitch #{event.note.pitch}"
-        @instrument.end_pitch event.note.pitch
+#        puts "ending pitch #{event.note.pitch}"
+        event.note.pitches.each do |pitch|
+          @instrument.end_pitch pitch
+        end
       end
     end
 

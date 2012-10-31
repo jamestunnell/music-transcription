@@ -2,9 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Part do
   before :each do
-    @note1 = Musicality::Note.new :pitch => Pitch.new, :duration => 0.25
-    @note2 = Musicality::Note.new :pitch => Pitch.new, :duration => 0.25
-    @note3 = Musicality::Note.new :pitch => Pitch.new, :duration => 0.25
+    @note1 = Musicality::Note.new :pitches => [Pitch.new], :duration => 0.25
+    @note2 = Musicality::Note.new :pitches => [Pitch.new], :duration => 0.25
+    @note3 = Musicality::Note.new :pitches => [Pitch.new], :duration => 0.25
 
     @sequences = [ 
       Musicality::Sequence.new( :offset => 0.0, :notes => [@note1, @note2, @note3] )

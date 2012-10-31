@@ -1,12 +1,12 @@
 module Musicality
 
-# Abstraction of a musical note. Contains values for pitch, duration, intensity, loudness, and seperation.
+# Abstraction of a musical note. Contains values for pitches, duration, intensity, loudness, and seperation.
 # The loudness, intensity, and seperation will be used to form the envelope profile for the note.
 #
 # @author James Tunnell
 # 
-# @!attribute [rw] pitch
-#   @return [Pitch] The pitch of the note.
+# @!attribute [rw] pitches
+#   @return [Array] The pitches of the note.
 #
 # @!attribute [rw] duration
 #   @return [Rational] The duration of the note in note lengths.
@@ -29,14 +29,14 @@ module Musicality
 # @!attribute [rw] tie
 #   @return [true/false] Indicates the note should be played 
 #                        continuously with the following note of the 
-#                        same pitch (if such a note exists).
+#                        same pitches (if such a note exists).
 class Note
 
-  attr_reader :pitch, :duration, :loudness, :intensity, :seperation
+  attr_reader :pitches, :duration, :loudness, :intensity, :seperation
   attr_accessor :tie
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ :duration, :pitch ]
+  REQUIRED_ARG_KEYS = [ :duration, :pitches ]
   # optional hash-args (for hash-makeable idiom)
   OPTIONAL_ARG_KEYS = [ :loudness, :intensity, :seperation, :tie ]
   # default values for optional hashed arguments
@@ -44,14 +44,14 @@ class Note
                       :seperation => 0.5, :tie => false }
 
   # A new instance of Note.
-  # @param [Hash] args Hashed arguments. Required keys are :pitch, :duration, 
+  # @param [Hash] args Hashed arguments. Required keys are :pitches, :duration, 
   #                    and :offset. Optional keys are :loudness, :intensity, 
   #                    :seperation, and :tie.
   def initialize args={}
-    raise ArgumentError, ":pitch key not present in args Hash" if !args.has_key?(:pitch)
+    raise ArgumentError, ":pitches key not present in args Hash" if !args.has_key?(:pitches)
     raise ArgumentError, ":duration key not present in args Hash" if !args.has_key?(:duration)
     
-    self.pitch = args[:pitch]
+    self.pitches = args[:pitches]
     self.duration = args[:duration]
   
     opts = OPTIONAL_ARG_DEFAULTS.merge args
@@ -63,13 +63,18 @@ class Note
     self.seperation = opts[:seperation]
     self.tie = opts[:tie]
   end
-  
-  # Set the note pitch.
-  # @param [Pitch] pitch The pitch of the note.
-  # @raise [ArgumentError] if pitch is not a Pitch.
-  def pitch= pitch
-    raise ArgumentError, "pitch is not a Pitch" if !pitch.is_a?(Pitch)
-    @pitch = pitch
+
+  # Set the note pitches.
+  # @param [Array] pitches The pitches of the note.
+  # @raise [ArgumentError] if pitches is not an Array.
+  # @raise [ArgumentError] if pitches contains a non-Pitch.
+  def pitches= pitches
+    raise ArgumentError, "pitches is not an Array" if !pitches.is_a?(Array)
+    pitches.each do |pitch|
+      raise ArgumentError, "pitch #{pitch} is not a Pitch" if !pitch.is_a?(Pitch)
+    end
+    
+    @pitches = pitches
   end
 
   # Set the note duration.

@@ -8,12 +8,12 @@ describe Musicality::Sequencer do
 
   before :each do
     @notes = [ 
-      Musicality::Note.new(:pitch => C9, :duration => 0.25),
-      Musicality::Note.new(:pitch => D9, :duration => 0.25),
-      Musicality::Note.new(:pitch => E9, :duration => 0.25),
-      Musicality::Note.new(:pitch => C9, :duration => 0.25),
-      Musicality::Note.new(:pitch => D9, :duration => 0.25),
-      Musicality::Note.new(:pitch => C9, :duration => 0.75)
+      Musicality::Note.new(:pitches => [C9], :duration => 0.25),
+      Musicality::Note.new(:pitches => [D9], :duration => 0.25),
+      Musicality::Note.new(:pitches => [E9], :duration => 0.25),
+      Musicality::Note.new(:pitches => [C9], :duration => 0.25),
+      Musicality::Note.new(:pitches => [D9], :duration => 0.25),
+      Musicality::Note.new(:pitches => [C9], :duration => 0.75)
     ]
 
     @sequence = Musicality::Sequence.new :notes => @notes, :offset => 0.0
