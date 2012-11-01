@@ -1,7 +1,7 @@
 module Musicality
 
-# Abstraction of a musical note. Contains values for pitches, duration, intensity, loudness, and seperation.
-# The loudness, intensity, and seperation will be used to form the envelope profile for the note.
+# Abstraction of a musical note. Contains values for pitches, duration, attack, sustain, and seperation.
+# The sustain, attack, and seperation will be used to form the envelope profile for the note.
 #
 # @author James Tunnell
 # 
@@ -11,15 +11,15 @@ module Musicality
 # @!attribute [rw] duration
 #   @return [Rational] The duration of the note in note lengths.
 #
-# @!attribute [rw] intensity
-#   @return [Numeric] Affects the loudness (envelope) during the attack 
-#                   portion of the note. From 0.0 (less attack) to 1.0 
-#                   (more attack).
+# @!attribute [rw] attack
+#   @return [Numeric] The amount of attack, from 0.0 (less) to 1.0 (more).
+#                     Attack controls how quickly a note's loudness increases
+#                     at the start.
 #
-# @!attribute [rw] loudness
-#   @return [Numeric] Affects the loudness (envelope) during the sustain 
-#                   portion of the note. From 0.0 (less sustain) to 1.0 
-#                   (more sustain).
+# @!attribute [rw] sustain
+#   @return [Numeric] The amount of sustain, from 0.0 (less) to 1.0 (more).
+#                     Sustain controls how much the note's loudness is 
+#                     sustained after the attack.
 #
 # @!attribute [rw] seperation
 #   @return [Numeric] Shift the note release towards or away the beginning
@@ -32,20 +32,20 @@ module Musicality
 #                        same pitches (if such a note exists).
 class Note
 
-  attr_reader :pitches, :duration, :loudness, :intensity, :seperation
+  attr_reader :pitches, :duration, :sustain, :attack, :seperation
   attr_accessor :tie
 
   # required hash-args (for hash-makeable idiom)
   REQUIRED_ARG_KEYS = [ :duration, :pitches ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :loudness, :intensity, :seperation, :tie ]
+  OPTIONAL_ARG_KEYS = [ :sustain, :attack, :seperation, :tie ]
   # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { :loudness => 0.5, :intensity => 0.5, 
+  OPTIONAL_ARG_DEFAULTS = { :sustain => 0.5, :attack => 0.5, 
                       :seperation => 0.5, :tie => false }
 
   # A new instance of Note.
   # @param [Hash] args Hashed arguments. Required keys are :pitches, :duration, 
-  #                    and :offset. Optional keys are :loudness, :intensity, 
+  #                    and :offset. Optional keys are :sustain, :attack, 
   #                    :seperation, and :tie.
   def initialize args={}
     raise ArgumentError, ":pitches key not present in args Hash" if !args.has_key?(:pitches)
@@ -56,10 +56,10 @@ class Note
   
     opts = OPTIONAL_ARG_DEFAULTS.merge args
 	  
-    # The loudness, intensity, and seperation will be used to form the envelope profile for the note.
+    # The sustain, attack, and seperation will be used to form the envelope profile for the note.
 
-    self.loudness = opts[:loudness]
-    self.intensity = opts[:intensity]	
+    self.sustain = opts[:sustain]
+    self.attack = opts[:attack]	
     self.seperation = opts[:seperation]
     self.tie = opts[:tie]
   end
@@ -87,24 +87,24 @@ class Note
   	@duration = duration
   end
   
-  # Set the note loudness.
-  # @param [Numeric] loudness The loudness of the note.
-  # @raise [ArgumentError] if loudness is not a Numeric.
-  # @raise [RangeError] if loudness is outside the range 0.0..1.0.
-  def loudness= loudness
-    raise ArgumentError, "loudness is not a Numeric" if !loudness.is_a?(Numeric)
-    raise RangeError, "loudness is outside the range 0.0..1.0" if !(0.0..1.0).include?(loudness)
-  	@loudness = loudness
+  # Set the note sustain.
+  # @param [Numeric] sustain The sustain of the note.
+  # @raise [ArgumentError] if sustain is not a Numeric.
+  # @raise [RangeError] if sustain is outside the range 0.0..1.0.
+  def sustain= sustain
+    raise ArgumentError, "sustain is not a Numeric" if !sustain.is_a?(Numeric)
+    raise RangeError, "sustain is outside the range 0.0..1.0" if !(0.0..1.0).include?(sustain)
+  	@sustain = sustain
   end
 
-  # Set the note intensity.
-  # @param [Numeric] intensity The intensity of the note.
-  # @raise [ArgumentError] if intensity is not a Numeric.
-  # @raise [RangeError] if intensity is outside the range 0.0..1.0.
-  def intensity= intensity
-    raise ArgumentError, "intensity is not a Numeric" if !intensity.is_a?(Numeric)
-    raise RangeError, "intensity is outside the range 0.0..1.0" if !(0.0..1.0).include?(intensity)
-	@intensity = intensity
+  # Set the note attack.
+  # @param [Numeric] attack The attack of the note.
+  # @raise [ArgumentError] if attack is not a Numeric.
+  # @raise [RangeError] if attack is outside the range 0.0..1.0.
+  def attack= attack
+    raise ArgumentError, "attack is not a Numeric" if !attack.is_a?(Numeric)
+    raise RangeError, "attack is outside the range 0.0..1.0" if !(0.0..1.0).include?(attack)
+	@attack = attack
   end
 
   # Set the note seperation.
