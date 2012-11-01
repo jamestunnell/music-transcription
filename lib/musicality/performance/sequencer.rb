@@ -8,6 +8,11 @@ class NoteEvent < Event
   end
 end
 
+# Assist in the performance of a note sequence. Based on note offset, the 
+# sequencer determines if notes are past, current (being played), or future 
+# (to be played).
+# 
+# @author James Tunnell
 class Sequencer
   attr_reader :sequence, :note_events, :note_events_future, :note_events_current, :note_events_past
   def initialize sequence
@@ -25,6 +30,12 @@ class Sequencer
     @note_events_past = []
   end
 
+  # Called as part of preparation for performance. Reset note events lists and 
+  # for the given note offset, determine which note events are past playing, 
+  # and which note events will occur in the future. Rebuild note event lists 
+  # accordingly.
+  #
+  # @param [Float] start_offset The note offset where performance will begin.
   def prepare_to_perform start_offset = 0.0
     @note_events_future.clear
     @note_events_current.clear
@@ -35,6 +46,8 @@ class Sequencer
 #    update_notes start_offset
   end
 
+  # @return [Hash] The notes to either start playing (use key :to_start) or to 
+  #                stop playing (use key :to_end).
   def update_notes note_counter
     to_start = @note_events_future.select { |event| event.offset <= note_counter }
 
