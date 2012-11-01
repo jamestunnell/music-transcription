@@ -23,12 +23,12 @@ describe Musicality::Note do
     note.seperation.should eq(0.3)
   end
 
-  it "should assign :tie and parameter if given during construction" do
-    note = Musicality::Note.new :pitches => [@pitch], :duration => 2, :tie => false
-    note.tie.should be_false
+  it "should assign :relationship parameter if given during construction" do
+    note = Musicality::Note.new :pitches => [@pitch], :duration => 2, :relationship => Musicality::Note::RELATIONSHIP_TIE
+    note.relationship.should eq(Musicality::Note::RELATIONSHIP_TIE)
 
-    note = Musicality::Note.new :pitches => [@pitch], :duration => 2, :tie => true
-    note.tie.should be_true
+    note = Musicality::Note.new :pitches => [@pitch], :duration => 2, :relationship => Musicality::Note::RELATIONSHIP_SLUR
+    note.relationship.should eq(Musicality::Note::RELATIONSHIP_SLUR)
   end
   
   it "should assign pitches" do
@@ -62,10 +62,10 @@ describe Musicality::Note do
     note.seperation.should eq 0.123
   end
 
-  it "should assign tie" do
+  it "should assign relationship" do
     note = Musicality::Note.new :pitches => [@pitch], :duration => 2
-    note.tie.should be_false
-    note.tie = true
-    note.tie.should be_true
+    note.relationship.should eq(Musicality::Note::RELATIONSHIP_NONE)
+    note.relationship = Musicality::Note::RELATIONSHIP_TIE
+    note.relationship.should eq(Musicality::Note::RELATIONSHIP_TIE)
   end
 end

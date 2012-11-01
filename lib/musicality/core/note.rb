@@ -26,22 +26,45 @@ module Musicality
 #                   of the note. From 0.0 (towards end of the note) to 
 #                   1.0 (towards beginning of the note).
 #
-# @!attribute [rw] tie
-#   @return [true/false] Indicates the note should be played 
-#                        continuously with the following note of the 
-#                        same pitches (if such a note exists).
+# @!attribute [rw] relationship
+#   @return [Symbol] The relationship between the current note and a consecutive
+#                    note. Valid values are NONE, TIE, SLUR, LEGATO, GLISSANDO, 
+#                    and PORTAMENTO.
+#
 class Note
 
-  attr_reader :pitches, :duration, :sustain, :attack, :seperation
-  attr_accessor :tie
+  attr_reader :pitches, :duration, :sustain, :attack, :seperation, :relationship
+
+  # no relationship to the following note
+  RELATIONSHIP_NONE = :none
+  # tie to the following note
+  RELATIONSHIP_TIE = :tie
+  # play notes continuously and don't rearticulate
+  RELATIONSHIP_SLUR = :slur
+  # play notes continuously and do rearticulate
+  RELATIONSHIP_LEGATO = :legato
+  # play an uninterrupted slide through a series of consecutive tones to the next note.
+  RELATIONSHIP_GLISSANDO = :glissando
+  # play an uninterrupted glide to the next note.
+  RELATIONSHIP_PORTAMENTO = :portamento
+  
+  # a list of valid note relationships
+  RELATIONSHIPS = [
+    RELATIONSHIP_NONE,
+    RELATIONSHIP_TIE,
+    RELATIONSHIP_SLUR,
+    RELATIONSHIP_LEGATO,
+    RELATIONSHIP_GLISSANDO,
+    RELATIONSHIP_PORTAMENTO
+  ]
 
   # required hash-args (for hash-makeable idiom)
   REQUIRED_ARG_KEYS = [ :duration, :pitches ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :sustain, :attack, :seperation, :tie ]
+  OPTIONAL_ARG_KEYS = [ :sustain, :attack, :seperation, :relationship ]
   # default values for optional hashed arguments
   OPTIONAL_ARG_DEFAULTS = { :sustain => 0.5, :attack => 0.5, 
-                      :seperation => 0.5, :tie => false }
+                      :seperation => 0.5, :relationship => RELATIONSHIP_NONE }
 
   # A new instance of Note.
   # @param [Hash] args Hashed arguments. Required keys are :pitches, :duration, 
@@ -61,7 +84,7 @@ class Note
     self.sustain = opts[:sustain]
     self.attack = opts[:attack]	
     self.seperation = opts[:seperation]
-    self.tie = opts[:tie]
+    self.relationship = opts[:relationship]
   end
 
   # Set the note pitches.
@@ -93,7 +116,7 @@ class Note
   # @raise [RangeError] if sustain is outside the range 0.0..1.0.
   def sustain= sustain
     raise ArgumentError, "sustain is not a Numeric" if !sustain.is_a?(Numeric)
-    raise RangeError, "sustain is outside the range 0.0..1.0" if !(0.0..1.0).include?(sustain)
+    raise RangeError, "sustain is outside the range 0.0..1.0" if !sustain.between?(0.0,1.0)
   	@sustain = sustain
   end
 
@@ -103,7 +126,7 @@ class Note
   # @raise [RangeError] if attack is outside the range 0.0..1.0.
   def attack= attack
     raise ArgumentError, "attack is not a Numeric" if !attack.is_a?(Numeric)
-    raise RangeError, "attack is outside the range 0.0..1.0" if !(0.0..1.0).include?(attack)
+    raise RangeError, "attack is outside the range 0.0..1.0" if !attack.between?(0.0,1.0)
 	@attack = attack
   end
 
@@ -113,8 +136,19 @@ class Note
   # @raise [RangeError] if seperation is outside the range 0.0..1.0.
   def seperation= seperation
     raise ArgumentError, "seperation is not Numeric" if !seperation.is_a?(Numeric)
-    raise RangeError, "seperation is outside the range 0.0..1.0" if !(0.0..1.0).include?(seperation)
+    raise RangeError, "seperation is outside the range 0.0..1.0" if !seperation.between?(0.0,1.0)
     @seperation = seperation
+  end
+  
+
+  # Set the note relationship.
+  # @param [Symbol] relationship The relationship of the note to the following 
+  #                  note (if applicable). Valid relationship are given by the 
+  #                  RELATIONSHIPS constant.
+  # @raise [ArgumentError] if relationship is not a valid relationship.
+  def relationship= relationship
+    raise ArgumentError, "relationship is not valid (not found in RELATIONSHIPS)" if !RELATIONSHIPS.include?(relationship)
+    @relationship = relationship
   end
 end
 
