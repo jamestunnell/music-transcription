@@ -38,18 +38,15 @@ module Musicality
 #    				 (12 x 100). If a different scale is required, 
 #                    modify CENTS_PER_SEMITONE (default 12) and/or 
 #                    SEMITONES_PER_OCTAVE (default 100).
+# @!attribute [r] base_freq
+#   @return [Float] Multiplied with pitch ratio to determine the final frequency
+#                   of the pitch. Defaults to DEFAULT_BASE_FREQ, but can be set 
+#                   during initialization to something else using the :base_freq key.
+#
 class Pitch
   include Comparable
   attr_reader :octave, :semitone, :cent, :cents_per_octave
 
-  # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ ]
-  # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :octave, :semitone, :cent ]  
-  
-  # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { :octave => 0, :semitone => 0, :cent => 0 }
-  
   #The default number of semitones per octave is 12, corresponding to 
   # the twelve-tone equal temperment tuning system.
   SEMITONES_PER_OCTAVE = 12
@@ -57,7 +54,19 @@ class Pitch
   #The default number of cents per semitone is 100 (hence the name cent,
   # as in percent).
   CENTS_PER_SEMITONE = 100
+  
+  # The default base ferquency is C0
+  DEFAULT_BASE_FREQ = 16.351597831287414
 
+  # required hash-args (for hash-makeable idiom)
+  REQUIRED_ARG_KEYS = [ ]
+  # optional hash-args (for hash-makeable idiom)
+  OPTIONAL_ARG_KEYS = [ :octave, :semitone, :cent, :base_freq ]  
+  # default values for optional hashed arguments
+  OPTIONAL_ARG_DEFAULTS = {
+    :octave => 0, :semitone => 0, :cent => 0, :base_freq => DEFAULT_BASE_FREQ
+  }
+  
   # A new instance of Pitch.
   # @param [Hash] opts Optional arguments. Valid keys are :octave, 
   #                    :semitone, :cent, :total_cent, and :ratio.
@@ -76,6 +85,25 @@ class Pitch
     @semitone = opts[:semitone]
     @cent = opts[:cent]
     @cents_per_octave = CENTS_PER_SEMITONE * SEMITONES_PER_OCTAVE
+    @base_freq = opts[:base_freq]
+  end
+
+  def freq
+    return self.ratio() * @base_freq
+  end
+
+  # Return the pitch's frequency, which is determined by multiplying the base 
+  # frequency and the pitch ratio. Base frequency defaults to DEFAULT_BASE_FREQ,
+  # but can be set during initialization to something else by specifying the 
+  # :base_freq key.
+  def freq
+    return self.ratio() * @base_freq
+  end
+  
+  # Set the pitch according to the given frequency. Uses the current base_freq 
+  # to determine what the pitch ratio should be, and sets it accordingly.
+  def freq= freq
+    self.ratio = freq / @base_freq
   end
 
   # Calculate the total cent count. Converts octave and semitone count

@@ -2,9 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Sequence do
   before :all do
-    @note1 = Musicality::Note.new(:pitches => [Musicality::Pitch.new( :ratio => 15.0 )], :duration => 2)
-    @note2 = Musicality::Note.new(:pitches => [Musicality::Pitch.new( :ratio => 30.0 )], :duration => 1)
-    @note3 = Musicality::Note.new(:pitches => [Musicality::Pitch.new( :ratio => 25.0 )], :duration => 3)
+    @note1 = Musicality::Note.new(:pitches => [Musicality::PitchConstants::C3], :duration => 2)
+    @note2 = Musicality::Note.new(:pitches => [Musicality::PitchConstants::D3], :duration => 1)
+    @note3 = Musicality::Note.new(:pitches => [Musicality::PitchConstants::E3], :duration => 3)
   end
 
   it "should raise ArgumentError if no notes are given during construction" do

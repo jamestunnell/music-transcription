@@ -2,18 +2,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Sequencer do
 
-  C9 = Musicality::Pitch.new :octave => 9, :semitone => 0
-  D9 = Musicality::Pitch.new :octave => 9, :semitone => 2
-  E9 = Musicality::Pitch.new :octave => 9, :semitone => 4
-
   before :each do
     @notes = [ 
-      Musicality::Note.new(:pitches => [C9], :duration => 0.25),
-      Musicality::Note.new(:pitches => [D9], :duration => 0.25),
-      Musicality::Note.new(:pitches => [E9], :duration => 0.25),
-      Musicality::Note.new(:pitches => [C9], :duration => 0.25),
-      Musicality::Note.new(:pitches => [D9], :duration => 0.25),
-      Musicality::Note.new(:pitches => [C9], :duration => 0.75)
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.25),
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::D7], :duration => 0.25),
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::E7], :duration => 0.25),
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.25),
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::D7], :duration => 0.25),
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.75)
     ]
 
     @sequence = Musicality::Sequence.new :notes => @notes, :offset => 0.0

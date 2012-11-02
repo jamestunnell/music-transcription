@@ -93,4 +93,9 @@ describe Musicality::Pitch do
     (p3 - p2).should eq(Musicality::Pitch.new :semitone => 1)
     (p3 - p1).should eq(Musicality::Pitch.new :semitone => 2)
   end
+  
+  it "should have freq of 440 for A4" do
+    a4 = Musicality::Pitch.new :octave => 4, :semitone => 9
+    a4.freq.should be_within(0.01).of(440.0)
+  end
 end

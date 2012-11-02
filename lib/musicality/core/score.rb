@@ -11,24 +11,30 @@ module Musicality
 # @!attribute [rw] tempos
 #   @return [Array] Score tempos.
 #
+# @!attribute [rw] program
+#   @return [Array] Score program.
+#
 class Score
 
-  attr_reader :parts, :tempos
+  attr_reader :parts, :tempos, :program
 
   # required hash-args (for hash-makeable idiom)
   REQUIRED_ARG_KEYS = [ ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :parts, :tempos ]  
+  OPTIONAL_ARG_KEYS = [ :parts, :tempos, :program ]
 
   # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { :parts => [], :tempos => [] }
+  OPTIONAL_ARG_DEFAULTS = { 
+    :parts => [], :tempos => [], :program => Program.new()
+  }
   
   # A new instance of Score.
-  # @param [Hash] options Optional arguments. Valid keys are :parts, :tempos
+  # @param [Hash] options Optional arguments. Valid keys are :parts, :tempos, :progam
   def initialize options={}
     opts = OPTIONAL_ARG_DEFAULTS.merge options
 	  self.parts = opts[:parts]
     self.tempos = opts[:tempos]
+    self.program = opts[:program]
   end
   
   # Set the score parts.
@@ -45,7 +51,7 @@ class Score
     @parts = parts
   end
 
-  # Set the part tempos.
+  # Set the score tempos.
   # @param [Array] tempos The score tempos.
   # @raise [ArgumentError] if tempos is not an Array.
   # @raise [ArgumentError] if tempos contain a non-Tempo object.
@@ -57,6 +63,16 @@ class Score
     end
     
   	@tempos = tempos
+  end
+
+  # Set the score program, which determines which defines sections and how they 
+  # are played.
+  # @param [Program] program The score program.
+  # @raise [ArgumentError] if tempos is not a Program.
+  def program= program
+    raise ArgumentError, "program is not a Program" if !program.is_a?(Program)
+
+  	@program = program
   end
   
   # Find the end of a score. The end will be at then end of whichever part ends 
