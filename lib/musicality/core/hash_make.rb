@@ -120,7 +120,7 @@ module Musicality
       
       if val.is_a?(Hash)
         clss = key_name_to_class key.to_s
-        if self.is_hash_makeable?(clss)
+        if !clss.nil? && self.is_hash_makeable?(clss)
           val = self.make_from_hash clss, val
         end
       elsif val.is_a?(Array)
@@ -129,7 +129,7 @@ module Musicality
         key_sing = ActiveSupport::Inflector.singularize key.to_s
         clss = key_name_to_class key_sing
         
-        if self.is_hash_makeable?(clss)
+        if !clss.nil? && self.is_hash_makeable?(clss)
           ary = []
           val.each do |item|
             if item.class == clss

@@ -13,10 +13,18 @@ class ClassFinder
     modul = Kernel
     
     for i in 0...(tokens.count - 1)
-      modul = modul.const_get(tokens[i].to_sym)
+      begin
+        modul = modul.const_get(tokens[i].to_sym)
+      rescue
+        return nil
+      end
     end
     
-    modul.const_get tokens.last.to_sym
+    begin
+      return modul.const_get tokens.last.to_sym
+    rescue
+      return nil
+    end
   end
 end
 

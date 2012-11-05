@@ -34,7 +34,7 @@ class Performer
   # be called before any calls to perform_sample.
   #
   # @param [Numeric] note_offset The note offset to begin playing notes at.
-  def prepare_to_perform note_offset = 0.0
+  def prepare_performance_at note_offset = 0.0
     @sequencers.each do |sequencer| 
       sequencer.prepare_to_perform note_offset
     end

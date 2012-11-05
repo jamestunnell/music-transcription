@@ -19,22 +19,24 @@ class Score
   attr_reader :parts, :tempos, :program
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ ]
+  REQUIRED_ARG_KEYS = [ :tempos, :program ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :parts, :tempos, :program ]
+  OPTIONAL_ARG_KEYS = [ :parts ]
 
   # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { 
-    :parts => [], :tempos => [], :program => Program.new()
-  }
+  OPTIONAL_ARG_DEFAULTS = { :parts => [] }
   
   # A new instance of Score.
-  # @param [Hash] options Optional arguments. Valid keys are :parts, :tempos, :progam
-  def initialize options={}
-    opts = OPTIONAL_ARG_DEFAULTS.merge options
+  # @param [Hash] args Hashed arguments. Required keys are :tempos and 
+  #               :programs. Optional keys are :parts.
+  def initialize args={}
+    raise ArgumentError, "args does not have :tempos key" if !args.has_key?(:tempos)
+    raise ArgumentError, "args does not have :program key" if !args.has_key?(:program)
+
+    self.tempos = args[:tempos]
+    self.program = args[:program]
+    opts = OPTIONAL_ARG_DEFAULTS.merge args
 	  self.parts = opts[:parts]
-    self.tempos = opts[:tempos]
-    self.program = opts[:program]
   end
   
   # Set the score parts.
@@ -73,6 +75,11 @@ class Score
     raise ArgumentError, "program is not a Program" if !program.is_a?(Program)
 
   	@program = program
+  end
+  
+  # Decide if the score is valid based solely on the current program
+  def valid?
+    @program.valid?
   end
   
   # Find the end of a score. The end will be at then end of whichever part ends 

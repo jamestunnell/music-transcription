@@ -2,18 +2,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Performer do
 
-  C9 = Musicality::Pitch.new :octave => 9, :semitone => 0
-  D9 = Musicality::Pitch.new :octave => 9, :semitone => 2
-  E9 = Musicality::Pitch.new :octave => 9, :semitone => 4
-
   before :each do
     @notes = [ 
-      Musicality::Note.new(:pitches => [C9], :duration => 0.25),
-      Musicality::Note.new(:pitches => [D9], :duration => 0.25),
-      Musicality::Note.new(:pitches => [E9], :duration => 0.25),
-      Musicality::Note.new(:pitches => [C9], :duration => 0.25),
-      Musicality::Note.new(:pitches => [D9], :duration => 0.25),
-      Musicality::Note.new(:pitches => [C9], :duration => 0.75)
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.25),
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::D7], :duration => 0.25),
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::E7], :duration => 0.25),
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.25),
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::D7], :duration => 0.25),
+      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.75)
     ]
 
     @sequence = Sequence.new :notes => @notes, :offset => 0.0
@@ -34,7 +30,7 @@ describe Musicality::Performer do
     @performer.instrument.class.name.should eq(@instrument.class_name)
   end
 
-  context "Musicality::Performer#prepare_to_perform" do
+  context "Musicality::Performer#prepare_performance_at" do
     it "should deem those notes which come on or after the given note offset as 'to be played' " do
       cases = { 
         0.0 => @sequence.notes,
@@ -45,7 +41,7 @@ describe Musicality::Performer do
       @performer.sequencers.count.should be 1
       
       cases.each do |offset, notes|
-        @performer.prepare_to_perform offset
+        @performer.prepare_performance_at offset
         
         @performer.sequencers.first.note_events_future.count.should be notes.count
 #        @performer.perform_sample offset, @note_time_converter.time_elapsed(0.0, offset)

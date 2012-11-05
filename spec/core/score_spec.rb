@@ -26,20 +26,23 @@ describe Musicality::Score do
       Musicality::Tempo.new( :beats_per_minute => 100, :beat_duration => 0.25.to_r, :offset => 0.to_r ),
       Musicality::Tempo.new( :beats_per_minute => 130, :beat_duration => 0.25.to_r, :offset => 2.to_r ),
     ]
+    
+    @program = Musicality::Program.new :stop => 0.75
   end
   
-  describe Musicality::Score.new do
-    its(:parts) { should be_empty }
-    its(:tempos) { should be_empty }    
+  it "should assign args given during construction" do
+    score = Musicality::Score.new :tempos => @tempos, :program => @program
+    score.tempos.should eq(@tempos.clone)
+    score.program.should eq(@program.clone)
+  end
+
+  it "should  default parts to empty" do
+    score = Musicality::Score.new :tempos => @tempos, :program => @program
+    score.parts.should be_empty
   end
 
   it "should assign parts given during construction" do
-    score = Musicality::Score.new :parts => @parts
+    score = Musicality::Score.new :tempos => @tempos, :program => @program, :parts => @parts
     score.parts.should eq(@parts.clone)
-  end
-
-  it "should assign tempos given during construction" do
-    score = Musicality::Score.new :tempos => @tempos
-    score.tempos.should eq(@tempos.clone)
   end
 end
