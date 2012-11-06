@@ -1,5 +1,5 @@
-# Representation musical constructs such as pitch, note, etc. 
+# Representation musical constructs such as pitch, note, score, etc. 
 module Musicality
   # musicality version
-  VERSION = "0.1.0"
+  VERSION = "0.1.1"
 end
