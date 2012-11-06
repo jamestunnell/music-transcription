@@ -1,5 +1,9 @@
 module Musicality
 
+# Use by the Seqeuencer class to determine when a note from a sequence is to be 
+# played.
+# 
+# @author James Tunnell
 class NoteEvent < Event
   attr_reader :note
   def initialize offset, note

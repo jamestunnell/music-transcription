@@ -62,6 +62,10 @@ class Oscillator
     0.0
   end
   
+  # Stop playing all notes
+  def release_all
+    @pitches.clear
+  end
 end
 
 end

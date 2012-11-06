@@ -64,6 +64,11 @@ class Performer
     #now actually render a sample
     return @instrument.render_sample
   end
+
+  # Release any currently playing notes
+  def release_all
+    @instrument.release_all
+  end
 end
 
 end

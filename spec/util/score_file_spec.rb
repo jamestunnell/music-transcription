@@ -9,7 +9,7 @@ describe Musicality::ScoreFile do
         { :beats_per_minute => 300, :beat_duration => 0.25, :offset => 0.0 },
         { :beats_per_minute => 100, :beat_duration => 0.25, :offset => 1.0, :duration => 1.25 }
       ],
-      :program => { :stop => 3.75 },
+      :program => { :segments => [0.0...3.75] },
       :parts => [
         {
           :sequences => [

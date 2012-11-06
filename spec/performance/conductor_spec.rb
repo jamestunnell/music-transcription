@@ -30,38 +30,38 @@ describe Musicality::Conductor do
         { :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0 }
       ],
       :program => {
-        :start => 0.0,
-        :stop => 3.75,
-        :markers => { :a => 1.0, :b => 2.0 },
-        :jumps => [
-          { :at => :b, :to => :a },
-          { :at => :b, :to => :a },
-          { :at => :b, :to => 0.0 },
-          { :at => :a, :to => :b },
+        :segments => [
+          0.0...2.0,
+          1.0...2.0,
+          1.0...2.0,
+          0.0...1.0,
+          2.0...3.75
         ]
       }
     }
     
     @score = Musicality::HashMake.make_from_hash Musicality::Score, hash
-    @sample_rate = 48.0
+    @sample_rate = 66.0
   end
-  
-  it "should follow the given score program" do    
-    conductor = Musicality::Conductor.new @score, @sample_rate
-    
-    conductor.prepare_performance_at 0.0
-    while conductor.jumps_left.any? || (conductor.note_current <= conductor.score.program.stop)
-      conductor.perform_sample
+
+  describe "#perform_score" do
+    before :each do
+      @conductor = Musicality::Conductor.new @score, @sample_rate
+      @conductor.perform_score
     end
-    
-    #how long it should take
-    notes_per_sec = 0.5
-    score_length_notes = 6.75
-    score_length_sec = score_length_notes / notes_per_sec
-    score_length_samples = score_length_sec * @sample_rate
-    
-    #compare to how long it did take
-    conductor.sample_total.should be_within(2).of(score_length_samples)
+
+    it "should be able to perform the entire score" do    
+      @conductor.note_counter.should be_within(0.001).of(@score.program.length)
+      
+      #how long it should take time-wise
+      notes_per_sec = 0.5
+      score_length_notes = @score.program.length
+      score_length_sec = score_length_notes / notes_per_sec
+      score_length_samples = score_length_sec * @sample_rate
+
+      @conductor.time_counter.should be_within(0.001).of(score_length_sec)
+      @conductor.sample_counter.should be_within(10).of(score_length_samples)
+    end
   end
 
 end

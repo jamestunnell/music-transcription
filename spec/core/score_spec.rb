@@ -27,7 +27,7 @@ describe Musicality::Score do
       Musicality::Tempo.new( :beats_per_minute => 130, :beat_duration => 0.25.to_r, :offset => 2.to_r ),
     ]
     
-    @program = Musicality::Program.new :stop => 0.75
+    @program = Musicality::Program.new :segments => [0...0.75]
   end
   
   it "should assign args given during construction" do

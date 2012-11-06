@@ -5,197 +5,133 @@ module Musicality
 # @author James Tunnell
 #
 class Program
-  attr_reader :start, :stop, :markers, :jumps
+  attr_reader :segments
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ :stop ]
+  REQUIRED_ARG_KEYS = [ :segments ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :start, :markers, :jumps ]
+  OPTIONAL_ARG_KEYS = [ ]
 
   # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { :start => 0.0, :markers => {}, :jumps => [] }
+  OPTIONAL_ARG_DEFAULTS = { }
 
   # A new instance of Program.
-  # @param [Hash] args Hashed arguments. Required key is :stop. Optional keys 
-  #                    are :start, :markers, and :jumps.
+  # @param [Hash] args Hashed arguments. Required key is :segments.
   def initialize args={}
-    raise ArgumentError, "args does not have :stop key" if !args.has_key?(:stop)
-    self.stop = args[:stop]
-    opts = OPTIONAL_ARG_DEFAULTS.merge args
-	  self.start = opts[:start]
-	  self.markers = opts[:markers]
-    self.jumps = opts[:jumps]
+    raise ArgumentError, "args does not have :segments key" if !args.has_key?(:segments)
+	  self.segments = args[:segments]
+  end
+
+  # Assign program segments. Each segment is a Range to specify which range of 
+  # notes from a score should be played.
+  #
+  # @param [Array] segments An array of program segements. Each segment is a 
+  #                         Range to specify which range of 
+  # @raise [ArgumentError] if segments is not an Array.
+  # @raise [ArgumentError] if segments contains a non-Range
+  #
+  def segments= segments
+    raise ArgumentError, "segments is not an Array" if !segments.is_a?(Array)
+    raise ArgumentError, "segments is empty" if segments.empty?
+    
+    segments.each do |segment|
+      raise ArgumentError, "segments contains a non-Range" if !segment.is_a?(Range)
+    end
+    
+    @segments = segments
+  end
+
+  # @return [Float] the starting note offset for the program
+  def start
+    @segments.first.first
+  end
+
+  # @return [Float] the ending note offset for the program
+  def stop
+    @segments.last.last
+  end
+
+  # @return [Float] the sum of all program segment lengths
+  def length
+    segments.inject(0.0) { |length, segment| length + (segment.last - segment.first) }
   end
   
+    # compare to another Program
   def == other
-    raise ArgumentError, "program is invalid" if !self.valid?
-    if self.start == other.start && self.stop == other.stop
-      self_jumps = prepare_jumps_at start
-      other_jumps = other.prepare_jumps_at start
-      return self.jumps == other.jumps
+#    raise ArgumentError, "program is invalid" if !self.valid?    
+    return @segments == other.segments
+  end
+
+  def include? offset
+    @segments.each do |segment|
+      if segment.include?(offset)
+        return true
+      end
     end
     return false
   end
 
-  # Set the program starting note offset.
-  # @param [Numeric] start The program starting note offset
-  # @raise [ArgumentError] if start is not a Numeric
-  def start= start
-    raise ArgumentError, "start is not a Numeric" if !start.is_a?(Numeric)
-  	@start = start.to_f
-  end
-
-  # Set the program ending note offset.
-  # @param [Numeric] stop The program ending note offset
-  # @raise [ArgumentError] if stop is not a Numeric
-  def stop= stop
-    raise ArgumentError, "stop is not a Numeric" if !stop.is_a?(Numeric)
-  	@stop = stop.to_f
-  end
-  
-  # Define section markers that map to their note offsets.
-  # @param [Hash] markers Map section markers to their note offset.
-  # @raise [ArgumentError] if markers is not a Hash.
-  # @raise [ArgumentError] if any marker key is not a Symbol and not a String.
-  # @raise [ArgumentError] if marker vals is not a Numeric.
-  def markers= markers
-    raise ArgumentError, "markers is not a Hash" if !markers.is_a?(Hash)
+  # For the given note elapsed, what will the note offset be?
+  #
+  def note_offset_for elapsed
+    raise ArgumentError, "elapsed #{elapsed} is less than 0.0" if elapsed < 0.0
+    raise ArgumentError, "elapsed #{elapsed} is greater than program length" if elapsed > self.length
     
-    markers.each do |key, val|
-      raise ArgumentError, "key #{key} is not a String or Symbol" if !key.is_a?(String) && !key.is_a?(Symbol)
-      raise ArgumentError, "val #{val} is not a Numeric" if !val.is_a?(Numeric)
-    end
+    so_far = 0.0
     
-  	@markers = markers
-  end
-  
-  # Define program jumps (changes in execution flow). A jump maps a note offset
-  # or marker where execution will jump to another note offset or marker.
-  # 
-  # @param [Hash] jumps Map note offsets or markers to where execution will jump to.
-  # @raise [ArgumentError] if jumps is not a Array.
-  # @raise [ArgumentError] if any marker key is not a Numeric, Symbol, or String.
-  # @raise [ArgumentError] if any marker val is not a Numeric, Symbol, or String.
-  def jumps= jumps
-    raise ArgumentError, "jumps is not a Array" if !jumps.is_a?(Array)
-  	
-  	jumps.each do |jump|
-  	  raise ArgumentError, "jump #{jump} is not a Hash" if !jump.is_a?(Hash)
-  	  raise ArgumentError, "jump does not have :at key" if !jump.has_key?(:at)
-  	  raise ArgumentError, "jump does not have :to key" if !jump.has_key?(:to)
-  	  
-  	  from = jump[:at]
-  	  to = jump[:to]
-  	  
-  	  raise ArgumentError, "jump[:at] #{from} is not a Numeric, String, or Symbol" if !from.is_a?(Numeric) && !from.is_a?(String) && !from.is_a?(Symbol)
-  	  raise ArgumentError, "jump[:to] #{to} is not a Numeric, String, or Symbol" if !to.is_a?(Numeric) && !to.is_a?(String) && !to.is_a?(Symbol)
-  	end
-  	
-  	@jumps = jumps
-  end
-
-  def valid?
-    offset = @start
-    
-    @jumps.each do |jump|
-      begin
-        at = get_jump_at jump
-        to = get_jump_to jump
-
-        if offset > at
-          return false
-        end
-        
-        if stop.between?(offset, at)
-          return false
-        end
-        
-        offset = to
-      rescue
-        return false
-      end
-    end
-
-    return offset <= stop
-  end
-    
-  def include? target_offset
-    offset = @start
-    
-    @jumps.each do |jump|
-      at = get_jump_at jump
-      to = get_jump_to jump
-
-      # assume the program is valid and 1) current offset is less than jump[:at],
-      # and 2) there's no end-of-score occuring here
-      if target_offset.between?(offset, at)
-        return true
+    @segments.each do |segment|
+      segment_length = segment.last - segment.first
+      
+      if (segment_length + so_far) > elapsed
+        return segment.first + (elapsed - so_far)
       else
-        offset = to
+        so_far += segment_length
       end
     end
-
-    #assume the program is valid and the offset is less than end-of-score
-    return target_offset.between?(offset, stop)
+    
+    raise "offset not determined even though the given elapsed is less than program length!"
   end
-
-  def jumps_left_at target_offset
-    offset = @start
+  
+  # For the given note offset in the score, how much note will have elapsed to 
+  # get there according to the program?
+  #
+  def note_elapsed_at offset
+    raise ArgumentError, "offset #{offset} is not included in program" if !self.include?(offset)
     
-    jumps_left = @jumps.count
+    elapsed = 0.0
     
-    @jumps.each do |jump|
-      at = get_jump_at jump
-      to = get_jump_to jump
-
-      # assume the program is valid and 1) current offset is less than jump[:at],
-      # and 2) there's no end-of-score occuring here
-      if target_offset.between?(offset, at)
+    @segments.each do |segment|
+      if segment.include?(offset)
+        elapsed += (offset - segment.first)
         break
       else
-        jumps_left -= 1
-        offset = to
+        elapsed += (segment.last - segment.first)
       end
     end
     
-    return @jumps[(@jumps.count - jumps_left)...@jumps.count]
+    return elapsed
   end
   
-  def prepare_jumps_at target_offset
-    jumps = []
-    self.jumps_left_at(target_offset).each do |jump|
-      at = get_jump_at jump
-      to = get_jump_to jump
-      
-      jumps << { :at => at, :to => to }
-    end
-    
-    return jumps
-  end
-  
-  private
+  # For the given note offset in the score, how much time will have elapsed to 
+  # get there according to the program?
+  #
+  def time_elapsed_at offset, note_time_converter
+    raise ArgumentError, "offset #{offset} is not included in program" if !self.include?(offset)
 
-  def get_jump_to jump
-    to = jump[:to]
-
-    if to.is_a?(Symbol) || to.is_a?(String)
-      raise ArgumentError, "marker #{to} not found" if !@markers.has_key?(to)
-      to = @markers[to]
+    elapsed = 0.0
+    
+    @segments.each do |segment|
+      if segment.include?(offset)
+        elapsed += note_time_converter.time_elapsed(segment.first, offset)
+        break
+      else
+        elapsed += note_time_converter.time_elapsed(segment.first, segment.last)
+      end
     end
     
-    return to
+    return elapsed
   end
   
-  def get_jump_at jump
-    at = jump[:at]
-    
-    if at.is_a?(Symbol) || at.is_a?(String)
-      raise ArgumentError, "marker #{at} not found" if !@markers.has_key?(at)
-      at = @markers[at]
-    end
-    
-    return at
-  end
 end
 
 end

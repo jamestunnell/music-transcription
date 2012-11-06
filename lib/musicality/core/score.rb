@@ -77,11 +77,6 @@ class Score
   	@program = program
   end
   
-  # Decide if the score is valid based solely on the current program
-  def valid?
-    @program.valid?
-  end
-  
   # Find the end of a score. The end will be at then end of whichever part ends 
   # last, or 0 if no parts have been added.
   def find_end
