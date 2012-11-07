@@ -42,36 +42,36 @@ describe Musicality::TempoComputer do
     end
   end
 
-#  context "two tempos, linear transition" do
-#    before :each do
-#      tempo1 = Musicality::Tempo.new :beats_per_minute => 120.0, :beat_duration => 0.25, :offset => 0.0
-#      tempo2 = Musicality::Tempo.new :beats_per_minute => 60.0, :beat_duration => 0.25, :offset => 1.0, :duration => 1.0
+  context "two tempos, linear transition" do
+    before :each do
+      tempo1 = Musicality::Tempo.new :beats_per_minute => 120.0, :beat_duration => 0.25, :offset => 0.0
+      tempo2 = Musicality::Tempo.new :beats_per_minute => 60.0, :beat_duration => 0.25, :offset => 1.0, :duration => 1.0
 
-#      @tc = Musicality::TempoComputer.new Event.hash_events_by_offset([tempo1, tempo2])
-#    end
+      @tc = Musicality::TempoComputer.new tempo1, [tempo2]
+    end
 
-#    it "should be the first (starting) tempo just before the second tempo" do
-#      @tc.notes_per_second_at(0.999).should eq(0.5)
-#    end
-#        
-#    it "should be the first (starting) tempo exactly at the second tempo" do
-#      @tc.notes_per_second_at(1.0).should eq(0.5)
-#    end
+    it "should be the first (starting) tempo just before the second tempo" do
+      @tc.notes_per_second_at(0.999).should eq(0.5)
+    end
+        
+    it "should be the first (starting) tempo exactly at the second tempo" do
+      @tc.notes_per_second_at(1.0).should eq(0.5)
+    end
 
-#    it "should be 1/4 to the second tempo after 1/4 transition duration has elapsed" do
-#      @tc.notes_per_second_at(Rational(5,4).to_f).should eq(Rational(7,16).to_f)
-#    end
+    it "should be 1/4 to the second tempo after 1/4 transition duration has elapsed" do
+      @tc.notes_per_second_at(Rational(5,4).to_f).should eq(Rational(7,16).to_f)
+    end
 
-#    it "should be 1/2 to the second tempo after 1/2 transition duration has elapsed" do
-#      @tc.notes_per_second_at(Rational(6,4).to_f).should eq(Rational(3,8).to_f)
-#    end
+    it "should be 1/2 to the second tempo after 1/2 transition duration has elapsed" do
+      @tc.notes_per_second_at(Rational(6,4).to_f).should eq(Rational(3,8).to_f)
+    end
 
-#    it "should be 3/4 to the second tempo after 3/4 transition duration has elapsed" do
-#      @tc.notes_per_second_at(Rational(7,4).to_f).should eq(Rational(5,16).to_f)
-#    end
+    it "should be 3/4 to the second tempo after 3/4 transition duration has elapsed" do
+      @tc.notes_per_second_at(Rational(7,4).to_f).should eq(Rational(5,16).to_f)
+    end
 
-#    it "should be at the second tempo after transition duration has elapsed" do
-#      @tc.notes_per_second_at(Rational(8,4).to_f).should eq(0.25)
-#    end
-#  end
+    it "should be at the second tempo after transition duration has elapsed" do
+      @tc.notes_per_second_at(Rational(8,4).to_f).should eq(0.25)
+    end
+  end
 end
