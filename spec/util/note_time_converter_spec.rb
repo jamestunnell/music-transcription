@@ -5,7 +5,7 @@ describe Musicality::NoteTimeConverter do
   context "constant tempo" do
     before :each do 
       tempo = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0
-      @tempo_computer = Musicality::TempoComputer.new Event.hash_events_by_offset([tempo])
+      @tempo_computer = Musicality::TempoComputer.new tempo
       sample_rate = 48
       @converter = Musicality::NoteTimeConverter.new @tempo_computer, sample_rate
     end
@@ -25,7 +25,7 @@ describe Musicality::NoteTimeConverter do
       tempo = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0
       tempo2 = Musicality::Tempo.new :beats_per_minute => 60, :beat_duration => 0.25, :offset => 1.0, :duration => 1.0
       
-      @tempo_computer = Musicality::TempoComputer.new Musicality::Event.hash_events_by_offset([tempo, tempo2])
+      @tempo_computer = Musicality::TempoComputer.new tempo, [tempo2]
       sample_rate = 200
       @converter = Musicality::NoteTimeConverter.new @tempo_computer, sample_rate
     end

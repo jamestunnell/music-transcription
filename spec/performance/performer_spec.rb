@@ -16,12 +16,9 @@ describe Musicality::Performer do
     @instrument = Musicality::Instrument.new :class_name => Musicality::SineWave.name
     @part = Musicality::Part.new :offset => 0.0, :sequences => [@sequence], :instrument => @instrument
 
-    tempos = [
-      Musicality::Tempo.new( { :beat_duration => 0.25, :beats_per_minute => 120, :offset => 0.0 } )
-    ]
-    
+    tempo = Musicality::Tempo.new( { :beat_duration => 0.25, :beats_per_minute => 120, :offset => 0.0 } )
     sample_rate = 48.0
-    @tempo_computer = TempoComputer.new( Event.hash_events_by_offset tempos )
+    @tempo_computer = TempoComputer.new tempo
     @note_time_converter = NoteTimeConverter.new @tempo_computer, sample_rate
     @performer = Musicality::Performer.new @part, @sample_rate, @note_time_converter
   end

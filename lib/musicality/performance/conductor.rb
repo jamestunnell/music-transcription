@@ -20,7 +20,7 @@ class Conductor
   # @param [Numeric] sample_rate The sample rate used in rendering samples.
   def initialize score, sample_rate = DEFAULT_SAMPLE_RATE
     @score = score
-    @tempo_computer = TempoComputer.new( Event.hash_events_by_offset @score.tempos )
+    @tempo_computer = TempoComputer.new( @score.start_tempo, @score.tempo_changes )
     @note_time_converter = NoteTimeConverter.new @tempo_computer, sample_rate
     
     @end_of_score = @score.find_end

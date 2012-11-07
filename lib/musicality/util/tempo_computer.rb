@@ -12,21 +12,32 @@ class TempoComputer
   attr_reader :piecewise_function
   
   # A new instance of TempoComputer.
-  # @param [Hash] tempos A hash that maps tempos to note offsets.
-  # @raise [ArgumentError] if tempos is not a Hash.
-  # @raise [ArgumentError] if there is no starting tempo (tempo at offset 0).
+  # @param [Tempo] start_tempo The tempo to use at start.
+  # @param [Array] tempo_changes An array of tempo events.
+  # @raise [ArgumentError] if start_tempo is not a Tempo.
+  # @raise [ArgumentError] if any of tempo_changes is not a Tempo.
   # @raise [ArgumentError] if the starting tempo has a non-zero duration.
-  def initialize tempos
-    raise ArgumentError, "tempos is not a Hash" if !tempos.is_a?(Hash)
-    raise ArgumentError, "there is no starting tempo (tempo at offset 0.0)" if tempos[0.0].nil?
-    raise ArgumentError, "starting tempo cannot have a non-zero event duration" if tempos[0.0].duration != 0
+  def initialize start_tempo, tempo_changes = []
+    raise ArgumentError, "start_tempo is not a Tempo" if !start_tempo.is_a?(Tempo)
+    raise ArgumentError, "starting tempo cannot have a non-zero event duration" if start_tempo.duration != 0
     
     @piecewise_function = Musicality::PiecewiseFunction.new
+    set_default_tempo start_tempo
     
-    sorted_tempo_keys = tempos.keys.sort
-    for i in 0...sorted_tempo_keys.count do
-      tempo = tempos[sorted_tempo_keys[i]]
-      add_to_piecewise_function tempo
+    if tempo_changes.any?
+      tempo_changes = Event.hash_events_by_offset tempo_changes
+      sorted_tempo_change_offsets = tempo_changes.keys.sort
+        
+      for i in 0...sorted_tempo_change_offsets.count do
+        offset = sorted_tempo_change_offsets[i]
+        tempo = tempo_changes[offset]
+        
+        if offset < start_tempo.offset
+          add_to_piecewise_function tempo, tempo.offset...start_tempo.offset
+        else
+          add_to_piecewise_function tempo, tempo.offset...(Event::MAX_OFFSET + 1)
+        end
+      end
     end
   end
   
@@ -38,36 +49,41 @@ class TempoComputer
   
   private
 
+  def set_default_tempo tempo
+    notes_per_sec = (tempo.beats_per_minute / 60.0) * tempo.beat_duration
+    func = lambda {|x| notes_per_sec }
+    @piecewise_function.add_piece (Event::MIN_OFFSET)...(Event::MAX_OFFSET + 1), func
+  end
+
   # Add a function piece to the piecewise function, which will to compute tempo
   # for a matching note offset. If the tempo event duration is non-zero, a 
   # linear transition function is created.
   #
   # @param [Tempo] tempo The Tempo object which contains offset, duration, and
   #                      tempo information.
-  def add_to_piecewise_function tempo
-    raise RangeError, "tempo note offset is less than zero!" if tempo.offset < 0
+  def add_to_piecewise_function tempo, domain
     
     notes_per_sec = (tempo.beats_per_minute / 60.0) * tempo.beat_duration
-    func = nil      
+    func = nil
     
     if tempo.duration == 0
       func = lambda {|x| notes_per_sec }
     else
-      b = @piecewise_function.evaluate_at tempo.offset
+      b = @piecewise_function.evaluate_at domain.first
       m = (notes_per_sec - b) / tempo.duration
       
       func = lambda do |x|
-        raise RangeError, "#{x} is not in the domain" if x < tempo.offset
+        raise RangeError, "#{x} is not in the domain" if !domain.include?(x)
         
-        if x < (tempo.offset + tempo.duration)
-          (m * (x - tempo.offset)) + b
+        if x < (domain.first + tempo.duration)
+          (m * (x - domain.first)) + b
         else
           notes_per_sec
         end
       end
     end
     
-    @piecewise_function.add_piece tempo.offset...(Event::MAX_OFFSET + 1), func
+    @piecewise_function.add_piece domain, func
   end
 end
 

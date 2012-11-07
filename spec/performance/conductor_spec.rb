@@ -26,9 +26,9 @@ describe Musicality::Conductor do
           ]
         }
       ],
-      :tempos => [
-        { :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0 }
-      ],
+      :start_tempo => { 
+        :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0 
+      },
       :program => {
         :segments => [
           0.0...2.0,

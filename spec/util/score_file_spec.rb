@@ -5,10 +5,7 @@ require 'yaml'
 describe Musicality::ScoreFile do
   before :all do 
     @score_hash = {
-      :tempos => [
-        { :beats_per_minute => 300, :beat_duration => 0.25, :offset => 0.0 },
-        { :beats_per_minute => 100, :beat_duration => 0.25, :offset => 1.0, :duration => 1.25 }
-      ],
+      :start_tempo => { :beats_per_minute => 300, :beat_duration => 0.25, :offset => 0.0 },
       :program => { :segments => [0.0...3.75] },
       :parts => [
         {
@@ -31,7 +28,11 @@ describe Musicality::ScoreFile do
             }
           ]
         }
+      ],
+      :tempo_changes => [
+        { :beats_per_minute => 100, :beat_duration => 0.25, :offset => 1.0, :duration => 1.25 }
       ]
+
     }
     
     @score_hash_filename = "score_hash.yaml"
@@ -45,7 +46,7 @@ describe Musicality::ScoreFile do
     score = ScoreFile.load @score_hash_filename
     score.class.should eq(Score)
     score.parts.count.should be 1
-    score.tempos.count.should be 2
+    score.tempo_changes.count.should be 1
   end
   
   it "should save score to file" do

@@ -8,7 +8,10 @@ module Musicality
 # @!attribute [rw] parts
 #   @return [Array] Score parts.
 # 
-# @!attribute [rw] tempos
+# @!attribute [rw] start_tempo
+#   @return [Array] Score tempos.
+#
+# @!attribute [rw] tempo_changes
 #   @return [Array] Score tempos.
 #
 # @!attribute [rw] program
@@ -16,20 +19,23 @@ module Musicality
 #
 class Score
   include HashMake
-  attr_reader :parts, :tempos, :program
+  attr_reader :parts, :start_tempo, :tempo_changes, :program
 
   # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg_array(:tempos, Tempo),
+  REQ_ARGS = [ spec_arg(:start_tempo, Tempo),
                spec_arg(:program, Program) ]
   
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_array(:parts, Part, []) ]
+  OPT_ARGS = [ spec_arg_array(:parts, Part, []),
+               spec_arg_array(:tempo_changes, Tempo) ]
   
   # A new instance of Score.
   # @param [Hash] args Hashed arguments. Required keys are :tempos and 
   #               :programs. Optional keys are :parts.
   def initialize args={}
     process_args args
+    
+    raise ArgumentError, "start_tempo is after program start" if @start_tempo.offset > @program.segments.first.first
   end
   
   # Set the score parts.
@@ -46,18 +52,26 @@ class Score
     @parts = parts
   end
 
-  # Set the score tempos.
-  # @param [Array] tempos The score tempos.
-  # @raise [ArgumentError] if tempos is not an Array.
-  # @raise [ArgumentError] if tempos contain a non-Tempo object.
-  def tempos= tempos
-    raise ArgumentError, "tempos is not an Array" if !tempos.is_a?(Array)
+  # Set the score starting tempo.
+  # @param [Tempo] start_tempo The score starting tempo.
+  # @raise [ArgumentError] if tempo is not a Tempo object.
+  def start_tempo= start_tempo
+    raise ArgumentError, "start_tempo is not a Tempo" if !start_tempo.is_a?(Tempo)
+  	@start_tempo = start_tempo
+  end
+  
+  # Set the score tempo changes.
+  # @param [Array] tempo_changes The score tempo changes.
+  # @raise [ArgumentError] if tempo_changes is not an Array.
+  # @raise [ArgumentError] if tempo_changes contain a non-Tempo object.
+  def tempo_changes= tempo_changes
+    raise ArgumentError, "tempo_changes is not an Array" if !tempo_changes.is_a?(Array)
 
-    tempos.each do |tempo|
-      raise ArgumentError, "tempos contain a non-Tempo #{tempo}" if !tempo.is_a?(Tempo)
+    tempo_changes.each do |tempo|
+      raise ArgumentError, "tempo_changes contain a non-Tempo #{tempo}" if !tempo.is_a?(Tempo)
     end
     
-  	@tempos = tempos
+  	@tempo_changes = tempo_changes
   end
 
   # Set the score program, which determines which defines sections and how they 
