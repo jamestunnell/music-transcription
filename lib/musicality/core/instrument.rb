@@ -5,27 +5,24 @@ module Musicality
 # @author James Tunnell
 # 
 class Instrument
-
+  include HashMake
   attr_reader :class_name, :settings
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ ]
+  REQ_ARGS = [ ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :class_name, :settings ]
-  # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { :settings => {}, :class_name => "Musicality::SquareWave" }
+  OPT_ARGS = [ spec_arg(:class_name, String, "Musicality::SquareWave") ,
+               spec_arg(:settings, Hash, {}) ]
 
   # A new instance of Instrument.
-  # @param [Hash] options Options hash. Valid keys are :settings, and :class_name.
+  # @param [Hash] args Hashed args. Valid, optional keys are :settings, and :class_name.
   #                       The :settings key can be used to specify instrument-
   #                       specific settings, which will be passed to the
   #                       instrument's class when it is instantiated. The 
   #                       :class_name key will specify a certain Musicality 
   #                       instrument class to use as the instrument.
-  def initialize options = {}
-    opts = OPTIONAL_ARG_DEFAULTS.merge options
-    self.class_name = opts[:class_name]
-    self.settings = opts[:settings]
+  def initialize args = {}
+    process_args args
   end
   
   # Set the instrument class name. Used later to make an instance of the instrument.

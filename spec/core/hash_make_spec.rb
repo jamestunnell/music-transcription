@@ -1,78 +1,70 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-class NotHashMakeable
-  attr_reader :my_var
+class HashMakeB
+  include Musicality::HashMake
+  
+  attr_accessor :anything
+
+  # required args (for hash-makeable idiom)
+  REQ_ARGS = [ self.spec_arg(:anything, Object) ]
+  # optional args (for hash-makeable idiom)
+  OPT_ARGS = [  ]
+  
   def initialize args={}
-    @my_var = args[:my_var]
+    process_args args
   end
 end
 
 class HashMakeA
-  attr_reader :hash_make_b, :c, :d, :e
+  include Musicality::HashMake
+
+  attr_accessor :b, :c, :d, :e
   
-  REQUIRED_ARG_KEYS = [ :hash_make_b, :c ]
-  OPTIONAL_ARG_KEYS = [ :d, :e ]
-  OPTIONAL_ARG_DEFAULTS = { :d => 31, :e => 55 }
+  # required args (for hash-makeable idiom)
+  REQ_ARGS = [
+    self.spec_arg(:b, HashMakeB),
+    self.spec_arg(:c, String)
+  ]
+  # optional args (for hash-makeable idiom)
+  OPT_ARGS = [
+    self.spec_arg(:d, Object, 31),
+    self.spec_arg(:e, Object, 55)
+  ]
 
   def initialize args={}
-    raise ArgumentError if !args.has_key?(:hash_make_b) || !args.has_key?(:c)
-    @hash_make_b = args[:hash_make_b]
-    @c = args[:c]
-    opts = OPTIONAL_ARG_DEFAULTS.merge args
-    @d = opts[:d]
-    @e = opts[:e]
-  end
-end
-
-class HashMakeB
-  attr_reader :anything
-
-  REQUIRED_ARG_KEYS = [ :anything ]
-  OPTIONAL_ARG_KEYS = [  ]
-  OPTIONAL_ARG_DEFAULTS = {  }
-  
-  def initialize args={}
-    raise ArgumentError if !args.has_key?(:anything)
-    @anything = args[:anything]
+    process_args args
   end
 end
 
 describe HashMakeA do
-  it "should raise ArgumentError if class given is not a Class" do
-    lambda { Musicality::HashMake.make_from_hash("a", {}) }.should raise_error(ArgumentError)
-  end
 
-  it "should raise ArgumentError if class given is not hash-makeable" do
-    lambda { Musicality::HashMake.make_from_hash("a", {}) }.should raise_error(ArgumentError)
-  end
-  
   it "should raise ArgumentError if hash given is not a Hash" do
-    lambda { Musicality::HashMake.make_from_hash(HashMakeA, "b") }.should raise_error(ArgumentError)
+    lambda { HashMakeA.make_from_hash("b") }.should raise_error(ArgumentError)
   end
 
   it "should raise ArgumentError if required args are not given" do
     args = {}
-    lambda { Musicality::HashMake.make_from_hash(HashMakeA, args) }.should raise_error(ArgumentError)
+    lambda { HashMakeA.make_from_hash(args) }.should raise_error(ArgumentError)
   end
 
-  it "should send hashed args to class constructor without modification, if arg is not " do
-    args = { :hash_make_b => "b", :c => "c" }
-    lambda { Musicality::HashMake.make_from_hash(HashMakeA, args) }.should_not raise_error(ArgumentError)
+  it "should pass on any objects which are already made" do
+    args = { :b => HashMakeB.new(:anything => "b"), :c => "c" }
+    lambda { HashMakeA.make_from_hash(args) }.should_not raise_error(ArgumentError)
   end
 
   it "should make any sub-HashMake objects when the relevant value is a Hash" do
     args_b = { :anything => "ok" }
-    args = { :hash_make_b => args_b, :c => "c" }
-    hma = Musicality::HashMake.make_from_hash(HashMakeA, args)
-    hma.hash_make_b.anything.should eq("ok")
+    args = { :b => args_b, :c => "c" }
+    hma = HashMakeA.make_from_hash(args)
+    hma.b.anything.should eq("ok")
   end
 
   it "should be able to save object to hash and then make from hash the same object" do
-    obj = HashMakeA.new :hash_make_b => HashMakeB.new( :anything => "ok"), :c => "c", :d => 1024, :e => false
-    hash = Musicality::HashMake.save_to_hash obj
-    obj2 = Musicality::HashMake.make_from_hash(HashMakeA, hash)
+    obj = HashMakeA.new :b => HashMakeB.new( :anything => "ok"), :c => "c", :d => "1024", :e => "false"
+    hash = obj.save_to_hash
+    obj2 = HashMakeA.make_from_hash(hash)
     
-    obj.hash_make_b.anything.should eq(obj2.hash_make_b.anything)
+    obj.b.anything.should eq(obj2.b.anything)
     obj.c.should eq(obj2.c)
     obj.d.should eq(obj2.d)
     obj.e.should eq(obj2.e)

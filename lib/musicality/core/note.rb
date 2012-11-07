@@ -32,7 +32,7 @@ module Musicality
 #                    and PORTAMENTO.
 #
 class Note
-
+  include HashMake
   attr_reader :pitches, :duration, :sustain, :attack, :seperation, :relationship
 
   # no relationship to the following note
@@ -59,32 +59,20 @@ class Note
   ]
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ :duration, :pitches ]
+  REQ_ARGS = [ spec_arg(:duration, Numeric),
+               spec_arg_array(:pitches, Pitch) ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :sustain, :attack, :seperation, :relationship ]
-  # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { :sustain => 0.5, :attack => 0.5, 
-                      :seperation => 0.5, :relationship => RELATIONSHIP_NONE }
+  OPT_ARGS = [ spec_arg(:sustain, Numeric, 0.5),
+               spec_arg(:attack, Numeric, 0.5),
+               spec_arg(:seperation, Numeric, 0.5),
+               spec_arg(:relationship, Symbol, RELATIONSHIP_NONE) ]
 
   # A new instance of Note.
   # @param [Hash] args Hashed arguments. Required keys are :pitches, :duration, 
   #                    and :offset. Optional keys are :sustain, :attack, 
   #                    :seperation, and :tie.
   def initialize args={}
-    raise ArgumentError, ":pitches key not present in args Hash" if !args.has_key?(:pitches)
-    raise ArgumentError, ":duration key not present in args Hash" if !args.has_key?(:duration)
-    
-    self.pitches = args[:pitches]
-    self.duration = args[:duration]
-  
-    opts = OPTIONAL_ARG_DEFAULTS.merge args
-	  
-    # The sustain, attack, and seperation will be used to form the envelope profile for the note.
-
-    self.sustain = opts[:sustain]
-    self.attack = opts[:attack]	
-    self.seperation = opts[:seperation]
-    self.relationship = opts[:relationship]
+    process_args args
   end
 
   # Set the note pitches.

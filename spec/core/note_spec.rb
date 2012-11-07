@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Note do
   before :each do
-    @pitch = Musicality::Pitch.new( :ratio => 120.0 )
+    @pitch = Musicality::PitchConstants::C4
   end
 
   it "should be constructible (no raised exceptions) without the optional parameters" do
@@ -67,5 +67,18 @@ describe Musicality::Note do
     note.relationship.should eq(Musicality::Note::RELATIONSHIP_NONE)
     note.relationship = Musicality::Note::RELATIONSHIP_TIE
     note.relationship.should eq(Musicality::Note::RELATIONSHIP_TIE)
+  end
+  
+  it "should be hash-makeable" do
+    Musicality::HashMakeUtil.is_hash_makeable?(Musicality::Note).should be_true
+  
+    hash = { :pitches => [{}, {:octave => 2}, { :octave => 2, :cent => 1}], :duration => 2, :relationship => Musicality::Note::RELATIONSHIP_TIE }
+    note = Musicality::Note.make_from_hash hash
+    hash2 = note.save_to_hash
+    hash.should eq(hash2)
+    
+    note2 = Musicality::Note.make_from_hash hash2
+    note.pitches.should eq(note2.pitches)
+    note.duration.should eq(note2.duration)
   end
 end

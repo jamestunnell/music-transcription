@@ -45,7 +45,9 @@ module Musicality
 #
 class Pitch
   include Comparable
-  attr_reader :octave, :semitone, :cent, :cents_per_octave
+  include HashMake
+  attr_accessor :octave, :semitone, :cent, :base_freq
+  attr_reader :cents_per_octave
 
   #The default number of semitones per octave is 12, corresponding to 
   # the twelve-tone equal temperment tuning system.
@@ -59,16 +61,15 @@ class Pitch
   DEFAULT_BASE_FREQ = 16.351597831287414
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ ]
+  REQ_ARGS = [ ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :octave, :semitone, :cent, :base_freq ]  
-  # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = {
-    :octave => 0, :semitone => 0, :cent => 0, :base_freq => DEFAULT_BASE_FREQ
-  }
+  OPT_ARGS = [ spec_arg(:octave, Numeric, 0),
+               spec_arg(:semitone, Numeric, 0), 
+               spec_arg(:cent, Numeric, 0), 
+               spec_arg(:base_freq, Numeric, DEFAULT_BASE_FREQ) ]  
   
   # A new instance of Pitch.
-  # @param [Hash] opts Optional arguments. Valid keys are :octave, 
+  # @param [Hash] args Hashed args. Valid, optional keys are :octave, 
   #                    :semitone, :cent, :total_cent, and :ratio.
   #                    When :total_cent is set, it will override all 
   #                    other arguments.
@@ -78,14 +79,9 @@ class Pitch
   #                    are set, each will override the default of zero.
   # @raise [ArgumentError] if any of :octave, :semitone, or :cent is
   #                        not a Fixnum.
-  def initialize opts={}
-    opts = OPTIONAL_ARG_DEFAULTS.merge opts
-
-    @octave = opts[:octave]
-    @semitone = opts[:semitone]
-    @cent = opts[:cent]
+  def initialize args={}
     @cents_per_octave = CENTS_PER_SEMITONE * SEMITONES_PER_OCTAVE
-    @base_freq = opts[:base_freq]
+    process_args args
   end
 
   def freq

@@ -10,15 +10,14 @@ module Musicality
 #                        (e.g. Array, Hash, etc.).
 #
 class Sequence < Event
-
+  include HashMake
   attr_reader :notes
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ :offset, :notes ]
+  REQ_ARGS = [ spec_arg(:offset), 
+               spec_arg_array(:notes, Note), ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [  ]
-  # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { }
+  OPT_ARGS = [  ]
 
   # A new instance of Sequence.
   # @param [Hash] args Hashed arguments. Required keys are :offset and :notes.
@@ -26,12 +25,7 @@ class Sequence < Event
   # @raise [ArgumentError] if notes is not an Array
   # @raise [ArgumentError] if notes contains a non-Note
   def initialize args={}
-    raise ArgumentError, ":offset is not given in args" if !args.has_key?(:offset)
-    raise ArgumentError, ":notes is not given in args" if !args.has_key?(:notes)
-    
-    self.notes = args[:notes]
-    self.offset = args[:offset]
-    # skip setting duration. It is calculated from sum of note durations. See #duration method below
+    process_args args
   end
 
   # Assign notes to sequence

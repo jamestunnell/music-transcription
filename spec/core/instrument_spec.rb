@@ -17,4 +17,19 @@ describe Musicality::Instrument do
     instr = Instrument.new :settings => settings
     instr.settings.should eq(settings.clone)
   end
+  
+  it "should be hash-makeable" do
+    Musicality::HashMakeUtil.is_hash_makeable?(Musicality::Instrument).should be_true
+    
+    settings = { 1 => "a", 2 => "b" }
+    hash = { :class_name => "Musicality::TriangleWave", :settings => settings }
+    instr = Instrument.make_from_hash hash
+    hash2 = instr.save_to_hash
+    hash.should eq(hash2)
+    
+    instr2 = Instrument.make_from_hash hash2
+    
+    instr.class_name.should eq(instr2.class_name)
+    instr.settings.should eq(instr2.settings)
+  end
 end

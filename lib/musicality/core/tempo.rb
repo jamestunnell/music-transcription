@@ -11,30 +11,19 @@ module Musicality
 #   @return [Rational] The length of each beat (in note length)
 #
 class Tempo < Event
-
+  include HashMake
   attr_reader :beat_duration, :beats_per_minute
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ :beats_per_minute, :beat_duration, :offset ]
+  REQ_ARGS = [ spec_arg(:beats_per_minute), spec_arg(:beat_duration), spec_arg(:offset) ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :duration ]
+  OPT_ARGS = [ spec_arg(:duration, Numeric, 0.0) ]
 
-  # default values for optional hash-args
-  OPTIONAL_ARG_DEFAULTS = { :duration => 0.0 }
-  
   # A new instance of Tempo.
   # @param [Hash] args Hashed arguments. Required keys are :beats_per_minute, 
   #                    :beat_duration, and :offset. Optional key is :duration.
   def initialize args = {}
-    raise ArgumentError, ":beats_per_minute key not present in args Hash" if !args.has_key?(:beats_per_minute)
-    raise ArgumentError, ":beat_duration key not present in args Hash" if !args.has_key?(:beat_duration)
-    raise ArgumentError, ":offset key not present in args Hash" if !args.has_key?(:offset)
-    
-    self.beats_per_minute = args[:beats_per_minute]
-    self.beat_duration = args[:beat_duration]
-  
-    opts = OPTIONAL_ARG_DEFAULTS.merge args
-    super opts[:offset], opts[:duration]
+    process_args args
   end
   
   # Set the beats per minute

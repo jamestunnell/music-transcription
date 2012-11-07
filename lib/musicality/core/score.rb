@@ -15,28 +15,21 @@ module Musicality
 #   @return [Array] Score program.
 #
 class Score
-
+  include HashMake
   attr_reader :parts, :tempos, :program
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ :tempos, :program ]
+  REQ_ARGS = [ spec_arg_array(:tempos, Tempo),
+               spec_arg(:program, Program) ]
+  
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :parts ]
-
-  # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { :parts => [] }
+  OPT_ARGS = [ spec_arg_array(:parts, Part, []) ]
   
   # A new instance of Score.
   # @param [Hash] args Hashed arguments. Required keys are :tempos and 
   #               :programs. Optional keys are :parts.
   def initialize args={}
-    raise ArgumentError, "args does not have :tempos key" if !args.has_key?(:tempos)
-    raise ArgumentError, "args does not have :program key" if !args.has_key?(:program)
-
-    self.tempos = args[:tempos]
-    self.program = args[:program]
-    opts = OPTIONAL_ARG_DEFAULTS.merge args
-	  self.parts = opts[:parts]
+    process_args args
   end
   
   # Set the score parts.

@@ -5,21 +5,18 @@ module Musicality
 # @author James Tunnell
 #
 class Program
+  include HashMake
   attr_reader :segments
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ :segments ]
+  REQ_ARGS = [ spec_arg_array(:segments, Range) ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ ]
-
-  # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { }
+  OPT_ARGS = [ ]
 
   # A new instance of Program.
   # @param [Hash] args Hashed arguments. Required key is :segments.
   def initialize args={}
-    raise ArgumentError, "args does not have :segments key" if !args.has_key?(:segments)
-	  self.segments = args[:segments]
+    process_args args
   end
 
   # Assign program segments. Each segment is a Range to specify which range of 

@@ -15,25 +15,21 @@ module Musicality
 #   @return [Instrument] The instrument to be used in playing the part.
 #
 class Part
-
+  include HashMake
   attr_reader :sequences, :dynamics, :instrument
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ ]
+  REQ_ARGS = [ ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :sequences, :dynamics, :instrument ]  
-  # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { :sequences => [], :dynamics => [],
-                      :instrument => Instrument.new }
+  OPT_ARGS = [ spec_arg_array(:sequences, Sequence),
+               spec_arg_array(:dynamics, Dynamic),
+               spec_arg(:instrument, Instrument, Instrument.new) ]  
                       
   # A new instance of Part.
-  # @param [Hash] options Optional arguments. Valid keys are :sequences, 
-  #                       :dynamics, and :instrument.
-  def initialize options = {}
-    opts = OPTIONAL_ARG_DEFAULTS.merge options
-    self.sequences = opts[:sequences]	
-    self.dynamics = opts[:dynamics]
-    self.instrument = opts[:instrument]
+  # @param [Hash] args Hashed arguments. Valid optional keys are :sequences, 
+  #                    :dynamics, and :instrument.
+  def initialize args = {}
+    process_args args
   end
   
   # Set the part note sequences.

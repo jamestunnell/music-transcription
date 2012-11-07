@@ -2,175 +2,256 @@ require 'active_support'
 
 module Musicality
 
-  # Makes class instances following a hash-makeable (hash-args-only-during-
-  # initialization) idiom.
-  # 
-  # In order to be considered hash-makeable a class must define the following 
-  # constants:
+  # Provide information about an argument that will/may be included in an args 
+  # hash.
   #
-  # REQUIRED_ARG_KEYS is an array contains the keys that must be present in
-  # the hash that is passed to the constructor.
-  #
-  # OPTIONAL_ARG_KEYS is an array contains the keys that might no be present
-  # in the hash that is passed to the constructor.
-  #
-  # OPTIONAL_ARG_DEFAULTS is a hash that maps the optional arg keys to their
-  # default values (since the args may or may not be passed to constructor.
-  #
-  # Additionally, each instance must define instance variables that match the 
-  # required arg keys.
-  # 
   # @author James Tunnell
-  class HashMake
-    # Test if a class can be made with hash-args. Class must define the
-    # REQUIRED_ARG_KEYS, OPTIONAL_ARG_KEYS, and OPTIONAL_ARG_DEFAULTS constants 
-    # to be hash-makeable. Also, instance variables must be defined to match the
-    # required arg keys. See HashMake class description for more details on what
-    # constitutes a hash-makeable class.
-    #
-    # @param [Class] klass The class to be tested for hash-makeableness.
-    def self.is_hash_makeable? klass, obj = nil
-      is_hash_makeable = klass.constants.include?(:REQUIRED_ARG_KEYS) && 
-                         klass.constants.include?(:OPTIONAL_ARG_KEYS) && 
-                         klass.constants.include?(:OPTIONAL_ARG_DEFAULTS)
+  class HashedArgSpec
+    attr_reader :key, :klass, :default_value
+    attr_accessor :array_flag
 
-      if is_hash_makeable
-        is_hash_makeable = klass::OPTIONAL_ARG_KEYS == klass::OPTIONAL_ARG_DEFAULTS.keys
-      end
+    # @param [Symbol] key The key which locates the arg in the args hash.
+    # @param [Class]  klass The class of the argument which should be mapped to the key.
+    # @param [Object] default_value Allows the save_to_hash method to 
+    #                               determine if the value should appear in 
+    #                               the output hash. Default values are not output.
+    # @param [true/false] array_flag Indicates if the value mapped to key should be 
+    #                                an Array of objects.
+    def initialize key, klass, default_value, array_flag
+      @key = key
+      @klass = klass
+      @default_value = default_value
+      @array_flag = array_flag
+    end
+  end
+
+  # Provide the is_hash_makeable? method to test if a class conforms to the hash-
+  # makeable idiom.
+  class HashMakeUtil
+    # Determine if the given class conforms to the hash-makeable idiom. 
+    #
+    # @param [Class] klass The class to be tested.
+    def self.is_hash_makeable? klass, obj = nil
+      is_hash_makeable = klass.constants.include?(:REQ_ARGS) && 
+                         klass.constants.include?(:OPT_ARGS)
       
       if is_hash_makeable && !obj.nil?
-        klass::REQUIRED_ARG_KEYS.each do |key|
-          instance_var_name = ("@" + key.to_s).to_sym 
+        klass::REQ_ARGS.each do |req_arg|
+          instance_var_name = ("@" + req_arg.key.to_s).to_sym 
           if !obj.instance_variable_defined?(instance_var_name)
             is_hash_makeable = false
           end
         end
       end
       
-      return is_hash_makeable
+      return is_hash_makeable    
+    end
+  end
+
+  # Allows class instances to follow a hash-makeable (hash-args-only-during-
+  # initialization) idiom.
+  # 
+  # In order to be considered hash-makeable a class must define the following 
+  # constants:
+  #
+  # REQ_ARGS is an array of HashedArgSpec objects, defining the args that must
+  # be present in the hash that is passed to the constructor.
+  #
+  # OPT_ARGS is an array of HashedArgSpec objects, defining the args that might
+  # not be present in the hash that is passed to the constructor. Default values
+  # should be specified to ensure semantic correctness.
+  #
+  # Additionally, each instance must define attribute accessors that match up
+  # for each arg.
+  # 
+  # @author James Tunnell  
+  module HashMake
+
+    # Use the included hook to also extend the including class with HashMake
+    # class methods
+    def self.included(base)
+      base.extend(ClassMethods)
     end
     
-    # Make a new class instance using the given hash-args.
-    # @param [Class] klass The class to make a new instance of.
-    # @param [Hash] hash The hash-args to use.
-    # @raise [ArgumentError] if hash is not a Hash.
-    # @raise [ArgumentError] if klass is not a Class.
-    # @raise [ArgumentError] if klass is not hash-makeable.
-    def self.make_from_hash klass, hash
-      
-      raise ArgumentError, "hash #{hash} is not a Hash" if !hash.is_a?(Hash)
-      raise ArgumentError, "klass is not a Class" if !klass.is_a?(Class)
-      raise ArgumentError, "klass is not hash-makeable" if !self.is_hash_makeable?(klass)
-
-      args = {}
-      
-      #make required args
-      klass::REQUIRED_ARG_KEYS.each do |key|
-        raise ArgumentError, "hash #{hash} does not have required key #{key}" if !hash.has_key?(key)
-        args[key] = make_val_from_hash_val key, hash[key]
-      end
-      
-      #if any optional keys are present
-      klass::OPTIONAL_ARG_KEYS.each do |key|
-        if hash.has_key?(key)
-          args[key] = make_val_from_hash_val key, hash[key]
-        end
-      end
-      
-      klass.new args
-    end
-
-    # Save an object to a representative hash, which could be use to hash-make 
-    # an equivalent object.
+    # This method is intended to be called from initialize. It will process the
+    # hashed args which are given in initialize. It will check for required args
+    # and using attribute accessors will assign them and any optional args which
+    # are in the args hash as well.
     #
-    # @param [Object] obj A hash-makeable object, to be made into a 
-    #                     representative hash.
-    def self.save_to_hash obj
-      raise ArgumentError, "obj is not hash-makeable" if !self.is_hash_makeable?(obj.class, obj)
+    # @param [Hash] args
+    def process_args args
+      raise ArgumentError, "args is not a Hash" if !args.is_a?(Hash)
+      
+      self.class::REQ_ARGS.each do |arg_spec|
+        key = arg_spec.key
+        raise ArgumentError, "args does not have required key #{key}" if !args.has_key?(key)
+        val = args[key]
+        process_val arg_spec, val
+      end
+      
+      self.class::OPT_ARGS.each do |arg_spec|
+        key = arg_spec.key
+        val = args[key] || arg_spec.default_value
+        process_val arg_spec, val
+      end
+    end
+    
+    # Take the current hash-makeable object and convert it to a Hash, which only includes those args which
+    # do not have the default value.
+    def save_to_hash
+      raise ArgumentError, "obj is not hash-makeable" if !HashMakeUtil.is_hash_makeable?(self.class, self)
       
       hash = {}
       
-      obj.class::REQUIRED_ARG_KEYS.each do |key|
-        instance_var_name = ("@" + key.to_s).to_sym
-        raise ArgumentError, "required arg key #{key} does not have an associated instance variable" if !obj.instance_variable_defined?(instance_var_name)
-        val = obj.instance_variable_get(instance_var_name)
-        hash[key] = self.make_hash_val_from_val val
+      self.class::REQ_ARGS.each do |arg_spec|
+        key = arg_spec.key
+        raise ArgumentError, "current obj #{self} does not include method #{key}" if !self.methods.include?(key)
+        val = self.send(key)
+        hash[key] = make_hashed_val_from_val arg_spec, val
       end
 
-      obj.class::OPTIONAL_ARG_KEYS.each do |key|
-        instance_var_name = ("@" + key.to_s).to_sym
-        if obj.instance_variable_defined?(instance_var_name)
-          default = obj.class::OPTIONAL_ARG_DEFAULTS[key]
-          val = obj.instance_variable_get(instance_var_name)
-          
-          if val != default
-            hash[key] = self.make_hash_val_from_val val
-          end
+      self.class::OPT_ARGS.each do |arg_spec|
+        key = arg_spec.key
+        raise ArgumentError, "current obj #{self} does not include method #{key}" if !self.methods.include?(key)
+        val = self.send(key)
+        
+        if val != arg_spec.default_value
+          hash[key] = make_hashed_val_from_val arg_spec, val
         end
       end
       
       return hash
-      
     end
-    
+      
     private
     
-    def self.make_val_from_hash_val key, val
-      raise ArgumentError, "key #{key} is not a Symbol" if !key.is_a?(Symbol)
+    def process_val arg_spec, val
+      key = arg_spec.key
       
-      if val.is_a?(Hash)
-        clss = key_name_to_class key.to_s
-        if !clss.nil? && self.is_hash_makeable?(clss)
-          val = self.make_from_hash clss, val
-        end
-      elsif val.is_a?(Array)
-        
-        #because val is an array, we expect the key to be a plural (e.g. :notes)
-        key_sing = ActiveSupport::Inflector.singularize key.to_s
-        clss = key_name_to_class key_sing
-        
-        if !clss.nil? && self.is_hash_makeable?(clss)
-          ary = []
-          val.each do |item|
-            if item.class == clss
-              ary << item
-            else            
-              ary << self.make_from_hash(clss, item)
-            end
-          end
-          val = ary
-        end
+      if arg_spec.array_flag
+        raise ArgumentError, "val #{val} is not an Array" if !val.is_a?(Array)
+      else
+        raise ArgumentError, "val #{val} is not a #{arg_spec.klass}" if !val.is_a?(arg_spec.klass)
       end
       
-      return val
-    end
-    
-    def self.key_name_to_class key_name
-      class_name = "Musicality::" + ActiveSupport::Inflector.camelize(key_name)
-      ClassFinder.find_by_name class_name
-    end
-    
-    def self.make_hash_val_from_val val
+      assigner_sym = "#{key.to_s}=".to_sym
+      raise "current obj #{self} does not include method #{assigner_sym.inspect}" if !self.methods.include?(assigner_sym)
       
-      hash_val = val
+      self.send(assigner_sym, val)
+    end
+
+    def make_hashed_val_from_val arg_spec, val
+      hashed_val = val
       
       if val.is_a?(Array)
         ary = val
-        hash_val = []
+        hashed_val = []
         ary.each do |item|
-          if self.is_hash_makeable? item.class
-            hash_val << self.save_to_hash(item)
+          if HashMakeUtil.is_hash_makeable? item.class
+            hashed_val << item.save_to_hash
           else
-            hash_val << item
+            hashed_val << item
           end
         end
-      elsif self.is_hash_makeable? val.class
-        hash_val = self.save_to_hash val
+      elsif HashMakeUtil.is_hash_makeable? val.class
+        hashed_val = val.save_to_hash
       end
       
-      return hash_val
+      return hashed_val
     end
     
+    # The class methods to be mixed in along with the instance methods.
+    # These methods can be called anywhere in the including class.
+    module ClassMethods    
+    
+      #make a new HashedArgSpec instance that is a non-Array
+      #
+      # @param [Symbol] key The key which locates the arg in the args hash.
+      # @param [Class]  klass The class of the argument which should be mapped to the key.
+      # @param [Object] default_value Allows the save_to_hash method to 
+      #                               determine if the value should appear in 
+      #                               the output hash. Default values are not output.
+      def spec_arg key, klass = Object, default_value = nil
+        HashedArgSpec.new key, klass, default_value, false
+      end
+      
+      # make a new HashedArgSpec instance that is an Array containing
+      # objects of the class given by klass.
+      #
+      # @param [Symbol] key The key which locates the arg in the args hash.
+      # @param [Class]  klass The class of the argument which should be mapped to the key.
+      # @param [Object] default_value Allows the save_to_hash method to 
+      #                               determine if the value should appear in 
+      #                               the output hash. Default values are not output.
+      def spec_arg_array key, klass = Object, default_value = []
+        HashedArgSpec.new key, klass, default_value, true
+      end
+      
+      # Make an instance of the current class from the given hashe args.
+      # @param [Hash] hash Hashed arguments.
+      def make_from_hash hash
+        klass = self
+        raise ArgumentError, "hash #{hash} is not a Hash" if !hash.is_a?(Hash)
+        raise ArgumentError, "klass #{klass} is not hash-makeable" if !HashMakeUtil.is_hash_makeable?(klass)
+
+        args = {}
+        
+        #make required args
+        self::REQ_ARGS.each do |arg_spec|
+          key = arg_spec.key
+          
+          raise ArgumentError, "hash #{hash} does not have required key #{key}" if !hash.has_key?(key)
+          hashed_val = hash[key]
+          args[key] = make_val_from_hashed_val arg_spec, hashed_val
+        end
+        
+        #if any optional keys are present
+        self::OPT_ARGS.each do |arg_spec|
+          key = arg_spec.key
+                  
+          if hash.has_key?(key)
+            hashed_val = hash[key]
+            args[key] = make_val_from_hashed_val arg_spec, hashed_val
+          end
+        end
+        
+        klass.new args
+      end
+      
+      private
+      
+      def make_val_from_hashed_val arg_spec, hashed_val
+        klass = arg_spec.klass
+
+        if hashed_val.is_a?(klass)
+        elsif hashed_val.is_a?(Hash)
+          raise ArgumentError, "hashed_val is a Hash but is not hash-makeable" if !HashMakeUtil.is_hash_makeable?(klass)
+          hashed_val = klass.make_from_hash hashed_val
+        elsif arg_spec.array_flag
+          raise ArgumentError, "hashed_val #{hashed_val} is not an Array" if !hashed_val.is_a?(Array)
+          arg_spec.array_flag = false
+          
+          ary = []
+          hashed_val.each do |item|
+            if item.is_a?(klass)
+              ary << item
+            elsif item.is_a?(Hash)
+              raise ArgumentError, "item is a Hash but is not hash-makeable" if !HashMakeUtil.is_hash_makeable?(klass)
+              ary << klass.make_from_hash(item)
+            else
+              raise ArgumentError, "item #{item} is not a #{klass} or a Hash"
+            end
+          end
+          hashed_val = ary
+          arg_spec.array_flag = true
+        else
+          raise ArgumentError, "hashed_val #{hashed_val} is not a #{klass} or a Hash"
+        end
+        
+        return hashed_val
+      end
+
+    end  
   end
 end
 

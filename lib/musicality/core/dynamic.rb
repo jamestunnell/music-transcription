@@ -9,27 +9,19 @@ module Musicality
 #   @return [Float] Determine loudness or softness in a part or score.
 #
 class Dynamic < Event
-
+  include HashMake
   attr_reader :loudness
 
   # required hash-args (for hash-makeable idiom)
-  REQUIRED_ARG_KEYS = [ :offset, :loudness ]
+  REQ_ARGS = [ spec_arg(:offset), spec_arg(:loudness) ]
   # optional hash-args (for hash-makeable idiom)
-  OPTIONAL_ARG_KEYS = [ :duration ]
-  # default values for optional hashed arguments
-  OPTIONAL_ARG_DEFAULTS = { :duration => 0.0 }
+  OPT_ARGS = [ spec_arg(:duration, Numeric, 0.0) ]
   
   # A new instance of Dynamic.
   # @param [Hash] args Hash arguments. Required keys are :loudness and :offset.
   #                    Optional key is :duration.
   def initialize args = {}
-    raise ArgumentError, ":loudness key not present in args Hash" if !args.has_key?(:loudness)
-    raise ArgumentError, ":offset key not present in args Hash" if !args.has_key?(:offset)
-    
-    self.loudness = args[:loudness]
-  
-    opts = OPTIONAL_ARG_DEFAULTS.merge args
-    super opts[:offset], opts[:duration]
+    process_args args
   end
   
   # Set the dynamic loudness.
