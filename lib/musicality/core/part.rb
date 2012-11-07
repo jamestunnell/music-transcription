@@ -8,21 +8,24 @@ module Musicality
 # @!attribute [rw] sequences
 #   @return [Array] The note sequences to be played.
 #
-# @!attribute [rw] dynamics
-#   @return [Array] The dynamics which control part loudness.
+# @!attribute [rw] start_dynamic
+#   @return [Dynamic] The starting part dynamic.
+#
+# @!attribute [rw] dynamic_changes
+#   @return [Array] Changes in the part dynamic.
 #
 # @!attribute [rw] instrument
 #   @return [Instrument] The instrument to be used in playing the part.
 #
 class Part
   include HashMake
-  attr_reader :sequences, :dynamics, :instrument
+  attr_reader :sequences, :start_dynamic, :dynamic_changes, :instrument
 
   # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ ]
+  REQ_ARGS = [ spec_arg(:start_dynamic, Dynamic) ]
   # optional hash-args (for hash-makeable idiom)
   OPT_ARGS = [ spec_arg_array(:sequences, Sequence),
-               spec_arg_array(:dynamics, Dynamic),
+               spec_arg_array(:dynamic_changes, Dynamic),
                spec_arg(:instrument, Instrument, Instrument.new) ]  
                       
   # A new instance of Part.
@@ -44,6 +47,28 @@ class Part
     end
     
   	@sequences = sequences
+  end
+
+  # Set the part starting dynamic.
+  # @param [Dynamic] start_dynamic The part starting dynamic.
+  # @raise [ArgumentError] if start_dynamic is not a Dynamic object.
+  def start_dynamic= start_dynamic
+    raise ArgumentError, "start_dynamic is not a Dynamic" if !start_dynamic.is_a?(Dynamic)
+  	@start_dynamic = start_dynamic
+  end
+  
+  # Set the part dynamic changes.
+  # @param [Array] dynamic_changes The score dynamic changes.
+  # @raise [ArgumentError] if dynamic_changes is not an Array.
+  # @raise [ArgumentError] if dynamic_changes contain a non-Dynamic object.
+  def dynamic_changes= dynamic_changes
+    raise ArgumentError, "dynamic_changes is not an Array" if !dynamic_changes.is_a?(Array)
+
+    dynamic_changes.each do |dynamic|
+      raise ArgumentError, "dynamic_changes contain a non-Dynamic #{dynamic}" if !dynamic.is_a?(Dynamic)
+    end
+    
+  	@dynamic_changes = dynamic_changes
   end
 
   # Set the part dynamics.

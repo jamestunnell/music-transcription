@@ -9,10 +9,10 @@ module Musicality
 #   @return [Array] Score parts.
 # 
 # @!attribute [rw] start_tempo
-#   @return [Array] Score tempos.
+#   @return [Tempo] The starting score tempo.
 #
 # @!attribute [rw] tempo_changes
-#   @return [Array] Score tempos.
+#   @return [Array] Changes in the score tempo.
 #
 # @!attribute [rw] program
 #   @return [Array] Score program.
@@ -34,8 +34,6 @@ class Score
   #               :programs. Optional keys are :parts.
   def initialize args={}
     process_args args
-    
-    raise ArgumentError, "start_tempo is after program start" if @start_tempo.offset > @program.segments.first.first
   end
   
   # Set the score parts.

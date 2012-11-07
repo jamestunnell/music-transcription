@@ -14,7 +14,8 @@ describe Musicality::Performer do
 
     @sequence = Sequence.new :notes => @notes, :offset => 0.0
     @instrument = Musicality::Instrument.new :class_name => Musicality::SineWave.name
-    @part = Musicality::Part.new :offset => 0.0, :sequences => [@sequence], :instrument => @instrument
+    @start_dynamic = Musicality::Dynamic.new :offset => 0.0, :loudness => 0.5
+    @part = Musicality::Part.new :offset => 0.0, :sequences => [@sequence], :instrument => @instrument, :start_dynamic => @start_dynamic
 
     tempo = Musicality::Tempo.new( { :beat_duration => 0.25, :beats_per_minute => 120, :offset => 0.0 } )
     sample_rate = 48.0

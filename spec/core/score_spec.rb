@@ -10,15 +10,16 @@ describe Musicality::Score do
       Musicality::Sequence.new( :offset => 0.0, :notes => [@note1, @note2, @note3] )
     ]
     
-    @dynamics = [
-      Musicality::Dynamic.new( :loudness => 0.5, :offset => 0.to_r ),
-      Musicality::Dynamic.new( :loudness => 1.0, :duration => 2.to_r, :offset => 1.to_r),
+    @start_dynamic = Musicality::Dynamic.new( :loudness => 0.5, :offset => 0.0 )
+    
+    @dynamic_changes = [
+      Musicality::Dynamic.new( :loudness => 1.0, :duration => 2.0, :offset => 1.0)
     ]
     
     @parts = 
     [
-      Musicality::Part.new( :sequences => @sequences, :dynamics => @dynamics, :name => "piano (LH)" ),
-      Musicality::Part.new( :sequences => @sequences, :dynamics => @dynamics, :name => "piano (RH)" ),
+      Musicality::Part.new( :start_dynamic => @start_dynamic, :sequences => @sequences, :dynamic_changes => @dynamic_changes, :name => "piano (LH)" ),
+      Musicality::Part.new( :start_dynamic => @start_dynamic, :sequences => @sequences, :dynamic_changes => @dynamic_changes, :name => "piano (RH)" ),
     ]
 
     @start_tempo = Musicality::Tempo.new( :beats_per_minute => 100, :beat_duration => 0.25.to_r, :offset => 0.to_r )

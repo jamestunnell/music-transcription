@@ -21,6 +21,8 @@ class Performer
     @sample_rate = sample_rate
     @part = part
 
+    @dynamic_computer = DynamicComputer.new @part.start_dynamic, @part.dynamic_changes
+
     settings = { :sample_rate => @sample_rate }.merge @part.instrument.settings
     @instrument = ClassFinder.find_by_name(@part.instrument.class_name).new(settings)
     
@@ -42,9 +44,9 @@ class Performer
   
   # Render an audio sample of the part at the current note counter.
   # Start or end notes as needed.
-  def perform_sample note_counter, time_counter
+  def perform_sample note_cursor, time_counter
     @sequencers.each do |sequencer|
-      event_updates = sequencer.update_notes note_counter
+      event_updates = sequencer.update_notes note_cursor
       
       event_updates[:to_start].each do |event|
 #        puts "starting pitch #{event.note.pitch}"
@@ -61,8 +63,11 @@ class Performer
       end
     end
 
+    loudness = @dynamic_computer.loudness_at note_cursor
+    raise ArgumentError, "loudness is not between 0.0 and 1.0" if !loudness.between?(0.0,1.0)
+
     #now actually render a sample
-    return @instrument.render_sample
+    return @instrument.render_sample loudness
   end
 
   # Release any currently playing notes

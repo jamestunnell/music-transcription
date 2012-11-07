@@ -40,7 +40,7 @@ class Oscillator
   
   # Render a sample of all the pitches currently set to be played. Increments 
   # each pitch's current phase based on its phase rate.
-  def render_sample
+  def render_sample loudness = 1.0
     sample = 0.0
     
     @pitches.each do |pitch, state|
@@ -53,7 +53,7 @@ class Oscillator
       state[:phase] += state[:phase_rate]
     end
     
-    return sample
+    return sample * loudness
   end
   
   # Default implementation of render_wave_at, which just produces 0. This should

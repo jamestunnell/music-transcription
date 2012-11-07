@@ -10,24 +10,25 @@ describe Musicality::Part do
       Musicality::Sequence.new( :offset => 0.0, :notes => [@note1, @note2, @note3] )
     ]
     
-    @dynamics = [
-      Musicality::Dynamic.new( :loudness => 0.5, :offset => 0.to_r ),
+    @start_dynamic = Musicality::Dynamic.new( :loudness => 0.5, :offset => 0.to_r )
+    
+    @dynamic_changes = [
       Musicality::Dynamic.new( :loudness => 1.0, :duration => 2.to_r, :offset => 1.to_r),
     ]
   end
   
-  describe Musicality::Part.new do
-    its(:sequences) { should be_empty }
-    its(:dynamics) { should be_empty }
-  end
+  it "should assign starting dynamic given during construction" do
+    part = Musicality::Part.new :start_dynamic => @start_dynamic
+    part.start_dynamic.should eq(@start_dynamic)
+  end  
   
   it "should assign note sequences given during construction" do
-    part = Musicality::Part.new :sequences => @sequences
+    part = Musicality::Part.new :start_dynamic => @start_dynamic, :sequences => @sequences
     part.sequences.should eq(@sequences.clone)
   end
   
-  it "should assign dynamics given during construction" do
-    part = Musicality::Part.new :dynamics => @dynamics
-    part.dynamics.should eq(@dynamics.clone)
+  it "should assign dynamic changes given during construction" do
+    part = Musicality::Part.new :start_dynamic => @start_dynamic, :dynamic_changes => @dynamic_changes
+    part.dynamic_changes.should eq(@dynamic_changes)
   end
 end
