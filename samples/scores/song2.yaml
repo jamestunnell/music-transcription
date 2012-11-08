@@ -1,0 +1,118 @@
+---
+:start_tempo:
+  :beats_per_minute: 120
+  :beat_duration: 0.25
+  :offset: 0.0
+:program:
+  :segments:
+  - !ruby/range
+    begin: 0
+    end: 4.0
+    excl: true
+  - !ruby/range
+    begin: 0
+    end: 4.0
+    excl: true
+:parts:
+- :start_dynamic:
+    :offset: 0.0
+    :loudness: 0.5
+  :sequences:
+  - :offset: 0.0
+    :notes:
+    - :duration: 1.0
+      :pitches:
+      - :octave: 4
+    - :duration: 1.0
+      :pitches:
+      - :octave: 3
+        :semitone: 10
+    - :duration: 1.0
+      :pitches:
+      - :octave: 3
+        :semitone: 8
+    - :duration: 0.5
+      :pitches:
+      - :octave: 3
+        :semitone: 7
+    - :duration: 0.5
+      :pitches:
+      - :octave: 3
+        :semitone: 10
+  :instrument:
+    :class_name: Musicality::SawtoothWave
+- :start_dynamic:
+    :offset: 0.0
+    :loudness: 0.5
+  :sequences:
+  - :offset: 0.0
+    :notes:
+    - :duration: 0.375
+      :pitches:
+      - :octave: 5
+        :semitone: 4
+    - :duration: 1.0
+      :pitches:
+      - :octave: 5
+        :semitone: 2
+    - :duration: 1.0
+      :pitches:
+      - :octave: 5
+    - :duration: 0.625
+      :pitches:
+      - :octave: 5
+    - :duration: 0.5
+      :pitches:
+      - :octave: 5
+    - :duration: 0.5
+      :pitches:
+      - :octave: 5
+        :semitone: 2
+  :instrument:
+    :class_name: Musicality::TriangleWave
+- :start_dynamic:
+    :offset: 0.0
+    :loudness: 0.5
+  :sequences:
+  - :offset: 0.125
+    :notes:
+    - :duration: 0.25
+      :pitches:
+      - :octave: 5
+        :semitone: 7
+    - :duration: 0.5
+      :pitches:
+      - :octave: 5
+        :semitone: 5
+  - :offset: 1.125
+    :notes:
+    - :duration: 0.25
+      :pitches:
+      - :octave: 5
+        :semitone: 5
+    - :duration: 0.5
+      :pitches:
+      - :octave: 5
+        :semitone: 3
+  - :offset: 2.125
+    :notes:
+    - :duration: 0.25
+      :pitches:
+      - :octave: 5
+        :semitone: 3
+    - :duration: 0.5
+      :pitches:
+      - :octave: 5
+        :semitone: 3
+  - :offset: 3.01
+    :notes:
+    - :duration: 0.5
+      :pitches:
+      - :octave: 5
+        :semitone: 3
+    - :duration: 0.5
+      :pitches:
+      - :octave: 5
+        :semitone: 5
+  :instrument:
+    :class_name: Musicality::TriangleWave
