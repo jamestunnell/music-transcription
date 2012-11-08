@@ -26,7 +26,7 @@ class Oscillator
   # 
   # @param [Pitch] pitch The pitch to be played.
   def start_pitch pitch
-    phase_rate = (pitch.ratio * TWO_PI) / @sample_rate.to_f
+    phase_rate = (pitch.freq * TWO_PI) / @sample_rate.to_f
     @pitches[pitch] = { :phase_rate => phase_rate, :phase => 0.0 }
   end
 
