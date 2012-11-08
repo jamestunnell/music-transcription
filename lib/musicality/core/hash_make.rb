@@ -1,5 +1,3 @@
-require 'active_support'
-
 module Musicality
 
   # Provide information about an argument that will/may be included in an args 
