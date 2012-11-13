@@ -45,7 +45,7 @@ describe Musicality::Conductor do
     }
     
     @score = Score.make_from_hash hash
-    @sample_rate = 66.0
+    @sample_rate = 1000.0
   end
 
   describe "#perform_score" do
@@ -54,9 +54,7 @@ describe Musicality::Conductor do
       @conductor.perform_score
     end
 
-    it "should be able to perform the entire score" do    
-      @conductor.note_counter.should be_within(0.001).of(@score.program.length)
-      
+    it "should be able to perform the entire score" do
       #how long it should take time-wise
       notes_per_sec = 0.5
       score_length_notes = @score.program.length

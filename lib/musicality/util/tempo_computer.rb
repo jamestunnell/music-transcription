@@ -52,7 +52,7 @@ class TempoComputer
   def set_default_tempo tempo
     notes_per_sec = (tempo.beats_per_minute / 60.0) * tempo.beat_duration
     func = lambda {|x| notes_per_sec }
-    @piecewise_function.add_piece (Event::MIN_OFFSET)...(Event::MAX_OFFSET + 1), func
+    @piecewise_function.add_piece( (Event::MIN_OFFSET)...(Event::MAX_OFFSET + 1), func )
   end
 
   # Add a function piece to the piecewise function, which will to compute tempo

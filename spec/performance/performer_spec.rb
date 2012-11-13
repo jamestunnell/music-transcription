@@ -19,9 +19,7 @@ describe Musicality::Performer do
 
     tempo = Musicality::Tempo.new( { :beat_duration => 0.25, :beats_per_minute => 120, :offset => 0.0 } )
     sample_rate = 48.0
-    @tempo_computer = TempoComputer.new tempo
-    @note_time_converter = NoteTimeConverter.new @tempo_computer, sample_rate
-    @performer = Musicality::Performer.new @part, @sample_rate, @note_time_converter
+    @performer = Musicality::Performer.new @part, @sample_rate
   end
 
   it "should find and instantiate the part's instrument class" do

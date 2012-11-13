@@ -30,7 +30,8 @@ describe Musicality::ScoreFile do
                 { :duration => 0.75, :pitches => [ { :octave => 9 } ] },
               ]
             }
-          ]
+          ],
+          :instrument => {},
         }
       ],
       :tempo_changes => [

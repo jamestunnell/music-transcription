@@ -26,8 +26,8 @@ class Score
                spec_arg(:program, Program) ]
   
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_array(:parts, Part, []),
-               spec_arg_array(:tempo_changes, Tempo) ]
+  OPT_ARGS = [ spec_arg_array(:parts, Part, ->{ Array.new }),
+               spec_arg_array(:tempo_changes, Tempo, ->{ Array.new }) ]
   
   # A new instance of Score.
   # @param [Hash] args Hashed arguments. Required keys are :tempos and 
@@ -80,6 +80,19 @@ class Score
     raise ArgumentError, "program is not a Program" if !program.is_a?(Program)
 
   	@program = program
+  end
+
+  # Find the start of a score. The start will be at then start of whichever part begins
+  # first, or 0 if no parts have been added.
+  def find_start
+    sos = 0.0
+    
+    @parts.each do |part|
+      sop = part.find_start
+      sos = sop if sop > sos
+    end
+    
+    return sos
   end
   
   # Find the end of a score. The end will be at then end of whichever part ends 

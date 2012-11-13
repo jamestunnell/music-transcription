@@ -4,22 +4,34 @@ module Musicality
   # hash.
   #
   # @author James Tunnell
+  #
+  # @!attribute [r] default_value
+  #   @return [Object] Display the default value for the argument, using the default
+  #                    value generator Proc given during initialization.
+  #
   class HashedArgSpec
-    attr_reader :key, :klass, :default_value
+    attr_reader :key, :klass
     attr_accessor :array_flag
 
     # @param [Symbol] key The key which locates the arg in the args hash.
     # @param [Class]  klass The class of the argument which should be mapped to the key.
-    # @param [Object] default_value Allows the save_to_hash method to 
-    #                               determine if the value should appear in 
-    #                               the output hash. Default values are not output.
+    # @param [Object] default_value_gen Allows the save_to_hash method to determine
+    #                                   if the value should appear in the output hash.
+    #                                   Default values are not output. Also allows
+    #                                   default values to be set on optional parameters
+    #                                   during initialization.
     # @param [true/false] array_flag Indicates if the value mapped to key should be 
     #                                an Array of objects.
-    def initialize key, klass, default_value, array_flag
+    def initialize key, klass, default_value_gen, array_flag
       @key = key
       @klass = klass
-      @default_value = default_value
+      @default_value_gen = default_value_gen
       @array_flag = array_flag
+    end
+    
+    def default_value
+      raise "@default_value_gen is nil" if @default_value_gen.nil?
+      @default_value_gen.call
     end
   end
 
@@ -166,11 +178,13 @@ module Musicality
       #
       # @param [Symbol] key The key which locates the arg in the args hash.
       # @param [Class]  klass The class of the argument which should be mapped to the key.
-      # @param [Object] default_value Allows the save_to_hash method to 
-      #                               determine if the value should appear in 
-      #                               the output hash. Default values are not output.
-      def spec_arg key, klass = Object, default_value = nil
-        HashedArgSpec.new key, klass, default_value, false
+      # @param [Object] default_value_gen Allows the save_to_hash method to determine if
+      #                                   the value should appear in the output hash.
+      #                                   Default values are not output. Also allows
+      #                                   default values to be set on optional parameters
+      #                                   during initialization.
+      def spec_arg key, klass = Object, default_value_gen = nil
+        HashedArgSpec.new key, klass, default_value_gen, false
       end
       
       # make a new HashedArgSpec instance that is an Array containing
@@ -178,11 +192,13 @@ module Musicality
       #
       # @param [Symbol] key The key which locates the arg in the args hash.
       # @param [Class]  klass The class of the argument which should be mapped to the key.
-      # @param [Object] default_value Allows the save_to_hash method to 
-      #                               determine if the value should appear in 
-      #                               the output hash. Default values are not output.
-      def spec_arg_array key, klass = Object, default_value = []
-        HashedArgSpec.new key, klass, default_value, true
+      # @param [Object] default_value_gen Allows the save_to_hash method to determine if
+      #                                   the value should appear in the output hash.
+      #                                   Default values are not output. Also allows
+      #                                   default values to be set on optional parameters
+      #                                   during initialization.
+      def spec_arg_array key, klass = Object, default_value_gen = ->{ Array.new }
+        HashedArgSpec.new key, klass, default_value_gen, true
       end
       
       # Make an instance of the current class from the given hashe args.

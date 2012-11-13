@@ -13,11 +13,7 @@ class Performer
   # A new instance of Performer.
   # @param [Part] part The part to be used during performance.
   # @param [Numeric] sample_rate The sample rate used in rendering samples.
-  # @param [NoteTimeConverter] note_time_converter Not currently used. Could be 
-  #                                                used for determining note lead
-  #                                                time for instruments that have
-  #                                                longer attack rise times.
-  def initialize part, sample_rate, note_time_converter
+  def initialize part, sample_rate
     @sample_rate = sample_rate
     @part = part
 
@@ -32,21 +28,23 @@ class Performer
     end
   end
 
-  # Figure which notes will be played, starting at the given note offset. Must 
+  # Figure which notes will be played, starting at the given offset. Must 
   # be called before any calls to perform_sample.
   #
-  # @param [Numeric] note_offset The note offset to begin playing notes at.
-  def prepare_performance_at note_offset = 0.0
+  # @param [Numeric] offset The offset to begin playing notes at.
+  def prepare_performance_at offset = 0.0
     @sequencers.each do |sequencer| 
-      sequencer.prepare_to_perform note_offset
+      sequencer.prepare_to_perform offset
     end
   end
   
-  # Render an audio sample of the part at the current note counter.
+  # Render an audio sample of the part at the current offset counter.
   # Start or end notes as needed.
-  def perform_sample note_cursor, time_counter
+  #
+  # @param [Numeric] counter The offset to sample performance at.
+  def perform_sample counter
     @sequencers.each do |sequencer|
-      event_updates = sequencer.update_notes note_cursor
+      event_updates = sequencer.update_notes counter
       
       event_updates[:to_start].each do |event|
 #        puts "starting pitch #{event.note.pitch}"
@@ -63,7 +61,7 @@ class Performer
       end
     end
 
-    loudness = @dynamic_computer.loudness_at note_cursor
+    loudness = @dynamic_computer.loudness_at counter
     raise ArgumentError, "loudness is not between 0.0 and 1.0" if !loudness.between?(0.0,1.0)
 
     #now actually render a sample

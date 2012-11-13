@@ -14,10 +14,9 @@ class Sequence < Event
   attr_reader :notes
 
   # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg(:offset), 
-               spec_arg_array(:notes, Note), ]
+  REQ_ARGS = [ spec_arg(:offset) ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [  ]
+  OPT_ARGS = [ spec_arg_array(:notes, Note, ->{Array.new}) ]
 
   # A new instance of Sequence.
   # @param [Hash] args Hashed arguments. Required keys are :offset and :notes.
@@ -31,11 +30,10 @@ class Sequence < Event
   # Assign notes to sequence
   # @param [Array] notes A non-empty array of notes
   # @raise [ArgumentError] if notes is not an Array
-  # @raise [ArgumentError] if notes is empty.
   # @raise [ArgumentError] if notes contains a non-Note  
   def notes= notes
     raise ArgumentError, "notes is not an Array" if !notes.is_a?(Array)
-    raise ArgumentError, "notes is empty" if notes.empty?
+    #raise ArgumentError, "notes is empty" if notes.empty?
 
     notes.each do |note|
       raise ArgumentError, "#{note} in notes is not a Note" if !note.is_a?(Note)

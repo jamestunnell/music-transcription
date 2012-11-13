@@ -11,8 +11,8 @@ class Instrument
   # required hash-args (for hash-makeable idiom)
   REQ_ARGS = [ ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg(:class_name, String, "Musicality::SquareWave") ,
-               spec_arg(:settings, Hash, {}) ]
+  OPT_ARGS = [ spec_arg(:class_name, String, -> {"Musicality::SquareWave"} ) ,
+               spec_arg(:settings, Hash, ->{ Hash.new }) ]
 
   # A new instance of Instrument.
   # @param [Hash] args Hashed args. Valid, optional keys are :settings, and :class_name.

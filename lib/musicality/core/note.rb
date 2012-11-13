@@ -62,10 +62,10 @@ class Note
   REQ_ARGS = [ spec_arg(:duration, Numeric),
                spec_arg_array(:pitches, Pitch) ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg(:sustain, Numeric, 0.5),
-               spec_arg(:attack, Numeric, 0.5),
-               spec_arg(:seperation, Numeric, 0.5),
-               spec_arg(:relationship, Symbol, RELATIONSHIP_NONE) ]
+  OPT_ARGS = [ spec_arg(:sustain, Numeric, ->{ 0.5 }),
+               spec_arg(:attack, Numeric, ->{ 0.5 }),
+               spec_arg(:seperation, Numeric, ->{ 0.5 }),
+               spec_arg(:relationship, Symbol, ->{ RELATIONSHIP_NONE }) ]
 
   # A new instance of Note.
   # @param [Hash] args Hashed arguments. Required keys are :pitches, :duration, 
@@ -93,8 +93,8 @@ class Note
   # @raise [ArgumentError] if duration is not a Numeric.
   # @raise [RangeError] if duration is negative or zero.
   def duration= duration
-    raise ArgumentError, "duration is not a Numeric" if !duration.is_a?(Numeric)
-  	raise RangeError, "duration is negative or zero." if duration <= 0.0  	
+    raise ArgumentError, "duration #{duration} is not a Numeric" if !duration.is_a?(Numeric)
+  	raise RangeError, "duration #{duration} is negative or zero." if duration <= 0.0  	
   	@duration = duration
   end
   

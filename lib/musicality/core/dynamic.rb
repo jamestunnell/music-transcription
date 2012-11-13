@@ -15,7 +15,7 @@ class Dynamic < Event
   # required hash-args (for hash-makeable idiom)
   REQ_ARGS = [ spec_arg(:offset), spec_arg(:loudness) ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg(:duration, Numeric, 0.0) ]
+  OPT_ARGS = [ spec_arg(:duration, Numeric, ->{0.0}) ]
   
   # A new instance of Dynamic.
   # @param [Hash] args Hash arguments. Required keys are :loudness and :offset.

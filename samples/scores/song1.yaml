@@ -70,6 +70,7 @@
       :pitches:
       - :octave: 2
         :semitone: 3
+  :instrument: {}
 - :start_dynamic:
     :offset: 0.0
     :loudness: 0.5
@@ -159,3 +160,4 @@
     - :duration: 0.125
       :pitches:
       - :octave: 4
+  :instrument: {}

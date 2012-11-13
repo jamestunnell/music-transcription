@@ -63,10 +63,10 @@ class Pitch
   # required hash-args (for hash-makeable idiom)
   REQ_ARGS = [ ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg(:octave, Numeric, 0),
-               spec_arg(:semitone, Numeric, 0), 
-               spec_arg(:cent, Numeric, 0), 
-               spec_arg(:base_freq, Numeric, DEFAULT_BASE_FREQ) ]  
+  OPT_ARGS = [ spec_arg(:octave, Numeric, ->{ 0 }),
+               spec_arg(:semitone, Numeric, ->{ 0 }), 
+               spec_arg(:cent, Numeric, ->{ 0 }), 
+               spec_arg(:base_freq, Numeric, ->{DEFAULT_BASE_FREQ}) ]  
   
   # A new instance of Pitch.
   # @param [Hash] args Hashed args. Valid, optional keys are :octave, 

@@ -27,8 +27,8 @@ class HashMakeA
   ]
   # optional args (for hash-makeable idiom)
   OPT_ARGS = [
-    self.spec_arg(:d, Object, 31),
-    self.spec_arg(:e, Object, 55)
+    self.spec_arg(:d, Object, -> {31}),
+    self.spec_arg(:e, Object, -> {55})
   ]
 
   def initialize args={}

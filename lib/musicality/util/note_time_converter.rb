@@ -45,6 +45,20 @@ class NoteTimeConverter
     return time
   end
 
+  #map absolute note offsets to relative time offsets
+  def map_note_offsets_to_time_offsets note_offsets
+    time_counter = 0.0
+    sorted_offsets = note_offsets.sort
+    note_time_map = { sorted_offsets.first => time_counter }
+    
+    for i in 1...sorted_offsets.count do
+      time_counter += time_elapsed(sorted_offsets[i-1], sorted_offsets[i])
+      note_time_map[sorted_offsets[i]] = time_counter
+    end
+    
+    return note_time_map
+  end
+
 end
 
 end

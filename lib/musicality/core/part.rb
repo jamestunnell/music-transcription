@@ -20,14 +20,14 @@ module Musicality
 class Part
   include HashMake
   attr_reader :sequences, :start_dynamic, :dynamic_changes, :instrument
-
+  
   # required hash-args (for hash-makeable idiom)
   REQ_ARGS = [ spec_arg(:start_dynamic, Dynamic) ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_array(:sequences, Sequence),
-               spec_arg_array(:dynamic_changes, Dynamic),
-               spec_arg(:instrument, Instrument, Instrument.new) ]  
-                      
+  OPT_ARGS = [ spec_arg_array(:sequences, Sequence, ->{ Array.new }),
+               spec_arg_array(:dynamic_changes, Dynamic, ->{ Array.new }),
+               spec_arg(:instrument, Instrument, ->{ Instrument.new }) ]
+  
   # A new instance of Part.
   # @param [Hash] args Hashed arguments. Valid optional keys are :sequences, 
   #                    :dynamics, and :instrument.
@@ -46,7 +46,7 @@ class Part
       raise ArgumentError, "seqeuences contain a non-Sequence" if !seqeuence.is_a?(Sequence)
     end
     
-  	@sequences = sequences
+    @sequences = sequences
   end
 
   # Set the part starting dynamic.
@@ -54,7 +54,7 @@ class Part
   # @raise [ArgumentError] if start_dynamic is not a Dynamic object.
   def start_dynamic= start_dynamic
     raise ArgumentError, "start_dynamic is not a Dynamic" if !start_dynamic.is_a?(Dynamic)
-  	@start_dynamic = start_dynamic
+    @start_dynamic = start_dynamic
   end
   
   # Set the part dynamic changes.
@@ -82,7 +82,7 @@ class Part
       raise ArgumentError, "dynamics contain a non-Dynamic #{dynamic}" if !dynamic.is_a?(Dynamic)
     end
       	
-  	@dynamics = dynamics
+    @dynamics = dynamics
   end
 
   # Set the part instrument.
@@ -91,6 +91,19 @@ class Part
   def instrument= instrument
     raise ArgumentError, "instrument is not an Instrument" if !instrument.is_a?(Instrument)
   	@instrument = instrument
+  end
+
+  # Find the start of the part. The start will be at the note or 
+  # note sequence that starts first, or 0 if none have been added.
+  def find_start
+    sop = 0.0
+ 
+    @sequences.each do |sequence|
+      sos = sequence.offset
+      sop = sos if sos < sop
+    end
+
+    return sop
   end
 
   # Find the end of the part. The end will be at then end of whichever note or 

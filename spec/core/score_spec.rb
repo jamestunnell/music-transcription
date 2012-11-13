@@ -13,22 +13,21 @@ describe Musicality::Score do
     @start_dynamic = Musicality::Dynamic.new( :loudness => 0.5, :offset => 0.0 )
     
     @dynamic_changes = [
-      Musicality::Dynamic.new( :loudness => 1.0, :duration => 2.0, :offset => 1.0)
+      Musicality::Dynamic.new( :loudness => 1.0, :duration => 0.5, :offset => 0.25)
     ]
-    
+      
     @parts = 
     [
-      Musicality::Part.new( :start_dynamic => @start_dynamic, :sequences => @sequences, :dynamic_changes => @dynamic_changes, :name => "piano (LH)" ),
-      Musicality::Part.new( :start_dynamic => @start_dynamic, :sequences => @sequences, :dynamic_changes => @dynamic_changes, :name => "piano (RH)" ),
+      Musicality::Part.new( :start_dynamic => @start_dynamic, :sequences => @sequences, :dynamic_changes => @dynamic_changes, :id => "piano (LH)" ),
     ]
 
-    @start_tempo = Musicality::Tempo.new( :beats_per_minute => 100, :beat_duration => 0.25.to_r, :offset => 0.to_r )
+    @start_tempo = Musicality::Tempo.new( :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0 )
     
     @tempo_changes = [
-      Musicality::Tempo.new( :beats_per_minute => 130, :beat_duration => 0.25.to_r, :offset => 2.to_r ),
+      Musicality::Tempo.new( :beats_per_minute => 60, :beat_duration => 0.25, :offset => 0.5, :duration => 0.25 ),
     ]
     
-    @program = Musicality::Program.new :segments => [0...0.75]
+    @program = Musicality::Program.new :segments => [0...0.75, 0...0.75]
   end
   
   it "should assign reqd args given during construction" do

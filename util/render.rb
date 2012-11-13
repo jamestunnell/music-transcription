@@ -33,7 +33,6 @@ class ScoreRenderer
       samples << (sample * MAX_SAMPLE_VALUE)
 
       if(samples.count >= 10000)
-        print "%.4f:" % conductor.note_counter
         print "%.4f:" % conductor.time_counter
         print "%08d   " % conductor.sample_counter
         print "%.4f   " % (samples.last / MAX_SAMPLE_VALUE.to_f)
