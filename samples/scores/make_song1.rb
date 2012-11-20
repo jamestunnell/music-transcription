@@ -26,7 +26,7 @@ score_hash = {
     :offset => 0.0
   },
   :parts => [
-    { 
+    {
       :start_dynamic => {
         :offset => 0.0,
         :loudness => 0.5
@@ -55,7 +55,7 @@ score_hash = {
         }
       ]
     }, 
-    { 
+    {
       :start_dynamic => {
         :offset => 0.0,
         :loudness => 0.5

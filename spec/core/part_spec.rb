@@ -15,6 +15,8 @@ describe Musicality::Part do
     @dynamic_changes = [
       Musicality::Dynamic.new( :loudness => 1.0, :duration => 2.to_r, :offset => 1.to_r),
     ]
+    
+    @id = "xyz"
   end
   
   it "should assign starting dynamic given during construction" do
@@ -30,5 +32,10 @@ describe Musicality::Part do
   it "should assign dynamic changes given during construction" do
     part = Musicality::Part.new :start_dynamic => @start_dynamic, :dynamic_changes => @dynamic_changes
     part.dynamic_changes.should eq(@dynamic_changes)
+  end
+
+  it "should assign id given during construction" do
+    part = Musicality::Part.new :start_dynamic => @start_dynamic, :id => @id
+    part.id.should eq(@id)
   end
 end

@@ -19,7 +19,12 @@ class ScoreCollator
     # figure parts (note sequences & dynamics)
     score.parts.each do |part|
       
-      new_part = Musicality::Part.new( :start_dynamic => part.start_dynamic, :instrument => part.instrument )
+      new_part = Musicality::Part.new(
+	:start_dynamic => part.start_dynamic,
+	:instrument_plugins => part.instrument_plugins,
+	:effect_plugins => part.effect_plugins,
+	:id => part.id
+      )
       segment_start_offset = 0.0
       dyn_comp = DynamicComputer.new part.start_dynamic, part.dynamic_changes
       

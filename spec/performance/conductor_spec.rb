@@ -45,13 +45,14 @@ describe Musicality::Conductor do
     }
     
     @score = Score.make_from_hash hash
+    @arrangement = Musicality::Arranger.new.make_arrangement @score
     @sample_rate = 1000.0
   end
 
   describe "#perform_score" do
     before :each do
-      @conductor = Musicality::Conductor.new @score, @sample_rate
-      @conductor.perform_score
+      @conductor = Musicality::Conductor.new @arrangement, @sample_rate
+      @conductor.perform
     end
 
     it "should be able to perform the entire score" do

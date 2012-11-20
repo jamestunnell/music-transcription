@@ -28,9 +28,6 @@ score_hash = {
   },
   :parts => [
     { 
-      :instrument => {
-        :class_name => "Musicality::SawtoothWave"
-      },
       :start_dynamic => {
         :offset => 0.0,
         :loudness => 0.5
@@ -47,9 +44,6 @@ score_hash = {
       ]
     }, 
     { 
-      :instrument => {
-        :class_name => "Musicality::TriangleWave"
-      },
       :start_dynamic => {
         :offset => 0.0,
         :loudness => 0.5
@@ -67,9 +61,6 @@ score_hash = {
       ]
     },
     { 
-      :instrument => {
-        :class_name => "Musicality::TriangleWave"
-      },
       :start_dynamic => {
         :offset => 0.0,
         :loudness => 0.5

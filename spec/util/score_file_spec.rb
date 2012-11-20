@@ -31,7 +31,7 @@ describe Musicality::ScoreFile do
               ]
             }
           ],
-          :instrument => {},
+          :id=> "1",
         }
       ],
       :tempo_changes => [

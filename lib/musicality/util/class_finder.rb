@@ -8,7 +8,7 @@ class ClassFinder
   # @param [String] name The class name (including scoping modules).
   #
   def self.find_by_name name
-    tokens = name.scan /\w+/
+    tokens = name.scan(/\w+/)
     
     modul = Kernel
     

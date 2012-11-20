@@ -39,8 +39,7 @@
       :pitches:
       - :octave: 3
         :semitone: 10
-  :instrument:
-    :class_name: Musicality::SawtoothWave
+  :id: palski1f
 - :start_dynamic:
     :offset: 0.0
     :loudness: 0.5
@@ -68,8 +67,7 @@
       :pitches:
       - :octave: 5
         :semitone: 2
-  :instrument:
-    :class_name: Musicality::TriangleWave
+  :id: uzdqejid
 - :start_dynamic:
     :offset: 0.0
     :loudness: 0.5
@@ -114,5 +112,4 @@
       :pitches:
       - :octave: 5
         :semitone: 5
-  :instrument:
-    :class_name: Musicality::TriangleWave
+  :id: ma7ke827

@@ -126,7 +126,11 @@ module Musicality
         val = self.send(key)
         
         if val != arg_spec.default_value
-          hash[key] = make_hashed_val_from_val arg_spec, val
+          hashed_val = make_hashed_val_from_val arg_spec, val
+          
+          unless hashed_val.is_a?(Hash) && hashed_val.empty?
+            hash[key] = hashed_val
+          end
         end
       end
       

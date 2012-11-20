@@ -3,6 +3,7 @@
 require 'micro-optparse'
 require 'musicality'
 require 'wavefile.rb'
+require 'pry'
 
 class ScoreRenderer
   
@@ -21,15 +22,16 @@ class ScoreRenderer
   
   def run
     score = Musicality::ScoreFile.load @scorefile
-    conductor = Musicality::Conductor.new score, @samplerate
+    arrangement = Musicality::Arranger.new.make_arrangement score
+    conductor = Musicality::Conductor.new arrangement, @samplerate
     
     format = WaveFile::Format.new(:mono, BITS_PER_SAMPLE, @samplerate.to_i)
     writer = WaveFile::Writer.new(@outfile, format)
     
-    puts "note   time   sample    "
+    puts "time   sample    "
       
     samples = []
-    conductor.perform_score do |sample|  
+    conductor.perform do |sample|
       samples << (sample * MAX_SAMPLE_VALUE)
 
       if(samples.count >= 10000)

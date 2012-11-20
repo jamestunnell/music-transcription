@@ -13,14 +13,26 @@ class Performer
   # A new instance of Performer.
   # @param [Part] part The part to be used during performance.
   # @param [Numeric] sample_rate The sample rate used in rendering samples.
+  # @param [Class] instrument_class The class to use for an instrument.
   def initialize part, sample_rate
     @sample_rate = sample_rate
     @part = part
 
     @dynamic_computer = DynamicComputer.new @part.start_dynamic, @part.dynamic_changes
 
-    settings = { :sample_rate => @sample_rate }.merge @part.instrument.settings
-    @instrument = ClassFinder.find_by_name(@part.instrument.class_name).new(settings)
+    @instruments = []
+    part.instrument_plugins.each do |instrument_plugin|
+      settings = { :sample_rate => @sample_rate }.merge instrument_plugin.settings
+      
+      # TODO make an instrument from each plugin config and add to @instruments
+    end
+
+    @effects = []
+    part.effect_plugins.each do |effect_plugin|
+      settings = { :sample_rate => @sample_rate }.merge effect_plugin.settings
+      
+      # TODO make an effect from each plugin config and add to @effects
+    end
     
     @sequencers = []
     @part.sequences.each do |sequence|
@@ -49,23 +61,36 @@ class Performer
       event_updates[:to_start].each do |event|
 #        puts "starting pitch #{event.note.pitch}"
         event.note.pitches.each do |pitch|
-          @instrument.start_pitch pitch
+          @instruments.each do |instrument|
+            instrument.start_pitch pitch
+          end
         end
       end
 
       event_updates[:to_end].each do |event|
 #        puts "ending pitch #{event.note.pitch}"
         event.note.pitches.each do |pitch|
-          @instrument.end_pitch pitch
+          @instruments.each do |instrument|
+            instrument.end_pitch pitch
+          end
         end
       end
     end
 
     loudness = @dynamic_computer.loudness_at counter
     raise ArgumentError, "loudness is not between 0.0 and 1.0" if !loudness.between?(0.0,1.0)
-
-    #now actually render a sample
-    return @instrument.render_sample loudness
+    
+    sample = 0.0
+    
+    @instruments.each do |instrument|
+      sample += instrument.render_sample loudness
+    end
+    
+    @effects.each do |effect|
+      sample += effect.render_sample loudness
+    end
+    
+    return sample
   end
 
   # Release any currently playing notes
