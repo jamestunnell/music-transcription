@@ -68,5 +68,10 @@ describe Musicality::ScoreFile do
     s2 = f2.read
     s1.should eq(s2)
   end
+  
+  after :all do
+    File.delete @score_hash_filename
+    File.delete "x_" + @score_hash_filename
+  end
 end
 
