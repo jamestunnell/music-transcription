@@ -3,8 +3,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Musicality::ValueComputer do
   
   before :each do
-    @value_change = Event.new 0.5, 0.2, 0.5
-    @value_updater = ValueUpdater.new 1.0, [@value_change], 0.0
+    value_change = Event.new 0.5, 0.2, 0.5
+    value_computer = ValueComputer.new 1.0, [value_change]
+    @value_updater = ValueUpdater.new value_computer, 0.0
   end
 
   it "should be at start/default value if nothing has been called yet" do

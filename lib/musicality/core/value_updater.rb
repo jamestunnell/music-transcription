@@ -19,8 +19,9 @@ class ValueUpdater
     end
   end
   
-  def initialize default_value, value_change_events, start_offset
-    @value_computer = ValueComputer.new default_value, value_change_events
+  def initialize value_computer, start_offset
+    raise ArgumentError, "value_computer is not a ValueComputer" unless value_computer.is_a?(ValueComputer)
+    @value_computer = value_computer
     reset start_offset
   end
   
