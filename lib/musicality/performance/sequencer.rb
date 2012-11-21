@@ -8,7 +8,7 @@ class NoteEvent < Event
   attr_reader :note
   def initialize offset, note
     @note = note
-    super(offset, note.duration)
+    super(offset, note, note.duration)
   end
 end
 

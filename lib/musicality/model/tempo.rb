@@ -15,9 +15,13 @@ class Tempo < Event
   attr_reader :beat_duration, :beats_per_minute
 
   # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg(:beats_per_minute), spec_arg(:beat_duration), spec_arg(:offset) ]
+  REQ_ARGS = [
+    spec_arg(:beats_per_minute, Numeric, ->(a){ a > 0.0}),
+    spec_arg(:beat_duration, Numeric, ->(a){ a > 0.0}),
+    spec_arg(:offset, Numeric, ->(a){ a.between?(Event::MIN_OFFSET, Event::MAX_OFFSET) } )
+  ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg(:duration, Numeric, ->{ 0.0 }) ]
+  OPT_ARGS = [ spec_arg(:duration, Numeric, ->(a){ a >= 0.0}, 0.0) ]
 
   # A new instance of Tempo.
   # @param [Hash] args Hashed arguments. Required keys are :beats_per_minute, 

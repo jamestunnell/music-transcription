@@ -24,8 +24,8 @@ describe Musicality::Sequencer do
 
   it "should be deemed inactive when offset is before note sequence offset" do
     sequencer = Sequencer.new @sequence
-    sequencer.prepare_to_perform -1.0
-    sequencer.update_notes -1.0
+    sequencer.prepare_to_perform(-1.0)
+    sequencer.update_notes(-1.0)
     sequencer.active?().should be_false
   end
 
@@ -61,8 +61,8 @@ describe Musicality::Sequencer do
 
   it "should be deemed active after updated to offset that is at sequence offset" do
     sequencer = Sequencer.new @sequence
-    sequencer.prepare_to_perform -1.0
-    sequencer.update_notes -1.0
+    sequencer.prepare_to_perform(-1.0)
+    sequencer.update_notes(-1.0)
     sequencer.active?().should be_false
     sequencer.update_notes 0.0
     sequencer.active?().should be_true
@@ -70,8 +70,8 @@ describe Musicality::Sequencer do
 
   it "should be deemed active after updated to offset that is during sequence" do
     sequencer = Sequencer.new @sequence
-    sequencer.prepare_to_perform -1.0
-    sequencer.update_notes -1.0
+    sequencer.prepare_to_perform(-1.0)
+    sequencer.update_notes(-1.0)
     sequencer.active?().should be_false
     sequencer.update_notes 1.0
     sequencer.active?().should be_true

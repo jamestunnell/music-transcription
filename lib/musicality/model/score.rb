@@ -26,8 +26,8 @@ class Score
                spec_arg(:program, Program) ]
   
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_array(:parts, Part, ->{ Array.new }),
-               spec_arg_array(:tempo_changes, Tempo, ->{ Array.new }) ]
+  OPT_ARGS = [ spec_arg_array(:parts, Part),
+               spec_arg_array(:tempo_changes, Tempo) ]
   
   # A new instance of Score.
   # @param [Hash] args Hashed arguments. Required keys are :tempos and 

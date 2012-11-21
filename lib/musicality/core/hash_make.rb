@@ -6,32 +6,43 @@ module Musicality
   # @author James Tunnell
   #
   # @!attribute [r] default_value
-  #   @return [Object] Display the default value for the argument, using the default
-  #                    value generator Proc given during initialization.
+  #   @return [Object] Display the default value for the argument. If a Proc was
+  #                    given for generating default values, use it.
   #
   class HashedArgSpec
-    attr_reader :key, :klass
+    attr_reader :key, :klass, :check_proc
     attr_accessor :array_flag
 
     # @param [Symbol] key The key which locates the arg in the args hash.
     # @param [Class]  klass The class of the argument which should be mapped to the key.
-    # @param [Object] default_value_gen Allows the save_to_hash method to determine
-    #                                   if the value should appear in the output hash.
-    #                                   Default values are not output. Also allows
-    #                                   default values to be set on optional parameters
-    #                                   during initialization.
+    # @param [Proc] check_proc Allows parameter checking.
+    # @param [Object] default_value Allows the save_to_hash method to determine
+    #                               if the value should appear in the output hash.
+    #                               Default values are not output. Also allows
+    #                               default values to be set on optional parameters
+    #                               during initialization. For object with no basic
+    #                               literal syntax, Pass a Proc to generate a unique
+    #                               default value object.
     # @param [true/false] array_flag Indicates if the value mapped to key should be 
     #                                an Array of objects.
-    def initialize key, klass, default_value_gen, array_flag
+    def initialize key, klass, check_proc, default_value, array_flag
       @key = key
       @klass = klass
-      @default_value_gen = default_value_gen
+      #puts "klass for key #{key} is #{klass}"
+      @check_proc = check_proc
+      @default_value = default_value
       @array_flag = array_flag
     end
-    
+
+    # @raise [RuntimeError] if @default_value is nil.    
     def default_value
-      raise "@default_value_gen is nil" if @default_value_gen.nil?
-      @default_value_gen.call
+      raise "@default_value is nil" if @default_value.nil?
+      
+      if @default_value.is_a?(Proc)
+        return @default_value.call
+      else
+        return @default_value
+      end
     end
   end
 
@@ -144,8 +155,15 @@ module Musicality
       
       if arg_spec.array_flag
         raise ArgumentError, "val #{val} is not an Array" if !val.is_a?(Array)
+        
+        val.each do |item|
+          raise ArgumentError, "val item #{item} does not pass check" unless arg_spec.check_proc.call(item)
+        end
       else
-        raise ArgumentError, "val #{val} is not a #{arg_spec.klass}" if !val.is_a?(arg_spec.klass)
+        #puts "val: #{val}"
+        #raise ArgumentError, "val #{val} is not a class" unless val.class.is_a?(Class)
+        raise ArgumentError, "val #{val} is not a #{arg_spec.klass}" unless val.is_a?(arg_spec.klass)
+        raise ArgumentError, "val #{val} does not pass check" unless arg_spec.check_proc.call(val)
       end
       
       assigner_sym = "#{key.to_s}=".to_sym
@@ -182,13 +200,14 @@ module Musicality
       #
       # @param [Symbol] key The key which locates the arg in the args hash.
       # @param [Class]  klass The class of the argument which should be mapped to the key.
-      # @param [Object] default_value_gen Allows the save_to_hash method to determine if
-      #                                   the value should appear in the output hash.
-      #                                   Default values are not output. Also allows
-      #                                   default values to be set on optional parameters
-      #                                   during initialization.
-      def spec_arg key, klass = Object, default_value_gen = nil
-        HashedArgSpec.new key, klass, default_value_gen, false
+      # @param [Proc] check_proc Allows parameter checking.
+      # @param [Object] default_value Allows the save_to_hash method to determine if
+      #                               the value should appear in the output hash.
+      #                               Default values are not output. Also allows
+      #                               default values to be set on optional parameters
+      #                               during initialization.
+      def spec_arg key, klass = Object, check_proc = ->(a){ true }, default_value = nil
+        HashedArgSpec.new key, klass, check_proc, default_value, false
       end
       
       # make a new HashedArgSpec instance that is an Array containing
@@ -196,13 +215,14 @@ module Musicality
       #
       # @param [Symbol] key The key which locates the arg in the args hash.
       # @param [Class]  klass The class of the argument which should be mapped to the key.
-      # @param [Object] default_value_gen Allows the save_to_hash method to determine if
-      #                                   the value should appear in the output hash.
-      #                                   Default values are not output. Also allows
-      #                                   default values to be set on optional parameters
-      #                                   during initialization.
-      def spec_arg_array key, klass = Object, default_value_gen = ->{ Array.new }
-        HashedArgSpec.new key, klass, default_value_gen, true
+      # @param [Proc] check_proc Allows parameter checking.
+      # @param [Object] default_value Allows the save_to_hash method to determine if
+      #                               the value should appear in the output hash.
+      #                               Default values are not output. Also allows
+      #                               default values to be set on optional parameters
+      #                               during initialization.
+      def spec_arg_array key, klass = Object, check_proc = ->(a){ true }, default_value = ->{ Array.new }
+        HashedArgSpec.new key, klass, check_proc, default_value, true
       end
       
       # Make an instance of the current class from the given hashe args.

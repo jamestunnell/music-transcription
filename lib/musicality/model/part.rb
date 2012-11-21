@@ -31,11 +31,11 @@ class Part
   # required hash-args (for hash-makeable idiom)
   REQ_ARGS = [ spec_arg(:start_dynamic, Dynamic) ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_array(:sequences, Sequence, ->{ Array.new }),
-               spec_arg_array(:dynamic_changes, Dynamic, ->{ Array.new }),
-               spec_arg_array(:instrument_plugins, PluginConfig, ->{ Array.new }),
-               spec_arg_array(:effect_plugins, PluginConfig, ->{ Array.new }),
-               spec_arg(:id, String, -> { UniqueToken.make_unique_token(8) }) ]
+  OPT_ARGS = [ spec_arg_array(:sequences, Sequence),
+               spec_arg_array(:dynamic_changes, Dynamic),
+               spec_arg_array(:instrument_plugins, PluginConfig),
+               spec_arg_array(:effect_plugins, PluginConfig),
+               spec_arg(:id, String, ->(a){true}, -> { UniqueToken.make_unique_token(8) }) ]
   
   # A new instance of Part.
   # @param [Hash] args Hashed arguments. Valid optional keys are :sequences, 

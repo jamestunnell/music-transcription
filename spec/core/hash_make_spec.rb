@@ -27,8 +27,8 @@ class HashMakeA
   ]
   # optional args (for hash-makeable idiom)
   OPT_ARGS = [
-    self.spec_arg(:d, Object, -> {31}),
-    self.spec_arg(:e, Object, -> {55})
+    self.spec_arg(:d, Numeric, ->(a){ a < 2000 }, 31),
+    self.spec_arg(:e, Numeric, ->(a){ a < 100 }, 55)
   ]
 
   def initialize args={}
@@ -60,7 +60,7 @@ describe HashMakeA do
   end
 
   it "should be able to save object to hash and then make from hash the same object" do
-    obj = HashMakeA.new :b => HashMakeB.new( :anything => "ok"), :c => "c", :d => "1024", :e => "false"
+    obj = HashMakeA.new :b => HashMakeB.new( :anything => "ok"), :c => "c", :d => 1024, :e => 6
     hash = obj.save_to_hash
     obj2 = HashMakeA.make_from_hash(hash)
     

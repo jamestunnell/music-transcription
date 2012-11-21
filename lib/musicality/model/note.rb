@@ -62,10 +62,10 @@ class Note
   REQ_ARGS = [ spec_arg(:duration, Numeric),
                spec_arg_array(:pitches, Pitch) ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg(:sustain, Numeric, ->{ 0.5 }),
-               spec_arg(:attack, Numeric, ->{ 0.5 }),
-               spec_arg(:seperation, Numeric, ->{ 0.5 }),
-               spec_arg(:relationship, Symbol, ->{ RELATIONSHIP_NONE }) ]
+  OPT_ARGS = [ spec_arg(:sustain, Numeric, ->(a){ a.between?(0.0,1.0)}, 0.5),
+               spec_arg(:attack, Numeric, ->(a){ a.between?(0.0,1.0)}, 0.5),
+               spec_arg(:seperation, Numeric, ->(a){ a.between?(0.0,1.0)}, 0.5),
+               spec_arg(:relationship, Symbol, ->(a){ RELATIONSHIPS.include?(a)}, RELATIONSHIP_NONE) ]
 
   # A new instance of Note.
   # @param [Hash] args Hashed arguments. Required keys are :pitches, :duration, 

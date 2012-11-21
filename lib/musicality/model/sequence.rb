@@ -14,9 +14,9 @@ class Sequence < Event
   attr_reader :notes
 
   # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg(:offset) ]
+  REQ_ARGS = [ spec_arg(:offset, Numeric, ->(a){a.between?(Event::MIN_OFFSET, Event::MAX_OFFSET) }) ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_array(:notes, Note, ->{Array.new}) ]
+  OPT_ARGS = [ spec_arg_array(:notes, Note) ]
 
   # A new instance of Sequence.
   # @param [Hash] args Hashed arguments. Required keys are :offset and :notes.

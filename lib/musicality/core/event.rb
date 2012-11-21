@@ -1,29 +1,33 @@
 module Musicality
 
-# A musical event, with an offset and duration in note length.
+# A musical event, with an offset, duration, and value.
 #
 # @author James Tunnell
 #
 # @!attribute [rw] offset
-#   @return [Rational] The offset of the event in note lengths.
+#   @return [Rational] The offset of the event. be in the range MIN_OFFSET..MAX_OFFSET
 #
 # @!attribute [rw] duration
-#   @return [Rational] The duration of the event in note lengths.
+#   @return [Rational] The duration of the event. Must be in the range MIN_OFFSET..MAX_OFFSET
+#
+# @!attribute [rw] value
+#   @return [Rational] The value of the event.
 #
 class Event
-
   # the minimum event offset allowed
   MIN_OFFSET = -(2 **(0.size * 8 - 2))
   # the maximum event offset allowed
   MAX_OFFSET = (2 **(0.size * 8 - 2) - 2)
 
-  attr_reader :offset, :duration
+  attr_reader :offset, :duration, :value
 
   # New instance of Event.
-  # @param [Numeric] offset The offset of the event.
-  # @param [Numeric] duration The duration of the event.
-  def initialize offset, duration
+  # @param [Numeric] offset The event offset.
+  # @param [Numeric] value The event value.
+  # @param [Numeric] duration The event duration. Zero by default. 
+  def initialize offset, value, duration = 0.0
     self.offset = offset
+    self.value = value
     self.duration = duration
   end
 
@@ -33,9 +37,9 @@ class Event
   # @raise [RangeError] if offset is less than MIN_OFFSET or greater than MAX_OFFSET.
   def offset= offset
     raise ArgumentError, "offset #{offset} is not a Numeric" if !offset.is_a?(Numeric)
-  	raise RangeError, "offset  #{offset} is outside the range #{MIN_OFFSET}..#{MAX_OFFSET}." if !(MIN_OFFSET..MAX_OFFSET).include?(offset)
+    raise RangeError, "offset  #{offset} is outside the range #{MIN_OFFSET}..#{MAX_OFFSET}." if !(MIN_OFFSET..MAX_OFFSET).include?(offset)
   	
-  	@offset = offset
+    @offset = offset
   end
 
   # Set the event duration.
@@ -44,9 +48,14 @@ class Event
   # @raise [RangeError] if duration is less than MIN_OFFSET or greater than MAX_OFFSET.
   def duration= duration
     raise ArgumentError, "duration is not a Numeric" if !duration.is_a?(Numeric)
-  	raise RangeError, "duration is outside the range #{MIN_OFFSET}..#{MAX_OFFSET}." if !(MIN_OFFSET..MAX_OFFSET).include?(duration)
+    raise RangeError, "duration is outside the range #{MIN_OFFSET}..#{MAX_OFFSET}." if !(MIN_OFFSET..MAX_OFFSET).include?(duration)
   	
-  	@duration = duration
+    @duration = duration
+  end
+
+  # Set the event value. Can be any object.
+  def value= value
+    @value = value
   end
 
   # Take an array of events and return a hash of the events by offset.
