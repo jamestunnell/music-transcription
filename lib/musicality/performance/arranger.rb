@@ -18,10 +18,15 @@ class Arranger
   # @param [Hash] args Hashed arguments. Optional keys are
   #                    :default_instrument_plugin and :plugin_dirs.
   def initialize args = {}
+    default_instrument_plugin = PluginConfig.new(
+      :plugin_name => 'oscillator',
+      :settings => {
+        :wave_type => { :start_value => 'square' }
+      }
+    )
+
     opts = {
-      :default_instrument_plugin => PluginConfig.new(
-        :name => 'oscillator', :settings => { :wave => 'square' }
-      ),
+      :default_instrument_plugin => default_instrument_plugin ,
       :plugin_dirs => [""]
     }.merge args
     

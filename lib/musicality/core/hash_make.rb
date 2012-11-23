@@ -11,7 +11,11 @@ module Musicality
   #
   class HashedArgSpec
     attr_reader :key, :klass, :check_proc
-    attr_accessor :array_flag
+    attr_accessor :type
+
+    TYPE_VAL = :typeVal
+    TYPE_ARRAY = :typeArray
+    TYPE_HASH = :typeHash
 
     # @param [Symbol] key The key which locates the arg in the args hash.
     # @param [Class]  klass The class of the argument which should be mapped to the key.
@@ -23,17 +27,29 @@ module Musicality
     #                               during initialization. For object with no basic
     #                               literal syntax, Pass a Proc to generate a unique
     #                               default value object.
-    # @param [true/false] array_flag Indicates if the value mapped to key should be 
-    #                                an Array of objects.
-    def initialize key, klass, check_proc, default_value, array_flag
+    # @param [true/false] type Indicates if the value mapped to key should be 
+    #                          an ordinary value, an Array, or a Hash.
+    def initialize key, klass, check_proc, default_value, type
       @key = key
       @klass = klass
       #puts "klass for key #{key} is #{klass}"
       @check_proc = check_proc
       @default_value = default_value
-      @array_flag = array_flag
+      @type = type
+    end
+    
+    def is_val?
+      @type == TYPE_VAL
+    end
+    
+    def is_array?
+      @type == TYPE_ARRAY
     end
 
+    def is_hash?
+      @type == TYPE_HASH
+    end
+    
     # @raise [RuntimeError] if @default_value is nil.    
     def default_value
       raise "@default_value is nil" if @default_value.nil?
@@ -153,10 +169,16 @@ module Musicality
     def process_val arg_spec, val
       key = arg_spec.key
       
-      if arg_spec.array_flag
-        raise ArgumentError, "val #{val} is not an Array" if !val.is_a?(Array)
+      if arg_spec.is_array?
+        raise ArgumentError, "val #{val} is not an Array" unless val.is_a?(Array)
         
         val.each do |item|
+          raise ArgumentError, "val item #{item} does not pass check" unless arg_spec.check_proc.call(item)
+        end
+      elsif arg_spec.is_hash?
+        raise ArgumentError, "val #{val} is not a Hash" unless val.is_a?(Hash)
+
+        val.values.each do |item|
           raise ArgumentError, "val item #{item} does not pass check" unless arg_spec.check_proc.call(item)
         end
       else
@@ -185,6 +207,16 @@ module Musicality
             hashed_val << item
           end
         end
+      elsif val.is_a?(Hash)
+        hash = val
+        hashed_val = {}
+        hash.each do |key,item|
+          if HashMakeUtil.is_hash_makeable? item.class
+            hashed_val[key] = item.save_to_hash
+          else
+            hashed_val[key] = item
+          end
+        end
       elsif HashMakeUtil.is_hash_makeable? val.class
         hashed_val = val.save_to_hash
       end
@@ -207,14 +239,14 @@ module Musicality
       #                               default values to be set on optional parameters
       #                               during initialization.
       def spec_arg key, klass = Object, check_proc = ->(a){ true }, default_value = nil
-        HashedArgSpec.new key, klass, check_proc, default_value, false
+        HashedArgSpec.new key, klass, check_proc, default_value, HashedArgSpec::TYPE_VAL
       end
       
       # make a new HashedArgSpec instance that is an Array containing
       # objects of the class given by klass.
       #
       # @param [Symbol] key The key which locates the arg in the args hash.
-      # @param [Class]  klass The class of the argument which should be mapped to the key.
+      # @param [Class]  klass The class of the argument which should be contained by the array that is mapped to the key.
       # @param [Proc] check_proc Allows parameter checking.
       # @param [Object] default_value Allows the save_to_hash method to determine if
       #                               the value should appear in the output hash.
@@ -222,7 +254,21 @@ module Musicality
       #                               default values to be set on optional parameters
       #                               during initialization.
       def spec_arg_array key, klass = Object, check_proc = ->(a){ true }, default_value = ->{ Array.new }
-        HashedArgSpec.new key, klass, check_proc, default_value, true
+        HashedArgSpec.new key, klass, check_proc, default_value, HashedArgSpec::TYPE_ARRAY
+      end
+
+      #make a new HashedArgSpec instance that is a Hash
+      #
+      # @param [Symbol] key The key which locates the arg in the args hash.
+      # @param [Class]  klass The class of the argument which should be contained by the hash that is mapped to the key.
+      # @param [Proc] check_proc Allows parameter checking.
+      # @param [Object] default_value Allows the save_to_hash method to determine if
+      #                               the value should appear in the output hash.
+      #                               Default values are not output. Also allows
+      #                               default values to be set on optional parameters
+      #                               during initialization.
+      def spec_arg_hash key, klass = Object, check_proc = ->(a){ true }, default_value = ->{ Hash.new }
+        HashedArgSpec.new key, klass, check_proc, default_value, HashedArgSpec::TYPE_HASH
       end
       
       # Make an instance of the current class from the given hashe args.
@@ -260,30 +306,49 @@ module Musicality
       
       def make_val_from_hashed_val arg_spec, hashed_val
         klass = arg_spec.klass
-
-        if hashed_val.is_a?(klass)
-        elsif hashed_val.is_a?(Hash)
-          raise ArgumentError, "hashed_val is a Hash but is not hash-makeable" if !HashMakeUtil.is_hash_makeable?(klass)
-          hashed_val = klass.make_from_hash hashed_val
-        elsif arg_spec.array_flag
-          raise ArgumentError, "hashed_val #{hashed_val} is not an Array" if !hashed_val.is_a?(Array)
-          arg_spec.array_flag = false
+        
+        if arg_spec.is_array?
+          raise ArgumentError, "hashed_val #{hashed_val} is not an Array" unless hashed_val.is_a?(Array)
+          arg_spec.type = HashedArgSpec::TYPE_VAL
           
           ary = []
           hashed_val.each do |item|
             if item.is_a?(klass)
               ary << item
             elsif item.is_a?(Hash)
-              raise ArgumentError, "item is a Hash but is not hash-makeable" if !HashMakeUtil.is_hash_makeable?(klass)
+              raise ArgumentError, "item is a Hash but is not hash-makeable" unless HashMakeUtil.is_hash_makeable?(klass)
               ary << klass.make_from_hash(item)
             else
               raise ArgumentError, "item #{item} is not a #{klass} or a Hash"
             end
           end
           hashed_val = ary
-          arg_spec.array_flag = true
+          arg_spec.type = HashedArgSpec::TYPE_ARRAY
+        elsif arg_spec.is_hash?
+          raise ArgumentError, "hashed_val #{hashed_val} is not a Hash" unless hashed_val.is_a?(Hash)
+          arg_spec.type = HashedArgSpec::TYPE_VAL
+          
+          hash = {}
+          hashed_val.each do |key,item|
+            if item.is_a?(klass)
+              hash[key] = item
+            elsif item.is_a?(Hash)
+              raise ArgumentError, "item is a Hash but is not hash-makeable" if !HashMakeUtil.is_hash_makeable?(klass)
+              hash[key] = klass.make_from_hash(item)
+            else
+              raise ArgumentError, "item #{item} is not a #{klass} or a Hash"
+            end
+          end
+          hashed_val = hash
+          arg_spec.type = HashedArgSpec::TYPE_HASH
         else
-          raise ArgumentError, "hashed_val #{hashed_val} is not a #{klass} or a Hash"
+          if hashed_val.is_a?(klass)
+          elsif hashed_val.is_a?(Hash)
+            raise ArgumentError, "hashed_val is a Hash but is not hash-makeable" unless HashMakeUtil.is_hash_makeable?(klass)
+            hashed_val = klass.make_from_hash hashed_val
+          else
+            raise ArgumentError, "hashed_val #{hashed_val} is not a #{klass} or a Hash"
+          end
         end
         
         return hashed_val

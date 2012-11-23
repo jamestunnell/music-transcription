@@ -45,10 +45,10 @@ class Event
   # Set the event duration.
   # @param [Numeric] duration The duration of the event.
   # @raise [ArgumentError] if duration is not a Numeric.
-  # @raise [RangeError] if duration is less than MIN_OFFSET or greater than MAX_OFFSET.
+  # @raise [RangeError] if duration is negative.
   def duration= duration
     raise ArgumentError, "duration is not a Numeric" if !duration.is_a?(Numeric)
-    raise RangeError, "duration is outside the range #{MIN_OFFSET}..#{MAX_OFFSET}." if !(MIN_OFFSET..MAX_OFFSET).include?(duration)
+    raise RangeError, "duration is negative" if duration < 0.0
   	
     @duration = duration
   end
