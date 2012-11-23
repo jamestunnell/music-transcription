@@ -1,5 +1,6 @@
 module Musicality
 
+# Compute the value of a SettingProfile for any offset.
 # @author James Tunnell
 #
 # @!attribute [r] piecewise_function

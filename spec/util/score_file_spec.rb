@@ -66,8 +66,8 @@ describe Musicality::ScoreFile do
   end
   
   after :all do
-    #File.delete @score_hash_filename
-    #File.delete "x_" + @score_hash_filename
+    File.delete @score_hash_filename
+    File.delete "x_" + @score_hash_filename
   end
 end
 

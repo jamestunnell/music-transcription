@@ -2,7 +2,9 @@ require 'publisher'
 
 module Musicality
 
-# Recomputes value when needed and notifies observers.
+# For a given value computer, recomputes value when needed and notifies observers.
+#
+# @author James Tunnell
 class ValueUpdater
   extend Publisher
   
