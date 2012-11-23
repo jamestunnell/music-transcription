@@ -3,9 +3,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Musicality::NoteTimeConverter do
   context "#time_elapsed" do
     context "constant tempo" do
-      before :each do 
-        tempo = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0
-        @tempo_computer = Musicality::TempoComputer.new tempo
+      before :each do
+        beat_duration_profile = Musicality::SettingProfile.new :start_value => 0.25
+        bpm_profile = Musicality::SettingProfile.new :start_value => 120.0
+        @tempo_computer = Musicality::TempoComputer.new beat_duration_profile, bpm_profile
         sample_rate = 48
         @converter = Musicality::NoteTimeConverter.new @tempo_computer, sample_rate
       end
@@ -21,11 +22,12 @@ describe Musicality::NoteTimeConverter do
     end
     
     context "linear tempo-change" do
-      before :each do 
-        tempo = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0
-        tempo2 = Musicality::Tempo.new :beats_per_minute => 60, :beat_duration => 0.25, :offset => 1.0, :duration => 1.0
-        
-        @tempo_computer = Musicality::TempoComputer.new tempo, [tempo2]
+      before :each do
+        beat_duration_profile = Musicality::SettingProfile.new :start_value => 0.25
+        bpm_profile = Musicality::SettingProfile.new :start_value => 120.0, :value_change_events => [
+          Musicality::Event.new(1.0, 60.0, 1.0)
+        ]
+        @tempo_computer = Musicality::TempoComputer.new beat_duration_profile, bpm_profile
         sample_rate = 200
         @converter = Musicality::NoteTimeConverter.new @tempo_computer, sample_rate
       end
@@ -47,8 +49,9 @@ describe Musicality::NoteTimeConverter do
   context "#map_note_offsets_to_time_offsets" do
     context "constant tempo" do
       before :each do 
-        tempo = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0
-        @tempo_computer = Musicality::TempoComputer.new tempo
+        beat_duration_profile = Musicality::SettingProfile.new :start_value => 0.25
+        bpm_profile = Musicality::SettingProfile.new :start_value => 120.0
+        @tempo_computer = Musicality::TempoComputer.new beat_duration_profile, bpm_profile
         sample_rate = 4800
         @converter = Musicality::NoteTimeConverter.new @tempo_computer, sample_rate
       end

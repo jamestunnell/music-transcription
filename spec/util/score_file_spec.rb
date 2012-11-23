@@ -5,14 +5,13 @@ require 'yaml'
 describe Musicality::ScoreFile do
   before :all do 
     @score_hash = {
-      :start_tempo => { :beats_per_minute => 300, :beat_duration => 0.25, :offset => 0.0 },
+      :beats_per_minute_profile => {
+        :start_value => 300,
+        :value_change_events => [ Event.new(1.0, 100, 1.25) ]
+      },
       :program => { :segments => [0.0...3.75] },
       :parts => [
         {
-          :start_dynamic => {
-            :offset => 0.0,
-            :loudness => 0.5
-          },
           :sequences => [
             { :offset => 0.0, :notes => [
                 { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
@@ -33,9 +32,6 @@ describe Musicality::ScoreFile do
           ],
           :id=> "1",
         }
-      ],
-      :tempo_changes => [
-        { :beats_per_minute => 100, :beat_duration => 0.25, :offset => 1.0, :duration => 1.25 }
       ]
 
     }
@@ -51,7 +47,7 @@ describe Musicality::ScoreFile do
     score = ScoreFile.load @score_hash_filename
     score.class.should eq(Score)
     score.parts.count.should be 1
-    score.tempo_changes.count.should be 1
+    score.beats_per_minute_profile.value_change_events.count.should be 1
   end
   
   it "should save score to file" do
@@ -70,8 +66,8 @@ describe Musicality::ScoreFile do
   end
   
   after :all do
-    File.delete @score_hash_filename
-    File.delete "x_" + @score_hash_filename
+    #File.delete @score_hash_filename
+    #File.delete "x_" + @score_hash_filename
   end
 end
 

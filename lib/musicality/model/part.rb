@@ -1,15 +1,15 @@
 module Musicality
 
-# Abstraction of a musical part. Contains note sequences, dynamics, and the 
-# instrument spec.
+# Abstraction of a musical part. Contains note sequences, loudness settings, 
+# instrument plugins, and effect plugins.
 #
 # @author James Tunnell
 #
 # @!attribute [rw] sequences
 #   @return [Array] The note sequences to be played.
 #
-# @!attribute [rw] start_dynamic
-#   @return [Dynamic] The starting part dynamic.
+# @!attribute [rw] loudness_profile
+#   @return [Dynamic] The parts loudness profile.
 #
 # @!attribute [rw] dynamic_changes
 #   @return [Array] Changes in the part dynamic.
@@ -26,13 +26,13 @@ module Musicality
 #
 class Part
   include HashMake
-  attr_reader :sequences, :start_dynamic, :dynamic_changes, :instrument_plugins, :effect_plugins, :id
+  attr_reader :loudness_profile, :sequences, :instrument_plugins, :effect_plugins, :id
   
   # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg(:start_dynamic, Dynamic) ]
+  REQ_ARGS = [  ]
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_array(:sequences, Sequence),
-               spec_arg_array(:dynamic_changes, Dynamic),
+  OPT_ARGS = [ spec_arg(:loudness_profile, SettingProfile, ->(a){ a.values_between?(0.0,1.0) }, SettingProfile.new(:start_value => 0.5)),
+               spec_arg_array(:sequences, Sequence),
                spec_arg_array(:instrument_plugins, PluginConfig),
                spec_arg_array(:effect_plugins, PluginConfig),
                spec_arg(:id, String, ->(a){true}, -> { UniqueToken.make_unique_token(8) }) ]
@@ -58,42 +58,14 @@ class Part
     @sequences = sequences
   end
 
-  # Set the part starting dynamic.
-  # @param [Dynamic] start_dynamic The part starting dynamic.
-  # @raise [ArgumentError] unless start_dynamic is a Dynamic object.
-  def start_dynamic= start_dynamic
-    raise ArgumentError, "start_dynamic is not a Dynamic" unless start_dynamic.is_a?(Dynamic)
-    @start_dynamic = start_dynamic
+  # Set the loudness SettingProfile.
+  # @param [Tempo] loudness_profile The SettingProfile for part loudness.
+  # @raise [ArgumentError] if loudness_profile is not a SettingProfile.
+  def loudness_profile= loudness_profile
+    raise ArgumentError, "loudness_profile is not a SettingProfile" unless loudness_profile.is_a?(SettingProfile)
+    @loudness_profile = loudness_profile
   end
   
-  # Set the part dynamic changes.
-  # @param [Array] dynamic_changes The score dynamic changes.
-  # @raise [ArgumentError] unless dynamic_changes is an Array.
-  # @raise [ArgumentError] unless dynamic_changes contains only Dynamic objects.
-  def dynamic_changes= dynamic_changes
-    raise ArgumentError, "dynamic_changes is not an Array" unless dynamic_changes.is_a?(Array)
-
-    dynamic_changes.each do |dynamic|
-      raise ArgumentError, "dynamic_changes contain a non-Dynamic #{dynamic}" unless dynamic.is_a?(Dynamic)
-    end
-    
-  	@dynamic_changes = dynamic_changes
-  end
-
-  # Set the part dynamics.
-  # @param [Array] dynamics The part dynamics.
-  # @raise [ArgumentError] unless dynamics is an Array.
-  # @raise [ArgumentError] unless dynamics contains only Dynamic objects.
-  def dynamics= dynamics
-    raise ArgumentError, "dynamics is not an Array" unless dynamics.is_a?(Array)
-  	
-    dynamics.each do |dynamic|
-      raise ArgumentError, "dynamics contain a non-Dynamic #{dynamic}" unless dynamic.is_a?(Dynamic)
-    end
-      	
-    @dynamics = dynamics
-  end
-
   # Set the part's instrument plugin configs.
   # 
   # @param [PluginConfig] instrument_plugins An array of plugin configs that each

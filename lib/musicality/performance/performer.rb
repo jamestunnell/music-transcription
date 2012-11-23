@@ -18,7 +18,7 @@ class Performer
     @sample_rate = sample_rate
     @part = part
 
-    @dynamic_computer = DynamicComputer.new @part.start_dynamic, @part.dynamic_changes
+    @loudness_computer = ValueComputer.new @part.loudness_profile.start_value, @part.loudness_profile.value_change_events
 
     @instruments = []
     part.instrument_plugins.each do |instrument_plugin|
@@ -77,7 +77,7 @@ class Performer
       end
     end
 
-    loudness = @dynamic_computer.loudness_at counter
+    loudness = @loudness_computer.value_at counter
     raise ArgumentError, "loudness is not between 0.0 and 1.0" if !loudness.between?(0.0,1.0)
     
     sample = 0.0

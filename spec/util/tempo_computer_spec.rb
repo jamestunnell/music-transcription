@@ -1,28 +1,33 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::TempoComputer do
+
+  before :all do
+    @beat_duration_profile = Musicality::SettingProfile.new :start_value => 0.25
+  end
   
   before :each do
-    @tempo = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0
+    @bpm_profile = Musicality::SettingProfile.new :start_value => 120.0
   end
 
   it "should always return starting tempo if only tempo given" do
-    tc = Musicality::TempoComputer.new @tempo
+    tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
     [Musicality::Event::MIN_OFFSET, -1000, 0, 1, 5, 100, 10000, Musicality::Event::MAX_OFFSET].each do |offset|
       tc.notes_per_second_at(offset).should eq(0.5)
     end
   end
 
   it "should return nil if offset is past max" do
-    tc = Musicality::TempoComputer.new @tempo
-    tc.notes_per_second_at(Musicality::Event::MAX_OFFSET + 1).should be_nil
+    tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
+    tc.beats_per_minute_at(Musicality::Event::MAX_OFFSET + 1).should be_nil
   end
 
   context "two tempos, no transition" do
     before :each do
-      tempo1 = Musicality::Tempo.new :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0
-      tempo2 = Musicality::Tempo.new :beats_per_minute => 60, :beat_duration => 0.25, :offset => 1.0
-      @tc = Musicality::TempoComputer.new tempo1, [tempo2]
+      @bpm_profile = Musicality::SettingProfile.new :start_value => 120.0, :value_change_events => [
+        Musicality::Event.new(1.0, 60.0)
+      ]
+      @tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
     end
 
     it "should be the first (starting) tempo just before the second tempo" do
@@ -44,10 +49,10 @@ describe Musicality::TempoComputer do
 
   context "two tempos, linear transition" do
     before :each do
-      tempo1 = Musicality::Tempo.new :beats_per_minute => 120.0, :beat_duration => 0.25, :offset => 0.0
-      tempo2 = Musicality::Tempo.new :beats_per_minute => 60.0, :beat_duration => 0.25, :offset => 1.0, :duration => 1.0
-
-      @tc = Musicality::TempoComputer.new tempo1, [tempo2]
+      @bpm_profile = Musicality::SettingProfile.new :start_value => 120.0, :value_change_events => [
+        Musicality::Event.new(1.0, 60.0, 1.0)
+      ]
+      @tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
     end
 
     it "should be the first (starting) tempo just before the second tempo" do

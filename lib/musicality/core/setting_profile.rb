@@ -13,6 +13,34 @@ class SettingProfile
   def initialize args
     process_args args
   end
+  
+  def == other
+    (self.start_value == other.start_value) &&
+    (self.value_change_events == other.value_change_events)
+  end
+  
+  def values_between? a, b
+    is_ok = self.start_value.between?(a,b)
+    
+    if is_ok
+      self.value_change_events.each do |event|
+        event.value.between?(a,b)
+      end
+    end
+    return is_ok
+  end
+
+  def values_positive?
+    is_ok = self.start_value > 0.0
+    
+    if is_ok
+      self.value_change_events.each do |event|
+        event.value > 0.0
+      end
+    end
+    return is_ok
+  end
+
 end
 
 end

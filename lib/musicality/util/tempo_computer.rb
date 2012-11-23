@@ -1,33 +1,36 @@
 module Musicality
 
-# Computer tempo at any offset. Uses ValueComputer base class to perform computation.
+# Computer tempo at any offset. Uses a ValueComputer for beat duration and beats per minute to compute tempo.
 #
 # @author James Tunnell
 #
-class TempoComputer < ValueComputer
+class TempoComputer
   
   # A new instance of TempoComputer.
-  # @param [Tempo] start_tempo The tempo to use at start.
-  # @param [Array] tempo_changes An array of tempo events.
-  # @raise [ArgumentError] if start_tempo is not a Tempo.
-  # @raise [ArgumentError] if any of tempo_changes is not a Tempo.
-  def initialize start_tempo, tempo_changes = []
-    raise ArgumentError, "start_tempo is not a Tempo" if !start_tempo.is_a?(Tempo)
-
-    default_value = start_tempo.notes_per_second
-    value_change_events = []
-    tempo_changes.each do |tempo_change|
-      raise ArgumentError, "tempo_change #{tempo_change} is not a Tempo" unless tempo_change.is_a?(Tempo)
-      value_change_events << Event.new(tempo_change.offset, tempo_change.notes_per_second, tempo_change.duration)
-    end
-    
-    super(default_value, value_change_events)
+  # @param [SettingProfile] beat_duration_profile A SettingProfile for beat duration.
+  # @param [SettingProfile] beats_per_minute_profile A SettingProfile for beats per minute.
+  def initialize beat_duration_profile, beats_per_minute_profile
+    @beat_duration_computer = ValueComputer.new(beat_duration_profile.start_value, beat_duration_profile.value_change_events)
+    @beats_per_minute_computer = ValueComputer.new(beats_per_minute_profile.start_value, beats_per_minute_profile.value_change_events)
   end
   
-  # Compute the tempo in notes per second at the given offset.
+  # Compute the beats per minute at the given offset.
+  # @param [Numeric] offset The given offset to compute beats per minute at.
+  def beats_per_minute_at offset
+    @beats_per_minute_computer.value_at(offset)
+  end
+  
+  # Compute the beat duration at the given offset.
+  # @param [Numeric] offset The given offset to compute tempo at.
+  def beat_duration_at_at offset
+    @beat_duration_computer.value_at(offset)
+  end
+  
+  # Compute the notes per second at the given offset.
   # @param [Numeric] offset The given offset to compute tempo at.
   def notes_per_second_at offset
-    value_at offset
+    bpm = @beats_per_minute_computer.value_at(offset)
+    nps = (bpm / 60.0) * @beat_duration_computer.value_at(offset)
   end
 end
 

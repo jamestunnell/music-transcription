@@ -3,13 +3,16 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Musicality::ScoreCollator do
   before :all do
     @simple_score_hash = {
-      :start_tempo => { :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0 },
+      :beats_per_minute_profile => {
+        :start_value => 120,
+        :value_change_events => [ Event.new(0.5, 60, 1.0) ]
+      },
       :program => { :segments => [0.0...1.0, 0.0...2.0] },
       :parts => [
         {
-          :start_dynamic => {
-            :offset => 0.0,
-            :loudness => 0.5
+          :loudness_profile => {
+            :start_value => 0.5,
+            :value_change_events => [ Event.new(0.5, 1.0, 1.0) ]
           },
           :sequences => [
             { :offset => 0.0,
@@ -21,24 +24,15 @@ describe Musicality::ScoreCollator do
                 { :duration => 1.00, :pitches => [ { :octave => 9, :semitone => 2 } ] }
               ]
             }
-          ],
-          :dynamic_changes => [
-            { :loudness => 1.0, :offset => 0.5, :duration => 1.0 }
           ]
         }
       ],
-      :tempo_changes => [
-        { :beats_per_minute => 60.0, :beat_duration => 0.25, :offset => 0.5, :duration => 1.0 }
-      ]
     }
     
     @complex_score_hash = {
       :parts => [
         {
-          :start_dynamic => {
-            :offset => 0.0,
-            :loudness => 0.5
-          },
+          :loudness_profile => { :start_value => 0.5 },
           :sequences => [
             { :offset => 0.0, :notes => [
                 { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
@@ -54,9 +48,7 @@ describe Musicality::ScoreCollator do
           ]
         }
       ],
-      :start_tempo => { 
-        :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0 
-      },
+      :beats_per_minute_profile => { :start_value => 120 },
       :program => {
         :segments => [
           0.0...2.0,
@@ -69,14 +61,11 @@ describe Musicality::ScoreCollator do
     }
 
     @two_part_score_hash = {
-      :start_tempo => { :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0 },
+      :beats_per_minute_profile => { :start_value => 120 },
       :program => { :segments => [0.0...1.0, 0.0...2.0] },
       :parts => [
         {
-          :start_dynamic => {
-            :offset => 0.0,
-            :loudness => 0.5
-          },
+          :loudness_profile => { :start_value => 0.5 },
           :sequences => [
             { :offset => 0.0,
               :notes => [
@@ -90,10 +79,7 @@ describe Musicality::ScoreCollator do
           ]
         },
         {
-          :start_dynamic => {
-            :offset => 0.0,
-            :loudness => 0.5
-          },
+          :loudness_profile => { :start_value => 0.5 },
           :sequences => [
             { :offset => 0.5,
               :notes => [
@@ -105,14 +91,13 @@ describe Musicality::ScoreCollator do
             }
           ]
         }
-      ],
-      :tempo_changes => [ ]
+      ]
     }
   end
     
   it "should collate a simple score/program into a single segment" do
     score = Score.make_from_hash @simple_score_hash
-    ScoreCollator.collate_score score
+    ScoreCollator.collate_score! score
   
     score.parts.count.should be 1
     part = score.parts.first
@@ -129,16 +114,16 @@ describe Musicality::ScoreCollator do
     part.sequences[1].duration.should eq(2.0)
     part.sequences[1].notes.last.duration.should eq(1.0)
     
-    dyn_comp = Musicality::DynamicComputer.new(part.start_dynamic, part.dynamic_changes)
-    dyn_comp.loudness_at(0.0).should eq(0.5)
-    dyn_comp.loudness_at(0.5).should eq(0.5)
-    dyn_comp.loudness_at(0.99).should be_within(0.01).of(0.75)
-    dyn_comp.loudness_at(1.0).should eq(0.5)
-    dyn_comp.loudness_at(1.5).should eq(0.5)
-    dyn_comp.loudness_at(2.0).should eq(0.75)
-    dyn_comp.loudness_at(2.5).should eq(1.0)
+    dyn_comp = Musicality::ValueComputer.new(part.loudness_profile.start_value, part.loudness_profile.value_change_events)
+    dyn_comp.value_at(0.0).should eq(0.5)
+    dyn_comp.value_at(0.5).should eq(0.5)
+    dyn_comp.value_at(0.99).should be_within(0.01).of(0.75)
+    dyn_comp.value_at(1.0).should eq(0.5)
+    dyn_comp.value_at(1.5).should eq(0.5)
+    dyn_comp.value_at(2.0).should eq(0.75)
+    dyn_comp.value_at(2.5).should eq(1.0)
     
-    tc = Musicality::TempoComputer.new(score.start_tempo, score.tempo_changes)
+    tc = Musicality::TempoComputer.new(score.beats_per_minute_profile, score.beat_duration_profile)
     tc.notes_per_second_at(0.0).should eq(0.5)
     tc.notes_per_second_at(0.5).should eq(0.5)
     tc.notes_per_second_at(0.75).should be_within(0.01).of(0.4375)
@@ -151,7 +136,7 @@ describe Musicality::ScoreCollator do
 
   it "should handle a complex one-part score" do
     score = Score.make_from_hash @complex_score_hash
-    ScoreCollator.collate_score score
+    ScoreCollator.collate_score! score
 
     score.find_start.should be_within(0.01).of(0.0)
     score.find_end.should be_within(0.01).of(6.75)
@@ -197,7 +182,7 @@ describe Musicality::ScoreCollator do
 
   it "should handle a simple two-part score" do
     score = Score.make_from_hash @two_part_score_hash
-    ScoreCollator.collate_score score
+    ScoreCollator.collate_score! score
 
     score.find_start.should be_within(0.01).of(0.0)
     score.find_end.should be_within(0.01).of(3.0)

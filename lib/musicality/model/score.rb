@@ -8,26 +8,26 @@ module Musicality
 # @!attribute [rw] parts
 #   @return [Array] Score parts.
 # 
-# @!attribute [rw] start_tempo
-#   @return [Tempo] The starting score tempo.
+# @!attribute [rw] beat_duration_profile
+#   @return [Tempo] The beat duration profile.
 #
-# @!attribute [rw] tempo_changes
-#   @return [Array] Changes in the score tempo.
+# @!attribute [rw] beats_per_minute_profile
+#   @return [Array] The beats per minute profile.
 #
 # @!attribute [rw] program
 #   @return [Array] Score program.
 #
 class Score
   include HashMake
-  attr_reader :parts, :start_tempo, :tempo_changes, :program
+  attr_reader :parts, :beat_duration_profile, :beats_per_minute_profile, :program
 
   # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg(:start_tempo, Tempo),
+  REQ_ARGS = [ spec_arg(:beats_per_minute_profile, SettingProfile, ->(a){ a.values_positive? }),
                spec_arg(:program, Program) ]
   
   # optional hash-args (for hash-makeable idiom)
   OPT_ARGS = [ spec_arg_array(:parts, Part),
-               spec_arg_array(:tempo_changes, Tempo) ]
+               spec_arg(:beat_duration_profile, SettingProfile, ->(a){ a.values_positive? }, ->{ SettingProfile.new :start_value => 0.25 }) ]
   
   # A new instance of Score.
   # @param [Hash] args Hashed arguments. Required keys are :tempos and 
@@ -50,26 +50,20 @@ class Score
     @parts = parts
   end
 
-  # Set the score starting tempo.
-  # @param [Tempo] start_tempo The score starting tempo.
-  # @raise [ArgumentError] if tempo is not a Tempo object.
-  def start_tempo= start_tempo
-    raise ArgumentError, "start_tempo is not a Tempo" if !start_tempo.is_a?(Tempo)
-  	@start_tempo = start_tempo
+  # Set the score beat duration SettingProfile.
+  # @param [Tempo] beat_duration_profile The SettingProfile for beat duration.
+  # @raise [ArgumentError] if beat_duration_profile is not a SettingProfile.
+  def beat_duration_profile= beat_duration_profile
+    raise ArgumentError, "beat_duration_profile is not a SettingProfile" unless beat_duration_profile.is_a?(SettingProfile)
+    @beat_duration_profile = beat_duration_profile
   end
   
-  # Set the score tempo changes.
-  # @param [Array] tempo_changes The score tempo changes.
-  # @raise [ArgumentError] if tempo_changes is not an Array.
-  # @raise [ArgumentError] if tempo_changes contain a non-Tempo object.
-  def tempo_changes= tempo_changes
-    raise ArgumentError, "tempo_changes is not an Array" if !tempo_changes.is_a?(Array)
-
-    tempo_changes.each do |tempo|
-      raise ArgumentError, "tempo_changes contain a non-Tempo #{tempo}" if !tempo.is_a?(Tempo)
-    end
-    
-  	@tempo_changes = tempo_changes
+  # Set the score beats per minute SettingProfile.
+  # @param [Tempo] beats_per_minute_profile The SettingProfile for beats per minute.
+  # @raise [ArgumentError] if beats_per_minute_profile is not a SettingProfile.
+  def beats_per_minute_profile= beats_per_minute_profile
+    raise ArgumentError, "beats_per_minute_profile is not a SettingProfile" unless beats_per_minute_profile.is_a?(SettingProfile)
+    @beats_per_minute_profile = beats_per_minute_profile
   end
 
   # Set the score program, which determines which defines sections and how they 

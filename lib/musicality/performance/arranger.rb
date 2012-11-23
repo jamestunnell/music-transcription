@@ -115,7 +115,7 @@ class Arranger
   #                                         time-base.
   def make_time_based_parts_from_score score, conversion_sample_rate
     
-    ScoreCollator.collate_score score
+    ScoreCollator.collate_score! score
     
     #gather all the note offets to be converted to time offsets
     
@@ -132,21 +132,21 @@ class Arranger
         end
       end
       
-      part.dynamic_changes.each do |a|
+      part.loudness_profile.value_change_events.each do |a|
         note_offsets << a.offset
       end
     end
     
     # convert note offsets to time offsets
     
-    tempo_computer = TempoComputer.new( score.start_tempo, score.tempo_changes )
+    tempo_computer = TempoComputer.new( score.beat_duration_profile, score.beats_per_minute_profile )
     note_time_converter = NoteTimeConverter.new tempo_computer, conversion_sample_rate
     note_time_map = note_time_converter.map_note_offsets_to_time_offsets note_offsets
     
     new_parts = []
     score.parts.each do |part|
       new_part = Musicality::Part.new(
-        :start_dynamic => part.start_dynamic,
+        :loudness_profile => SettingProfile.new(:start_value => part.loudness_profile.start_value),
 	:instrument_plugins => part.instrument_plugins,
 	:effect_plugins => part.effect_plugins,
         :id => part.id
@@ -177,17 +177,17 @@ class Arranger
         new_part.sequences << new_sequence
       end
       
-      part.dynamic_changes.each do |a|
-        note_start_offset = a.offset
-        note_end_offset = note_start_offset + a.duration
+      part.loudness_profile.value_change_events.each do |event|
+        note_start_offset = event.offset
+        note_end_offset = note_start_offset + event.duration
         raise "Note-time map does not have note start offset key #{note_start_offset}" unless note_time_map.has_key?(note_start_offset)
         raise "Note-time map does not have note end offset key #{note_end_offset}" unless note_time_map.has_key?(note_end_offset)
         
         start_time = note_time_map[note_start_offset]
         duration = note_time_map[note_end_offset] - start_time
         
-        new_dynamic = Musicality::Dynamic.new :offset => start_time, :duration => duration, :loudness => a.loudness
-        new_part.dynamic_changes << new_dynamic
+        new_event = Musicality::Event.new start_time, event.value, duration
+        new_part.loudness_profile.value_change_events << new_event
       end
       
       new_parts << new_part

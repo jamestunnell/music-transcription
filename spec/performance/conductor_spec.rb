@@ -6,10 +6,7 @@ describe Musicality::Conductor do
     hash = {
       :parts => [
         {
-          :start_dynamic => {
-            :offset => 0.0,
-            :loudness => 0.5
-          },
+          :loudness_profile => { :start_value => 0.5 },
           :sequences => [
             { :offset => 0.0, :notes => [
                 { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
@@ -30,8 +27,8 @@ describe Musicality::Conductor do
           ]
         }
       ],
-      :start_tempo => { 
-        :beats_per_minute => 120, :beat_duration => 0.25, :offset => 0.0 
+      :beats_per_minute_profile => { 
+        :start_value => 120
       },
       :program => {
         :segments => [
