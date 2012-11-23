@@ -10,8 +10,8 @@ class TempoComputer
   # @param [SettingProfile] beat_duration_profile A SettingProfile for beat duration.
   # @param [SettingProfile] beats_per_minute_profile A SettingProfile for beats per minute.
   def initialize beat_duration_profile, beats_per_minute_profile
-    @beat_duration_computer = ValueComputer.new(beat_duration_profile.start_value, beat_duration_profile.value_change_events)
-    @beats_per_minute_computer = ValueComputer.new(beats_per_minute_profile.start_value, beats_per_minute_profile.value_change_events)
+    @beat_duration_computer = ValueComputer.new(beat_duration_profile)
+    @beats_per_minute_computer = ValueComputer.new(beats_per_minute_profile)
   end
   
   # Compute the beats per minute at the given offset.

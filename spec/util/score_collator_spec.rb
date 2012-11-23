@@ -114,7 +114,7 @@ describe Musicality::ScoreCollator do
     part.sequences[1].duration.should eq(2.0)
     part.sequences[1].notes.last.duration.should eq(1.0)
     
-    dyn_comp = Musicality::ValueComputer.new(part.loudness_profile.start_value, part.loudness_profile.value_change_events)
+    dyn_comp = Musicality::ValueComputer.new(part.loudness_profile)
     dyn_comp.value_at(0.0).should eq(0.5)
     dyn_comp.value_at(0.5).should eq(0.5)
     dyn_comp.value_at(0.99).should be_within(0.01).of(0.75)

@@ -18,7 +18,7 @@ class Performer
     @sample_rate = sample_rate
     @part = part
 
-    @loudness_computer = ValueComputer.new @part.loudness_profile.start_value, @part.loudness_profile.value_change_events
+    @loudness_computer = ValueComputer.new @part.loudness_profile
 
     @instruments = []
     part.instrument_plugins.each do |instrument_plugin|

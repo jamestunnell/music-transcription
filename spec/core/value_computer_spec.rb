@@ -8,7 +8,7 @@ describe Musicality::ValueComputer do
   
   describe "constant value" do
     before :each do
-      @comp = Musicality::ValueComputer.new 0.5
+      @comp = Musicality::ValueComputer.new SettingProfile.new(:start_value => 0.5)
     end
     
     it "should always return default value if no changes are given" do
@@ -20,7 +20,8 @@ describe Musicality::ValueComputer do
   
   describe "one change, no transition" do
     before :each do
-      @comp = Musicality::ValueComputer.new 0.5, [@value_change1]
+      setting_profile = SettingProfile.new :start_value => 0.5, :value_change_events => [@value_change1]
+      @comp = Musicality::ValueComputer.new setting_profile
     end
     
     it "should be the default value just before the first change" do
@@ -42,7 +43,8 @@ describe Musicality::ValueComputer do
   
   context "one change, linear transition" do
     before :each do
-      @comp = Musicality::ValueComputer.new 0.2, [@value_change2]
+      setting_profile = SettingProfile.new :start_value => 0.2, :value_change_events => [@value_change2]
+      @comp = Musicality::ValueComputer.new setting_profile
     end
     
     it "should be the first (starting) value just before the second value" do

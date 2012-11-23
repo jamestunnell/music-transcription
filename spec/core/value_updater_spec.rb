@@ -4,7 +4,8 @@ describe Musicality::ValueComputer do
   
   before :each do
     value_change = Event.new 0.5, 0.2, 0.5
-    value_computer = ValueComputer.new 1.0, [value_change]
+    setting_profile = SettingProfile.new :start_value => 1.0, :value_change_events => [value_change]
+    value_computer = ValueComputer.new setting_profile
     @value_updater = ValueUpdater.new value_computer, 0.0
   end
 

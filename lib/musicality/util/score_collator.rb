@@ -91,7 +91,7 @@ class ScoreCollator
     new_profile = SettingProfile.new :start_value => profile.start_value
     
     segment_start_offset = 0.0
-    comp = ValueComputer.new profile.start_value, profile.value_change_events
+    comp = ValueComputer.new profile
   
     program_segments.each do |seg|
       # figure which dynamics to keep/modify

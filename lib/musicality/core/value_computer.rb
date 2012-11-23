@@ -9,12 +9,12 @@ module Musicality
 class ValueComputer
   attr_reader :piecewise_function
 
-  def initialize default_value, value_change_events = []
+  def initialize setting_profile
     @piecewise_function = Musicality::PiecewiseFunction.new
-    set_default_value default_value
+    set_default_value setting_profile.start_value
     
-    if value_change_events.any?
-      value_change_events = value_change_events.sort_by {|a| a.offset }
+    if setting_profile.value_change_events.any?
+      value_change_events = setting_profile.value_change_events.sort_by {|a| a.offset }
         
       value_change_events.each do |event|
         add_value_change event
