@@ -17,7 +17,7 @@ describe Musicality::Performer do
     @part = Musicality::Part.new(
       :offset => 0.0,
       :sequences => [@sequence],
-      :instrument_plugins => [ PluginConfig.new(:plugin_name => "oscillator_instrument") ],
+      :instrument_plugin => PluginConfig.new(:plugin_name => "oscillator_instrument"),
       :loudness_profile => @loudness_profile
     )
 

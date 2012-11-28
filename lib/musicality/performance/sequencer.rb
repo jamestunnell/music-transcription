@@ -5,9 +5,10 @@ module Musicality
 # 
 # @author James Tunnell
 class NoteEvent < Event
-  attr_reader :note
-  def initialize offset, note
+  attr_reader :note, :id
+  def initialize offset, note, id
     @note = note
+    @id = id
     super(offset, note, note.duration)
   end
 end
@@ -25,7 +26,7 @@ class Sequencer
     @note_events = []
     offset = @sequence.offset
     @sequence.notes.each do |note|
-      @note_events << NoteEvent.new(offset, note)
+      @note_events << NoteEvent.new(offset, note, UniqueToken.make_unique_sym(3))
       offset += note.duration
     end
     

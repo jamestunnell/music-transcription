@@ -1,8 +1,6 @@
 ---
-:start_tempo:
-  :beats_per_minute: 120
-  :beat_duration: 0.25
-  :offset: 0.0
+:beats_per_minute_profile:
+  :start_value: 120.0
 :program:
   :segments:
   - !ruby/range
@@ -14,10 +12,7 @@
     end: 4.0
     excl: true
 :parts:
-- :start_dynamic:
-    :offset: 0.0
-    :loudness: 0.5
-  :sequences:
+- :sequences:
   - :offset: 0.0
     :notes:
     - :duration: 0.375
@@ -70,11 +65,10 @@
       :pitches:
       - :octave: 2
         :semitone: 3
-  :id: jtpqlez5
-- :start_dynamic:
-    :offset: 0.0
-    :loudness: 0.5
-  :sequences:
+  :instrument_plugin:
+    :plugin_name: default
+  :id: v4x372d0
+- :sequences:
   - :offset: 0.125
     :notes:
     - :duration: 0.125
@@ -160,4 +154,6 @@
     - :duration: 0.125
       :pitches:
       - :octave: 4
-  :id: 7htyyqpu
+  :instrument_plugin:
+    :plugin_name: default
+  :id: jj99m8bo

@@ -56,10 +56,8 @@ class Arranger
     parts = make_time_based_parts_from_score score, conversion_sample_rate
         
     parts.each do |part|
-      part.instrument_plugins.keep_if { |plugin| PLUGINS.plugins.has_key? plugin.plugin_name.to_sym }
-      
-      if part.instrument_plugins.empty?
-        part.instrument_plugins << @default_instrument_plugin
+      unless PLUGINS.plugins.has_key? part.instrument_plugin.plugin_name.to_sym
+        part.instrument_plugin = @default_instrument_plugin
       end
       
       part.effect_plugins.keep_if { |plugin| PLUGINS.plugins.has_key? plugin.plugin_name.to_sym }
@@ -112,7 +110,7 @@ class Arranger
     score.parts.each do |part|
       new_part = Musicality::Part.new(
         :loudness_profile => SettingProfile.new(:start_value => part.loudness_profile.start_value),
-	:instrument_plugins => part.instrument_plugins,
+	:instrument_plugin => part.instrument_plugin,
 	:effect_plugins => part.effect_plugins,
         :id => part.id
       )

@@ -4,8 +4,12 @@ module Musicality
   class UniqueToken
     # Make a unique string token of a given length.
     # @param [Fixnum] len The desired string token length.
-    def self.make_unique_token len
+    def self.make_unique_string len
       rand(36**len).to_s(36)
+    end
+
+    def self.make_unique_sym len
+      rand(36**len).to_s(36).to_sym
     end
   end
 end

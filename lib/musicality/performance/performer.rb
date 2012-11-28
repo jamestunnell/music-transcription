@@ -8,26 +8,20 @@ module Musicality
 # 
 class Performer
 
-  attr_reader :part, :instrument, :sequencers
+  attr_reader :part, :instrument, :effects, :sequencers
 
   # A new instance of Performer.
   # @param [Part] part The part to be used during performance.
   # @param [Numeric] sample_rate The sample rate used in rendering samples.
-  # @param [Class] instrument_class The class to use for an instrument.
-  def initialize part, sample_rate#, instrument_map, effect_map
+  def initialize part, sample_rate
     @sample_rate = sample_rate
     @part = part
 
     @loudness_computer = ValueComputer.new @part.loudness_profile
 
-    raise ArgumentError, "part has no instrument plugins" if part.instrument_plugins.empty?
-    @instruments = []
-    part.instrument_plugins.each do |instrument_plugin|
-      settings = { :sample_rate => @sample_rate }.merge instrument_plugin.settings
-      
-      plugin = PLUGINS.plugins[instrument_plugin.plugin_name.to_sym]
-      @instruments << plugin.make_instrument(settings)
-    end
+    settings = { :sample_rate => @sample_rate }.merge @part.instrument_plugin.settings
+    plugin = PLUGINS.plugins[@part.instrument_plugin.plugin_name.to_sym]
+    @instrument = plugin.make_instrument(settings)
 
     @effects = []
     part.effect_plugins.each do |effect_plugin|
@@ -63,19 +57,19 @@ class Performer
       
       event_updates[:to_start].each do |event|
 #        puts "starting pitch #{event.note.pitch}"
+        id = event.id
+        attack = event.note.attack
+        sustain = event.note.sustain
+        
         event.note.pitches.each do |pitch|
-          @instruments.each do |instrument|
-            instrument.note_on pitch.freq, event.note.attack, event.note.sustain
-          end
+          @instrument.note_on id, pitch.freq, attack, sustain
         end
       end
 
       event_updates[:to_end].each do |event|
 #        puts "ending pitch #{event.note.pitch}"
         event.note.pitches.each do |pitch|
-          @instruments.each do |instrument|
-            instrument.note_off pitch
-          end
+          @instrument.note_off event.id
         end
       end
     end
@@ -83,11 +77,7 @@ class Performer
     loudness = @loudness_computer.value_at counter
     raise ArgumentError, "loudness is not between 0.0 and 1.0" if !loudness.between?(0.0,1.0)
     
-    sample = 0.0
-    
-    @instruments.each do |instrument|
-      sample += instrument.render_sample loudness
-    end
+    sample = @instrument.render_sample loudness
     
     @effects.each do |effect|
       sample += effect.render_sample loudness

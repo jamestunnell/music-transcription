@@ -20,17 +20,10 @@ score_hash = {
       0...4.0
     ]
   },
-  :start_tempo => { 
-    :beats_per_minute => 120, 
-    :beat_duration => 0.25, 
-    :offset => 0.0
-  },
+  :beats_per_minute_profile => { :start_value => 120.0 },
   :parts => [
     {
-      :start_dynamic => {
-        :offset => 0.0,
-        :loudness => 0.5
-      },
+      :loudness_profile => { :start_value => 0.5 },
       :sequences => [
         { :offset => 0.0, :notes => [
             { :duration => 0.375, :pitches => [C2] },
@@ -56,10 +49,7 @@ score_hash = {
       ]
     }, 
     {
-      :start_dynamic => {
-        :offset => 0.0,
-        :loudness => 0.5
-      },
+      :loudness_profile => { :start_value => 0.5 },
       :sequences => [
         { :offset => 0.125, :notes => [
             { :duration => 0.125, :pitches => [Bb3] },

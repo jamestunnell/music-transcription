@@ -13,8 +13,8 @@ class Instrument
     @notes = {}
   end
   
-  def note_on freq, attack, sustain
-    id = UniqueToken.make_unique_token(3)
+  def note_on id, freq, attack, sustain
+    #id = UniqueToken.make_unique_token(3)
 
     envelope_plugin = PLUGINS.plugins[@envelope_plugin.plugin_name.to_sym]
     voice_plugin = PLUGINS.plugins[@voice_plugin.plugin_name.to_sym]

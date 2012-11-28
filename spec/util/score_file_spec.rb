@@ -30,6 +30,7 @@ describe Musicality::ScoreFile do
               ]
             }
           ],
+          :instrument_plugin => { :plugin_name => 'default' },
           :id=> "1",
         }
       ]
