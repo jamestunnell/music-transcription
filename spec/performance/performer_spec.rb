@@ -14,7 +14,12 @@ describe Musicality::Performer do
 
     @sequence = Sequence.new :notes => @notes, :offset => 0.0
     @loudness_profile = Musicality::SettingProfile.new :start_value => 0.5
-    @part = Musicality::Part.new :offset => 0.0, :sequences => [@sequence], :instrument => @instrument, :loudness_profile => @loudness_profile
+    @part = Musicality::Part.new(
+      :offset => 0.0,
+      :sequences => [@sequence],
+      :instrument_plugins => [ PluginConfig.new(:plugin_name => "oscillator_instrument") ],
+      :loudness_profile => @loudness_profile
+    )
 
     sample_rate = 48.0
     @performer = Musicality::Performer.new @part, @sample_rate

@@ -25,7 +25,7 @@ class Conductor
     
     @performers = []
     @arrangement.parts.each do |part|
-      @performers << Performer.new(part, sample_rate)
+      @performers << Performer.new(part, sample_rate)#, @arrangement.instrument_map, @arrangement.effect_map)
     end
     
     @sample_rate = sample_rate

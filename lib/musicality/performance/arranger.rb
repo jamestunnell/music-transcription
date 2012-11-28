@@ -11,7 +11,7 @@ module Musicality
 #
 class Arranger
 
-  attr_reader :default_instrument_config
+  attr_reader :default_instrument_config, :plugin_dirs
 
   # A new instance of Arranger.
   #
@@ -19,22 +19,28 @@ class Arranger
   #                    :default_instrument_plugin and :plugin_dirs.
   def initialize args = {}
     default_instrument_plugin = PluginConfig.new(
-      :plugin_name => 'oscillator',
+      :plugin_name => 'oscillator_instrument',
       :settings => {
-        :wave_type => { :start_value => 'square' }
+        :wave_type => SettingProfile.new( :start_value => 'square' )
       }
     )
 
-    opts = {
-      :default_instrument_plugin => default_instrument_plugin ,
-      :plugin_dirs => [""]
+    args = {
+      :default_instrument_plugin => default_instrument_plugin,
+      :plugin_dirs => [] # File.expand_path(File.dirname(__FILE__))
     }.merge args
     
-    @default_instrument_config = opts[:default_instrument_config]
+    @default_instrument_plugin = args[:default_instrument_plugin]
+    @plugin_dirs = args[:plugin_dirs]
     
-    #TODO use PlugMan to load all plugins in these dirs...
+    @plugin_dirs.each do |dir|
+      puts "loading plugins from #{dir}"
+      PLUGINS.load_plugins dir
+    end
     
-    #TODO Check to make sure that the default instrument plugin is found and valid
+    unless PLUGINS.plugins.has_key?(@default_instrument_plugin.plugin_name.to_sym)
+      raise ArgumentError, "default instrument plugin #{@default_instrument_plugin.plugin_name} is not registered"
+    end
   end
   
   # Make an Arrangment from a Score, which includes converting note-based
@@ -46,65 +52,24 @@ class Arranger
     raise ArgumentError, "score has no parts" unless score.parts.any?
     raise ArgumentError, "conversion_sample_rate is not a Numeric" unless conversion_sample_rate.is_a?(Numeric)
     raise ArgumentError, "conversion_sample_rate is less than 100.0" if conversion_sample_rate < 100.0
-
+    
     parts = make_time_based_parts_from_score score, conversion_sample_rate
+        
+    parts.each do |part|
+      part.instrument_plugins.keep_if { |plugin| PLUGINS.plugins.has_key? plugin.plugin_name.to_sym }
+      
+      if part.instrument_plugins.empty?
+        part.instrument_plugins << @default_instrument_plugin
+      end
+      
+      part.effect_plugins.keep_if { |plugin| PLUGINS.plugins.has_key? plugin.plugin_name.to_sym }
+
+    end
     
-    # TODO make instruments for the part, using part.instrument_plugins.
-    # Assign instrument to part id in instrument_map hash.
-    instrument_map = {}
-    
-    # TODO make effects for the part, using part.effect_plugins
-    # Assign effect to part id in effect_map hash.
-    effect_map = {}
-    
-    return Arrangement.new(parts, instrument_map, effect_map)
+    return Arrangement.new(parts)
   end
   
   private
-  
-  ## Find an instrument class for each of the given parts.
-  #def map_parts_to_instruments parts
-  #  parts_to_instruments = {}
-  #  
-  #  parts.each do |part|
-  #    config = part.instrument_config
-  #    config.makemodel_list.each do |makemodel|
-  #    end
-  #    klass = find_instrument_class settings
-  #    parts_to_instruments[part.id] = klass
-  #  end
-  #  return parts_to_instruments
-  #end
-  #
-  ## Find an instrument matching the specied settings.
-  #def find_instrument_class settings
-  #  raise ArgumentError, "settings does not have :make key" unless settings.has_key?(:make)
-  #  raise ArgumentError, "settings does not have :type key" unless settings.has_key?(:type)
-  #  raise ArgumentError, "settings does not have :subtype key" unless settings.has_key?(:subtype)
-  #  
-  #  make = settings[:make]
-  #  type = settings[:type]
-  #  subtype = settings[:subtype]
-  #  
-  #  raise ArgumentError, "Could not find find make #{make}" unless ClassFinder.find_by_name(make)
-  #  
-  #  klass = ClassFinder.find_by_name("#{make}::#{subtype}")
-  #  
-  #  if klass.nil?
-  #    klass = ClassFinder.find_by_name("#{make}::#{type}#{subtype}")
-  #  end
-  #  
-  #  if klass.nil?
-  #    klass = ClassFinder.find_by_name("#{make}::#{type}::#{subtype}")
-  #  end
-  #  
-  #  if klass.nil?
-  #    klass = ClassFinder.find_by_name("#{make}::#{type}")
-  #  end
-  #  
-  #  raise ArgumentError, "no class foud for #{subtype} #{type}" if klass.nil?
-  #  return klass
-  #end
 
   # Convert note-based offsets & durations to time-based. This eliminates
   # the use of tempo during performance.

@@ -14,24 +14,27 @@ class Performer
   # @param [Part] part The part to be used during performance.
   # @param [Numeric] sample_rate The sample rate used in rendering samples.
   # @param [Class] instrument_class The class to use for an instrument.
-  def initialize part, sample_rate
+  def initialize part, sample_rate#, instrument_map, effect_map
     @sample_rate = sample_rate
     @part = part
 
     @loudness_computer = ValueComputer.new @part.loudness_profile
 
+    raise ArgumentError, "part has no instrument plugins" if part.instrument_plugins.empty?
     @instruments = []
     part.instrument_plugins.each do |instrument_plugin|
       settings = { :sample_rate => @sample_rate }.merge instrument_plugin.settings
       
-      # TODO make an instrument from each plugin config and add to @instruments
+      plugin = PLUGINS.plugins[instrument_plugin.plugin_name.to_sym]
+      @instruments << plugin.make_instrument(settings)
     end
 
     @effects = []
     part.effect_plugins.each do |effect_plugin|
       settings = { :sample_rate => @sample_rate }.merge effect_plugin.settings
       
-      # TODO make an effect from each plugin config and add to @effects
+      plugin = PLUGINS.plugins[effect_plugin.plugin_name.to_sym]
+      @effects << plugin.make_effect(settings)
     end
     
     @sequencers = []
@@ -62,7 +65,7 @@ class Performer
 #        puts "starting pitch #{event.note.pitch}"
         event.note.pitches.each do |pitch|
           @instruments.each do |instrument|
-            instrument.start_pitch pitch
+            instrument.note_on pitch.freq, event.note.attack, event.note.sustain
           end
         end
       end
@@ -71,7 +74,7 @@ class Performer
 #        puts "ending pitch #{event.note.pitch}"
         event.note.pitches.each do |pitch|
           @instruments.each do |instrument|
-            instrument.end_pitch pitch
+            instrument.note_off pitch
           end
         end
       end

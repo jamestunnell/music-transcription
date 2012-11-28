@@ -12,8 +12,7 @@ describe Musicality::TriangleWave do
   
   it "should produce increasing samples during first half-period, and decreasing samples during the second half-period" do
     @pitches.each do |pitch|
-      wave = Musicality::TriangleWave.new :sample_rate => @sample_rate
-      wave.start_pitch pitch
+      wave = Musicality::TriangleWave.new @sample_rate, pitch.freq
       
       samples_in_half_period = @sample_rate / (2.0 * pitch.freq)
       
