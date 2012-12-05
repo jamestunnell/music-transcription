@@ -34,6 +34,7 @@ require 'musicality/performance/arrangement'
 require 'musicality/performance/arranger'
 require 'musicality/performance/conductor'
 
+require 'musicality/performance/envelopes/adsr_envelope'
 require 'musicality/performance/envelopes/flat_envelope'
 require 'musicality/performance/instruments/oscillator_instrument'
 

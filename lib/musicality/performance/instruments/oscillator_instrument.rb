@@ -5,19 +5,12 @@ class OscillatorInstrument < Musicality::Instrument
   def initialize settings
 
     envelope_plugin = PluginConfig.new(
-      :plugin_name => "flat_envelope",
-      #:plugin_name => "adsr_envelope",
-      :settings => {
-        #:attack_time => SettingProfile.new(:start_value => 0.01),
-        #:decay_time => SettingProfile.new(:start_value => 0.01),
-        #:release_time => SettingProfile.new(:start_value => 0.01)
-      }.merge(settings)
+      :plugin_name => "adsr_envelope",
+      :settings => settings
     )
     voice_plugin = PluginConfig.new(
       :plugin_name => "oscillator_voice",
-      :settings => {
-        :wave_type => SettingProfile.new( :start_value => 'square')
-      }.merge(settings)
+      :settings => settings
     )
     
     super( settings[:sample_rate], voice_plugin, envelope_plugin)
@@ -31,7 +24,7 @@ PLUGINS.register :oscillator_instrument do
   self.extends = [:instrument]
   #self.requires = [ :oscillator_voice, :flat_envelope ]
   self.extension_points = []
-  self.params = { :description => "Makes an oscillator-based instrument, with adjustable attack, decay, and release time." }
+  self.params = { :description => "Makes an oscillator-based instrument, with adjustable attack rate, decay rate, sustain level, and damping rate." }
 
   def make_instrument settings
     OscillatorInstrument.new settings

@@ -44,7 +44,7 @@ class ScoreRenderer
 
         active_pitches = 0
         conductor.performers.each do |performer|  
-          active_pitches += performer.instrument.notes.count
+          active_pitches += performer.instruments.first.notes.count
         end
 
       #  print "#{notes_played} notes played, #{notes_being_played} notes being played"

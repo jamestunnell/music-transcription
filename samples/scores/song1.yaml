@@ -65,9 +65,7 @@
       :pitches:
       - :octave: 2
         :semitone: 3
-  :instrument_plugin:
-    :plugin_name: default
-  :id: v4x372d0
+  :id: '1'
 - :sequences:
   - :offset: 0.125
     :notes:
@@ -154,6 +152,4 @@
     - :duration: 0.125
       :pitches:
       - :octave: 4
-  :instrument_plugin:
-    :plugin_name: default
-  :id: jj99m8bo
+  :id: '2'

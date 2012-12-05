@@ -21,7 +21,7 @@ class ScoreCollator
       
       new_part = Musicality::Part.new(
 	:loudness_profile => clone_and_collate_profile(part.loudness_profile, score.program.segments),
-	:instrument_plugin => part.instrument_plugin,
+	:instrument_plugins => part.instrument_plugins,
 	:effect_plugins => part.effect_plugins,
 	:id => part.id
       )

@@ -1,17 +1,25 @@
 module Musicality
 
+# Plain envelope that alsways produces 1.0 no matter what.
 class FlatEnvelope
   def initialize settings
+    @envelope = 0.0
   end
   
-  def restart attack, sustain
+  def attack attack, sustain, envelope_start
+    @envelope = 1.0
+  end
+  
+  def release damping
+    @envelope = 0.0
   end
   
   def render_sample
-    1.0
+    @envelope
   end
 end
 
+# Register the plugin with Musicality::PLUGINS registry
 PLUGINS.register :flat_envelope do
   self.author = "James Tunnell"
   self.version = "1.0.0"

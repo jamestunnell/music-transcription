@@ -4,16 +4,16 @@ describe Musicality::Sequencer do
 
   before :each do
     @notes = [ 
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.25),
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::D7], :duration => 0.25),
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::E7], :duration => 0.25),
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.25),
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::D7], :duration => 0.25),
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.75)
+      Note.new(:pitches => [PitchConstants::C7], :duration => 0.25),
+      Note.new(:pitches => [PitchConstants::D7], :duration => 0.25),
+      Note.new(:pitches => [PitchConstants::E7], :duration => 0.25),
+      Note.new(:pitches => [PitchConstants::C7], :duration => 0.25),
+      Note.new(:pitches => [PitchConstants::D7], :duration => 0.25),
+      Note.new(:pitches => [PitchConstants::C7], :duration => 0.75)
     ]
 
-    @sequence = Musicality::Sequence.new :notes => @notes, :offset => 0.0
-    @sequencer = Musicality::Sequencer.new @sequence
+    @sequence = Sequence.new :notes => @notes, :offset => 0.0
+    @sequencer = Sequencer.new @sequence
   end
 
   it "should be deemed inactive when #update_notes hasn't been called yet" do

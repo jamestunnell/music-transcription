@@ -38,7 +38,7 @@ class OscillatorVoice
     
   end
   
-  def change_freq freq
+  def freq= freq
     @oscillator.freq = freq
   end
   

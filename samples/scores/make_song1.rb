@@ -46,7 +46,8 @@ score_hash = {
             { :duration => 0.25, :pitches => [Eb2] }
           ]
         }
-      ]
+      ],
+      :id => "1",
     }, 
     {
       :loudness_profile => { :start_value => 0.5 },
@@ -78,7 +79,8 @@ score_hash = {
             { :duration => 0.125, :pitches => [C4] },
           ]
         }
-      ]
+      ],
+      :id => "2",
     }
   ]
 }

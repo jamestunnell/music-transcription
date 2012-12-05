@@ -21,6 +21,16 @@ class Arranger
     default_instrument_plugin = PluginConfig.new(
       :plugin_name => 'oscillator_instrument',
       :settings => {
+        
+        :attack_rate_min => 150.0,
+        :attack_rate_max => 250.0,
+        :decay_rate_min => 25.0,
+        :decay_rate_max => 50.0,
+        :sustain_level_min => 0.2,
+        :sustain_level_max => 0.6,
+        :damping_rate_min => 100.0,
+        :damping_rate_max => 200.0,
+        
         :wave_type => SettingProfile.new( :start_value => 'square' )
       }
     )
@@ -56,8 +66,11 @@ class Arranger
     parts = make_time_based_parts_from_score score, conversion_sample_rate
         
     parts.each do |part|
-      unless PLUGINS.plugins.has_key? part.instrument_plugin.plugin_name.to_sym
-        part.instrument_plugin = @default_instrument_plugin
+      
+      part.instrument_plugins.keep_if { |plugin| PLUGINS.plugins.has_key? plugin.plugin_name.to_sym }
+      
+      if part.instrument_plugins.empty?
+        part.instrument_plugins << @default_instrument_plugin
       end
       
       part.effect_plugins.keep_if { |plugin| PLUGINS.plugins.has_key? plugin.plugin_name.to_sym }
@@ -110,7 +123,7 @@ class Arranger
     score.parts.each do |part|
       new_part = Musicality::Part.new(
         :loudness_profile => SettingProfile.new(:start_value => part.loudness_profile.start_value),
-	:instrument_plugin => part.instrument_plugin,
+	:instrument_plugins => part.instrument_plugins,
 	:effect_plugins => part.effect_plugins,
         :id => part.id
       )

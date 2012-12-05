@@ -37,7 +37,8 @@ score_hash = {
             { :duration => 0.5, :pitches => [Bb3] },
           ]
         }
-      ]
+      ],
+      :id => "1",
     }, 
     { 
       :loudness_profile => { :start_value => 0.5 },
@@ -51,9 +52,10 @@ score_hash = {
             { :duration => 0.5, :pitches => [D5] }
           ]
         }
-      ]
+      ],
+      :id => "2",
     },
-    { 
+    {
       :loudness_profile => { :start_value => 0.5 },
       :sequences => [
         { :offset => 0.125, :notes => [
@@ -76,7 +78,8 @@ score_hash = {
             { :duration => 0.5, :pitches => [F5] }
           ]
         }
-      ]
+      ],
+      :id => "3",
     }
   ]
 }
