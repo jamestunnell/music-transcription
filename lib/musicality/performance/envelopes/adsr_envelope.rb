@@ -13,7 +13,7 @@ class MinMax
   # Determine the value based on the given percent between min and max values.
   def by_percent percent
     raise ArgumentError, "percent is not between 0.0 and 1.0" unless percent.between?(0.0,1.0)
-    @min + ((@max - @min) * 0.5)
+    @min + ((@max - @min) * percent)
   end
 end
 
@@ -22,6 +22,12 @@ end
 #
 # @author James Tunnell
 class ADSREnvelope
+  attr_reader :attack_rate_minmax, :decay_rate_minmax, :sustain_level_minmax, :damping_rate_minmax,
+    :mode, :mode_elapsed, :envelope,
+    :attack_time, :attack_per_sample,
+    :decay_time, :decay_per_sample,
+    :damping_per_sample
+
   ENV_MODE_INACTIVE = :envModeInactive
   ENV_MODE_ATTACK = :envModeAttack
   ENV_MODE_DECAY = :envModeDecay
@@ -108,12 +114,14 @@ class ADSREnvelope
       
       if @mode_elapsed > @attack_time
         @mode = ENV_MODE_DECAY
+        @mode_elapsed = 0.0
       end
     when ENV_MODE_DECAY
       @envelope -= @decay_per_sample
       
       if @mode_elapsed > @decay_time
         @mode = ENV_MODE_SUSTAIN
+        @mode_elapsed = 0.0
       end
     when ENV_MODE_SUSTAIN
       # do nothing
@@ -123,6 +131,7 @@ class ADSREnvelope
       if @envelope < 0.0
         @envelope = 0.0
         @mode = ENV_MODE_INACTIVE
+        @mode_elapsed = 0.0 
       end
     end
     
