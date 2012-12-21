@@ -1,7 +1,12 @@
 module Musicality
 
+# Takes a composed part, derives information useful for performing, and stores it for
+# performer. Converts note sequences to note instruction sequences. Finds plugins using
+# plugin configs. Saves loudness profile as-is.
+#
+# @author James Tunnell
 class ArrangedPart
-  attr_reader :sample_rate, :instruction_sequences, :loudness_profile, :instrument_plugins, :effect_plugins
+  attr_reader :instruction_sequences, :loudness_profile, :instrument_plugins, :effect_plugins
 
   def initialize composed_part
     @loudness_profile = composed_part.loudness_profile

@@ -2,18 +2,22 @@ module Musicality
 
 # Plain envelope that alsways produces 1.0 no matter what.
 class FlatEnvelope
+  # Set envelope to 0.
   def initialize settings
     @envelope = 0.0
   end
   
+  # Set envelope to 1.
   def attack attack, sustain, envelope_start
     @envelope = 1.0
   end
   
+  # Set envelope to 0.
   def release damping
     @envelope = 0.0
   end
   
+  # Return envelope value.
   def render_sample
     @envelope
   end

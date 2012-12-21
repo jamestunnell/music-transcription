@@ -1,5 +1,7 @@
 module Musicality
   
+  # A plugin, including metadata (name, author, version).
+  # Taken and modified from the PlugMan library.
   class Plugin
 
     # 
@@ -12,7 +14,7 @@ module Musicality
                   #:requires,         # the plugins that are required by this plugin (not needed for extensions though)
                   :extension_points,  # extension points defined by this plugin [:ext_a:, :ext_b]
                   :params,            # parameters to pass to the parent plugin { :param1 => "abc", :param2 => 123 }
-                  :source_file        # the file that the plugin was loaded from, populated by PlugMan.
+                  :source_file        # the file that the plugin was loaded from, populated by PluginRegistry.
 
     # Should not be called directly, use PluginRegistry.register instead.
     def initialize

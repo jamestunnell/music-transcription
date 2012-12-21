@@ -2,10 +2,14 @@ require "logger"
 require "set"
 
 module Musicality
+# Provide a method of listing the plugins in a given PluginRegistry.
+# Only plugins which extend at least one of the given extension points
+# will be shown.
 class PluginView
 
   attr_accessor :extension_points
   
+  # A new instance of PluginView.
   def initialize ext_points = [], registry = PLUGINS
     @logger = Logger.new(STDOUT)
     #@logger.level = Logger::DEBUG

@@ -28,10 +28,15 @@ class ADSREnvelope
     :decay_time, :decay_per_sample,
     :damping_per_sample
 
+  # THe default state of the envelope generator, both before attack occurs, and after release finishes (reaches 0).
   ENV_MODE_INACTIVE = :envModeInactive
+  # THe state of the envelope generator where envelope is increasing toward one.
   ENV_MODE_ATTACK = :envModeAttack
+  # THe state of the envelope generator where envelope is decreasing toward the sustain level.
   ENV_MODE_DECAY = :envModeDecay
+  # THe state of the envelope generator where envelope is not changing.
   ENV_MODE_SUSTAIN = :envModeSustain
+  # THe state of the envelope generator where envelope is decreasing toward zero.
   ENV_MODE_RELEASE = :envModeRelease
   
   # A new instance of ADSREnvelope.
@@ -69,7 +74,7 @@ class ADSREnvelope
     @damping_per_sample = 0.0
   end
 
-  # Start the envelope
+  # Start the envelope at the given level.
   def attack attack, sustain, envelope_start = 0.0
     raise ArgumentError, "attack is not between 0.0 and 1.0" unless attack.between?(0.0, 1.0)
     raise ArgumentError, "sustain is not between 0.0 and 1.0" unless sustain.between?(0.0, 1.0)
@@ -93,6 +98,7 @@ class ADSREnvelope
     @decay_per_sample = decay_rate / @sample_rate
   end
   
+  # Release the envelope, dampening as given.
   def release damping
     raise ArgumentError, "damping is not between 0.0 and 1.0" unless damping.between?(0.0, 1.0)
 
@@ -104,6 +110,7 @@ class ADSREnvelope
     @damping_per_sample = damping_rate / @sample_rate
   end
   
+  # Render a sample of the envelope.
   def render_sample
     raise "Call start or restart before rendering sample" unless @attack_time && @attack_per_sample && @decay_time && @decay_per_sample
     sample = @envelope

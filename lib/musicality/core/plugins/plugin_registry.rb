@@ -1,10 +1,12 @@
 require 'logger'
 require 'publisher'
 require 'find'
-require 'set'
 
 module Musicality
 
+  # Maintains a list of plugins that were created by calling '.register'.
+  # Plugins should not be added any other way.
+  # Taken and modified from the PlugMan library.
   class PluginRegistry
     extend Publisher
     can_fire :plugins_loaded, :plugins_cleared
@@ -23,9 +25,7 @@ module Musicality
       @current_load_path = ""
     end
     
-    #
-    # Load all the plugins in plugin_dir
-    #
+    # Load all the plugins in the given plugin dir.
     def load_plugins(plugin_dir)
       prev_plugins = @plugins.clone
       
@@ -40,6 +40,7 @@ module Musicality
       fire :plugins_loaded, new_plugins
     end
     
+    # Remove all registered plugins.
     def clear_plugins
       @plugins.clear
       fire :plugins_cleared
