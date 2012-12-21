@@ -45,7 +45,7 @@ class Part
   end
   
   # Set the part note sequences.
-  # @param [Array] sequences Contains note sequences to be played.
+  # @param [Array] note_sequences Contains note sequences to be played.
   # @raise [ArgumentError] unless note_sequences is an Array.
   # @raise [ArgumentError] unless note_sequences contains only NoteSequence objects.
   def note_sequences= note_sequences

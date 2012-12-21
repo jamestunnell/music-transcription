@@ -74,7 +74,7 @@ class Instrument
   # Restart the note attack for the given note ID. Attack and sustain can be different than current.
   # @param [Symbol] id Identifies the note whose attack is to be restarted.
   # @param [Numeric] attack The attack amount (0.0 to 1.0) to use in new attack.
-  # @param [Numeric] attack The sustain amount (0.0 to 1.0) to use in new attack.
+  # @param [Numeric] sustain The sustain amount (0.0 to 1.0) to use in new attack.
   # @raise [ArgumentError] if attack is not between 0.0 and 1.0.
   # @raise [ArgumentError] if sustain is not between 0.0 and 1.0.
   def note_restart_attack id, attack, sustain

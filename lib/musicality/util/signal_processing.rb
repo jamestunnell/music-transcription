@@ -12,7 +12,9 @@ class SignalProcessing
   #
   # @param [Array] f The signal to look for g in.
   # @param [Array] g The signal to look for in f.
-  # @param [true/false] use_relative_error Instead of just multiplying samples during convolution, compute relative error.
+  # @param [true/false] normalize Flag to indicate if normalization should be
+  #                               performed on input functions (does not
+  #                               modify original input array).
   # @raise [ArgumentError] if g is longer than f.
   def self.cross_correlate f, g, normalize = true
     raise ArgumentError, "g.count #{g.count} is greater than f.count #{f.count}" if g.count > f.count

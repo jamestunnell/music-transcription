@@ -9,7 +9,6 @@ class Arrangement
   # New instance of Arrangement
   #
   # @param [Array] parts Array of collated, time-based, composed parts (i.e., score should pass through score collator and time converter first)
-  # @param [Float] sample_rate The sample rate to use in making instrument and effect plugins.
   def initialize parts
     @start = parts.inject(parts.first.find_start) {|so_far, part| now = part.find_start; (now < so_far) ? now : so_far }
     @end = parts.inject(parts.first.find_end) {|so_far, part| now = part.find_end; (now > so_far) ? now : so_far }

@@ -1,6 +1,8 @@
 module Musicality
 
+# Utility class to perform conversions on a score. 
 class ScoreConverter
+
   # Convert note-based offsets & durations to time-based. This eliminates
   # the use of tempo during performance.
   # @param [Score] score The score to process. It will be collated if
@@ -8,9 +10,9 @@ class ScoreConverter
   # @param [Numeric] conversion_sample_rate The sample rate to use in
   #                                         converting from note-base to
   #                                         time-base.
-  def self.make_time_based_parts_from_score score, conversion_sample_rate
+  def self.make_time_based_parts_from_score! score, conversion_sample_rate
     if score.program.segments.count > 1
-      ScoreCollator.collate_score!(score)
+      self.collate_score!(score)
     end
     
     #gather all the note offets to be converted to time offsets

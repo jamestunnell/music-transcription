@@ -12,7 +12,6 @@ class Oscillator
   TWO_PI = Math::PI * 2.0
   
   # A new instance of Oscillator.
-  # @param [Hash] args Should contain the :sample_rate key.
   # @raise [ArgumentError] if args does not have the :sample_rate key.
   def initialize sample_rate, freq = 1.0
     @sample_rate = sample_rate
@@ -22,7 +21,7 @@ class Oscillator
   # Prepare the freq to be rendered when  render_sample is called. Computes the
   # phase rate according to the frequency.
   # 
-  # @param [Pitch] pitch The freq to be played.
+  # @param [Pitch] freq The freq to be played.
   def freq= freq
     @phase_rate = (freq * TWO_PI) / @sample_rate.to_f
     @phase = 0.0

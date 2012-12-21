@@ -22,7 +22,7 @@ class Instruction
   # A new instance of Instruction.
   # @param [Symbol] type The type of instruction to be performed. See Instructions list for valid instructions.
   # @param [Float] offset The offset where the instruction should be eecuted.
-  # @param [Symbol] type The data to be used in executing the instruction.
+  # @param [Symbol] data The data to be used in executing the instruction.
   def initialize type, offset, data = nil
     unless Instructions.include?(type)
       raise ArgumentError, "type #{type} is not one of #{Instructions.inspect}"

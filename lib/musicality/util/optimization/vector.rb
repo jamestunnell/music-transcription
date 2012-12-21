@@ -7,12 +7,14 @@ module Optimization
 # Straight from the Internet, found posted on:
 # http://www.manybody.org/wiki/index.php/MSA-A_Complete_Vector_Class-Ruby
 class Vector < Array
+  # Override the base array behavior with vector addition
   def +(a)
     sum = Vector.new
     self.each_index{|k| sum[k] = self[k]+a[k]}
     sum
   end
   
+  # Override the base array behavior with vector subtraction
   def -(a)
     diff = Vector.new
     self.each_index{|k| diff[k] = self[k]-a[k]}
@@ -27,6 +29,7 @@ class Vector < Array
     self.map{|x| -x}.to_v
   end
   
+  # Override the base array behavior with vector multiplication 
   def *(a)
     if a.class == Vector              # inner product
       product = 0
@@ -38,6 +41,7 @@ class Vector < Array
     product
   end
   
+  # Override the base array behavior with vector division
   def /(a)
     if a.class == Vector
       raise
@@ -53,6 +57,7 @@ end
 end
 
 class Array
+  # Convert current object (self) to a Vector.
   def to_v
     Vector[*self]
   end
@@ -60,6 +65,8 @@ end
 
 class Fixnum
   alias :original_mult :*
+  # Override built-in Fixnum multiplication with one that
+  # checks for Vector operand, in order to perform scalar multiplication.
   def *(a)
     if a.class == Musicality::Optimization::Vector
       a*self
@@ -71,7 +78,8 @@ end
 
 class Float
   alias :original_mult :*
-
+  # Override built-in Float multiplication with one that
+  # checks for Vector operand, in order to perform scalar multiplication.
   def *(a)
     if a.class == Musicality::Optimization::Vector
       a*self

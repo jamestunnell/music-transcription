@@ -50,9 +50,7 @@ class ValueComputer
   # for a matching note offset. If the dynamic event duration is non-zero, a 
   # linear transition function is created.
   #
-  # @param [Numeric] value The new value.
-  # @param [Numeric] offset The offset where the new value takes effect.
-  # @param [Numeric] duration The duration (if any) of a transition to the new value.
+  # @param [Numeric] value_change_event An event with information about the new value.
   def add_value_change value_change_event
     
     func = nil

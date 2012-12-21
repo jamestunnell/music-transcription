@@ -11,7 +11,7 @@ class Performer
   attr_reader :arranged_part, :sample_rate, :instruments, :effects, :instructions_future, :instructions_past
 
   # A new instance of Performer.
-  # @param [Part] part The part to be used during performance.
+  # @param [ArrangedPart] arranged_part The part to be used during performance.
   # @param [Numeric] sample_rate The sample rate used in rendering samples.
   def initialize arranged_part, sample_rate
     @sample_rate = sample_rate

@@ -1,6 +1,9 @@
 require 'musicality'
 
 module Musicality
+
+# A simple instrument to use for rendering. Can select different
+# ADSR envelope and oscillator voice settings.
 class OscillatorInstrument < Musicality::Instrument
   def initialize settings
 

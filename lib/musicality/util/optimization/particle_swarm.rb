@@ -38,7 +38,7 @@ class ParticleSwarm
   
   # A new instance of ParticleSwarm.
   # @param [Fixnum] swarm_size Number of particles to create for the swarm.
-  # @position_bounds [Array] position_bounds Array containing Range objects.
+  # @param [Array] position_bounds Array containing Range objects.
   #                                          The array's length determines the size
   #                                          of each particle's position vector.
   #                                          Each range object is used to bound
