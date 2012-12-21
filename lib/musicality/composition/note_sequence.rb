@@ -1,15 +1,14 @@
 module Musicality
 
-# A group of at least two notes. The group may exist for such musical constructs
+# A group of notes. The group may exist for such musical constructs
 # as a chord, phrase, slur, glissando, portamento, or tuplet.
 #
 # @author James Tunnell
 # 
 # @!attribute [r] notes
-#   @return [Enumerable] Two or more notes contained in an Enumerable object 
-#                        (e.g. Array, Hash, etc.).
+#   @return [Array] Array of notes.
 #
-class Sequence < Event
+class NoteSequence < Event
   include HashMake
   attr_reader :notes
 
@@ -18,7 +17,7 @@ class Sequence < Event
   # optional hash-args (for hash-makeable idiom)
   OPT_ARGS = [ spec_arg_array(:notes, Note) ]
 
-  # A new instance of Sequence.
+  # A new instance of NoteSequence.
   # @param [Hash] args Hashed arguments. Required keys are :offset and :notes.
   #                    There are no optional keys.
   # @raise [ArgumentError] if notes is not an Array
@@ -50,10 +49,10 @@ class Sequence < Event
   # Override duration= from Event base class, because it should not be called.
   # Always throws runtime error.
   #
-  # @raise [RuntimeError] if called. Duration of a note sequence is instead
+  # @raise [RuntimeError] if called. Duration of a sequence is instead
   #                       derived from the sum of note durations.
   def duration= duration
-    raise "Cannot set duration of a note sequence. Duration is instead derived from the sum of note durations"
+    raise "Cannot set duration of a sequence. Duration is instead derived from the sum of note durations"
   end
 end
 

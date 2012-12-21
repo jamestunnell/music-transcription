@@ -12,7 +12,7 @@
     end: 4.0
     excl: true
 :parts:
-- :sequences:
+- :note_sequences:
   - :offset: 0.0
     :notes:
     - :duration: 0.375
@@ -66,7 +66,7 @@
       - :octave: 2
         :semitone: 3
   :id: '1'
-- :sequences:
+- :note_sequences:
   - :offset: 0.125
     :notes:
     - :duration: 0.125
@@ -104,10 +104,12 @@
       :pitches:
       - :octave: 3
         :semitone: 7
+      :relationship: :slur
     - :duration: 0.0625
       :pitches:
       - :octave: 3
         :semitone: 5
+      :relationship: :slur
     - :duration: 0.125
       :pitches:
       - :octave: 3
@@ -145,10 +147,12 @@
       :pitches:
       - :octave: 4
         :semitone: 4
+      :relationship: :slur
     - :duration: 0.125
       :pitches:
       - :octave: 4
         :semitone: 2
+      :relationship: :slur
     - :duration: 0.125
       :pitches:
       - :octave: 4

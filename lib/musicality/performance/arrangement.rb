@@ -4,33 +4,21 @@ module Musicality
 #
 # @author James Tunnell
 class Arrangement
-  attr_reader :start, :end, :parts#, :instrument_map, :effect_map
+  attr_reader :start, :end, :arranged_parts
   
   # New instance of Arrangement
   #
-  # @param [Array] parts Array of time-based parts.
-  # @param [Hash] instrument_map Maps instrument classes to part IDs.
-  # @param [Hash] effect_map Maps effect classes to part IDs.
-  def initialize parts#, instrument_map, effect_map
-    raise ArgumentError, "parts is not an Array" unless parts.is_a?(Array)
-    #raise ArgumentError, "instrument_map is not an Hash" unless instrument_map.is_a?(Hash)
-    #raise ArgumentError, "effect_map is not an Hash" unless effect_map.is_a?(Hash)
+  # @param [Array] parts Array of collated, time-based, composed parts (i.e., score should pass through score collator and time converter first)
+  # @param [Float] sample_rate The sample rate to use in making instrument and effect plugins.
+  def initialize parts
+    @start = parts.inject(parts.first.find_start) {|so_far, part| now = part.find_start; (now < so_far) ? now : so_far }
+    @end = parts.inject(parts.first.find_end) {|so_far, part| now = part.find_end; (now > so_far) ? now : so_far }
     
-    @parts = parts
-    #@instrument_map = instrument_map
-    #@effect_map = effect_map
-    
-    @start = parts.first.find_start
-    @end = parts.first.find_end
-
+    @arranged_parts = []
     parts.each do |part|
-      sop = part.find_start
-      @start = sop if sop < @start
-      
-      eop = part.find_end
-      @end = eop if eop > @end
+      @arranged_parts << ArrangedPart.new(part)
     end
   end
-
+  
 end
 end

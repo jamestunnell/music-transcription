@@ -1,7 +1,6 @@
 module Musicality
 
-# Abstraction of a musical score. Contains parts, notes, note sequences, dynamics,
-# and tempos.
+# Abstraction of a musical score. Contains parts, program, and tempo profiles.
 #
 # @author James Tunnell
 #

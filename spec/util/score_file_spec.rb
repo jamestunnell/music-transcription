@@ -12,7 +12,7 @@ describe Musicality::ScoreFile do
       :program => { :segments => [0.0...3.75] },
       :parts => [
         {
-          :sequences => [
+          :note_sequences => [
             { :offset => 0.0, :notes => [
                 { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
                 { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 2 } ] },

@@ -24,7 +24,7 @@ score_hash = {
   :parts => [
     {
       :loudness_profile => { :start_value => 0.5 },
-      :sequences => [
+      :note_sequences => [
         { :offset => 0.0, :notes => [
             { :duration => 0.375, :pitches => [C2] },
             { :duration => 0.25, :pitches => [Eb2] },
@@ -51,7 +51,7 @@ score_hash = {
     }, 
     {
       :loudness_profile => { :start_value => 0.5 },
-      :sequences => [
+      :note_sequences => [
         { :offset => 0.125, :notes => [
             { :duration => 0.125, :pitches => [Bb3] },
             { :duration => 0.125, :pitches => [Bb3] },
@@ -61,8 +61,8 @@ score_hash = {
             { :duration => 0.25, :pitches => [A3] },
             { :duration => 0.125, :pitches => [G3] },
             { :duration => 0.125, :pitches => [F3] },
-            { :duration => 0.3125, :pitches => [G3] },
-            { :duration => 0.0625, :pitches => [F3] },
+            { :duration => 0.3125, :pitches => [G3], :relationship => Musicality::Note::RELATIONSHIP_SLUR},
+            { :duration => 0.0625, :pitches => [F3], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
             { :duration => 0.125, :pitches => [E3] }
           ]
         },
@@ -74,8 +74,8 @@ score_hash = {
             { :duration => 0.25, :pitches => [C4] },
             { :duration => 0.125, :pitches => [A3] },
             { :duration => 0.125, :pitches => [E4] },
-            { :duration => 0.125, :pitches => [E4] },
-            { :duration => 0.125, :pitches => [D4] },
+            { :duration => 0.125, :pitches => [E4], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
+            { :duration => 0.125, :pitches => [D4], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
             { :duration => 0.125, :pitches => [C4] },
           ]
         }

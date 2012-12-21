@@ -29,7 +29,7 @@ class ScoreCollator
       
       score.program.segments.each do |seg|
 	# figure which sequences to keep/modify
-	sequences = Marshal.load(Marshal.dump(part.sequences))
+	sequences = Marshal.load(Marshal.dump(part.note_sequences))
 	sequences.each do |seq|
 	  modify_seq_for_segment seq, seg
 	end
@@ -38,7 +38,7 @@ class ScoreCollator
 	# add sequences to part, adjusting for segment start offset
 	sequences.each do |sequence|
 	  sequence.offset = (sequence.offset - seg.first) + segment_start_offset
-	  new_part.sequences << sequence
+	  new_part.note_sequences << sequence
 	end	
 
 	segment_start_offset += (seg.last - seg.first)
@@ -50,6 +50,12 @@ class ScoreCollator
     score.parts = new_parts
     score.beat_duration_profile = clone_and_collate_profile(score.beat_duration_profile, score.program.segments)
     score.beats_per_minute_profile = clone_and_collate_profile(score.beats_per_minute_profile, score.program.segments)
+    
+    # find new start/end based on collated parts, and replace
+    # current program segments with a single segment.
+    seg_start = score.parts.inject(score.parts.first.find_start) {|so_far, part| now = part.find_start; (now < so_far) ? now : so_far }
+    seg_end = score.parts.inject(score.parts.first.find_end) {|so_far, part| now = part.find_end; (now > so_far) ? now : so_far }
+    score.program.segments = [seg_start...seg_end]
   end
 
   private

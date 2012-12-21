@@ -7,28 +7,21 @@ describe Musicality::Conductor do
       :parts => [
         {
           :loudness_profile => { :start_value => 0.5 },
-          :sequences => [
+          :note_sequences => [
             { :offset => 0.0, :notes => [
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 4 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 4 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 4 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 4 } ] },
-                { :duration => 0.75, :pitches => [ { :octave => 9 } ] },
+                { :duration => 0.05, :pitches => [ { :octave => 9 } ] },
+                { :duration => 0.05, :pitches => [ { :octave => 9, :semitone => 2 } ] },
+                { :duration => 0.05, :pitches => [ { :octave => 9, :semitone => 4 } ] },
+                { :duration => 0.05, :pitches => [ { :octave => 9 } ] },
+                { :duration => 0.05, :pitches => [ { :octave => 9, :semitone => 2 } ] },
+                { :duration => 0.05, :pitches => [ { :octave => 9, :semitone => 4 } ] },
               ]
             }
           ]
         }
       ],
       :beats_per_minute_profile => { 
-        :start_value => 120
+        :start_value => 360
       },
       :program => {
         :segments => [
@@ -43,7 +36,7 @@ describe Musicality::Conductor do
     
     @score = Score.make_from_hash hash
     @arrangement = Musicality::Arranger.new.make_arrangement @score
-    @sample_rate = 1000.0
+    @sample_rate = 250.0
   end
 
   describe "#perform_score" do
@@ -54,12 +47,12 @@ describe Musicality::Conductor do
 
     it "should be able to perform the entire score" do
       #how long it should take time-wise
-      notes_per_sec = 0.5
+      notes_per_sec = @score.beats_per_minute_profile.start_value * @score.beat_duration_profile.start_value / 60.0
       score_length_notes = @score.program.length
       score_length_sec = score_length_notes / notes_per_sec
       score_length_samples = score_length_sec * @sample_rate
 
-      @conductor.time_counter.should be_within(0.001).of(score_length_sec)
+      @conductor.time_counter.should be_within(0.01).of(score_length_sec)
       @conductor.sample_counter.should be_within(10).of(score_length_samples)
     end
   end

@@ -26,36 +26,36 @@ module Musicality
 #
 class Part
   include HashMake
-  attr_reader :loudness_profile, :sequences, :instrument_plugins, :effect_plugins, :id
+  attr_reader :loudness_profile, :note_sequences, :instrument_plugins, :effect_plugins, :id
   
   # required hash-args (for hash-makeable idiom)
   REQ_ARGS = [  ]
   # optional hash-args (for hash-makeable idiom)
   OPT_ARGS = [ spec_arg(:loudness_profile, SettingProfile, ->(a){ a.values_between?(0.0,1.0) }, SettingProfile.new(:start_value => 0.5)),
-               spec_arg_array(:sequences, Sequence),
+               spec_arg_array(:note_sequences, NoteSequence),
                spec_arg_array(:instrument_plugins, PluginConfig),
                spec_arg_array(:effect_plugins, PluginConfig),
                spec_arg(:id, String, ->(a){true}, -> { UniqueToken.make_unique_string(8) }) ]
   
   # A new instance of Part.
   # @param [Hash] args Hashed arguments. Valid optional keys are :loudness_profile, 
-  #                    :sequences, :instrument_plugins, :effect_plugins, and :id.
+  #                    :note_sequences, :instrument_plugins, :effect_plugins, and :id.
   def initialize args = {}
     process_args args
   end
   
   # Set the part note sequences.
   # @param [Array] sequences Contains note sequences to be played.
-  # @raise [ArgumentError] unless sequences is an Array.
-  # @raise [ArgumentError] unless sequences contains only Sequence objects.
-  def sequences= sequences
-    raise ArgumentError, "seqeuences is not an Array" if !sequences.is_a?(Array)
+  # @raise [ArgumentError] unless note_sequences is an Array.
+  # @raise [ArgumentError] unless note_sequences contains only NoteSequence objects.
+  def note_sequences= note_sequences
+    raise ArgumentError, "note_seqeuences is not an Array" if !note_sequences.is_a?(Array)
     
-    sequences.each do |seqeuence|
-      raise ArgumentError, "seqeuences contain a non-Sequence" if !seqeuence.is_a?(Sequence)
+    note_sequences.each do |note_seqeuence|
+      raise ArgumentError, "note_seqeuences contain a non-NoteSequence" if !note_seqeuence.is_a?(NoteSequence)
     end
     
-    @sequences = sequences
+    @note_sequences = note_sequences
   end
 
   # Set the loudness SettingProfile.
@@ -117,7 +117,7 @@ class Part
   def find_start
     sop = 0.0
  
-    @sequences.each do |sequence|
+    @note_sequences.each do |sequence|
       sos = sequence.offset
       sop = sos if sos < sop
     end
@@ -130,7 +130,7 @@ class Part
   def find_end
     eop = 0.0
  
-    @sequences.each do |sequence|
+    @note_sequences.each do |sequence|
       eos = sequence.offset + sequence.duration
       eop = eos if eos > eop
     end

@@ -1,0 +1,74 @@
+---
+:beats_per_minute_profile:
+  :start_value: 120.0
+:program:
+  :segments:
+  - !ruby/range
+    begin: 0
+    end: 4.0
+    excl: true
+:parts:
+- :note_sequences:
+  - :offset: 0.0
+    :notes:
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+        :semitone: 2
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+        :semitone: 4
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+        :semitone: 5
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+        :semitone: 4
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+        :semitone: 2
+    - :duration: 0.5
+      :pitches:
+      - :octave: 3
+  - :offset: 2.0
+    :notes:
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+      :relationship: :legato
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+        :semitone: 2
+      :relationship: :legato
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+        :semitone: 4
+      :relationship: :legato
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+        :semitone: 5
+      :relationship: :legato
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+        :semitone: 4
+      :relationship: :legato
+    - :duration: 0.25
+      :pitches:
+      - :octave: 3
+        :semitone: 2
+      :relationship: :legato
+    - :duration: 0.5
+      :pitches:
+      - :octave: 3
+  :id: '1'

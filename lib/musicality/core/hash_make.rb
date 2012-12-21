@@ -13,8 +13,11 @@ module Musicality
     attr_reader :key, :klass, :check_proc
     attr_accessor :type
 
+    # indicate the hashed arg should be an object of class :klass
     TYPE_VAL = :typeVal
+    # indicate the hashed arg should be an array of objects of class :klass
     TYPE_ARRAY = :typeArray
+    # indicate the hashed arg should be a hash of objects of class :klass
     TYPE_HASH = :typeHash
 
     # @param [Symbol] key The key which locates the arg in the args hash.

@@ -7,7 +7,7 @@ describe Musicality::Part do
     @note3 = Musicality::Note.new :pitches => [Pitch.new], :duration => 0.25
 
     @sequences = [ 
-      Musicality::Sequence.new( :offset => 0.0, :notes => [@note1, @note2, @note3] )
+      NoteSequence.new( :offset => 0.0, :notes => [@note1, @note2, @note3] )
     ]
     
     @loudness_profile = Musicality::SettingProfile.new(
@@ -26,8 +26,8 @@ describe Musicality::Part do
   end  
   
   it "should assign note sequences given during construction" do
-    part = Musicality::Part.new :sequences => @sequences
-    part.sequences.should eq(@sequences.clone)
+    part = Musicality::Part.new :note_sequences => @sequences
+    part.note_sequences.should eq(@sequences.clone)
   end
   
   it "should assign id given during construction" do

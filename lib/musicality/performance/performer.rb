@@ -8,36 +8,31 @@ module Musicality
 # 
 class Performer
 
-  attr_reader :part, :instruments, :effects, :sequencers
+  attr_reader :arranged_part, :sample_rate, :instruments, :effects, :instructions_future, :instructions_past
 
   # A new instance of Performer.
   # @param [Part] part The part to be used during performance.
   # @param [Numeric] sample_rate The sample rate used in rendering samples.
-  def initialize part, sample_rate
+  def initialize arranged_part, sample_rate
     @sample_rate = sample_rate
-    @part = part
+    @arranged_part = arranged_part
 
-    @loudness_computer = ValueComputer.new @part.loudness_profile
+    @loudness_computer = ValueComputer.new @arranged_part.loudness_profile
 
     @instruments = []
-    part.instrument_plugins.each do |instrument_plugin|
-      settings = { :sample_rate => @sample_rate }.merge instrument_plugin.settings
-      plugin = PLUGINS.plugins[instrument_plugin.plugin_name.to_sym]
-      @instruments << plugin.make_instrument(settings)
+    @arranged_part.instrument_plugins.each do |hash|
+      settings = { :sample_rate => @sample_rate }.merge(hash[:settings])
+      @instruments << hash[:plugin].make_instrument(settings)
     end
 
     @effects = []
-    part.effect_plugins.each do |effect_plugin|
-      settings = { :sample_rate => @sample_rate }.merge effect_plugin.settings
-      
-      plugin = PLUGINS.plugins[effect_plugin.plugin_name.to_sym]
-      @effects << plugin.make_effect(settings)
+    @arranged_part.effect_plugins.each do |hash|
+      settings = { :sample_rate => @sample_rate }.merge(hash[:settings])
+      @effects << hash[:plugin].make_instrument(settings)
     end
     
-    @sequencers = []
-    @part.sequences.each do |sequence|
-      @sequencers << Sequencer.new(sequence)
-    end
+    @instructions_future = {}
+    @instructions_past = {}
   end
 
   # Figure which notes will be played, starting at the given offset. Must 
@@ -45,8 +40,12 @@ class Performer
   #
   # @param [Numeric] offset The offset to begin playing notes at.
   def prepare_performance_at offset = 0.0
-    @sequencers.each do |sequencer| 
-      sequencer.prepare_to_perform offset
+    @instructions_future.clear
+    @instructions_past.clear
+    
+    @arranged_part.instruction_sequences.each do |seq|
+      @instructions_future[seq.id] = seq.instructions.select { |instr| instr.offset >= offset }
+      @instructions_past[seq.id] = seq.instructions.select { |instr| instr.offset < offset }
     end
   end
   
@@ -55,22 +54,43 @@ class Performer
   #
   # @param [Numeric] counter The offset to sample performance at.
   def perform_sample counter
-    @sequencers.each do |sequencer|
-      event_updates = sequencer.update_notes counter
+    instructions_to_exec = {}
+    
+    @instructions_future.each do |seq_id, instrs|
+      instructions_to_exec[seq_id] = instrs.select { |instr| instr.offset <= counter }
+      instrs.keep_if { |instr| instr.offset > counter }
+    end
+    
+    instructions_to_exec.each do |seq_id, instructions|
+      instructions.each do |instruction|
+        case instruction.type
+        when Instruction::ON
+          @instruments.each do |instrument|
+            note = instruction.data
+            instrument.note_on note, seq_id
+          end
+        when Instruction::OFF
+          @instruments.each do |instrument|
+            instrument.note_off seq_id
+          end
+        when Instruction::CHANGE_PITCH
+          @instruments.each do |instrument|
+            note = instruction.data
+            instrument.note_change_pitches seq_id, note.pitches
+          end
+        when Instruction::RESTART_ATTACK
+          @instruments.each do |instrument|
+            note = instruction.data
+            instrument.note_restart_attack seq_id, note.attack, note.sustain
+          end
+        when Instruction::RELEASE
+          # TODO
+        else
+          raise "Unsupported instruction type #{instruction.type} called for"
+        end
+      end
       
-      event_updates[:to_start].each do |event|
-#        puts "starting pitch #{event.note.pitch}"
-        @instruments.each do |instrument|
-          instrument.note_on event.note, event.id
-        end
-      end
-
-      event_updates[:to_end].each do |event|
-#        puts "ending pitch #{event.note.pitch}"
-        @instruments.each do |instrument|
-          instrument.note_off event.id
-        end
-      end
+      @instructions_past[seq_id] += instructions
     end
 
     loudness = @loudness_computer.value_at counter

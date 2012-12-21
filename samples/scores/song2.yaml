@@ -12,7 +12,7 @@
     end: 4.0
     excl: true
 :parts:
-- :sequences:
+- :note_sequences:
   - :offset: 0.0
     :notes:
     - :duration: 1.0
@@ -35,7 +35,7 @@
       - :octave: 3
         :semitone: 10
   :id: '1'
-- :sequences:
+- :note_sequences:
   - :offset: 0.0
     :notes:
     - :duration: 0.375
@@ -60,7 +60,7 @@
       - :octave: 5
         :semitone: 2
   :id: '2'
-- :sequences:
+- :note_sequences:
   - :offset: 0.125
     :notes:
     - :duration: 0.25

@@ -7,7 +7,7 @@ describe Musicality::Score do
     @note3 = Musicality::Note.new :pitches => [Pitch.new], :duration => 0.25
 
     @sequences = [ 
-      Musicality::Sequence.new( :offset => 0.0, :notes => [@note1, @note2, @note3] )
+      NoteSequence.new( :offset => 0.0, :notes => [@note1, @note2, @note3] )
     ]
     
     @loudness_profile = Musicality::SettingProfile.new(
@@ -19,7 +19,7 @@ describe Musicality::Score do
 
     @parts = 
     [
-      Musicality::Part.new( :loudness_profile => @loudness_profile, :sequences => @sequences, :id => "piano (LH)" ),
+      Musicality::Part.new( :loudness_profile => @loudness_profile, :note_sequences => @sequences, :id => "piano (LH)" ),
     ]
 
     @bpm_profile = Musicality::SettingProfile.new(

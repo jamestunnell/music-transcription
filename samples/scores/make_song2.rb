@@ -28,7 +28,7 @@ score_hash = {
         :offset => 0.0,
         :loudness => 0.5
       },
-      :sequences => [
+      :note_sequences => [
         { :offset => 0.0, :notes => [
             { :duration => 1.0, :pitches => [C4] },
             { :duration => 1.0, :pitches => [Bb3] },
@@ -42,7 +42,7 @@ score_hash = {
     }, 
     { 
       :loudness_profile => { :start_value => 0.5 },
-      :sequences => [
+      :note_sequences => [
         { :offset => 0.0, :notes => [
             { :duration => 0.375, :pitches => [E5] },
             { :duration => 1.0, :pitches => [D5] },
@@ -57,7 +57,7 @@ score_hash = {
     },
     {
       :loudness_profile => { :start_value => 0.5 },
-      :sequences => [
+      :note_sequences => [
         { :offset => 0.125, :notes => [
             { :duration => 0.25, :pitches => [G5] },
             { :duration => 0.5, :pitches => [F5] }

@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Musicality::ScoreCollator do
   before :all do
@@ -14,7 +14,7 @@ describe Musicality::ScoreCollator do
             :start_value => 0.5,
             :value_change_events => [ Event.new(0.5, 1.0, 1.0) ]
           },
-          :sequences => [
+          :note_sequences => [
             { :offset => 0.0,
               :notes => [
                 { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
@@ -33,7 +33,7 @@ describe Musicality::ScoreCollator do
       :parts => [
         {
           :loudness_profile => { :start_value => 0.5 },
-          :sequences => [
+          :note_sequences => [
             { :offset => 0.0, :notes => [
                 { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
                 { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 2 } ] },
@@ -66,7 +66,7 @@ describe Musicality::ScoreCollator do
       :parts => [
         {
           :loudness_profile => { :start_value => 0.5 },
-          :sequences => [
+          :note_sequences => [
             { :offset => 0.0,
               :notes => [
                 { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
@@ -80,7 +80,7 @@ describe Musicality::ScoreCollator do
         },
         {
           :loudness_profile => { :start_value => 0.5 },
-          :sequences => [
+          :note_sequences => [
             { :offset => 0.5,
               :notes => [
                 { :duration => 0.5, :pitches => [ { :octave => 9 } ] },
@@ -103,16 +103,16 @@ describe Musicality::ScoreCollator do
     part = score.parts.first
 
     #puts part.save_to_hash.to_yaml
-    part.sequences.count.should be 2
-    part.sequences[0].notes.count.should be 4
-    part.sequences[1].notes.count.should be 5
+    part.note_sequences.count.should be 2
+    part.note_sequences[0].notes.count.should be 4
+    part.note_sequences[1].notes.count.should be 5
     
-    part.sequences[0].offset.should eq(0.0)
-    part.sequences[0].duration.should eq(1.0)
-    part.sequences[0].notes.first.duration.should eq(0.25)
-    part.sequences[1].offset.should eq(1.0)
-    part.sequences[1].duration.should eq(2.0)
-    part.sequences[1].notes.last.duration.should eq(1.0)
+    part.note_sequences[0].offset.should eq(0.0)
+    part.note_sequences[0].duration.should eq(1.0)
+    part.note_sequences[0].notes.first.duration.should eq(0.25)
+    part.note_sequences[1].offset.should eq(1.0)
+    part.note_sequences[1].duration.should eq(2.0)
+    part.note_sequences[1].notes.last.duration.should eq(1.0)
     
     dyn_comp = Musicality::ValueComputer.new(part.loudness_profile)
     dyn_comp.value_at(0.0).should eq(0.5)
@@ -146,38 +146,38 @@ describe Musicality::ScoreCollator do
     part = parts.first
 
     #puts part.save_to_hash.to_yaml
-    part.sequences.count.should eq(5)
-    part.sequences[0].notes.count.should eq(5)
-    part.sequences[1].notes.count.should eq(1)
-    part.sequences[2].notes.count.should eq(1)
-    part.sequences[3].notes.count.should eq(4)
-    part.sequences[4].notes.count.should eq(3)
+    part.note_sequences.count.should eq(5)
+    part.note_sequences[0].notes.count.should eq(5)
+    part.note_sequences[1].notes.count.should eq(1)
+    part.note_sequences[2].notes.count.should eq(1)
+    part.note_sequences[3].notes.count.should eq(4)
+    part.note_sequences[4].notes.count.should eq(3)
     
-    part.sequences[0].offset.should be_within(0.01).of(0.0)
-    part.sequences[1].offset.should be_within(0.01).of(2.0)
-    part.sequences[2].offset.should be_within(0.01).of(3.0)
-    part.sequences[3].offset.should be_within(0.01).of(4.0)
-    part.sequences[4].offset.should be_within(0.01).of(5.0)
+    part.note_sequences[0].offset.should be_within(0.01).of(0.0)
+    part.note_sequences[1].offset.should be_within(0.01).of(2.0)
+    part.note_sequences[2].offset.should be_within(0.01).of(3.0)
+    part.note_sequences[3].offset.should be_within(0.01).of(4.0)
+    part.note_sequences[4].offset.should be_within(0.01).of(5.0)
     
-    part.sequences[0].duration.should be_within(0.01).of(2.0)
-    part.sequences[0].notes.first.duration.should be_within(0.01).of(0.25)
-    part.sequences[0].notes.last.duration.should be_within(0.01).of(1.0)
+    part.note_sequences[0].duration.should be_within(0.01).of(2.0)
+    part.note_sequences[0].notes.first.duration.should be_within(0.01).of(0.25)
+    part.note_sequences[0].notes.last.duration.should be_within(0.01).of(1.0)
     
-    part.sequences[1].duration.should be_within(0.01).of(1.0)
-    part.sequences[1].notes.first.duration.should be_within(0.01).of(1.0)
-    part.sequences[1].notes.last.duration.should be_within(0.01).of(1.0)
+    part.note_sequences[1].duration.should be_within(0.01).of(1.0)
+    part.note_sequences[1].notes.first.duration.should be_within(0.01).of(1.0)
+    part.note_sequences[1].notes.last.duration.should be_within(0.01).of(1.0)
     
-    part.sequences[2].duration.should be_within(0.01).of(1.0)
-    part.sequences[2].notes.first.duration.should be_within(0.01).of(1.0)
-    part.sequences[2].notes.last.duration.should be_within(0.01).of(1.0)
+    part.note_sequences[2].duration.should be_within(0.01).of(1.0)
+    part.note_sequences[2].notes.first.duration.should be_within(0.01).of(1.0)
+    part.note_sequences[2].notes.last.duration.should be_within(0.01).of(1.0)
     
-    part.sequences[3].duration.should be_within(0.01).of(1.0)
-    part.sequences[3].notes.first.duration.should be_within(0.01).of(0.25)
-    part.sequences[3].notes.last.duration.should be_within(0.01).of(0.25)
+    part.note_sequences[3].duration.should be_within(0.01).of(1.0)
+    part.note_sequences[3].notes.first.duration.should be_within(0.01).of(0.25)
+    part.note_sequences[3].notes.last.duration.should be_within(0.01).of(0.25)
     
-    part.sequences[4].duration.should be_within(0.01).of(1.75)
-    part.sequences[4].notes.first.duration.should be_within(0.01).of(0.5)
-    part.sequences[4].notes.last.duration.should be_within(0.01).of(0.75)
+    part.note_sequences[4].duration.should be_within(0.01).of(1.75)
+    part.note_sequences[4].notes.first.duration.should be_within(0.01).of(0.5)
+    part.note_sequences[4].notes.last.duration.should be_within(0.01).of(0.75)
   end
 
   it "should handle a simple two-part score" do
@@ -192,27 +192,27 @@ describe Musicality::ScoreCollator do
     part0 = parts[0]
     part1 = parts[1]
 
-    part0.sequences.count.should be 2
-    part0.sequences[0].notes.count.should be 4
-    part0.sequences[1].notes.count.should be 5
+    part0.note_sequences.count.should be 2
+    part0.note_sequences[0].notes.count.should be 4
+    part0.note_sequences[1].notes.count.should be 5
     
-    part0.sequences[0].offset.should be_within(0.01).of(0.0)
-    part0.sequences[0].duration.should be_within(0.01).of(1.0)
-    part0.sequences[0].notes.first.duration.should be_within(0.01).of(0.25)
-    part0.sequences[1].offset.should be_within(0.01).of(1.0)
-    part0.sequences[1].duration.should be_within(0.01).of(2.0)
-    part0.sequences[1].notes.last.duration.should be_within(0.01).of(1.0)
+    part0.note_sequences[0].offset.should be_within(0.01).of(0.0)
+    part0.note_sequences[0].duration.should be_within(0.01).of(1.0)
+    part0.note_sequences[0].notes.first.duration.should be_within(0.01).of(0.25)
+    part0.note_sequences[1].offset.should be_within(0.01).of(1.0)
+    part0.note_sequences[1].duration.should be_within(0.01).of(2.0)
+    part0.note_sequences[1].notes.last.duration.should be_within(0.01).of(1.0)
 
-    part1.sequences.count.should be 2
-    part1.sequences[0].notes.count.should be 1
-    part1.sequences[1].notes.count.should be 4
+    part1.note_sequences.count.should be 2
+    part1.note_sequences[0].notes.count.should be 1
+    part1.note_sequences[1].notes.count.should be 4
     
-    part1.sequences[0].offset.should be_within(0.01).of(0.5)
-    part1.sequences[0].duration.should be_within(0.01).of(0.5)
-    part1.sequences[0].notes.first.duration.should be_within(0.01).of(0.5)
-    part1.sequences[1].offset.should be_within(0.01).of(1.5)
-    part1.sequences[1].duration.should be_within(0.01).of(1.5)
-    part1.sequences[1].notes.last.duration.should be_within(0.01).of(0.25)
+    part1.note_sequences[0].offset.should be_within(0.01).of(0.5)
+    part1.note_sequences[0].duration.should be_within(0.01).of(0.5)
+    part1.note_sequences[0].notes.first.duration.should be_within(0.01).of(0.5)
+    part1.note_sequences[1].offset.should be_within(0.01).of(1.5)
+    part1.note_sequences[1].duration.should be_within(0.01).of(1.5)
+    part1.note_sequences[1].notes.last.duration.should be_within(0.01).of(0.25)
   end
 
 end
