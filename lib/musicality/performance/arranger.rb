@@ -22,14 +22,14 @@ class Arranger
       :plugin_name => 'oscillator_instrument',
       :settings => {
         
-        :attack_rate_min => 150.0,
-        :attack_rate_max => 250.0,
-        :decay_rate_min => 25.0,
-        :decay_rate_max => 50.0,
-        :sustain_level_min => 0.2,
-        :sustain_level_max => 0.6,
-        :damping_rate_min => 100.0,
-        :damping_rate_max => 200.0,
+        :attack_rate_min => SettingProfile.new( :start_value => 150.0 ),
+        :attack_rate_max => SettingProfile.new( :start_value => 250.0 ),
+        :decay_rate_min => SettingProfile.new( :start_value => 25.0 ),
+        :decay_rate_max => SettingProfile.new( :start_value => 50.0 ),
+        :sustain_level_min => SettingProfile.new( :start_value => 0.2 ),
+        :sustain_level_max => SettingProfile.new( :start_value => 0.6 ),
+        :damping_rate_min => SettingProfile.new( :start_value => 100.0 ),
+        :damping_rate_max => SettingProfile.new( :start_value => 200.0 ),
         
         :wave_type => SettingProfile.new( :start_value => 'square' )
       }

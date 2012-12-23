@@ -95,7 +95,25 @@ class ArrangedPart
             seq.add Instruction.new(Instruction::RESTART_ATTACK, current_offset, sub_note)
           end
         elsif (note.relationship == Note::RELATIONSHIP_PORTAMENTO)
-          # TODO - ignore for now
+          cent_step_size = 5
+          cents = (next_note.pitch - note.pitch).total_cent
+          cents_abs = cents.abs
+          
+          current_pitch = note.pitch.clone
+          pitch_mod = Pitch.new(:cent => (cent_step_size * cents) / cents_abs)
+          
+          current_offset = offset
+          sub_note_duration = (cent_step_size * note.duration) / cents_abs
+          ((cents_abs / cent_step_size) - 1).times do
+            current_offset += sub_note_duration
+            current_pitch += pitch_mod
+
+            sub_note = note.clone
+            sub_note.pitch = current_pitch
+            sub_note.duration = sub_note_duration
+            
+            seq.add Instruction.new(Instruction::CHANGE_PITCH, current_offset, sub_note)
+          end
         end
       end
       

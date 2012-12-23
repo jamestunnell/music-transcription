@@ -86,5 +86,5 @@ score_hash = {
 }
 
 score = Musicality::Score.make_from_hash score_hash
-Musicality::ScoreFile.save score, "song1.yaml"
+Musicality::ScoreFile.save score, "song1.yml"
 

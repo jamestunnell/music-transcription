@@ -15,6 +15,7 @@ class Oscillator
   # @raise [ArgumentError] if args does not have the :sample_rate key.
   def initialize sample_rate, freq = 1.0
     @sample_rate = sample_rate
+    @phase = 0.0
     self.freq = freq
   end
   
@@ -24,7 +25,6 @@ class Oscillator
   # @param [Pitch] freq The freq to be played.
   def freq= freq
     @phase_rate = (freq * TWO_PI) / @sample_rate.to_f
-    @phase = 0.0
   end
 
   # Render a sample of the freq currently set to be played. Increments 

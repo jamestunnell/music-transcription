@@ -58,10 +58,10 @@ class ADSREnvelope
     raise ArgumentError, "settings does not have :sustain_level_max key" unless settings.has_key?(:sustain_level_max)
     raise ArgumentError, "settings does not have :damping_rate_min key" unless settings.has_key?(:damping_rate_min)
     raise ArgumentError, "settings does not have :damping_rate_max key" unless settings.has_key?(:damping_rate_max)
-    @attack_rate_minmax = MinMax.new settings[:attack_rate_min], settings[:attack_rate_max]
-    @decay_rate_minmax = MinMax.new settings[:decay_rate_min], settings[:decay_rate_max]
-    @sustain_level_minmax = MinMax.new settings[:sustain_level_min], settings[:sustain_level_max]
-    @damping_rate_minmax = MinMax.new settings[:damping_rate_min], settings[:damping_rate_max]
+    @attack_rate_minmax = MinMax.new settings[:attack_rate_min].start_value, settings[:attack_rate_max].start_value
+    @decay_rate_minmax = MinMax.new settings[:decay_rate_min].start_value, settings[:decay_rate_max].start_value
+    @sustain_level_minmax = MinMax.new settings[:sustain_level_min].start_value, settings[:sustain_level_max].start_value
+    @damping_rate_minmax = MinMax.new settings[:damping_rate_min].start_value, settings[:damping_rate_max].start_value
 
     @mode = ENV_MODE_INACTIVE
     @mode_elapsed = 0.0
