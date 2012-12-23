@@ -26,24 +26,24 @@ score_hash = {
       :loudness_profile => { :start_value => 0.5 },
       :note_sequences => [
         { :offset => 0.0, :notes => [
-            { :duration => 0.375, :pitches => [C2] },
-            { :duration => 0.25, :pitches => [Eb2] },
-            { :duration => 0.3125, :pitches => [F2] },
-            { :duration => 0.0625, :pitches => [Eb2] }
+            { :duration => 0.375, :pitch => C2 },
+            { :duration => 0.25, :pitch => Eb2 },
+            { :duration => 0.3125, :pitch => F2 },
+            { :duration => 0.0625, :pitch => Eb2 }
           ]
         }, { :offset => 1.125, :notes => [
-            { :duration => 0.25, :pitches => [C2] },
-            { :duration => 0.25, :pitches => [Eb2] }
+            { :duration => 0.25, :pitch => C2 },
+            { :duration => 0.25, :pitch => Eb2 }
           ]
         }, { :offset => 2.0, :notes => [
-            { :duration => 0.375, :pitches => [C2] },
-            { :duration => 0.25, :pitches => [Eb2] },
-            { :duration => 0.3125, :pitches => [F2] },
-            { :duration => 0.0625, :pitches => [Eb2] }
+            { :duration => 0.375, :pitch => C2 },
+            { :duration => 0.25, :pitch => Eb2 },
+            { :duration => 0.3125, :pitch => F2 },
+            { :duration => 0.0625, :pitch => Eb2 }
           ]
         }, { :offset => 3.125, :notes => [
-            { :duration => 0.25, :pitches => [C2] },
-            { :duration => 0.25, :pitches => [Eb2] }
+            { :duration => 0.25, :pitch => C2 },
+            { :duration => 0.25, :pitch => Eb2 }
           ]
         }
       ],
@@ -53,30 +53,30 @@ score_hash = {
       :loudness_profile => { :start_value => 0.5 },
       :note_sequences => [
         { :offset => 0.125, :notes => [
-            { :duration => 0.125, :pitches => [Bb3] },
-            { :duration => 0.125, :pitches => [Bb3] },
-            { :duration => 0.125, :pitches => [Bb3] },
-            { :duration => 0.125, :pitches => [Bb3] },
-            { :duration => 0.25, :pitches => [C4] },
-            { :duration => 0.25, :pitches => [A3] },
-            { :duration => 0.125, :pitches => [G3] },
-            { :duration => 0.125, :pitches => [F3] },
-            { :duration => 0.3125, :pitches => [G3], :relationship => Musicality::Note::RELATIONSHIP_SLUR},
-            { :duration => 0.0625, :pitches => [F3], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.125, :pitches => [E3] }
+            { :duration => 0.125, :pitch => Bb3 },
+            { :duration => 0.125, :pitch => Bb3 },
+            { :duration => 0.125, :pitch => Bb3 },
+            { :duration => 0.125, :pitch => Bb3 },
+            { :duration => 0.25, :pitch => C4 },
+            { :duration => 0.25, :pitch => A3 },
+            { :duration => 0.125, :pitch => G3 },
+            { :duration => 0.125, :pitch => F3 },
+            { :duration => 0.3125, :pitch => G3, :relationship => Musicality::Note::RELATIONSHIP_SLUR},
+            { :duration => 0.0625, :pitch => F3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
+            { :duration => 0.125, :pitch => E3 }
           ]
         },
         { :offset => 2.125, :notes => [
-            { :duration => 0.125, :pitches => [Bb3] },
-            { :duration => 0.125, :pitches => [Bb3] },
-            { :duration => 0.125, :pitches => [Bb3] },
-            { :duration => 0.125, :pitches => [Bb3] },
-            { :duration => 0.25, :pitches => [C4] },
-            { :duration => 0.125, :pitches => [A3] },
-            { :duration => 0.125, :pitches => [E4] },
-            { :duration => 0.125, :pitches => [E4], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.125, :pitches => [D4], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.125, :pitches => [C4] },
+            { :duration => 0.125, :pitch => Bb3 },
+            { :duration => 0.125, :pitch => Bb3 },
+            { :duration => 0.125, :pitch => Bb3 },
+            { :duration => 0.125, :pitch => Bb3 },
+            { :duration => 0.25, :pitch => C4 },
+            { :duration => 0.125, :pitch => A3 },
+            { :duration => 0.125, :pitch => E4 },
+            { :duration => 0.125, :pitch => E4, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
+            { :duration => 0.125, :pitch => D4, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
+            { :duration => 0.125, :pitch => C4 },
           ]
         }
       ],

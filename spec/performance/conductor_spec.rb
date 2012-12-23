@@ -9,12 +9,12 @@ describe Musicality::Conductor do
           :loudness_profile => { :start_value => 0.5 },
           :note_sequences => [
             { :offset => 0.0, :notes => [
-                { :duration => 0.05, :pitches => [ { :octave => 9 } ] },
-                { :duration => 0.05, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.05, :pitches => [ { :octave => 9, :semitone => 4 } ] },
-                { :duration => 0.05, :pitches => [ { :octave => 9 } ] },
-                { :duration => 0.05, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.05, :pitches => [ { :octave => 9, :semitone => 4 } ] },
+                { :duration => 0.05, :pitch => { :octave => 9 } },
+                { :duration => 0.05, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.05, :pitch => { :octave => 9, :semitone => 4 } },
+                { :duration => 0.05, :pitch => { :octave => 9 } },
+                { :duration => 0.05, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.05, :pitch => { :octave => 9, :semitone => 4 } },
               ]
             }
           ]

@@ -4,12 +4,12 @@ describe Musicality::Performer do
 
   before :each do
     @notes = [ 
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.25),
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::D7], :duration => 0.25),
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::E7], :duration => 0.25),
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.25),
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::D7], :duration => 0.25),
-      Musicality::Note.new(:pitches => [Musicality::PitchConstants::C7], :duration => 0.75)
+      Musicality::Note.new(:pitch => Musicality::PitchConstants::C7, :duration => 0.25),
+      Musicality::Note.new(:pitch => Musicality::PitchConstants::D7, :duration => 0.25),
+      Musicality::Note.new(:pitch => Musicality::PitchConstants::E7, :duration => 0.25),
+      Musicality::Note.new(:pitch => Musicality::PitchConstants::C7, :duration => 0.25),
+      Musicality::Note.new(:pitch => Musicality::PitchConstants::D7, :duration => 0.25),
+      Musicality::Note.new(:pitch => Musicality::PitchConstants::C7, :duration => 0.75)
     ]
 
     @sequence = NoteSequence.new :notes => @notes, :offset => 0.0

@@ -10,7 +10,7 @@ class ScoreConverter
   # @param [Numeric] conversion_sample_rate The sample rate to use in
   #                                         converting from note-base to
   #                                         time-base.
-  def self.make_time_based_parts_from_score! score, conversion_sample_rate
+  def self.make_time_based_parts_from_score score, conversion_sample_rate
     if score.program.segments.count > 1
       self.collate_score!(score)
     end
@@ -64,7 +64,7 @@ class ScoreConverter
           
           time_duration = note_time_map[note_end_offset] - note_time_map[note_start_offset]
           new_note = Musicality::Note.new(
-            :duration => time_duration, :pitches => note.pitches, :sustain => note.sustain,
+            :duration => time_duration, :pitch => note.pitch, :sustain => note.sustain,
             :attack => note.attack, :seperation => note.seperation, :relationship => note.relationship
           )
           

@@ -16,89 +16,89 @@
   - :offset: 0.0
     :notes:
     - :duration: 1.0
-      :pitches:
-      - :octave: 4
+      :pitch:
+        :octave: 4
     - :duration: 1.0
-      :pitches:
-      - :octave: 3
+      :pitch:
+        :octave: 3
         :semitone: 10
     - :duration: 1.0
-      :pitches:
-      - :octave: 3
+      :pitch:
+        :octave: 3
         :semitone: 8
     - :duration: 0.5
-      :pitches:
-      - :octave: 3
+      :pitch:
+        :octave: 3
         :semitone: 7
     - :duration: 0.5
-      :pitches:
-      - :octave: 3
+      :pitch:
+        :octave: 3
         :semitone: 10
   :id: '1'
 - :note_sequences:
   - :offset: 0.0
     :notes:
     - :duration: 0.375
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 4
     - :duration: 1.0
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 2
     - :duration: 1.0
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
     - :duration: 0.625
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
     - :duration: 0.5
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
     - :duration: 0.5
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 2
   :id: '2'
 - :note_sequences:
   - :offset: 0.125
     :notes:
     - :duration: 0.25
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 7
     - :duration: 0.5
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 5
   - :offset: 1.125
     :notes:
     - :duration: 0.25
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 5
     - :duration: 0.5
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 3
   - :offset: 2.125
     :notes:
     - :duration: 0.25
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 3
     - :duration: 0.5
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 3
   - :offset: 3.01
     :notes:
     - :duration: 0.5
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 3
     - :duration: 0.5
-      :pitches:
-      - :octave: 5
+      :pitch:
+        :octave: 5
         :semitone: 5
   :id: '3'

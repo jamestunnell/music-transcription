@@ -76,7 +76,7 @@ class Performer
         when Instruction::CHANGE_PITCH
           @instruments.each do |instrument|
             note = instruction.data
-            instrument.note_change_pitches seq_id, note.pitches
+            instrument.note_change_pitch seq_id, note.pitch
           end
         when Instruction::RESTART_ATTACK
           @instruments.each do |instrument|

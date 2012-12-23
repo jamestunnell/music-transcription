@@ -30,7 +30,7 @@ class Instrument
   
   # Start a new note.
   #
-  # @param [Note] note The Note to be started. Uses note attack, sustain, and pitches to get started.
+  # @param [Note] note The Note to be started. Uses note attack, sustain, and pitch to get started.
   # @param [Symbol] id Identifies the note to be added.
   # @return [Symbol] The Symbol use to identify the note which was just started. Required for other note_ methods.
   def note_on note, id = UniqueToken.make_unique_sym(3)
@@ -40,35 +40,19 @@ class Instrument
     envelope = envelope_plugin.make_envelope @envelope_plugin.settings
     envelope.attack note.attack, note.sustain 
     
-    voices = []
-    note.pitches.each do |pitch|
-      voices << voice_plugin.make_voice(@voice_plugin.settings)
-      voices.last.freq = pitch.freq
-    end
+    voice = voice_plugin.make_voice(@voice_plugin.settings)
+    voice.freq = note.pitch.freq
     
-    @notes[id] = { :voices => voices, :envelope => envelope, :envelope_sample => 0.0 }
+    @notes[id] = { :voice => voice, :envelope => envelope, :envelope_sample => 0.0 }
     return id
   end
   
-  # Change the pitches being played for the given note ID. Can be more or less than the number of
-  # pitches currently being played.
-  # @param [Symbol] id Identifies the note whose pitches are to be modified.
-  # @param [Array] pitches The Pitch objects to use.
-  def note_change_pitches id, pitches
-    voices = @notes[id][:voices]
-    
-    while voices.count > pitches.count
-      voices.pop
-    end
-    
-    while voices.count < pitches.count
-      voice_plugin = PLUGINS.plugins[@voice_plugin.plugin_name.to_sym]
-      voices.push voice_plugin.make_voice(@voice_plugin.settings)
-    end
-    
-    pitches.each_index do |i|
-      voices[i].freq = pitches[i].freq
-    end
+  # Change the pitch being played for the given note ID.
+  # @param [Symbol] id Identifies the note whose pitch is to be modified.
+  # @param [Pitch] pitch The Pitch object to use.
+  def note_change_pitch id, pitch
+    voice = @notes[id][:voice]
+    voice.freq = pitch.freq
   end
 
   # Restart the note attack for the given note ID. Attack and sustain can be different than current.
@@ -104,11 +88,7 @@ class Instrument
     output = 0.0
     
     @notes.each do |id, note|
-      voices_sample = 0.0
-      note[:voices].each do |voice|
-        voices_sample += voice.render_sample
-      end
-      
+      voices_sample = note[:voice].render_sample
       envelope_sample = note[:envelope].render_sample
       note[:envelope_sample] = envelope_sample
       

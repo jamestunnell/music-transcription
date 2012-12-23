@@ -30,11 +30,11 @@ score_hash = {
       },
       :note_sequences => [
         { :offset => 0.0, :notes => [
-            { :duration => 1.0, :pitches => [C4] },
-            { :duration => 1.0, :pitches => [Bb3] },
-            { :duration => 1.0, :pitches => [Ab3] },
-            { :duration => 0.5, :pitches => [G3] },
-            { :duration => 0.5, :pitches => [Bb3] },
+            { :duration => 1.0, :pitch => C4 },
+            { :duration => 1.0, :pitch => Bb3 },
+            { :duration => 1.0, :pitch => Ab3 },
+            { :duration => 0.5, :pitch => G3 },
+            { :duration => 0.5, :pitch => Bb3 },
           ]
         }
       ],
@@ -44,12 +44,12 @@ score_hash = {
       :loudness_profile => { :start_value => 0.5 },
       :note_sequences => [
         { :offset => 0.0, :notes => [
-            { :duration => 0.375, :pitches => [E5] },
-            { :duration => 1.0, :pitches => [D5] },
-            { :duration => 1.0, :pitches => [C5] },
-            { :duration => 0.625, :pitches => [C5] },
-            { :duration => 0.5, :pitches => [C5] },
-            { :duration => 0.5, :pitches => [D5] }
+            { :duration => 0.375, :pitch => E5 },
+            { :duration => 1.0, :pitch => D5 },
+            { :duration => 1.0, :pitch => C5 },
+            { :duration => 0.625, :pitch => C5 },
+            { :duration => 0.5, :pitch => C5 },
+            { :duration => 0.5, :pitch => D5 }
           ]
         }
       ],
@@ -59,23 +59,23 @@ score_hash = {
       :loudness_profile => { :start_value => 0.5 },
       :note_sequences => [
         { :offset => 0.125, :notes => [
-            { :duration => 0.25, :pitches => [G5] },
-            { :duration => 0.5, :pitches => [F5] }
+            { :duration => 0.25, :pitch => G5 },
+            { :duration => 0.5, :pitch => F5 }
           ]
         },
         { :offset => 1.125, :notes => [
-            { :duration => 0.25, :pitches => [F5] },
-            { :duration => 0.5, :pitches => [Eb5] }
+            { :duration => 0.25, :pitch => F5 },
+            { :duration => 0.5, :pitch => Eb5 }
           ]
         },
         { :offset => 2.125, :notes => [
-            { :duration => 0.25, :pitches => [Eb5] },
-            { :duration => 0.5, :pitches => [Eb5] }
+            { :duration => 0.25, :pitch => Eb5 },
+            { :duration => 0.5, :pitch => Eb5 }
           ]
         },
         { :offset => 3.01, :notes => [
-            { :duration => 0.5, :pitches => [Eb5] },
-            { :duration => 0.5, :pitches => [F5] }
+            { :duration => 0.5, :pitch => Eb5 },
+            { :duration => 0.5, :pitch => F5 }
           ]
         }
       ],

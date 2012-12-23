@@ -17,11 +17,11 @@ describe Musicality::ScoreCollator do
           :note_sequences => [
             { :offset => 0.0,
               :notes => [
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 4 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
-                { :duration => 1.00, :pitches => [ { :octave => 9, :semitone => 2 } ] }
+                { :duration => 0.25, :pitch => { :octave => 9 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
+                { :duration => 0.25, :pitch => { :octave => 9 } },
+                { :duration => 1.00, :pitch => { :octave => 9, :semitone => 2 } }
               ]
             }
           ]
@@ -35,14 +35,14 @@ describe Musicality::ScoreCollator do
           :loudness_profile => { :start_value => 0.5 },
           :note_sequences => [
             { :offset => 0.0, :notes => [
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 4 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
-                { :duration => 1.00, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.50, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.50, :pitches => [ { :octave => 9, :semitone => 4 } ] },
-                { :duration => 0.75, :pitches => [ { :octave => 9 } ] },
+                { :duration => 0.25, :pitch => { :octave => 9 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
+                { :duration => 0.25, :pitch => { :octave => 9 } },
+                { :duration => 1.00, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.50, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.50, :pitch => { :octave => 9, :semitone => 4 } },
+                { :duration => 0.75, :pitch => { :octave => 9 } },
               ]
             }
           ]
@@ -69,11 +69,11 @@ describe Musicality::ScoreCollator do
           :note_sequences => [
             { :offset => 0.0,
               :notes => [
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 4 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
-                { :duration => 1.00, :pitches => [ { :octave => 9, :semitone => 2 } ] }
+                { :duration => 0.25, :pitch => { :octave => 9 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
+                { :duration => 0.25, :pitch => { :octave => 9 } },
+                { :duration => 1.00, :pitch => { :octave => 9, :semitone => 2 } }
               ]
             }
           ]
@@ -83,10 +83,10 @@ describe Musicality::ScoreCollator do
           :note_sequences => [
             { :offset => 0.5,
               :notes => [
-                { :duration => 0.5, :pitches => [ { :octave => 9 } ] },
-                { :duration => 0.5, :pitches => [ { :octave => 9, :semitone => 2 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9, :semitone => 4 } ] },
-                { :duration => 0.25, :pitches => [ { :octave => 9 } ] },
+                { :duration => 0.50, :pitch => { :octave => 9 } },
+                { :duration => 0.50, :pitch => { :octave => 9, :semitone => 2 } },
+                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
+                { :duration => 0.25, :pitch => { :octave => 9 } },
               ]
             }
           ]

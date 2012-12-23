@@ -5,7 +5,7 @@ module Musicality
 #
 # @author James Tunnell
 #
-# @!attribute [rw] sequences
+# @!attribute [rw] note_sequences
 #   @return [Array] The note sequences to be played.
 #
 # @!attribute [rw] loudness_profile

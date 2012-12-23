@@ -1,12 +1,12 @@
 module Musicality
 
-# Abstraction of a musical note. Contains values for pitches, duration, attack, sustain, and seperation.
+# Abstraction of a musical note. Contains values for pitch, duration, attack, sustain, and seperation.
 # The sustain, attack, and seperation will be used to form the envelope profile for the note.
 #
 # @author James Tunnell
 # 
-# @!attribute [rw] pitches
-#   @return [Array] The pitches of the note.
+# @!attribute [rw] pitch
+#   @return [Array] The pitch of the note.
 #
 # @!attribute [rw] duration
 #   @return [Rational] The duration of the note in note lengths.
@@ -33,7 +33,7 @@ module Musicality
 #
 class Note
   include HashMake
-  attr_reader :pitches, :duration, :sustain, :attack, :seperation, :relationship
+  attr_reader :pitch, :duration, :sustain, :attack, :seperation, :relationship
 
   # no relationship to the following note
   RELATIONSHIP_NONE = :none
@@ -60,7 +60,7 @@ class Note
 
   # required hash-args (for hash-makeable idiom)
   REQ_ARGS = [ spec_arg(:duration, Numeric),
-               spec_arg_array(:pitches, Pitch) ]
+               spec_arg(:pitch, Pitch) ]
   # optional hash-args (for hash-makeable idiom)
   OPT_ARGS = [ spec_arg(:sustain, Numeric, ->(a){ a.between?(0.0,1.0)}, 0.5),
                spec_arg(:attack, Numeric, ->(a){ a.between?(0.0,1.0)}, 0.5),
@@ -68,24 +68,19 @@ class Note
                spec_arg(:relationship, Symbol, ->(a){ RELATIONSHIPS.include?(a)}, RELATIONSHIP_NONE) ]
 
   # A new instance of Note.
-  # @param [Hash] args Hashed arguments. Required keys are :pitches, :duration, 
+  # @param [Hash] args Hashed arguments. Required keys are :pitch, :duration, 
   #                    and :offset. Optional keys are :sustain, :attack, 
   #                    :seperation, and :tie.
   def initialize args={}
     process_args args
   end
 
-  # Set the note pitches.
-  # @param [Array] pitches The pitches of the note.
-  # @raise [ArgumentError] if pitches is not an Array.
-  # @raise [ArgumentError] if pitches contains a non-Pitch.
-  def pitches= pitches
-    raise ArgumentError, "pitches is not an Array" if !pitches.is_a?(Array)
-    pitches.each do |pitch|
-      raise ArgumentError, "pitch #{pitch} is not a Pitch" if !pitch.is_a?(Pitch)
-    end
-    
-    @pitches = pitches
+  # Set the note pitch.
+  # @param [Pitch] pitch The pitch of the note.
+  # @raise [ArgumentError] if pitch is not a Pitch.
+  def pitch= pitch
+    raise ArgumentError, "pitch #{pitch} is not a Pitch" unless pitch.is_a?(Pitch)
+    @pitch = pitch
   end
 
   # Set the note duration.
@@ -137,6 +132,10 @@ class Note
   def relationship= relationship
     raise ArgumentError, "relationship is not valid (not found in RELATIONSHIPS)" if !RELATIONSHIPS.include?(relationship)
     @relationship = relationship
+  end
+  
+  def clone
+    Note.new(:pitch => @pitch.clone, :duration => @duration, :sustain => @sustain, :attack => @attack, :seperation => @seperation, :relationship => @relationship)
   end
 end
 

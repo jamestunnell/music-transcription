@@ -2,9 +2,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::NoteSequence do
   before :all do
-    @note1 = Musicality::Note.new(:pitches => [Musicality::PitchConstants::C3], :duration => 2)
-    @note2 = Musicality::Note.new(:pitches => [Musicality::PitchConstants::D3], :duration => 1)
-    @note3 = Musicality::Note.new(:pitches => [Musicality::PitchConstants::E3], :duration => 3)
+    @note1 = Musicality::Note.new(:pitch => Musicality::PitchConstants::C3, :duration => 2)
+    @note2 = Musicality::Note.new(:pitch => Musicality::PitchConstants::D3, :duration => 1)
+    @note3 = Musicality::Note.new(:pitch => Musicality::PitchConstants::E3, :duration => 3)
   end
 
   it "should raise ArgumentError if no notes are given during construction" do
@@ -45,8 +45,8 @@ describe Musicality::NoteSequence do
     hash = { 
       :offset => 0.0,
       :notes=> [
-        {:duration=>2, :pitches=>[{:octave=>3}] },
-        {:duration=>1, :pitches=>[{:octave=>3, :semitone=>2}] }
+        {:duration=>2, :pitch=> {:octave=>3} },
+        {:duration=>1, :pitch=> {:octave=>3, :semitone=>2} }
       ]
     }
     obj = NoteSequence.make_from_hash hash
@@ -58,7 +58,7 @@ describe Musicality::NoteSequence do
     
     obj.offset.should eq(obj2.offset)
     obj.notes.count.should eq(obj2.notes.count)
-    obj.notes[0].pitches[0].should eq(obj2.notes[0].pitches[0])
-    obj.notes[1].pitches[0].should eq(obj2.notes[1].pitches[0])
+    obj.notes[0].pitch.should eq(obj2.notes[0].pitch)
+    obj.notes[1].pitch.should eq(obj2.notes[1].pitch)
   end
 end

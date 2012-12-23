@@ -48,39 +48,58 @@ class ArrangedPart
 
     offset = sequence.offset    
     seq = nil
-
+    prev_relationship = Note::RELATIONSHIP_NONE
+    
     for i in 0...sequence.notes.count do
       note = sequence.notes[i]
       
-      unless seq
+      if prev_relationship == Note::RELATIONSHIP_NONE
+        seq.end(offset) if seq
         seq = InstructionSequence.new(offset, note)
         instr_sequences.push seq
+      elsif (prev_relationship == Note::RELATIONSHIP_TIE) or
+            (prev_relationship == Note::RELATIONSHIP_SLUR) or
+            (prev_relationship == Note::RELATIONSHIP_PORTAMENTO)
+        seq.add Instruction.new(Instruction::CHANGE_PITCH, offset, note)
+      elsif (prev_relationship == Note::RELATIONSHIP_LEGATO) or
+            (prev_relationship == Note::RELATIONSHIP_GLISSANDO)
+        seq.add Instruction.new(Instruction::CHANGE_PITCH, offset, note)
+        seq.add Instruction.new(Instruction::RESTART_ATTACK, offset, note)        
+      else
+        raise "prev_relationship #{prev_relationship} not supported"
       end
       
       if i == (sequence.notes.count - 1)  # on the last note of sequence, ignore relationship and just end the instruction sequence
         seq.end offset + note.duration
-        seq = nil
       else
         next_note = sequence.notes[i + 1]
         
-        case note.relationship
-        when Note::RELATIONSHIP_NONE
-          seq.end offset + note.duration
-          seq = nil
-  #      when Note::RELATIONSHIP_TIE
-  #        seq.push Instruction.new(Instruction::OFF, offset + note.duration)
-        when Note::RELATIONSHIP_SLUR
-          seq.add Instruction.new(Instruction::CHANGE_PITCH, offset + note.duration, next_note)
-        when Note::RELATIONSHIP_LEGATO
-          seq.add Instruction.new(Instruction::CHANGE_PITCH, offset + note.duration, next_note)
-          seq.add Instruction.new(Instruction::RESTART_ATTACK, offset + note.duration, next_note)
-        #when Note::RELATIONSHIP_GLISSANDO
-        #when Note::RELATIONSHIP_PORTAMENTO
-        else
-          raise ArgumentError, "note relationship #{note.relationship} is not valid"
+        if (note.relationship == Note::RELATIONSHIP_GLISSANDO)
+          semitones = (next_note.pitch - note.pitch).total_semitone          
+          semitones_abs = semitones.abs
+          
+          current_pitch = note.pitch.clone
+          pitch_mod = Pitch.new(:semitone => (semitones / semitones_abs))
+          
+          current_offset = offset
+          sub_note_duration = note.duration / semitones_abs
+          (semitones_abs - 1).times do
+            current_offset += sub_note_duration
+            current_pitch += pitch_mod
+
+            sub_note = note.clone
+            sub_note.pitch = current_pitch
+            sub_note.duration = sub_note_duration
+            
+            seq.add Instruction.new(Instruction::CHANGE_PITCH, current_offset, sub_note)
+            seq.add Instruction.new(Instruction::RESTART_ATTACK, current_offset, sub_note)
+          end
+        elsif (note.relationship == Note::RELATIONSHIP_PORTAMENTO)
+          # TODO - ignore for now
         end
       end
       
+      prev_relationship = note.relationship
       offset += note.duration      
     end
       

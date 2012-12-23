@@ -27,7 +27,7 @@ class Oscillator
     @phase = 0.0
   end
 
-  # Render a sample of all the pitches currently set to be played. Increments 
+  # Render a sample of the freq currently set to be played. Increments 
   # each pitch's current phase based on its phase rate.
   def render_sample
     while @phase > Math::PI

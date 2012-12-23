@@ -9,7 +9,7 @@ class Instruction
   ON = :note_instruction_on
   # Instruct performer to stop a note. Data should be nil.
   CHANGE_PITCH = :note_instruction_change_pitch
-  # Instruct performer to change note pitches. Data should be set to a note containing the desired pitches.
+  # Instruct performer to change note pitch. Data should be set to a note containing the desired pitch.
   RESTART_ATTACK = :note_instruction_restart_attack
   # Instruct performer to restart an attack. Data should be set to a note containing the desired attack and sustain values.
   RELEASE = :note_instruction_release

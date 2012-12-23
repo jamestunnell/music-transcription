@@ -15,23 +15,23 @@ score_hash = {
       :loudness_profile => { :start_value => 0.5 },
       :note_sequences => [
         { :offset => 0.0, :notes => [
-            { :duration => 0.25, :pitches => [C3] },
-            { :duration => 0.25, :pitches => [D3] },
-            { :duration => 0.25, :pitches => [E3] },
-            { :duration => 0.25, :pitches => [F3] },
-            { :duration => 0.25, :pitches => [E3] },
-            { :duration => 0.25, :pitches => [D3] },
-            { :duration => 0.5, :pitches => [C3] }
+            { :duration => 0.25, :pitch => C3 },
+            { :duration => 0.25, :pitch => D3 },
+            { :duration => 0.25, :pitch => E3 },
+            { :duration => 0.25, :pitch => F3 },
+            { :duration => 0.25, :pitch => E3 },
+            { :duration => 0.25, :pitch => D3 },
+            { :duration => 0.5, :pitch => C3 }
           ]
         },
         { :offset => 2.0, :notes => [
-            { :duration => 0.25, :pitches => [C3], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.25, :pitches => [D3], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.25, :pitches => [E3], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.25, :pitches => [F3], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.25, :pitches => [E3], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.25, :pitches => [D3], :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.5, :pitches => [C3] }
+            { :duration => 0.25, :pitch => C3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
+            { :duration => 0.25, :pitch => D3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
+            { :duration => 0.25, :pitch => E3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
+            { :duration => 0.25, :pitch => F3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
+            { :duration => 0.25, :pitch => E3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
+            { :duration => 0.25, :pitch => D3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
+            { :duration => 0.5, :pitch => C3 }
           ]
         }
 

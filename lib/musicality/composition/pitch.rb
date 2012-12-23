@@ -135,6 +135,19 @@ class Pitch
     x = Math.log2 ratio
     self.total_cent = (x * @cents_per_octave).round
   end
+
+  # Round to the nearest semitone.
+  def round_to_nearest_semitone
+    if @cent >= (CENTS_PER_SEMITONE / 2)
+      @semitone += 1
+    end
+    @cent = 0
+    normalize
+  end
+  
+  def total_semitone
+    return (@octave * SEMITONES_PER_OCTAVE) + @semitone
+  end
   
   # Compare pitches. A higher ratio or total cent is considered larger.
   # @param [Pitch] other The pitch object to compare.
@@ -154,6 +167,10 @@ class Pitch
     self.class.new :octave => (@octave - other.octave), :semitone => (@semitone - other.semitone), :cent => (@cent - other.cent)
   end
   
+  def clone
+    Pitch.new(:octave => @octave, :semitone => @semitone, :cent => @cent, :base_freq => @base_freq)
+  end
+  
   private
   
   # Balance out the octave, semitone, and cent count. 
@@ -169,5 +186,6 @@ class Pitch
     @cent = centTotal
     return true
   end
+  
 end
 end
