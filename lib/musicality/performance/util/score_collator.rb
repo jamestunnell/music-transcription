@@ -14,16 +14,13 @@ class ScoreCollator
   def self.collate_score! score
     return if score.program.segments.count <= 1
     
-    new_parts = []
+    new_parts = {}
     
     # figure parts (note sequences & dynamics)
-    score.parts.each do |part|
+    score.parts.each do |id, part|
       
       new_part = Musicality::Part.new(
 	:loudness_profile => clone_and_collate_profile(part.loudness_profile, score.program.segments),
-	:instrument_plugins => part.instrument_plugins,
-	:effect_plugins => part.effect_plugins,
-	:id => part.id
       )
       segment_start_offset = 0.0
       
@@ -44,7 +41,7 @@ class ScoreCollator
 	segment_start_offset += (seg.last - seg.first)
       end
       
-      new_parts << new_part
+      new_parts[id] = new_part
     end    
     
     score.parts = new_parts
@@ -53,8 +50,8 @@ class ScoreCollator
     
     # find new start/end based on collated parts, and replace
     # current program segments with a single segment.
-    seg_start = score.parts.inject(score.parts.first.find_start) {|so_far, part| now = part.find_start; (now < so_far) ? now : so_far }
-    seg_end = score.parts.inject(score.parts.first.find_end) {|so_far, part| now = part.find_end; (now > so_far) ? now : so_far }
+    seg_start = score.parts.values.inject(score.parts.values.first.find_start) {|so_far, part| now = part.find_start; (now < so_far) ? now : so_far }
+    seg_end = score.parts.values.inject(score.parts.values.first.find_end) {|so_far, part| now = part.find_end; (now > so_far) ? now : so_far }
     score.program.segments = [seg_start...seg_end]
   end
 

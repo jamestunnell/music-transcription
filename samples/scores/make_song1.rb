@@ -21,8 +21,8 @@ score_hash = {
     ]
   },
   :beats_per_minute_profile => { :start_value => 120.0 },
-  :parts => [
-    {
+  :parts => {
+    1 => {
       :loudness_profile => { :start_value => 0.5 },
       :note_sequences => [
         { :offset => 0.0, :notes => [
@@ -46,10 +46,9 @@ score_hash = {
             { :duration => 0.25, :pitch => Eb2 }
           ]
         }
-      ],
-      :id => "1",
+      ]
     }, 
-    {
+    2 => {
       :loudness_profile => { :start_value => 0.5 },
       :note_sequences => [
         { :offset => 0.125, :notes => [
@@ -79,10 +78,9 @@ score_hash = {
             { :duration => 0.125, :pitch => C4 },
           ]
         }
-      ],
-      :id => "2",
+      ]
     }
-  ]
+  }
 }
 
 score = Musicality::Score.make_from_hash score_hash

@@ -8,8 +8,8 @@ describe Musicality::ScoreConverter do
           :start_value => 120
         },
         :program => { :segments => [1.0...2.0] },
-        :parts => [
-          {
+        :parts => {
+          1 => {
             :loudness_profile => {
               :start_value => 0.5
             },
@@ -24,12 +24,12 @@ describe Musicality::ScoreConverter do
               }
             ]
           }
-        ],
+        },
       }
       
       score = Score.make_from_hash score_hash
       parts = ScoreConverter.make_time_based_parts_from_score score, 1000.0
-      note_seq = parts.first.note_sequences.first
+      note_seq = parts.values.first.note_sequences.first
       
       note_seq.offset.should be_within(0.01).of(2.0)
       note_seq.notes[0].duration.should be_within(0.01).of(0.2)
@@ -45,8 +45,8 @@ describe Musicality::ScoreConverter do
           :value_change_events => [ Event.new(1.0, 60) ]
         },
         :program => { :segments => [0.0...2.0] },
-        :parts => [
-          {
+        :parts => {
+          1 => {
             :loudness_profile => {
               :start_value => 0.5
             },
@@ -70,20 +70,20 @@ describe Musicality::ScoreConverter do
 
             ]
           }
-        ],
+        },
       }
 
       score = Score.make_from_hash score_hash
       parts = ScoreConverter.make_time_based_parts_from_score score, 1000.0
       
-      note_seq = parts.first.note_sequences[0]
+      note_seq = parts.values.first.note_sequences[0]
       note_seq.offset.should be_within(0.01).of(0.0)
       note_seq.notes[0].duration.should be_within(0.01).of(0.4)
       note_seq.notes[1].duration.should be_within(0.01).of(0.8)
       note_seq.notes[2].duration.should be_within(0.01).of(0.4)
       note_seq.notes[3].duration.should be_within(0.01).of(0.2)
 
-      note_seq = parts.first.note_sequences[1]
+      note_seq = parts.values.first.note_sequences[1]
       note_seq.offset.should be_within(0.01).of(2.0)
       note_seq.notes[0].duration.should be_within(0.01).of(0.8)
       note_seq.notes[1].duration.should be_within(0.01).of(1.6)

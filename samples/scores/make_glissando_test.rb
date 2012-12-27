@@ -11,7 +11,7 @@ score_hash = {
   },
   :beats_per_minute_profile => { :start_value => 120.0 },
   :parts => [
-    {
+    1 => {
       :loudness_profile => { :start_value => 0.5 },
       :note_sequences => [
         { :offset => 0.0, :notes => [
@@ -20,8 +20,7 @@ score_hash = {
             { :duration => 0.5, :pitch => C3 }
           ]
         }
-      ],
-      :id => "1",
+      ]
     }
   ]
 }

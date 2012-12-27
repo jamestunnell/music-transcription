@@ -12,148 +12,148 @@
     end: 4.0
     excl: true
 :parts:
-- :note_sequences:
-  - :offset: 0.0
-    :notes:
-    - :duration: 0.375
-      :pitch:
-        :octave: 2
-    - :duration: 0.25
-      :pitch:
-        :octave: 2
-        :semitone: 3
-    - :duration: 0.3125
-      :pitch:
-        :octave: 2
-        :semitone: 5
-    - :duration: 0.0625
-      :pitch:
-        :octave: 2
-        :semitone: 3
-  - :offset: 1.125
-    :notes:
-    - :duration: 0.25
-      :pitch:
-        :octave: 2
-    - :duration: 0.25
-      :pitch:
-        :octave: 2
-        :semitone: 3
-  - :offset: 2.0
-    :notes:
-    - :duration: 0.375
-      :pitch:
-        :octave: 2
-    - :duration: 0.25
-      :pitch:
-        :octave: 2
-        :semitone: 3
-    - :duration: 0.3125
-      :pitch:
-        :octave: 2
-        :semitone: 5
-    - :duration: 0.0625
-      :pitch:
-        :octave: 2
-        :semitone: 3
-  - :offset: 3.125
-    :notes:
-    - :duration: 0.25
-      :pitch:
-        :octave: 2
-    - :duration: 0.25
-      :pitch:
-        :octave: 2
-        :semitone: 3
-  :id: '1'
-- :note_sequences:
-  - :offset: 0.125
-    :notes:
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 10
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 10
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 10
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 10
-    - :duration: 0.25
-      :pitch:
-        :octave: 4
-    - :duration: 0.25
-      :pitch:
-        :octave: 3
-        :semitone: 9
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 7
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 5
-    - :duration: 0.3125
-      :pitch:
-        :octave: 3
-        :semitone: 7
-      :relationship: :slur
-    - :duration: 0.0625
-      :pitch:
-        :octave: 3
-        :semitone: 5
-      :relationship: :slur
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 4
-  - :offset: 2.125
-    :notes:
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 10
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 10
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 10
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 10
-    - :duration: 0.25
-      :pitch:
-        :octave: 4
-    - :duration: 0.125
-      :pitch:
-        :octave: 3
-        :semitone: 9
-    - :duration: 0.125
-      :pitch:
-        :octave: 4
-        :semitone: 4
-    - :duration: 0.125
-      :pitch:
-        :octave: 4
-        :semitone: 4
-      :relationship: :slur
-    - :duration: 0.125
-      :pitch:
-        :octave: 4
-        :semitone: 2
-      :relationship: :slur
-    - :duration: 0.125
-      :pitch:
-        :octave: 4
-  :id: '2'
+  1:
+    :note_sequences:
+    - :offset: 0.0
+      :notes:
+      - :duration: 0.375
+        :pitch:
+          :octave: 2
+      - :duration: 0.25
+        :pitch:
+          :octave: 2
+          :semitone: 3
+      - :duration: 0.3125
+        :pitch:
+          :octave: 2
+          :semitone: 5
+      - :duration: 0.0625
+        :pitch:
+          :octave: 2
+          :semitone: 3
+    - :offset: 1.125
+      :notes:
+      - :duration: 0.25
+        :pitch:
+          :octave: 2
+      - :duration: 0.25
+        :pitch:
+          :octave: 2
+          :semitone: 3
+    - :offset: 2.0
+      :notes:
+      - :duration: 0.375
+        :pitch:
+          :octave: 2
+      - :duration: 0.25
+        :pitch:
+          :octave: 2
+          :semitone: 3
+      - :duration: 0.3125
+        :pitch:
+          :octave: 2
+          :semitone: 5
+      - :duration: 0.0625
+        :pitch:
+          :octave: 2
+          :semitone: 3
+    - :offset: 3.125
+      :notes:
+      - :duration: 0.25
+        :pitch:
+          :octave: 2
+      - :duration: 0.25
+        :pitch:
+          :octave: 2
+          :semitone: 3
+  2:
+    :note_sequences:
+    - :offset: 0.125
+      :notes:
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 10
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 10
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 10
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 10
+      - :duration: 0.25
+        :pitch:
+          :octave: 4
+      - :duration: 0.25
+        :pitch:
+          :octave: 3
+          :semitone: 9
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 7
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 5
+      - :duration: 0.3125
+        :pitch:
+          :octave: 3
+          :semitone: 7
+        :relationship: :slur
+      - :duration: 0.0625
+        :pitch:
+          :octave: 3
+          :semitone: 5
+        :relationship: :slur
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 4
+    - :offset: 2.125
+      :notes:
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 10
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 10
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 10
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 10
+      - :duration: 0.25
+        :pitch:
+          :octave: 4
+      - :duration: 0.125
+        :pitch:
+          :octave: 3
+          :semitone: 9
+      - :duration: 0.125
+        :pitch:
+          :octave: 4
+          :semitone: 4
+      - :duration: 0.125
+        :pitch:
+          :octave: 4
+          :semitone: 4
+        :relationship: :slur
+      - :duration: 0.125
+        :pitch:
+          :octave: 4
+          :semitone: 2
+        :relationship: :slur
+      - :duration: 0.125
+        :pitch:
+          :octave: 4

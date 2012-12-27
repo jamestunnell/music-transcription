@@ -8,7 +8,7 @@ module Musicality
 # 
 class Performer
 
-  attr_reader :arranged_part, :sample_rate, :instruments, :effects, :instructions_future, :instructions_past
+  attr_reader :arranged_part, :sample_rate, :instructions_future, :instructions_past, :instrument#, :instruments, :effects, 
 
   # A new instance of Performer.
   # @param [ArrangedPart] arranged_part The part to be used during performance.
@@ -18,18 +18,21 @@ class Performer
     @arranged_part = arranged_part
 
     @loudness_computer = ValueComputer.new @arranged_part.loudness_profile
-
-    @instruments = []
-    @arranged_part.instrument_plugins.each do |hash|
-      settings = { :sample_rate => @sample_rate }.merge(hash[:settings])
-      @instruments << hash[:plugin].make_instrument(settings)
-    end
-
-    @effects = []
-    @arranged_part.effect_plugins.each do |hash|
-      settings = { :sample_rate => @sample_rate }.merge(hash[:settings])
-      @effects << hash[:plugin].make_instrument(settings)
-    end
+    
+    settings = { :sample_rate => @sample_rate }.merge(@arranged_part.instrument_hash[:settings])
+    @instrument = @arranged_part.instrument_hash[:plugin].make_instrument(settings)
+    
+    #@instruments = []
+    #@arranged_part.instrument_plugins.each do |hash|
+    #  settings = { :sample_rate => @sample_rate }.merge(hash[:settings])
+    #  @instruments << hash[:plugin].make_instrument(settings)
+    #end
+    #
+    #@effects = []
+    #@arranged_part.effect_plugins.each do |hash|
+    #  settings = { :sample_rate => @sample_rate }.merge(hash[:settings])
+    #  @effects << hash[:plugin].make_instrument(settings)
+    #end
     
     @instructions_future = {}
     @instructions_past = {}
@@ -65,24 +68,16 @@ class Performer
       instructions.each do |instruction|
         case instruction.type
         when Instruction::ON
-          @instruments.each do |instrument|
-            note = instruction.data
-            instrument.note_on note, seq_id
-          end
+          note = instruction.data
+          @instrument.note_on note, seq_id
         when Instruction::OFF
-          @instruments.each do |instrument|
-            instrument.note_off seq_id
-          end
+          @instrument.note_off seq_id
         when Instruction::CHANGE_PITCH
-          @instruments.each do |instrument|
-            note = instruction.data
-            instrument.note_change_pitch seq_id, note.pitch
-          end
+          note = instruction.data
+          @instrument.note_change_pitch seq_id, note.pitch
         when Instruction::RESTART_ATTACK
-          @instruments.each do |instrument|
-            note = instruction.data
-            instrument.note_restart_attack seq_id, note.attack, note.sustain
-          end
+          note = instruction.data
+          @instrument.note_restart_attack seq_id, note.attack, note.sustain
         when Instruction::RELEASE
           # TODO
         else
@@ -96,15 +91,11 @@ class Performer
     loudness = @loudness_computer.value_at counter
     raise ArgumentError, "loudness is not between 0.0 and 1.0" if !loudness.between?(0.0,1.0)
     
-    sample = 0.0
+    sample = (loudness * @instrument.render_sample)
     
-    @instruments.each do |instrument|
-      sample += (loudness * instrument.render_sample)
-    end
-    
-    @effects.each do |effect|
-      sample += effect.render_sample
-    end
+    #@effects.each do |effect|
+    #  sample += effect.render_sample
+    #end
     
     return sample
   end

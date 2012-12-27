@@ -18,9 +18,9 @@ describe Musicality::Score do
     )
 
     @parts = 
-    [
-      Musicality::Part.new( :loudness_profile => @loudness_profile, :note_sequences => @sequences, :id => "piano (LH)" ),
-    ]
+    {
+      "piano (LH)" => Musicality::Part.new( :loudness_profile => @loudness_profile, :note_sequences => @sequences),
+    }
 
     @bpm_profile = Musicality::SettingProfile.new(
       :start_value => 120,

@@ -16,8 +16,6 @@ describe Musicality::Part do
         Musicality::Event.new(1.0, 1.0, 2.0)
       ]
     )
-    
-    @id = "xyz"
   end
   
   it "should assign loudness profile given during construction" do
@@ -28,10 +26,5 @@ describe Musicality::Part do
   it "should assign note sequences given during construction" do
     part = Musicality::Part.new :note_sequences => @sequences
     part.note_sequences.should eq(@sequences.clone)
-  end
-  
-  it "should assign id given during construction" do
-    part = Musicality::Part.new :start_dynamic => @start_dynamic, :id => @id
-    part.id.should eq(@id)
   end
 end

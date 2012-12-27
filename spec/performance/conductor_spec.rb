@@ -4,8 +4,8 @@ describe Musicality::Conductor do
 
   before :each do
     hash = {
-      :parts => [
-        {
+      :parts => {
+        1 => {
           :loudness_profile => { :start_value => 0.5 },
           :note_sequences => [
             { :offset => 0.0, :notes => [
@@ -19,7 +19,7 @@ describe Musicality::Conductor do
             }
           ]
         }
-      ],
+      },
       :beats_per_minute_profile => { 
         :start_value => 360
       },

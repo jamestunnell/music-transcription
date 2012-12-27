@@ -6,28 +6,33 @@ module Musicality
 #
 # @author James Tunnell
 class ArrangedPart
-  attr_reader :instruction_sequences, :loudness_profile, :instrument_plugins, :effect_plugins
+  attr_reader :instruction_sequences, :loudness_profile, :instrument_hash#, :instrument_plugins, :effect_plugins
 
-  def initialize composed_part
+  def initialize composed_part, instrument_plugin
     @loudness_profile = composed_part.loudness_profile
-    @instrument_plugins = []
-    @effect_plugins = []
-
-    composed_part.instrument_plugins.each do |plugin|
-      hash = {
-          :plugin => PLUGINS.plugins[plugin.plugin_name.to_sym],
-          :settings => plugin.settings
-      }
-      @instrument_plugins << hash
-    end
-
-    composed_part.effect_plugins.each do |effect_plugin|
-      hash = {
-          :plugin => PLUGINS.plugins[plugin.plugin_name.to_sym],
-          :settings => plugin.settings
-      }
-      @effect_plugins << hash
-    end
+    @instrument_hash = {
+      :plugin => PLUGINS.plugins[instrument_plugin.plugin_name.to_sym],
+      :settings => instrument_plugin.settings
+    }
+    
+    #@instrument_plugins = []
+    #@effect_plugins = []
+    #
+    #composed_part.instrument_plugins.each do |plugin|
+    #  hash = {
+    #      :plugin => PLUGINS.plugins[plugin.plugin_name.to_sym],
+    #      :settings => plugin.settings
+    #  }
+    #  @instrument_plugins << hash
+    #end
+    #
+    #composed_part.effect_plugins.each do |effect_plugin|
+    #  hash = {
+    #      :plugin => PLUGINS.plugins[plugin.plugin_name.to_sym],
+    #      :settings => plugin.settings
+    #  }
+    #  @effect_plugins << hash
+    #end
     
     @instruction_sequences = []
     

@@ -10,8 +10,8 @@ describe Musicality::ScoreFile do
         :value_change_events => [ Event.new(1.0, 100, 1.25) ]
       },
       :program => { :segments => [0.0...3.75] },
-      :parts => [
-        {
+      :parts => {
+        "1" => {
           :note_sequences => [
             { :offset => 0.0, :notes => [
                 { :duration => 0.25, :pitch => { :octave => 9 } },
@@ -30,9 +30,8 @@ describe Musicality::ScoreFile do
               ]
             }
           ],
-          :id=> "1",
         }
-      ]
+      }
 
     }
     

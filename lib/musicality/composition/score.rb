@@ -25,7 +25,7 @@ class Score
                spec_arg(:program, Program) ]
   
   # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_array(:parts, Part),
+  OPT_ARGS = [ spec_arg_hash(:parts, Part),
                spec_arg(:beat_duration_profile, SettingProfile, ->(a){ a.values_positive? }, ->{ SettingProfile.new :start_value => 0.25 }) ]
   
   # A new instance of Score.
@@ -36,13 +36,13 @@ class Score
   end
   
   # Set the score parts.
-  # @param [Array] parts The score parts.
-  # @raise [ArgumentError] if notes is not an Array.
+  # @param [Hash] parts The score parts, mapped to IDs.
+  # @raise [ArgumentError] if notes is not a Hash.
   # @raise [ArgumentError] if parts contain a non-Part object.
   def parts= parts
-    raise ArgumentError, "parts is not an Array" if !parts.is_a?(Array)
+    raise ArgumentError, "parts is not an Hash" if !parts.is_a?(Hash)
 
-    parts.each do |part|
+    parts.each do |id, part|
       raise ArgumentError, "parts contain a non-Part #{part}" if !part.is_a?(Part)
     end
     
@@ -80,7 +80,7 @@ class Score
   def find_start
     sos = 0.0
     
-    @parts.each do |part|
+    @parts.each do |id,part|
       sop = part.find_start
       sos = sop if sop > sos
     end
@@ -93,7 +93,7 @@ class Score
   def find_end
     eos = 0.0
     
-    @parts.each do |part|
+    @parts.each do |id,part|
       eop = part.find_end
       eos = eop if eop > eos
     end

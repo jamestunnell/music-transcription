@@ -19,7 +19,7 @@ class ScoreConverter
     
     note_offsets = Set.new [0.0]
     
-    score.parts.each do |part|
+    score.parts.each do |id, part|
       part.note_sequences.each do |sequence|
         offset = sequence.offset
         note_offsets << offset
@@ -41,13 +41,10 @@ class ScoreConverter
     note_time_converter = NoteTimeConverter.new tempo_computer, conversion_sample_rate
     note_time_map = note_time_converter.map_note_offsets_to_time_offsets note_offsets
     
-    new_parts = []
-    score.parts.each do |part|
+    new_parts = {}
+    score.parts.each do |id, part|
       new_part = Musicality::Part.new(
         :loudness_profile => SettingProfile.new(:start_value => part.loudness_profile.start_value),
-	:instrument_plugins => part.instrument_plugins,
-	:effect_plugins => part.effect_plugins,
-        :id => part.id
       )
       
       part.note_sequences.each do |sequence|
@@ -88,7 +85,7 @@ class ScoreConverter
         new_part.loudness_profile.value_change_events << new_event
       end
       
-      new_parts << new_part
+      new_parts[id] = new_part
     end
     
     return new_parts

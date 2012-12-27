@@ -17,10 +17,9 @@ describe Musicality::Performer do
     part = Musicality::Part.new(
       :offset => 0.0,
       :note_sequences => [@sequence],
-      :instrument_plugins => [ PluginConfig.new(:plugin_name => "oscillator_instrument") ],
       :loudness_profile => @loudness_profile
     )
-    @arranged_part = ArrangedPart.new part
+    @arranged_part = ArrangedPart.new part, PluginConfig.new(:plugin_name => "oscillator_instrument")
 
     sample_rate = 48.0
     @performer = Musicality::Performer.new @arranged_part, @sample_rate

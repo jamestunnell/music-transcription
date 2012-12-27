@@ -8,8 +8,8 @@ describe Musicality::ScoreCollator do
         :value_change_events => [ Event.new(0.5, 60, 1.0) ]
       },
       :program => { :segments => [0.0...1.0, 0.0...2.0] },
-      :parts => [
-        {
+      :parts => {
+        "1" => {
           :loudness_profile => {
             :start_value => 0.5,
             :value_change_events => [ Event.new(0.5, 1.0, 1.0) ]
@@ -26,12 +26,12 @@ describe Musicality::ScoreCollator do
             }
           ]
         }
-      ],
+      },
     }
     
     @complex_score_hash = {
-      :parts => [
-        {
+      :parts => {
+        :part1 => {
           :loudness_profile => { :start_value => 0.5 },
           :note_sequences => [
             { :offset => 0.0, :notes => [
@@ -47,7 +47,7 @@ describe Musicality::ScoreCollator do
             }
           ]
         }
-      ],
+      },
       :beats_per_minute_profile => { :start_value => 120 },
       :program => {
         :segments => [
@@ -63,8 +63,8 @@ describe Musicality::ScoreCollator do
     @two_part_score_hash = {
       :beats_per_minute_profile => { :start_value => 120 },
       :program => { :segments => [0.0...1.0, 0.0...2.0] },
-      :parts => [
-        {
+      :parts => {
+        :a => {
           :loudness_profile => { :start_value => 0.5 },
           :note_sequences => [
             { :offset => 0.0,
@@ -78,7 +78,7 @@ describe Musicality::ScoreCollator do
             }
           ]
         },
-        {
+        :b => {
           :loudness_profile => { :start_value => 0.5 },
           :note_sequences => [
             { :offset => 0.5,
@@ -91,7 +91,7 @@ describe Musicality::ScoreCollator do
             }
           ]
         }
-      ]
+      }
     }
   end
     
@@ -100,7 +100,7 @@ describe Musicality::ScoreCollator do
     ScoreCollator.collate_score! score
   
     score.parts.count.should be 1
-    part = score.parts.first
+    part = score.parts.values.first
 
     #puts part.save_to_hash.to_yaml
     part.note_sequences.count.should be 2
@@ -141,7 +141,7 @@ describe Musicality::ScoreCollator do
     score.find_start.should be_within(0.01).of(0.0)
     score.find_end.should be_within(0.01).of(6.75)
 
-    parts = score.parts
+    parts = score.parts.values
     parts.count.should be 1
     part = parts.first
 
@@ -187,7 +187,7 @@ describe Musicality::ScoreCollator do
     score.find_start.should be_within(0.01).of(0.0)
     score.find_end.should be_within(0.01).of(3.0)
 
-    parts = score.parts
+    parts = score.parts.values
     parts.count.should be 2
     part0 = parts[0]
     part1 = parts[1]

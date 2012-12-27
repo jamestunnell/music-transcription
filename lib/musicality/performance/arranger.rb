@@ -65,20 +65,24 @@ class Arranger
     
     ScoreCollator.collate_score!(score)
     parts = ScoreConverter.make_time_based_parts_from_score score, conversion_sample_rate
-        
-    parts.each do |part|
-      
-      part.instrument_plugins.keep_if { |plugin| PLUGINS.plugins.has_key? plugin.plugin_name.to_sym }
-      
-      if part.instrument_plugins.empty?
-        part.instrument_plugins << @default_instrument_plugin
-      end
-      
-      part.effect_plugins.keep_if { |plugin| PLUGINS.plugins.has_key? plugin.plugin_name.to_sym }
-
+    
+    instrument_map = {}
+    parts.each do |id, part|
+      instrument_map[id] = @default_instrument_plugin
+    
+    #  TODO - score should contain a map of part ID to instrument/effet configs. Check there instead of in each part...
+    #
+    #  part.instrument_plugins.keep_if { |plugin| PLUGINS.plugins.has_key? plugin.plugin_name.to_sym }
+    #  
+    #  if part.instrument_plugins.empty?
+    #    part.instrument_plugins << @default_instrument_plugin
+    #  end
+    #  
+    #  part.effect_plugins.keep_if { |plugin| PLUGINS.plugins.has_key? plugin.plugin_name.to_sym }
+    #
     end
     
-    return Arrangement.new(parts)
+    return Arrangement.new(parts, instrument_map)
   end
   
 end
