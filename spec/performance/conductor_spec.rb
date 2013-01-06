@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Conductor do
 
-  before :each do
+  before :all do
     hash = {
       :parts => {
         1 => {
@@ -35,13 +35,13 @@ describe Musicality::Conductor do
     }
     
     @score = Score.make_from_hash hash
-    @arrangement = Musicality::Arranger.new.make_arrangement @score
     @sample_rate = 250.0
   end
 
   describe "#perform_score" do
     before :each do
-      @conductor = Musicality::Conductor.new @arrangement, @sample_rate
+      time_conversion_rate = 250.0
+      @conductor = Musicality::Conductor.new @score, time_conversion_rate, @sample_rate
       @conductor.perform
     end
 

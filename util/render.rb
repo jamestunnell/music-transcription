@@ -22,8 +22,8 @@ class ScoreRenderer
   
   def run
     score = Musicality::ScoreFile.load @scorefile
-    arrangement = Musicality::Arranger.new.make_arrangement score
-    conductor = Musicality::Conductor.new arrangement, @samplerate
+    time_conversion_sample_rate = 250.0
+    conductor = Musicality::Conductor.new score, time_conversion_sample_rate, @samplerate
     
     format = WaveFile::Format.new(:mono, BITS_PER_SAMPLE, @samplerate.to_i)
     writer = WaveFile::Writer.new(@outfile, format)
