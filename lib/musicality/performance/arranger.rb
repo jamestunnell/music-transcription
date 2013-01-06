@@ -66,9 +66,14 @@ class Arranger
     ScoreCollator.collate_score!(score)
     parts = ScoreConverter.make_time_based_parts_from_score score, conversion_sample_rate
     
-    instrument_map = {}
+    # this combines any contiguous note sequences into one
     parts.each do |id, part|
-      instrument_map[id] = @default_instrument_plugin
+      NoteSequenceCombiner.combine_note_sequences part.note_sequences
+    end
+    
+    instruments = {}
+    parts.each do |id, part|
+      instruments[id] = @default_instrument_plugin
     
     #  TODO - score should contain a map of part ID to instrument/effet configs. Check there instead of in each part...
     #
@@ -82,7 +87,7 @@ class Arranger
     #
     end
     
-    return Arrangement.new(parts, instrument_map)
+    return Arrangement.new(parts, instruments)
   end
   
 end

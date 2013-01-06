@@ -1,4 +1,4 @@
 require 'rspec'
-require 'musicality/version'
+require 'musicality'
 
 include Musicality

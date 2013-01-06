@@ -10,7 +10,7 @@ score_hash = {
     :segments => [0...4.0]
   },
   :beats_per_minute_profile => { :start_value => 120.0 },
-  :parts => [
+  :parts => {
     1 => {
       :loudness_profile => { :start_value => 0.5 },
       :note_sequences => [
@@ -22,7 +22,7 @@ score_hash = {
         }
       ]
     }
-  ]
+  }
 }
 
 score = Musicality::Score.make_from_hash score_hash

@@ -19,13 +19,15 @@ class Conductor
   # A new instance of Conductor.
   # @param [Arrangement] arrangement The arrangement to be used during performance.
   # @param [Numeric] sample_rate The sample rate used in rendering samples.
-  def initialize arrangement, sample_rate = DEFAULT_SAMPLE_RATE
+  def initialize arrangement, sample_rate = DEFAULT_SAMPLE_RATE, max_attack_time = 0.15
     raise ArgumentError, "arrangement is not an Arrangement" unless arrangement.is_a?(Arrangement)
     @arrangement = arrangement
     
     @performers = []
-    @arrangement.arranged_parts.each do |part|
-      @performers << Performer.new(part, sample_rate)
+    @arrangement.parts.each do |id, part|
+      raise ArgumentError, "arrangement.instruments does not have #{id} key" unless @arrangement.instruments.has_key?(id)
+      instrument_config = @arrangement.instruments[id]
+      @performers << Performer.new(part, instrument_config, sample_rate, max_attack_time)
     end
     
     @sample_rate = sample_rate

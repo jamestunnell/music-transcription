@@ -8,19 +8,19 @@
     end: 4.0
     excl: true
 :parts:
-- :note_sequences:
-  - :offset: 0.0
-    :notes:
-    - :duration: 0.75
-      :pitch:
-        :octave: 3
-      :relationship: :glissando
-    - :duration: 0.75
-      :pitch:
-        :octave: 3
-        :semitone: 5
-      :relationship: :glissando
-    - :duration: 0.5
-      :pitch:
-        :octave: 3
-  :id: '1'
+  1:
+    :note_sequences:
+    - :offset: 0.0
+      :notes:
+      - :duration: 0.75
+        :pitch:
+          :octave: 3
+        :relationship: :glissando
+      - :duration: 0.75
+        :pitch:
+          :octave: 3
+          :semitone: 5
+        :relationship: :glissando
+      - :duration: 0.5
+        :pitch:
+          :octave: 3
