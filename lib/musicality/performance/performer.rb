@@ -8,21 +8,17 @@ module Musicality
 # 
 class Performer
 
-  attr_reader :instrument, :sample_rate, :max_attack_time, :instruction_sequences, :instructions_future, :instructions_past
+  attr_reader :part, :instrument, :max_attack_time, :instruction_sequences, :instructions_future, :instructions_past
 
   # A new instance of Performer.
   # @param [Part] part The part to be used during performance.
   # @param [PluginConfig] instrument_config The instrument plugin configuration to be used in rendering samples.
   # @param [Numeric] sample_rate The sample rate used in rendering samples.
-  def initialize part, instrument_config, sample_rate, max_attack_time
-    @sample_rate = sample_rate
+  def initialize part, instrument, max_attack_time
+    @part = part
+    @instrument = instrument
     @max_attack_time = max_attack_time
-
     @loudness_computer = ValueComputer.new part.loudness_profile
-    
-    settings = { :sample_rate => @sample_rate }.merge(instrument_config.settings)
-    plugin = PLUGINS.plugins[instrument_config.plugin_name.to_sym]
-    @instrument = plugin.make_instrument(settings)
     
     part.note_sequences.each do |note_sequence|
       intermediate_sequences = IntermediateSequencer.make_intermediate_sequences_from_note_sequence note_sequence
@@ -30,7 +26,7 @@ class Performer
       @instruction_sequences = make_instruction_sequences(intermediate_sequences)
     end
     
-    # TODO - practice_record = practice_instrument()
+    #practice_record = practice_instrument()
     # TODO - rehearsed_instructions = rehease_part(practice_record)
     
     @instructions_future = {}
@@ -101,16 +97,40 @@ class Performer
   end
 
   # Release any currently playing notes
-  def release_all
-    @instruments.each do |instrument|      
-      instrument.notes.each do |id,note|
-        instrument.release_note id
+  def all_notes_off
+    @instrument.notes.each do |id,note|
+      instrument.note_off id
+    end
+  end
+
+  # Determine the attack time (time to reach max value) of a note.
+  # Start by silencing all currently playing notes, then play the
+  # entire note and keep track of where the maximum value occurs.
+  def find_note_attack_time note
+    
+    all_notes_off
+    note_id = @instrument.note_on note
+
+    max_value = 0.0
+    max_index = 0
+
+    (note.duration * @instrument.sample_rate).to_i.times do |i|
+      sample = @instrument.render_sample
+      
+      if sample > max_value
+        max_value = sample
+        max_index = i
       end
     end
+    @instrument.note_off note_id
+    
+    max_time = max_index.to_f / @instrument.sample_rate
+    binding.pry
+    return max_time
   end
   
   private
-
+  
   def refine_intermediate_sequences intermediate_sequences
     
     prev_seq = nil

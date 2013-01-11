@@ -1,12 +1,12 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe Musicality::SignalProcessing do
-  context '.cross_correlate' do
+describe Musicality::Signal do
+  context '#cross_correlation' do
     it 'should return one-long array for f and g of equal size' do
       f = [ 5, 4, 3, 2, 1, 0 ]
       g = [ 0, 1, 2, 3, 4, 5 ]
       
-      h = SignalProcessing.cross_correlate f, g
+      h = Musicality::Signal.new(f).cross_correlation g
       h.count.should eq(1)
     end
 
@@ -14,7 +14,7 @@ describe Musicality::SignalProcessing do
       #puts ""
       f = [ 5, 4, 3, 2, 1, 0 ]
       
-      h = SignalProcessing.cross_correlate f, f
+      h = Musicality::Signal.new(f).cross_correlation f
       #puts "h #{h.inspect}"
       h.count.should eq(1)
       h[0].should eq(0.0)
@@ -25,7 +25,7 @@ describe Musicality::SignalProcessing do
       f = [ 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5 ]
       g = [ 5, 4, 3 ]
       
-      h = SignalProcessing.cross_correlate f, g
+      h = Musicality::Signal.new(f).cross_correlation g
       #puts "h #{h.inspect}"
       h.index(h.min).should eq(0)
     end
@@ -35,7 +35,7 @@ describe Musicality::SignalProcessing do
       f = [ 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5 ]
       g = [ 1, 0, 1 ]
       
-      h = SignalProcessing.cross_correlate f, g
+      h = Musicality::Signal.new(f).cross_correlation g
       #puts "h #{h.inspect}"
       h.index(h.min).should eq(4)
     end
@@ -46,9 +46,10 @@ describe Musicality::SignalProcessing do
       f = [ 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5 ]
       g = [ 3, 4, 5 ]
       
-      h = SignalProcessing.cross_correlate f, g
+      h = Musicality::Signal.new(f).cross_correlation g
       #puts "h #{h.inspect}"
       h.index(h.min).should eq(8)
     end
   end
+
 end
