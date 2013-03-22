@@ -51,7 +51,6 @@ describe Musicality::ScoreFile do
   
   it "should save score to file" do
     score = ScoreFile.load @score_hash_filename
-    
     mod_filename = "x_" + @score_hash_filename
     ScoreFile.save score, mod_filename
     

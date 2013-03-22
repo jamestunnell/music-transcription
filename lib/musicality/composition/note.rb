@@ -1,3 +1,5 @@
+require 'hashmake'
+
 module Musicality
 
 # Abstraction of a musical note. Contains values for pitch, duration, attack, sustain, and seperation.
@@ -32,7 +34,7 @@ module Musicality
 #                    and PORTAMENTO.
 #
 class Note
-  include HashMake
+  include Hashmake::HashMakeable
   attr_reader :pitch, :duration, :sustain, :attack, :seperation, :relationship
 
   # no relationship to the following note
@@ -58,28 +60,29 @@ class Note
     RELATIONSHIP_PORTAMENTO
   ]
 
-  # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg(:duration, Numeric),
-               spec_arg(:pitch, Pitch) ]
-  # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg(:sustain, Numeric, ->(a){ a.between?(0.0,1.0)}, 0.5),
-               spec_arg(:attack, Numeric, ->(a){ a.between?(0.0,1.0)}, 0.5),
-               spec_arg(:seperation, Numeric, ->(a){ a.between?(0.0,1.0)}, 0.5),
-               spec_arg(:relationship, Symbol, ->(a){ RELATIONSHIPS.include?(a)}, RELATIONSHIP_NONE) ]
+  # hashed-arg specs (for hash-makeable idiom)
+  ARG_SPECS = {
+    :duration => arg_spec(:type => Numeric, :reqd => true),
+    :pitch => arg_spec(:type => Pitch, :reqd => true),
+    :sustain => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
+    :attack => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
+    :seperation => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
+    :relationship => arg_spec(:type => Symbol, :reqd => false, :validator => ->(a){ RELATIONSHIPS.include?(a)}, :default => RELATIONSHIP_NONE)
+  }
 
   # A new instance of Note.
   # @param [Hash] args Hashed arguments. Required keys are :pitch, :duration, 
   #                    and :offset. Optional keys are :sustain, :attack, 
   #                    :seperation, and :tie.
   def initialize args={}
-    process_args args
+    hash_make ARG_SPECS, args
   end
 
   # Set the note pitch.
   # @param [Pitch] pitch The pitch of the note.
   # @raise [ArgumentError] if pitch is not a Pitch.
   def pitch= pitch
-    raise ArgumentError, "pitch #{pitch} is not a Pitch" unless pitch.is_a?(Pitch)
+    validate_arg ARG_SPECS[:pitch], pitch
     @pitch = pitch
   end
 
@@ -88,9 +91,8 @@ class Note
   # @raise [ArgumentError] if duration is not a Numeric.
   # @raise [RangeError] if duration is negative or zero.
   def duration= duration
-    raise ArgumentError, "duration #{duration} is not a Numeric" if !duration.is_a?(Numeric)
-  	raise RangeError, "duration #{duration} is negative or zero." if duration <= 0.0  	
-  	@duration = duration
+    validate_arg ARG_SPECS[:duration], duration
+    @duration = duration
   end
   
   # Set the note sustain.
@@ -98,9 +100,8 @@ class Note
   # @raise [ArgumentError] if sustain is not a Numeric.
   # @raise [RangeError] if sustain is outside the range 0.0..1.0.
   def sustain= sustain
-    raise ArgumentError, "sustain is not a Numeric" if !sustain.is_a?(Numeric)
-    raise RangeError, "sustain is outside the range 0.0..1.0" if !sustain.between?(0.0,1.0)
-  	@sustain = sustain
+    validate_arg ARG_SPECS[:sustain], sustain
+    @sustain = sustain
   end
 
   # Set the note attack.
@@ -108,9 +109,8 @@ class Note
   # @raise [ArgumentError] if attack is not a Numeric.
   # @raise [RangeError] if attack is outside the range 0.0..1.0.
   def attack= attack
-    raise ArgumentError, "attack is not a Numeric" if !attack.is_a?(Numeric)
-    raise RangeError, "attack is outside the range 0.0..1.0" if !attack.between?(0.0,1.0)
-	@attack = attack
+    validate_arg ARG_SPECS[:attack], attack
+    @attack = attack
   end
 
   # Set the note seperation.
@@ -118,8 +118,7 @@ class Note
   # @raise [ArgumentError] if seperation is not a Numeric.
   # @raise [RangeError] if seperation is outside the range 0.0..1.0.
   def seperation= seperation
-    raise ArgumentError, "seperation is not Numeric" if !seperation.is_a?(Numeric)
-    raise RangeError, "seperation is outside the range 0.0..1.0" if !seperation.between?(0.0,1.0)
+    validate_arg ARG_SPECS[:seperation], seperation
     @seperation = seperation
   end
   
@@ -130,7 +129,7 @@ class Note
   #                  RELATIONSHIPS constant.
   # @raise [ArgumentError] if relationship is not a valid relationship.
   def relationship= relationship
-    raise ArgumentError, "relationship is not valid (not found in RELATIONSHIPS)" if !RELATIONSHIPS.include?(relationship)
+    validate_arg ARG_SPECS[:relationship], relationship
     @relationship = relationship
   end
   

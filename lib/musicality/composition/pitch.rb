@@ -1,3 +1,5 @@
+require 'musicality'
+
 module Musicality
 
 # Abstraction of a musical pitch. Contains values for octave, semitone, 
@@ -45,9 +47,8 @@ module Musicality
 #
 class Pitch
   include Comparable
-  include HashMake
-  attr_accessor :octave, :semitone, :cent, :base_freq
-  attr_reader :cents_per_octave
+  include Hashmake::HashMakeable
+  attr_reader :cents_per_octave, :base_freq, :octave, :semitone, :cent
 
   #The default number of semitones per octave is 12, corresponding to 
   # the twelve-tone equal temperment tuning system.
@@ -60,13 +61,13 @@ class Pitch
   # The default base ferquency is C0
   DEFAULT_BASE_FREQ = 16.351597831287414
 
-  # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ ]
-  # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg(:octave, Numeric, ->(a){ true}, 0),
-               spec_arg(:semitone, Numeric, ->(a){ true}, 0), 
-               spec_arg(:cent, Numeric, ->(a){ true}, 0), 
-               spec_arg(:base_freq, Numeric, ->(a){ a > 0.0 }, DEFAULT_BASE_FREQ) ]  
+  # hashed-arg specs (for hash-makeable idiom)
+  ARG_SPECS = {
+    :octave => arg_spec(:reqd => false, :type => Numeric, :default => 0),
+    :semitone => arg_spec(:reqd => false, :type => Numeric, :default => 0), 
+    :cent => arg_spec(:reqd => false, :type => Numeric, :default => 0), 
+    :base_freq => arg_spec(:reqd => false, :type => Numeric, :validator => ->(a){ a > 0.0 }, :default => DEFAULT_BASE_FREQ)
+  }
   
   # A new instance of Pitch.
   # @param [Hash] args Hashed args. Valid, optional keys are :octave, 
@@ -81,9 +82,29 @@ class Pitch
   #                        not a Fixnum.
   def initialize args={}
     @cents_per_octave = CENTS_PER_SEMITONE * SEMITONES_PER_OCTAVE
-    process_args args
+    hash_make ARG_SPECS, args
   end
 
+  def base_freq= base_freq
+    validate_arg ARG_SPECS[:base_freq], base_freq
+    @base_freq = base_freq
+  end
+  
+  def octave= octave
+    validate_arg ARG_SPECS[:octave], octave
+    @octave = octave
+  end
+  
+  def semitone= semitone
+    validate_arg ARG_SPECS[:semitone], semitone
+    @semitone = semitone
+  end
+  
+  def cent= cent
+    validate_arg ARG_SPECS[:cent], cent
+    @cent = cent
+  end
+  
   def freq
     return self.ratio() * @base_freq
   end

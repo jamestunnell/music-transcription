@@ -27,7 +27,7 @@ describe Musicality::ScoreConverter do
         },
       }
       
-      score = Score.make_from_hash score_hash
+      score = Score.new score_hash
       parts = ScoreConverter.make_time_based_parts_from_score score, 1000.0
       note_seq = parts.values.first.note_sequences.first
       
@@ -73,7 +73,7 @@ describe Musicality::ScoreConverter do
         },
       }
 
-      score = Score.make_from_hash score_hash
+      score = Score.new score_hash
       parts = ScoreConverter.make_time_based_parts_from_score score, 1000.0
       
       note_seq = parts.values.first.note_sequences[0]

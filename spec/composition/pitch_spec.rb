@@ -24,19 +24,10 @@ describe Musicality::Pitch do
   end
   
   it "should be hash-makeable" do
-    Musicality::HashMakeUtil.is_hash_makeable?(Musicality::Pitch).should be_true
-  
-    hash = { :octave => 4, :semitone => 3 }
-    obj = Musicality::Pitch.make_from_hash hash
-    hash2 = obj.save_to_hash
-    
-    hash.should eq(hash2)
-    
-    obj2 = Musicality::Pitch.make_from_hash hash2
-    
-    obj.octave.should eq(obj2.octave)
-    obj.semitone.should eq(obj2.semitone)
-    obj.cent.should eq(obj2.cent)
+    obj = Pitch.new :octave => 4, :semitone => 3
+    obj.octave.should eq(4)
+    obj.semitone.should eq(3)
+    obj.cent.should eq(0)
   end
   
   it "should use default octave, semitone, and cent in none is given" do

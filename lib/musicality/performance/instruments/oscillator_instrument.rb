@@ -5,18 +5,25 @@ module Musicality
 # A simple instrument to use for rendering. Can select different
 # ADSR envelope and oscillator voice settings.
 class OscillatorInstrument < Musicality::Instrument
-  def initialize settings
+  include Hashmake::HashMakeable
+  
+  ARG_SPECS = {
+    :sample_rate => arg_spec(:reqd => true, :type => Numeric, :validator => ->(a){ a > 0 }),
+    :settings => arg_spec_hash(:reqd => false, :type => SettingProfile)
+  }
+  def initialize args
+    hash_make OscillatorInstrument::ARG_SPECS, args
 
     envelope_plugin = PluginConfig.new(
       :plugin_name => "adsr_envelope",
-      :settings => settings
+      :settings => @settings
     )
     voice_plugin = PluginConfig.new(
       :plugin_name => "oscillator_voice",
-      :settings => settings
+      :settings => @settings
     )
     
-    super( settings[:sample_rate], voice_plugin, envelope_plugin)
+    super( @sample_rate, voice_plugin, envelope_plugin)
   end
 end
 
@@ -29,8 +36,8 @@ PLUGINS.register :oscillator_instrument do
   self.extension_points = []
   self.params = { :description => "Makes an oscillator-based instrument, with adjustable attack rate, decay rate, sustain level, and damping rate." }
 
-  def make_instrument settings
-    OscillatorInstrument.new settings
+  def make_instrument args
+    OscillatorInstrument.new args
   end
 end
 

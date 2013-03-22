@@ -40,25 +40,18 @@ describe Musicality::NoteSequence do
   end
   
   it "should be hash-makeable" do 
-    Musicality::HashMakeUtil.is_hash_makeable?(Musicality::NoteSequence).should be_true
-    
     hash = { 
-      :offset => 0.0,
-      :notes=> [
-        {:duration=>2, :pitch=> {:octave=>3} },
-        {:duration=>1, :pitch=> {:octave=>3, :semitone=>2} }
+      :offset => 1.5,
+      :notes => [
+        {:duration =>2, :pitch => {:octave =>3} },
+        {:duration =>1, :pitch => {:octave =>3, :semitone =>2} }
       ]
     }
-    obj = NoteSequence.make_from_hash hash
-    hash2 = obj.save_to_hash
-    
-    hash.should eq(hash2)
-    
-    obj2 = NoteSequence.make_from_hash hash2
-    
-    obj.offset.should eq(obj2.offset)
-    obj.notes.count.should eq(obj2.notes.count)
-    obj.notes[0].pitch.should eq(obj2.notes[0].pitch)
-    obj.notes[1].pitch.should eq(obj2.notes[1].pitch)
+    obj = NoteSequence.new hash
+    obj.offset.should eq(1.5)
+    obj.notes.count.should eq(2)
+    obj.notes[0].pitch.octave.should eq(3)
+    obj.notes[1].pitch.octave.should eq(3)
+    obj.notes[1].pitch.semitone.should eq(2)
   end
 end

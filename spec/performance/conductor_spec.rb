@@ -34,7 +34,7 @@ describe Musicality::Conductor do
       }
     }
     
-    @score = Score.make_from_hash hash
+    @score = Score.new hash
     @sample_rate = 250.0
   end
 

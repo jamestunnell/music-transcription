@@ -125,7 +125,6 @@ class Performer
     @instrument.note_off note_id
     
     max_time = max_index.to_f / @instrument.sample_rate
-    binding.pry
     return max_time
   end
   

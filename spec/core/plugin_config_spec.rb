@@ -17,23 +17,15 @@ describe PluginConfig do
   end
 
   it "should be hash-makeable" do
-    HashMakeUtil.is_hash_makeable?(PluginConfig).should be_true
-    
-    PluginConfig.new( :plugin_name => "MyPluginName" ).save_to_hash.should have_key(:plugin_name)
-    
     settings = {
       :volume => { :start_value => 0.5 },
       :gain => { :start_value => 0.75 }
     }
     hash = { :plugin_name => "MyPluginName", :settings => settings }
-    cfg = PluginConfig.make_from_hash hash
-    hash2 = cfg.save_to_hash
-    hash.should eq(hash2)
+    cfg = PluginConfig.new hash
     
-    cfg2 = PluginConfig.make_from_hash hash2
-    
-    cfg.plugin_name.should eq(cfg2.plugin_name)
-    cfg.settings[:volume].start_value.should eq(cfg2.settings[:volume].start_value)
-    cfg.settings[:gain].start_value.should eq(cfg2.settings[:gain].start_value)
+    cfg.plugin_name.should eq("MyPluginName")
+    cfg.settings[:volume].start_value.should eq(0.5)
+    cfg.settings[:gain].start_value.should eq(0.75)
   end
 end

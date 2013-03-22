@@ -22,16 +22,14 @@ class ScoreFile
     end
     raise "Could not load score hash from file #{filename}" if hash.nil?
     
-    return Score.make_from_hash hash
+    return Score.new hash
   end
   
   # Save a score to a YAML/hash file
   # @param [String] filename The filename to save to.
   def self.save score, filename
-    hash = score.save_to_hash
-    
     File.open(filename, "w") do |file|
-      file.write hash.to_yaml
+      file.write score.make_hash.to_yaml
     end
   end
 end

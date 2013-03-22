@@ -1,3 +1,4 @@
+require 'pry'
 module Musicality
 
 # Contains plugin name string, and any plugin settings (via an
@@ -5,20 +6,21 @@ module Musicality
 #
 # @author James Tunnell
 class PluginConfig
-  include HashMake
+  include Hashmake::HashMakeable
 
   attr_accessor :plugin_name, :settings
 
-  # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg(:plugin_name, String) ]
-  # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_hash(:settings, SettingProfile) ]  
+  # hashed-arg specs (for hash-makeable idiom)
+  ARG_SPECS = {
+    :plugin_name => arg_spec(:reqd => true, :type => String),
+    :settings => arg_spec_hash(:reqd => false, :type => SettingProfile)
+  }
   
   # A new instance of PluginConfig.
   # @param [Hash] args Hashed arguments. Required key is :plugin_name (String).
   #                    Optional key is :settings (Array of SettingProfile).
   def initialize args={}
-    process_args args
+    hash_make PluginConfig::ARG_SPECS, args
   end
 end
 

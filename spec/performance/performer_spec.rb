@@ -56,11 +56,11 @@ describe Performer do
     end
   end
   
-  context "Performer#find_note_attack_time " do
-    it 'should....' do
-      attack_time = @performer.find_note_attack_time @sequence.notes.first
-      puts
-      puts "attack_time is #{attack_time}"
-    end
-  end
+  #context "Performer#find_note_attack_time " do
+  #  it 'should....' do
+  #    attack_time = @performer.find_note_attack_time @sequence.notes.first
+  #    puts
+  #    puts "attack_time is #{attack_time}"
+  #  end
+  #end
 end

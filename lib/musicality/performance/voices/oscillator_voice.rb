@@ -8,7 +8,7 @@ module Musicality
 class OscillatorVoice
   
   attr_accessor :sample_rate, :wave_type
-  include HashMake
+  include Hashmake::HashMakeable
   
   # A list of the valid oscillator wave types. Currently: square, triangle,
   # sawtooth, and sine.
@@ -20,19 +20,17 @@ class OscillatorVoice
   ]
   
   # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [
-    spec_arg(:sample_rate, Numeric, ->(a){ a > 0.0 } ),
-    spec_arg(:wave_type, SettingProfile, ->(a){ VALID_WAVE_TYPES.include? a.start_value } )
-  ]
-  # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = []
+  ARG_SPECS = {
+    :sample_rate => arg_spec(:reqd => true, :type => Numeric, :validator => ->(a){ a > 0.0 } ),
+    :wave_type => arg_spec(:reqd => true, :type => SettingProfile, :validator => ->(a){ VALID_WAVE_TYPES.include? a.start_value } )
+  }
   
   # A new instance of OscillatorVoice.
   # @param [Hash] settings Hashed arguments. Required keys are :sample_rate
   #                        and :wave_type. See VALID_WAVE_TYPES for a list
   #                        of the valid values for :wave_type.
   def initialize settings
-    process_args settings
+    hash_make ARG_SPECS, settings
     
     wave_type = @wave_type.start_value
     if wave_type == 'square'

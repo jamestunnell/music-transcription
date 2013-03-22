@@ -1,3 +1,5 @@
+require 'hashmake'
+
 module Musicality
 
 # Abstraction of a musical score. Contains parts, program, and tempo profiles.
@@ -17,22 +19,22 @@ module Musicality
 #   @return [Array] Score program.
 #
 class Score
-  include HashMake
+  include Hashmake::HashMakeable
   attr_reader :parts, :beat_duration_profile, :beats_per_minute_profile, :program
 
-  # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg(:beats_per_minute_profile, SettingProfile, ->(a){ a.values_positive? }),
-               spec_arg(:program, Program) ]
-  
-  # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_hash(:parts, Part),
-               spec_arg(:beat_duration_profile, SettingProfile, ->(a){ a.values_positive? }, ->{ SettingProfile.new :start_value => 0.25 }) ]
+  # hashed-arg specs (for hash-makeable idiom)
+  ARG_SPECS = {
+    :beats_per_minute_profile => arg_spec(:reqd => true, :type => SettingProfile, :validator => ->(a){ a.values_positive? }),
+    :program => arg_spec(:reqd => true, :type => Program),
+    :parts => arg_spec_hash(:reqd => false, :type => Part),
+    :beat_duration_profile => arg_spec(:reqd => false, :type => SettingProfile, :validator => ->(a){ a.values_positive? }, :default => ->{ SettingProfile.new :start_value => 0.25 })
+  }
   
   # A new instance of Score.
   # @param [Hash] args Hashed arguments. Required keys are :tempos and 
   #               :programs. Optional keys are :parts.
   def initialize args={}
-    process_args args
+    hash_make ARG_SPECS, args
   end
   
   # Set the score parts.
@@ -40,12 +42,7 @@ class Score
   # @raise [ArgumentError] if notes is not a Hash.
   # @raise [ArgumentError] if parts contain a non-Part object.
   def parts= parts
-    raise ArgumentError, "parts is not an Hash" if !parts.is_a?(Hash)
-
-    parts.each do |id, part|
-      raise ArgumentError, "parts contain a non-Part #{part}" if !part.is_a?(Part)
-    end
-    
+    validate_arg ARG_SPECS[:parts], parts
     @parts = parts
   end
 
@@ -53,15 +50,14 @@ class Score
   # @param [Tempo] beat_duration_profile The SettingProfile for beat duration.
   # @raise [ArgumentError] if beat_duration_profile is not a SettingProfile.
   def beat_duration_profile= beat_duration_profile
-    raise ArgumentError, "beat_duration_profile is not a SettingProfile" unless beat_duration_profile.is_a?(SettingProfile)
-    @beat_duration_profile = beat_duration_profile
+    validate_arg ARG_SPECS[:beat_duration_profile], beat_duration_profile
   end
   
   # Set the score beats per minute SettingProfile.
   # @param [Tempo] beats_per_minute_profile The SettingProfile for beats per minute.
   # @raise [ArgumentError] if beats_per_minute_profile is not a SettingProfile.
   def beats_per_minute_profile= beats_per_minute_profile
-    raise ArgumentError, "beats_per_minute_profile is not a SettingProfile" unless beats_per_minute_profile.is_a?(SettingProfile)
+    validate_arg ARG_SPECS[:beats_per_minute_profile], beats_per_minute_profile
     @beats_per_minute_profile = beats_per_minute_profile
   end
 
@@ -70,9 +66,8 @@ class Score
   # @param [Program] program The score program.
   # @raise [ArgumentError] if tempos is not a Program.
   def program= program
-    raise ArgumentError, "program is not a Program" if !program.is_a?(Program)
-
-  	@program = program
+    validate_arg ARG_SPECS[:program], program
+    @program = program
   end
 
   # Find the start of a score. The start will be at then start of whichever part begins

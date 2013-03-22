@@ -1,3 +1,5 @@
+require 'hashmake'
+
 module Musicality
 
 # A group of notes. The group may exist for such musical constructs
@@ -9,13 +11,14 @@ module Musicality
 #   @return [Array] Array of notes.
 #
 class NoteSequence < Event
-  include HashMake
+  include Hashmake::HashMakeable
   attr_reader :notes
 
-  # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg(:offset, Numeric, ->(a){a.between?(Event::MIN_OFFSET, Event::MAX_OFFSET) }) ]
-  # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_array(:notes, Note) ]
+  # hashed-arg specs (for hash-makeable idiom)
+  ARG_SPECS = {
+    :offset => arg_spec(:reqd => true, :type => Numeric, :validator => ->(a){a.between?(Event::MIN_OFFSET, Event::MAX_OFFSET) }),
+    :notes => arg_spec_array(:reqd => false, :type => Note)
+  }
 
   # A new instance of NoteSequence.
   # @param [Hash] args Hashed arguments. Required keys are :offset and :notes.
@@ -23,7 +26,7 @@ class NoteSequence < Event
   # @raise [ArgumentError] if notes is not an Array
   # @raise [ArgumentError] if notes contains a non-Note
   def initialize args={}
-    process_args args
+    hash_make ARG_SPECS, args
   end
 
   # Assign notes to sequence
@@ -31,13 +34,7 @@ class NoteSequence < Event
   # @raise [ArgumentError] if notes is not an Array
   # @raise [ArgumentError] if notes contains a non-Note  
   def notes= notes
-    raise ArgumentError, "notes is not an Array" if !notes.is_a?(Array)
-    #raise ArgumentError, "notes is empty" if notes.empty?
-
-    notes.each do |note|
-      raise ArgumentError, "#{note} in notes is not a Note" if !note.is_a?(Note)
-    end
-    
+    validate_arg ARG_SPECS[:notes], notes
     @notes = notes
   end
   

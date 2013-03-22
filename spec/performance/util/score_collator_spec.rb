@@ -96,7 +96,7 @@ describe Musicality::ScoreCollator do
   end
     
   it "should collate a simple score/program into a single segment" do
-    score = Score.make_from_hash @simple_score_hash
+    score = Score.new @simple_score_hash
     ScoreCollator.collate_score! score
   
     score.parts.count.should be 1
@@ -135,7 +135,7 @@ describe Musicality::ScoreCollator do
   end
 
   it "should handle a complex one-part score" do
-    score = Score.make_from_hash @complex_score_hash
+    score = Score.new @complex_score_hash
     ScoreCollator.collate_score! score
 
     score.find_start.should be_within(0.01).of(0.0)
@@ -181,7 +181,7 @@ describe Musicality::ScoreCollator do
   end
 
   it "should handle a simple two-part score" do
-    score = Score.make_from_hash @two_part_score_hash
+    score = Score.new @two_part_score_hash
     ScoreCollator.collate_score! score
 
     score.find_start.should be_within(0.01).of(0.0)

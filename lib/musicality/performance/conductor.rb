@@ -63,9 +63,8 @@ class Conductor
       raise ArgumentError, "instrument_map does not have key for id #{id}" unless instrument_map.has_key?(id)
       instrument_config = instrument_map[id]
       
-      settings = { :sample_rate => @sample_rate }.merge(instrument_config.settings)
       plugin = PLUGINS.plugins[instrument_config.plugin_name.to_sym]
-      instrument = plugin.make_instrument(settings)
+      instrument = plugin.make_instrument(:sample_rate => @sample_rate, :settings => instrument_config.settings)
       
       @performers << Performer.new(part, instrument, max_attack_time)
     end

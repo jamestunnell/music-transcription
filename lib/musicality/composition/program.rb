@@ -1,3 +1,5 @@
+require 'musicality'
+
 module Musicality
 
 # Program defines markers (by starting note offset) and subprograms (list which markers are played).
@@ -5,18 +7,19 @@ module Musicality
 # @author James Tunnell
 #
 class Program
-  include HashMake
+  include Hashmake::HashMakeable
   attr_reader :segments
 
-  # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg_array(:segments, Range) ]
-  # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ ]
+  # hashed-arg specs (for hash-makeable idiom)
+  ARG_SPECS = {
+    :segments => arg_spec_array(:reqd => true, :type => Range)
+  }
 
   # A new instance of Program.
   # @param [Hash] args Hashed arguments. Required key is :segments.
   def initialize args={}
-    process_args args
+    hash_make ARG_SPECS, args
+    raise ArgumentError, "segments is empty" if @segments.empty?
   end
 
   # Assign program segments. Each segment is a Range to specify which range of 
@@ -28,13 +31,8 @@ class Program
   # @raise [ArgumentError] if segments contains a non-Range
   #
   def segments= segments
-    raise ArgumentError, "segments is not an Array" if !segments.is_a?(Array)
+    validate_arg ARG_SPECS[:segments], segments
     raise ArgumentError, "segments is empty" if segments.empty?
-    
-    segments.each do |segment|
-      raise ArgumentError, "segments contains a non-Range" if !segment.is_a?(Range)
-    end
-    
     @segments = segments
   end
 

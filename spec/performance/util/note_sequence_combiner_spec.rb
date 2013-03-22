@@ -24,7 +24,7 @@ describe Musicality::NoteSequenceCombiner do
           }
         ]
       }
-      @part = Part.make_from_hash hash
+      @part = Part.new hash
     end
     
     it "should combine two contiguous sequences into one" do

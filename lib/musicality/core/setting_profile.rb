@@ -5,20 +5,21 @@ module Musicality
 # @author James Tunnell
 #
 class SettingProfile
-  include HashMake
+  include Hashmake::HashMakeable
   
   attr_accessor :start_value, :value_change_events
   
-  # required hash-args (for hash-makeable idiom)
-  REQ_ARGS = [ spec_arg(:start_value) ]
-  # optional hash-args (for hash-makeable idiom)
-  OPT_ARGS = [ spec_arg_array(:value_change_events, Event) ]
+  # hashed-arg specs (for hash-makeable idiom)
+  ARG_SPECS = {
+    :start_value => arg_spec(:reqd => true),
+    :value_change_events => arg_spec_array(:reqd => false, :type => Event)
+  }
 
   # A new instance of SettingProfile.
   #
   # @param [Hash] args Hashed args. Required key is :start_value. Optional key is :value_change_events.
   def initialize args
-    process_args args
+    hash_make SettingProfile::ARG_SPECS, args
   end
   
   # Compare to another SettingProfile object.
