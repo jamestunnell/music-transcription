@@ -22,11 +22,8 @@ require 'musicality/composition/score'
 
 require 'musicality/util/pitch_constants'
 require 'musicality/util/score_file'
-require 'musicality/util/class_finder'
 require 'musicality/util/tempo_computer'
 require 'musicality/util/note_time_converter'
-require 'musicality/util/signal_processing/window'
-require 'musicality/util/signal_processing/signal'
 require 'musicality/util/optimization/vector'
 require 'musicality/util/optimization/particle_swarm'
 
