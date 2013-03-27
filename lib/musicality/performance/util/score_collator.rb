@@ -1,3 +1,4 @@
+require 'pry'
 module Musicality
 
 # Combine multiple program segments to one, using
@@ -22,23 +23,40 @@ class ScoreCollator
       new_part = Musicality::Part.new(
 	:loudness_profile => clone_and_collate_profile(part.loudness_profile, score.program.segments),
       )
-      segment_start_offset = 0.0
       
       score.program.segments.each do |seg|
-	# figure which sequences to keep/modify
-	sequences = Marshal.load(Marshal.dump(part.note_sequences))
-	sequences.each do |seq|
-	  modify_seq_for_segment seq, seg
+	cur_offset = part.start_offset	
+	cur_groups = []
+	
+	part.note_groups.each do |group|
+	  if cur_offset >= seg.first
+	    if cur_offset < seg.last
+	      cur_groups.push group.clone
+	    else
+	      if cur_groups.any?
+		cur_group_duration = cur_groups.inject(0){|sum,cur_group| cur_group.duration + sum }
+		overshoot = cur_group_duration - (seg.last - seg.first)
+		cur_groups.last.duration -= overshoot
+	      end
+	    end
+	  end
+	  
+	  #binding.pry
+	  cur_offset += group.duration
 	end
-	sequences.keep_if {|seq| seq.notes.any? }
-
-	# add sequences to part, adjusting for segment start offset
-	sequences.each do |sequence|
-	  sequence.offset = (sequence.offset - seg.first) + segment_start_offset
-	  new_part.note_sequences << sequence
-	end	
-
-	segment_start_offset += (seg.last - seg.first)
+	
+	#binding.pry
+	
+	if cur_groups.empty?
+	  cur_groups.push NoteGroup.new(:duration => (seg.last - seg.first))
+	else
+	  # make sure the notes don't have any links past this point
+	  cur_groups.last.notes.each do |note|
+	    note.link = NoteLink.new
+	  end
+	end
+	
+	new_part.note_groups.concat cur_groups
       end
       
       new_parts[id] = new_part
@@ -48,40 +66,40 @@ class ScoreCollator
     score.beat_duration_profile = clone_and_collate_profile(score.beat_duration_profile, score.program.segments)
     score.beats_per_minute_profile = clone_and_collate_profile(score.beats_per_minute_profile, score.program.segments)
     
-    # find new start/end based on collated parts, and replace
-    # current program segments with a single segment.
-    seg_start = score.parts.values.inject(score.parts.values.first.find_start) {|so_far, part| now = part.find_start; (now < so_far) ? now : so_far }
-    seg_end = score.parts.values.inject(score.parts.values.first.find_end) {|so_far, part| now = part.find_end; (now > so_far) ? now : so_far }
-    score.program.segments = [seg_start...seg_end]
+    ## find new start/end based on collated parts, and replace
+    ## current program segments with a single segment.
+    #seg_start = score.parts.values.inject(score.parts.values.first.find_start) {|so_far, part| now = part.find_start; (now < so_far) ? now : so_far }
+    #seg_end = score.parts.values.inject(score.parts.values.first.find_end) {|so_far, part| now = part.find_end; (now > so_far) ? now : so_far }
+    score.program.segments = [score.find_start...score.find_end]
   end
 
   private
   
-  def self.modify_seq_for_segment seq, seg
-    start_offset = seq.offset
-    notes = []
-    
-    seq.notes.each do |note|
-      if start_offset < seg.first
-	seq.offset += note.duration
-      elsif start_offset < seg.last
-	if (start_offset + note.duration) > seg.last
-	  #reach last sequence note in segment
-	  note.duration = seg.last - start_offset
-	  notes << note
-	  break
-	end
-	
-	notes << note
-      else
-	break
-      end
-      
-      start_offset += note.duration
-    end
-    
-    seq.notes = notes
-  end
+#  def self.modify_group_for_segment seq, seg
+#    start_offset = seq.offset
+#    notes = []
+#    
+#    seq.notes.each do |note|
+#      if start_offset < seg.first
+#	seq.offset += note.duration
+#      elsif start_offset < seg.last
+#	if (start_offset + note.duration) > seg.last
+#	  #reach last sequence note in segment
+#	  note.duration = seg.last - start_offset
+#	  notes << note
+#	  break
+#	end
+#	
+#	notes << note
+#      else
+#	break
+#      end
+#      
+#      start_offset += note.duration
+#    end
+#    
+#    seq.notes = notes
+#  end
   
   def self.modify_event_for_segment event, seg, computer
     if(event.offset + event.duration) > seg.last

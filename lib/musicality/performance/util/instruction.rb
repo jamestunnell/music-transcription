@@ -4,7 +4,8 @@ module Musicality
 # instructions and associated information. A different class
 # for each instruction.
 module Instructions
-  
+
+# Stores information needed to start a note.
 class On
   attr_reader :offset, :note
   def initialize offset, note, attack_time_max = 0.0
@@ -14,6 +15,7 @@ class On
   end
 end
 
+# Stores information needed to end a note.
 class Off
   attr_reader :offset
   def initialize offset
@@ -21,6 +23,7 @@ class Off
   end
 end
 
+# Stores information needed to change note pitch.
 class ChangePitch
   attr_reader :offset, :pitch
   def initialize offset, pitch
@@ -29,6 +32,7 @@ class ChangePitch
   end
 end
 
+# Stores information needed to restart note attack.
 class RestartAttack
   attr_reader :offset, :attack, :sustain, :attack_time_max
   def initialize offset, attack, sustain, attack_time_max = 0.0
@@ -39,6 +43,7 @@ class RestartAttack
   end
 end
 
+# Stores information needed to release a note.
 class Release
   attr_reader :offset, :damping
   def initialize offset, damping

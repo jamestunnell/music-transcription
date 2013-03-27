@@ -25,19 +25,15 @@ class Conductor
   #                             and :plugin_dirs.
   def initialize score, time_conversion_sample_rate, rendering_sample_rate, optional_args = {} #arrangement, sample_rate = DEFAULT_SAMPLE_RATE, max_attack_time = 0.15
     raise ArgumentError, "score is not a Score" unless score.is_a?(Score)
+    raise ArgumentError, "score contains no parts" if score.parts.empty?
     raise ArgumentError, "time_conversion_sample_rate is not a Numeric" unless time_conversion_sample_rate.is_a?(Numeric)
     raise ArgumentError, "time_conversion_sample_rate is less than 100.0" if time_conversion_sample_rate < 100.0
 
     ScoreCollator.collate_score!(score)
     parts = ScoreConverter.make_time_based_parts_from_score score, time_conversion_sample_rate
     
-    # this combines any contiguous note sequences into one
-    parts.each do |id, part|
-      NoteSequenceCombiner.combine_note_sequences part.note_sequences
-    end
-
-    @start_of_score = parts.values.inject(parts.values.first.find_start) {|so_far, part| now = part.find_start; (now < so_far) ? now : so_far }
-    @end_of_score = parts.values.inject(parts.values.first.find_end) {|so_far, part| now = part.find_end; (now > so_far) ? now : so_far }
+    @start_of_score = parts.values.inject(parts.values.first.start_offset) {|so_far, part| now = part.start_offset; (now < so_far) ? now : so_far }
+    @end_of_score = parts.values.inject(parts.values.first.end_offset) {|so_far, part| now = part.end_offset; (now > so_far) ? now : so_far }
     
     opts = {
       :max_attack_time => 0.15,

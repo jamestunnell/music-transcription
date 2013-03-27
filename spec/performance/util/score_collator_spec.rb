@@ -10,20 +10,17 @@ describe Musicality::ScoreCollator do
       :program => { :segments => [0.0...1.0, 0.0...2.0] },
       :parts => {
         "1" => {
+          :start_offset => 0.0,
           :loudness_profile => {
             :start_value => 0.5,
             :value_change_events => [ Event.new(0.5, 1.0, 1.0) ]
           },
-          :note_sequences => [
-            { :offset => 0.0,
-              :notes => [
-                { :duration => 0.25, :pitch => { :octave => 9 } },
-                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
-                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
-                { :duration => 0.25, :pitch => { :octave => 9 } },
-                { :duration => 1.00, :pitch => { :octave => 9, :semitone => 2 } }
-              ]
-            }
+          :note_groups => [
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 1.00, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
           ]
         }
       },
@@ -32,19 +29,17 @@ describe Musicality::ScoreCollator do
     @complex_score_hash = {
       :parts => {
         :part1 => {
+          :start_offset => 0.0,
           :loudness_profile => { :start_value => 0.5 },
-          :note_sequences => [
-            { :offset => 0.0, :notes => [
-                { :duration => 0.25, :pitch => { :octave => 9 } },
-                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
-                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
-                { :duration => 0.25, :pitch => { :octave => 9 } },
-                { :duration => 1.00, :pitch => { :octave => 9, :semitone => 2 } },
-                { :duration => 0.50, :pitch => { :octave => 9, :semitone => 2 } },
-                { :duration => 0.50, :pitch => { :octave => 9, :semitone => 4 } },
-                { :duration => 0.75, :pitch => { :octave => 9 } },
-              ]
-            }
+          :note_groups => [
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 1.00, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.50, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.50, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.75, :notes => [ {:pitch => { :octave => 9 }} ] },
           ]
         }
       },
@@ -66,29 +61,21 @@ describe Musicality::ScoreCollator do
       :parts => {
         :a => {
           :loudness_profile => { :start_value => 0.5 },
-          :note_sequences => [
-            { :offset => 0.0,
-              :notes => [
-                { :duration => 0.25, :pitch => { :octave => 9 } },
-                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 2 } },
-                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
-                { :duration => 0.25, :pitch => { :octave => 9 } },
-                { :duration => 1.00, :pitch => { :octave => 9, :semitone => 2 } }
-              ]
-            }
+          :note_groups => [
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 1.00, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
           ]
         },
         :b => {
           :loudness_profile => { :start_value => 0.5 },
-          :note_sequences => [
-            { :offset => 0.5,
-              :notes => [
-                { :duration => 0.50, :pitch => { :octave => 9 } },
-                { :duration => 0.50, :pitch => { :octave => 9, :semitone => 2 } },
-                { :duration => 0.25, :pitch => { :octave => 9, :semitone => 4 } },
-                { :duration => 0.25, :pitch => { :octave => 9 } },
-              ]
-            }
+          :note_groups => [
+            { :duration => 0.50, :notes => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.50, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
           ]
         }
       }
@@ -99,21 +86,15 @@ describe Musicality::ScoreCollator do
     score = Score.new @simple_score_hash
     ScoreCollator.collate_score! score
   
-    score.parts.count.should be 1
+    score.parts.count.should eq 1
     part = score.parts.values.first
 
-    #puts part.save_to_hash.to_yaml
-    part.note_sequences.count.should be 2
-    part.note_sequences[0].notes.count.should be 4
-    part.note_sequences[1].notes.count.should be 5
-    
-    part.note_sequences[0].offset.should eq(0.0)
-    part.note_sequences[0].duration.should eq(1.0)
-    part.note_sequences[0].notes.first.duration.should eq(0.25)
-    part.note_sequences[1].offset.should eq(1.0)
-    part.note_sequences[1].duration.should eq(2.0)
-    part.note_sequences[1].notes.last.duration.should eq(1.0)
-    
+    group_durations = [0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0]
+    part.note_groups.count.should eq(group_durations.count)
+    part.note_groups.each_index do |i|
+      part.note_groups[i].duration.should eq(group_durations [i])
+    end
+
     dyn_comp = Musicality::ValueComputer.new(part.loudness_profile)
     dyn_comp.value_at(0.0).should eq(0.5)
     dyn_comp.value_at(0.5).should eq(0.5)
@@ -142,42 +123,14 @@ describe Musicality::ScoreCollator do
     score.find_end.should be_within(0.01).of(6.75)
 
     parts = score.parts.values
-    parts.count.should be 1
+    parts.count.should eq 1
     part = parts.first
 
-    #puts part.save_to_hash.to_yaml
-    part.note_sequences.count.should eq(5)
-    part.note_sequences[0].notes.count.should eq(5)
-    part.note_sequences[1].notes.count.should eq(1)
-    part.note_sequences[2].notes.count.should eq(1)
-    part.note_sequences[3].notes.count.should eq(4)
-    part.note_sequences[4].notes.count.should eq(3)
-    
-    part.note_sequences[0].offset.should be_within(0.01).of(0.0)
-    part.note_sequences[1].offset.should be_within(0.01).of(2.0)
-    part.note_sequences[2].offset.should be_within(0.01).of(3.0)
-    part.note_sequences[3].offset.should be_within(0.01).of(4.0)
-    part.note_sequences[4].offset.should be_within(0.01).of(5.0)
-    
-    part.note_sequences[0].duration.should be_within(0.01).of(2.0)
-    part.note_sequences[0].notes.first.duration.should be_within(0.01).of(0.25)
-    part.note_sequences[0].notes.last.duration.should be_within(0.01).of(1.0)
-    
-    part.note_sequences[1].duration.should be_within(0.01).of(1.0)
-    part.note_sequences[1].notes.first.duration.should be_within(0.01).of(1.0)
-    part.note_sequences[1].notes.last.duration.should be_within(0.01).of(1.0)
-    
-    part.note_sequences[2].duration.should be_within(0.01).of(1.0)
-    part.note_sequences[2].notes.first.duration.should be_within(0.01).of(1.0)
-    part.note_sequences[2].notes.last.duration.should be_within(0.01).of(1.0)
-    
-    part.note_sequences[3].duration.should be_within(0.01).of(1.0)
-    part.note_sequences[3].notes.first.duration.should be_within(0.01).of(0.25)
-    part.note_sequences[3].notes.last.duration.should be_within(0.01).of(0.25)
-    
-    part.note_sequences[4].duration.should be_within(0.01).of(1.75)
-    part.note_sequences[4].notes.first.duration.should be_within(0.01).of(0.5)
-    part.note_sequences[4].notes.last.duration.should be_within(0.01).of(0.75)
+    group_durations = [0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.25,0.25,0.25,0.25,0.5,0.5,0.75]
+    part.note_groups.count.should eq(group_durations.count)
+    part.note_groups.each_index do |i|
+      part.note_groups[i].duration.should eq(group_durations [i])
+    end
   end
 
   it "should handle a simple two-part score" do
@@ -188,31 +141,21 @@ describe Musicality::ScoreCollator do
     score.find_end.should be_within(0.01).of(3.0)
 
     parts = score.parts.values
-    parts.count.should be 2
+    parts.count.should eq 2
     part0 = parts[0]
     part1 = parts[1]
 
-    part0.note_sequences.count.should be 2
-    part0.note_sequences[0].notes.count.should be 4
-    part0.note_sequences[1].notes.count.should be 5
+    part0_group_durations = [0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0]
+    part0.note_groups.count.should eq part0_group_durations.count
+    part0.note_groups.each_index do |i|
+      part0.note_groups[i].duration.should eq(part0_group_durations[i])
+    end
     
-    part0.note_sequences[0].offset.should be_within(0.01).of(0.0)
-    part0.note_sequences[0].duration.should be_within(0.01).of(1.0)
-    part0.note_sequences[0].notes.first.duration.should be_within(0.01).of(0.25)
-    part0.note_sequences[1].offset.should be_within(0.01).of(1.0)
-    part0.note_sequences[1].duration.should be_within(0.01).of(2.0)
-    part0.note_sequences[1].notes.last.duration.should be_within(0.01).of(1.0)
-
-    part1.note_sequences.count.should be 2
-    part1.note_sequences[0].notes.count.should be 1
-    part1.note_sequences[1].notes.count.should be 4
-    
-    part1.note_sequences[0].offset.should be_within(0.01).of(0.5)
-    part1.note_sequences[0].duration.should be_within(0.01).of(0.5)
-    part1.note_sequences[0].notes.first.duration.should be_within(0.01).of(0.5)
-    part1.note_sequences[1].offset.should be_within(0.01).of(1.5)
-    part1.note_sequences[1].duration.should be_within(0.01).of(1.5)
-    part1.note_sequences[1].notes.last.duration.should be_within(0.01).of(0.25)
+    part1_group_durations = [0.5,0.5,0.5,0.5,0.25,0.25]
+    part1.note_groups.count.should eq part1_group_durations.count
+    part1.note_groups.each_index do |i|
+      part1.note_groups[i].duration.should eq(part1_group_durations[i])
+    end
   end
 
 end

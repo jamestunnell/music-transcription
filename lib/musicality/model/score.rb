@@ -37,6 +37,14 @@ class Score
     hash_make ARG_SPECS, args
   end
   
+  # Compare the equality of another Score object.
+  def ==(other)
+    return (@beats_per_minute_profile == other.beats_per_minute_profile) &&
+    (@beat_duration_profile == other.beat_duration_profile) &&
+    (@program == other.program) &&
+    (@parts == other.parts)
+  end
+  
   # Set the score parts.
   # @param [Hash] parts The score parts, mapped to IDs.
   # @raise [ArgumentError] if notes is not a Hash.
@@ -76,7 +84,7 @@ class Score
     sos = 0.0
     
     @parts.each do |id,part|
-      sop = part.find_start
+      sop = part.start_offset
       sos = sop if sop > sos
     end
     
@@ -89,7 +97,7 @@ class Score
     eos = 0.0
     
     @parts.each do |id,part|
-      eop = part.find_end
+      eop = part.end_offset
       eos = eop if eop > eos
     end
     

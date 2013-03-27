@@ -1,82 +1,89 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Note do
-  before :each do
-    @pitch = Musicality::PitchConstants::C4
-  end
-
-  it "should be constructible (no raised exceptions) without the optional parameters" do
-    lambda { Note.new :pitch => @pitch, :duration => 1 }.should_not raise_error ArgumentError
-    lambda { Note.new :pitch => @pitch, :duration => 1 }.should_not raise_error RangeError
+  before :all do
+    @pitch = PitchConstants::C4
   end
   
-  it "should assign pitch and duration parameters when given during construction" do
-    note = Note.new :pitch => @pitch, :duration => 2
-    note.pitch.ratio.should eq(@pitch.ratio)
-    note.duration.should eq(Rational(2,1)) 
+  context '.new' do
+    it 'should assign :pitch and :duration that is given during construction' do
+      note = Note.new :pitch => @pitch, :duration => 2
+      note.pitch.should eq(@pitch)
+      note.duration.should eq(2)
+    end
+    
+    it "should assign :sustain, :attack, and :seperation parameters if given during construction" do
+      note = Note.new :pitch => @pitch, :duration => 2, :sustain => 0.1, :attack => 0.2, :seperation => 0.3
+      note.sustain.should eq(0.1)
+      note.attack.should eq(0.2)
+      note.seperation.should eq(0.3)
+    end
+  
+    it "should assign :link parameter if given during construction" do
+      link = NoteLink.new(:relationship => NoteLink::RELATIONSHIP_TIE, :target_pitch => @pitch)
+      note = Note.new :pitch => @pitch, :duration => 2, :link => link
+      note.link.should eq(link)
+    end
   end
 
-  it "should assign :sustain, :attack, and :seperation parameters if given during construction" do
-    note = Note.new :pitch => @pitch, :duration => 2, :sustain => 0.1, :attack => 0.2, :seperation => 0.3
-    note.sustain.should eq(0.1)
-    note.attack.should eq(0.2)
-    note.seperation.should eq(0.3)
-  end
-
-  it "should assign :relationship parameter if given during construction" do
-    note = Note.new :pitch => @pitch, :duration => 2, :relationship => Note::RELATIONSHIP_TIE
-    note.relationship.should eq(Note::RELATIONSHIP_TIE)
-
-    note = Note.new :pitch => @pitch, :duration => 2, :relationship => Note::RELATIONSHIP_SLUR
-    note.relationship.should eq(Note::RELATIONSHIP_SLUR)
+  context '#pitch=' do
+    it "should assign pitch" do
+      note = Note.new :pitch => @pitch, :duration => 2
+      note.pitch = @pitch = PitchConstants::Gb4
+      note.pitch.should eq PitchConstants::Gb4
+    end
   end
   
-  it "should assign pitches" do
-    note = Note.new :pitch => @pitch, :duration => 2
-    new_pitch = Musicality::Pitch.new
-    new_pitch.ratio = 55.0
-    note.pitch = new_pitch
-    note.pitch.ratio.should eq new_pitch.ratio
+  context '#sustain=' do
+    it "should assign sustain" do
+      note = Note.new :pitch => @pitch, :duration => 2
+      note.sustain = 0.123
+      note.sustain.should eq 0.123
+    end
   end
 
-  it "should assign duration" do
-    note = Note.new :pitch => @pitch, :duration => 2
-    note.duration = 3
-    note.duration.should eq 3
-  end
-
-  it "should assign sustain" do
-    note = Note.new :pitch => @pitch, :duration => 2
-    note.sustain = 0.123
-    note.sustain.should eq 0.123
-  end
-
-  it "should assign attack" do
-    note = Note.new :pitch => @pitch, :duration => 2
-    note.attack = 0.123
-    note.attack.should eq 0.123
+  context '#attack=' do
+    it "should assign attack" do
+      note = Note.new :pitch => @pitch, :duration => 2
+      note.attack = 0.123
+      note.attack.should eq 0.123
+    end
   end
   
-  it "should assign seperation" do
-    note = Note.new :pitch => @pitch, :duration => 2
-    note.seperation = 0.123
-    note.seperation.should eq 0.123
+  context '#seperation=' do
+    it "should assign seperation" do
+      note = Note.new :pitch => @pitch, :duration => 2
+      note.seperation = 0.123
+      note.seperation.should eq 0.123
+    end
   end
-
-  it "should assign relationship" do
-    note = Note.new :pitch => @pitch, :duration => 2
-    note.relationship.should eq(Note::RELATIONSHIP_NONE)
-    note.relationship = Note::RELATIONSHIP_TIE
-    note.relationship.should eq(Note::RELATIONSHIP_TIE)
+  
+  context '#link=' do
+    it "should assign link" do
+      link = NoteLink.new(:relationship => NoteLink::RELATIONSHIP_SLUR, :target_pitch => PitchConstants::G2)
+      note = Note.new :pitch => @pitch, :duration => 2
+      note.link = link
+      note.link.should eq(link)
+    end
   end
   
   it "should be hash-makeable" do
     Hashmake::hash_makeable?(Note).should be_true
   
-    hash = { :pitch => {:octave => 2}, :duration => 2, :relationship => Note::RELATIONSHIP_TIE }
+    hash = {
+      :pitch => @pitch,
+      :duration => 2,
+      :attack => 0.2,
+      :seperation => 0.6,
+      :link => {
+        :relationship => NoteLink::RELATIONSHIP_TIE,
+        :target_pitch => {
+          :octave => 2, :semitone => 3
+        }
+      }
+    }
     note = Note.new hash
-    note.pitch.should eq(Pitch.new(:octave => 2))
-    note.duration.should eq(2)
-    note.relationship.should eq(Note::RELATIONSHIP_TIE)
+    note2 = Note.new note.make_hash
+    note.should eq(note2)
   end
 end

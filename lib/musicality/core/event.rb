@@ -30,6 +30,13 @@ class Event
     self.value = value
     self.duration = duration
   end
+  
+  # Compare the equality of another Event object.
+  def == other
+    return (@offset == other.offset) &&
+    (@duration == other.duration) &&
+    (@value == other.value)
+  end
 
   # Set the event offset.
   # @param [Numeric] offset The offset of the event.

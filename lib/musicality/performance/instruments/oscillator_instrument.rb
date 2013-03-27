@@ -7,6 +7,7 @@ module Musicality
 class OscillatorInstrument < Musicality::Instrument
   include Hashmake::HashMakeable
   
+  # define how hashed args may be used to initialize a new instance.
   ARG_SPECS = {
     :sample_rate => arg_spec(:reqd => true, :type => Numeric, :validator => ->(a){ a > 0 }),
     :settings => arg_spec_hash(:reqd => false, :type => SettingProfile)

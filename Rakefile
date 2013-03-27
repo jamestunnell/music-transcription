@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require 'rubygems'
-require 'pry'
 
 begin
   require 'bundler'

@@ -12,19 +12,18 @@ class Performer
 
   # A new instance of Performer.
   # @param [Part] part The part to be used during performance.
-  # @param [PluginConfig] instrument_config The instrument plugin configuration to be used in rendering samples.
-  # @param [Numeric] sample_rate The sample rate used in rendering samples.
+  # @param [Instrument] instrument The instrument to be used in rendering samples.
+  # @param [Numeric] max_attack_time The maximum value to use when calculating attack time.
   def initialize part, instrument, max_attack_time
     @part = part
     @instrument = instrument
     @max_attack_time = max_attack_time
     @loudness_computer = ValueComputer.new part.loudness_profile
     
-    part.note_sequences.each do |note_sequence|
-      intermediate_sequences = IntermediateSequencer.make_intermediate_sequences_from_note_sequence note_sequence
-      # TODO - refine_intermediate_sequences(intermediate_sequences)
-      @instruction_sequences = make_instruction_sequences(intermediate_sequences)
-    end
+    note_sequences = Sequencer.extract_note_sequences_from_part part
+    intermediate_sequences = note_sequences.map { |note_seq| Sequencer.make_intermediate_sequence_from_note_sequence note_seq }
+    # TODO - refine_intermediate_sequences(intermediate_sequences)
+    @instruction_sequences = make_instruction_sequences(intermediate_sequences)
     
     #practice_record = practice_instrument()
     # TODO - rehearsed_instructions = rehease_part(practice_record)

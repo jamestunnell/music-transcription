@@ -85,26 +85,32 @@ class Pitch
     hash_make ARG_SPECS, args
   end
 
+  # Set @base_freq, which is used with the pitch ratio to produce the
+  # pitch frequency.
   def base_freq= base_freq
     validate_arg ARG_SPECS[:base_freq], base_freq
     @base_freq = base_freq
   end
   
+  # Set @octave.
   def octave= octave
     validate_arg ARG_SPECS[:octave], octave
     @octave = octave
   end
   
+  # Set semitone.
   def semitone= semitone
     validate_arg ARG_SPECS[:semitone], semitone
     @semitone = semitone
   end
   
+  # Set @cent.
   def cent= cent
     validate_arg ARG_SPECS[:cent], cent
     @cent = cent
   end
   
+  # Calculate the pitch frequency by multiplying the pitch ratio by @base_freq.
   def freq
     return self.ratio() * @base_freq
   end
@@ -166,8 +172,20 @@ class Pitch
     normalize
   end
   
+  # Calculates the number of semitones which would represent the pitch's
+  # octave and semitone count. Excludes cents.
   def total_semitone
     return (@octave * SEMITONES_PER_OCTAVE) + @semitone
+  end
+  
+  # Override default hash method.
+  def hash
+    return self.total_cent
+  end
+  
+  # Compare pitch equality using total cent
+  def ==(other)
+    self.total_cent == other.total_cent
   end
   
   # Compare pitches. A higher ratio or total cent is considered larger.
@@ -188,6 +206,7 @@ class Pitch
     self.class.new :octave => (@octave - other.octave), :semitone => (@semitone - other.semitone), :cent => (@cent - other.cent)
   end
   
+  # Produce an identical Pitch object.
   def clone
     Pitch.new(:octave => @octave, :semitone => @semitone, :cent => @cent, :base_freq => @base_freq)
   end

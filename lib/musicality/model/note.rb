@@ -2,17 +2,15 @@ require 'hashmake'
 
 module Musicality
 
-# Abstraction of a musical note. Contains values for pitch, duration, attack, sustain, and seperation.
+# Abstraction of a musical note. Contains values for attack, sustain, seperation, and link
+# to a successive note.
 # The sustain, attack, and seperation will be used to form the envelope profile for the note.
 #
 # @author James Tunnell
-# 
+#
 # @!attribute [rw] pitch
-#   @return [Array] The pitch of the note.
-#
-# @!attribute [rw] duration
-#   @return [Rational] The duration of the note in note lengths.
-#
+#   @return [Pitch] The pitch of the note.
+# 
 # @!attribute [rw] attack
 #   @return [Numeric] The amount of attack, from 0.0 (less) to 1.0 (more).
 #                     Attack controls how quickly a note's loudness increases
@@ -28,71 +26,58 @@ module Musicality
 #                   of the note. From 0.0 (towards end of the note) to 
 #                   1.0 (towards beginning of the note).
 #
-# @!attribute [rw] relationship
-#   @return [Symbol] The relationship between the current note and a consecutive
-#                    note. Valid values are NONE, TIE, SLUR, LEGATO, GLISSANDO, 
-#                    and PORTAMENTO.
+# @!attribute [rw] link
+#   @return [NoteLink] Shows how the current note is related to a following note.
 #
 class Note
   include Hashmake::HashMakeable
-  attr_reader :pitch, :duration, :sustain, :attack, :seperation, :relationship
-
-  # no relationship to the following note
-  RELATIONSHIP_NONE = :none
-  # tie to the following note
-  RELATIONSHIP_TIE = :tie
-  # play notes continuously and don't rearticulate
-  RELATIONSHIP_SLUR = :slur
-  # play notes continuously and do rearticulate
-  RELATIONSHIP_LEGATO = :legato
-  # play an uninterrupted slide through a series of consecutive tones to the next note.
-  RELATIONSHIP_GLISSANDO = :glissando
-  # play an uninterrupted glide to the next note.
-  RELATIONSHIP_PORTAMENTO = :portamento
-  
-  # a list of valid note relationships
-  RELATIONSHIPS = [
-    RELATIONSHIP_NONE,
-    RELATIONSHIP_TIE,
-    RELATIONSHIP_SLUR,
-    RELATIONSHIP_LEGATO,
-    RELATIONSHIP_GLISSANDO,
-    RELATIONSHIP_PORTAMENTO
-  ]
+  attr_reader :pitch, :duration, :sustain, :attack, :seperation, :link
 
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
-    :duration => arg_spec(:type => Numeric, :reqd => true),
     :pitch => arg_spec(:type => Pitch, :reqd => true),
+    :duration => arg_spec(:type => Numeric, :reqd => true, :validator => ->(a){ a > 0 } ),
     :sustain => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
     :attack => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
     :seperation => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
-    :relationship => arg_spec(:type => Symbol, :reqd => false, :validator => ->(a){ RELATIONSHIPS.include?(a)}, :default => RELATIONSHIP_NONE)
+    :link => arg_spec(:type => NoteLink, :reqd => false, :default => ->(){ NoteLink.new } ),
   }
-
+  
   # A new instance of Note.
-  # @param [Hash] args Hashed arguments. Required keys are :pitch, :duration, 
-  #                    and :offset. Optional keys are :sustain, :attack, 
-  #                    :seperation, and :tie.
+  # @param [Hash] args Hashed arguments. See Note::ARG_SPECS for details.
   def initialize args={}
     hash_make ARG_SPECS, args
   end
 
+  # Return true if the @link relationship is not NONE.
+  def linked?
+    @link.relationship != NoteLink::RELATIONSHIP_NONE
+  end
+  
+  # Compare the equality of another Note object.
+  def ==(other)
+    return (@pitch == other.pitch) &&
+    (@duration == other.duration) &&
+    (@sustain == other.sustain) &&
+    (@attack == other.attack) &&
+    (@seperation == other.seperation) &&
+    (@link == other.link)
+  end
+
+  # Set the note duration.
+  # @param [Numeric] duration The duration to use.
+  # @raise [ArgumentError] if duration is not greater than 0.
+  def duration= duration
+    validate_arg ARG_SPECS[:duration], duration
+    @duration = duration
+  end
+  
   # Set the note pitch.
-  # @param [Pitch] pitch The pitch of the note.
+  # @param [Pitch] pitch The pitch to use.
   # @raise [ArgumentError] if pitch is not a Pitch.
   def pitch= pitch
     validate_arg ARG_SPECS[:pitch], pitch
     @pitch = pitch
-  end
-
-  # Set the note duration.
-  # @param [Numeric] duration The duration of the note.
-  # @raise [ArgumentError] if duration is not a Numeric.
-  # @raise [RangeError] if duration is negative or zero.
-  def duration= duration
-    validate_arg ARG_SPECS[:duration], duration
-    @duration = duration
   end
   
   # Set the note sustain.
@@ -121,20 +106,17 @@ class Note
     validate_arg ARG_SPECS[:seperation], seperation
     @seperation = seperation
   end
-  
 
-  # Set the note relationship.
-  # @param [Symbol] relationship The relationship of the note to the following 
-  #                  note (if applicable). Valid relationship are given by the 
-  #                  RELATIONSHIPS constant.
-  # @raise [ArgumentError] if relationship is not a valid relationship.
-  def relationship= relationship
-    validate_arg ARG_SPECS[:relationship], relationship
-    @relationship = relationship
+  # Setup the relationship to a following note.
+  # @param [NoteLink] link The NoteLink object to assign.
+  def link= link
+    validate_arg ARG_SPECS[:link], link
+    @link = link
   end
   
+  # Produce an identical Note object.
   def clone
-    Note.new(:pitch => @pitch.clone, :duration => @duration, :sustain => @sustain, :attack => @attack, :seperation => @seperation, :relationship => @relationship)
+    Note.new(:pitch => @pitch, :duration => @duration, :sustain => @sustain, :attack => @attack, :seperation => @seperation, :link => @link.clone )
   end
 end
 

@@ -16,18 +16,14 @@ class ScoreConverter
     end
     
     #gather all the note offets to be converted to time offsets
-    
     note_offsets = Set.new [0.0]
     
     score.parts.each do |id, part|
-      part.note_sequences.each do |sequence|
-        offset = sequence.offset
+      offset = part.start_offset
+      note_offsets << offset
+      part.note_groups.each do |group|
+        offset += group.duration
         note_offsets << offset
-        
-        sequence.notes.each do |note|
-          offset += note.duration
-          note_offsets << offset
-        end
       end
       
       part.loudness_profile.value_change_events.each do |a|
@@ -40,36 +36,28 @@ class ScoreConverter
     tempo_computer = TempoComputer.new( score.beat_duration_profile, score.beats_per_minute_profile )
     note_time_converter = NoteTimeConverter.new tempo_computer, conversion_sample_rate
     note_time_map = note_time_converter.map_note_offsets_to_time_offsets note_offsets
-    
+
     new_parts = {}
     score.parts.each do |id, part|
+      note_start_offset = part.start_offset
+      raise "Note-time map does not have sequence start note offset key #{note_start_offset}" unless note_time_map.has_key?(note_start_offset)
+      
       new_part = Musicality::Part.new(
+        :start_offset => note_time_map[note_start_offset],
         :loudness_profile => SettingProfile.new(:start_value => part.loudness_profile.start_value),
       )
       
-      part.note_sequences.each do |sequence|
+      part.note_groups.each do |group|
+        note_end_offset = note_start_offset + group.duration
+
+        raise "Note-time map does not have note start offset key #{note_start_offset}" unless note_time_map.has_key?(note_start_offset)
+        raise "Note-time map does not have note end offset key #{note_end_offset}" unless note_time_map.has_key?(note_end_offset)
         
-        note_start_offset = sequence.offset
-        raise "Note-time map does not have sequence start note offset key #{note_start_offset}" unless note_time_map.has_key?(note_start_offset)
-        new_sequence = Musicality::NoteSequence.new :offset => note_time_map[note_start_offset]
+        time_duration = note_time_map[note_end_offset] - note_time_map[note_start_offset]
+        new_group = Musicality::NoteGroup.new :duration => time_duration, :notes => group.notes
         
-        sequence.notes.each do |note|
-          note_end_offset = note_start_offset + note.duration
-          
-          raise "Note-time map does not have note start offset key #{note_start_offset}" unless note_time_map.has_key?(note_start_offset)
-          raise "Note-time map does not have note end offset key #{note_end_offset}" unless note_time_map.has_key?(note_end_offset)
-          
-          time_duration = note_time_map[note_end_offset] - note_time_map[note_start_offset]
-          new_note = Musicality::Note.new(
-            :duration => time_duration, :pitch => note.pitch, :sustain => note.sustain,
-            :attack => note.attack, :seperation => note.seperation, :relationship => note.relationship
-          )
-          
-          new_sequence.notes << new_note
-          note_start_offset += note.duration
-        end
-        
-        new_part.note_sequences << new_sequence
+        note_start_offset += group.duration
+        new_part.note_groups << new_group
       end
       
       part.loudness_profile.value_change_events.each do |event|

@@ -5,6 +5,7 @@ module Musicality
 # @author James Tunnell
 class InstrumentFinder
   
+  # A plugin config object to load default instrument.
   DEFAULT_INSTRUMENT_PLUGIN = PluginConfig.new(
     :plugin_name => 'oscillator_instrument',
     :settings => {
