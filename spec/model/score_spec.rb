@@ -2,10 +2,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Score do
   before :each do
-    groups = [
+    notes = [
       {
         :duration => 0.25,
-        :notes => [
+        :intervals => [
           { :pitch => PitchConstants::C1 },
           { :pitch => PitchConstants::D1 },
         ]
@@ -21,7 +21,7 @@ describe Musicality::Score do
 
     @parts = 
     {
-      "piano (LH)" => Musicality::Part.new( :loudness_profile => loudness_profile, :note_groups => groups),
+      "piano (LH)" => Musicality::Part.new( :loudness_profile => loudness_profile, :notes => notes),
     }
 
     @bpm_profile = Musicality::SettingProfile.new(

@@ -41,7 +41,7 @@ class Instrument
     envelope.attack note.attack, note.sustain 
     
     voice = voice_plugin.make_voice(@voice_plugin.settings)
-    voice.freq = note.pitch.freq
+    voice.freq = note.intervals.first.pitch.freq
     
     @notes[id] = { :voice => voice, :envelope => envelope, :envelope_sample => 0.0 }
     return id

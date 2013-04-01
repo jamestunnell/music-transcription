@@ -15,12 +15,12 @@ describe Musicality::ScoreCollator do
             :start_value => 0.5,
             :value_change_events => [ Event.new(0.5, 1.0, 1.0) ]
           },
-          :note_groups => [
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 1.00, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+          :notes => [
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 1.00, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
           ]
         }
       },
@@ -31,15 +31,15 @@ describe Musicality::ScoreCollator do
         :part1 => {
           :start_offset => 0.0,
           :loudness_profile => { :start_value => 0.5 },
-          :note_groups => [
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 1.00, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.50, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.50, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.75, :notes => [ {:pitch => { :octave => 9 }} ] },
+          :notes => [
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 1.00, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.50, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.50, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.75, :intervals => [ {:pitch => { :octave => 9 }} ] },
           ]
         }
       },
@@ -61,21 +61,21 @@ describe Musicality::ScoreCollator do
       :parts => {
         :a => {
           :loudness_profile => { :start_value => 0.5 },
-          :note_groups => [
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 1.00, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+          :notes => [
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 1.00, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
           ]
         },
         :b => {
           :loudness_profile => { :start_value => 0.5 },
-          :note_groups => [
-            { :duration => 0.50, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.50, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
+          :notes => [
+            { :duration => 0.50, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.50, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
           ]
         }
       }
@@ -89,10 +89,10 @@ describe Musicality::ScoreCollator do
     score.parts.count.should eq 1
     part = score.parts.values.first
 
-    group_durations = [0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0]
-    part.note_groups.count.should eq(group_durations.count)
-    part.note_groups.each_index do |i|
-      part.note_groups[i].duration.should eq(group_durations [i])
+    durations = [0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0]
+    part.notes.count.should eq(durations.count)
+    part.notes.each_index do |i|
+      part.notes[i].duration.should eq(durations [i])
     end
 
     dyn_comp = Musicality::ValueComputer.new(part.loudness_profile)
@@ -126,10 +126,10 @@ describe Musicality::ScoreCollator do
     parts.count.should eq 1
     part = parts.first
 
-    group_durations = [0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.25,0.25,0.25,0.25,0.5,0.5,0.75]
-    part.note_groups.count.should eq(group_durations.count)
-    part.note_groups.each_index do |i|
-      part.note_groups[i].duration.should eq(group_durations [i])
+    durations = [0.25,0.25,0.25,0.25,1.0,1.0,1.0,0.25,0.25,0.25,0.25,0.5,0.5,0.75]
+    part.notes.count.should eq(durations.count)
+    part.notes.each_index do |i|
+      part.notes[i].duration.should eq(durations [i])
     end
   end
 
@@ -145,16 +145,16 @@ describe Musicality::ScoreCollator do
     part0 = parts[0]
     part1 = parts[1]
 
-    part0_group_durations = [0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0]
-    part0.note_groups.count.should eq part0_group_durations.count
-    part0.note_groups.each_index do |i|
-      part0.note_groups[i].duration.should eq(part0_group_durations[i])
+    part0_durations = [0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,1.0]
+    part0.notes.count.should eq part0_durations.count
+    part0.notes.each_index do |i|
+      part0.notes[i].duration.should eq(part0_durations[i])
     end
     
-    part1_group_durations = [0.5,0.5,0.5,0.5,0.25,0.25]
-    part1.note_groups.count.should eq part1_group_durations.count
-    part1.note_groups.each_index do |i|
-      part1.note_groups[i].duration.should eq(part1_group_durations[i])
+    part1_durations = [0.5,0.5,0.5,0.5,0.25,0.25,0.5]
+    part1.notes.count.should eq part1_durations.count
+    part1.notes.each_index do |i|
+      part1.notes[i].duration.should eq(part1_durations[i])
     end
   end
 

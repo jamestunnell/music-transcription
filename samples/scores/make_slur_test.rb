@@ -1,9 +1,10 @@
 require 'musicality'
+include Musicality
 
-C3 = Musicality::PitchConstants::C3
-D3 = Musicality::PitchConstants::D3
-E3 = Musicality::PitchConstants::E3
-F3 = Musicality::PitchConstants::F3
+C3 = PitchConstants::C3
+D3 = PitchConstants::D3
+E3 = PitchConstants::E3
+F3 = PitchConstants::F3
 
 score_hash = {
   :program => {
@@ -12,34 +13,26 @@ score_hash = {
   :beats_per_minute_profile => { :start_value => 120.0 },
   :parts => {
     1 => {
-      :loudness_profile => { :start_value => 0.5 },
-      :note_sequences => [
-        { :offset => 0.0, :notes => [
-            { :duration => 0.25, :pitch => C3 },
-            { :duration => 0.25, :pitch => D3 },
-            { :duration => 0.25, :pitch => E3 },
-            { :duration => 0.25, :pitch => F3 },
-            { :duration => 0.25, :pitch => E3 },
-            { :duration => 0.25, :pitch => D3 },
-            { :duration => 0.5, :pitch => C3 }
-          ]
-        },
-        { :offset => 2.0, :notes => [
-            { :duration => 0.25, :pitch => C3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.25, :pitch => D3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.25, :pitch => E3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.25, :pitch => F3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.25, :pitch => E3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.25, :pitch => D3, :relationship => Musicality::Note::RELATIONSHIP_SLUR },
-            { :duration => 0.5, :pitch => C3 }
-          ]
-        }
-
+      :notes => [
+        { :duration => 0.25, :intervals => [ { :pitch => C3 } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => D3 } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => E3 } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => F3 } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => E3 } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => D3 } ] },
+        { :duration => 0.5, :intervals => [ { :pitch => C3 } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => C3, :link => slur(D3) } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => D3, :link => slur(E3) } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => E3, :link => slur(F3) } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => F3, :link => slur(E3) } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => E3, :link => slur(D3) } ] },
+        { :duration => 0.25, :intervals => [ { :pitch => D3, :link => slur(C3) } ] },
+        { :duration => 0.5, :intervals => [ { :pitch => C3 } ] },
       ]
     }
   }
 }
 
-score = Musicality::Score.make_from_hash score_hash
-Musicality::ScoreFile.save score, "slur_test.yml"
+score = Score.new score_hash
+ScoreFile.save score, "slur_test.yml"
 

@@ -1,5 +1,4 @@
 require 'musicality'
-
 module Musicality
 
 # A simple instrument to use for rendering. Can select different

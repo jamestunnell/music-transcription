@@ -12,17 +12,17 @@ describe Musicality::ScoreFile do
       :program => { :segments => [0.0...3.75] },
       :parts => {
         "1" => {
-          :note_groups => [
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },            
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.75, :notes => [ {:pitch => { :octave => 9 }} ] },
+          :notes => [
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },            
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.75, :intervals => [ {:pitch => { :octave => 9 }} ] },
           ],
         }
       }

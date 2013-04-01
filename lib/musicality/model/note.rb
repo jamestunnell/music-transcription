@@ -2,14 +2,19 @@ require 'hashmake'
 
 module Musicality
 
-# Abstraction of a musical note. Contains values for attack, sustain, seperation, and link
-# to a successive note.
-# The sustain, attack, and seperation will be used to form the envelope profile for the note.
+# Abstraction of a musical note. The note can contain multiple intervals
+# (at different pitches). Each interval can also contain a link to an interval
+# in a following note. Contains values for attack, sustain, and seperation,
+# which will be used to form the envelope profile for the note.
 #
 # @author James Tunnell
+# 
+# @!attribute [rw] duration
+#   @return [Numeric] The duration (in, say note length or time), greater than 0.0.
 #
-# @!attribute [rw] pitch
-#   @return [Pitch] The pitch of the note.
+# @!attribute [rw] intervals
+#   @return [Numeric] The intervals that define which pitches are part of the
+#                     note and can link to intervals in a following note.
 # 
 # @!attribute [rw] attack
 #   @return [Numeric] The amount of attack, from 0.0 (less) to 1.0 (more).
@@ -26,21 +31,17 @@ module Musicality
 #                   of the note. From 0.0 (towards end of the note) to 
 #                   1.0 (towards beginning of the note).
 #
-# @!attribute [rw] link
-#   @return [NoteLink] Shows how the current note is related to a following note.
-#
 class Note
   include Hashmake::HashMakeable
-  attr_reader :pitch, :duration, :sustain, :attack, :seperation, :link
+  attr_reader :duration, :intervals, :sustain, :attack, :seperation
 
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
-    :pitch => arg_spec(:type => Pitch, :reqd => true),
     :duration => arg_spec(:type => Numeric, :reqd => true, :validator => ->(a){ a > 0 } ),
+    :intervals => arg_spec_array(:type => Interval, :reqd => false),
     :sustain => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
     :attack => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
     :seperation => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
-    :link => arg_spec(:type => NoteLink, :reqd => false, :default => ->(){ NoteLink.new } ),
   }
   
   # A new instance of Note.
@@ -48,20 +49,14 @@ class Note
   def initialize args={}
     hash_make ARG_SPECS, args
   end
-
-  # Return true if the @link relationship is not NONE.
-  def linked?
-    @link.relationship != NoteLink::RELATIONSHIP_NONE
-  end
   
   # Compare the equality of another Note object.
-  def ==(other)
-    return (@pitch == other.pitch) &&
-    (@duration == other.duration) &&
+  def == other
+    return (@duration == other.duration) &&
+    (@intervals == other.intervals) &&
     (@sustain == other.sustain) &&
     (@attack == other.attack) &&
-    (@seperation == other.seperation) &&
-    (@link == other.link)
+    (@seperation == other.seperation)
   end
 
   # Set the note duration.
@@ -70,15 +65,7 @@ class Note
   def duration= duration
     validate_arg ARG_SPECS[:duration], duration
     @duration = duration
-  end
-  
-  # Set the note pitch.
-  # @param [Pitch] pitch The pitch to use.
-  # @raise [ArgumentError] if pitch is not a Pitch.
-  def pitch= pitch
-    validate_arg ARG_SPECS[:pitch], pitch
-    @pitch = pitch
-  end
+  end  
   
   # Set the note sustain.
   # @param [Numeric] sustain The sustain of the note.
@@ -106,18 +93,41 @@ class Note
     validate_arg ARG_SPECS[:seperation], seperation
     @seperation = seperation
   end
-
-  # Setup the relationship to a following note.
-  # @param [NoteLink] link The NoteLink object to assign.
-  def link= link
-    validate_arg ARG_SPECS[:link], link
-    @link = link
-  end
   
   # Produce an identical Note object.
   def clone
-    Note.new(:pitch => @pitch, :duration => @duration, :sustain => @sustain, :attack => @attack, :seperation => @seperation, :link => @link.clone )
+    Note.new(:duration => @duration, :intervals => @intervals.clone, :sustain => @sustain, :attack => @attack, :seperation => @seperation)
   end
+  
+  # Remove any duplicate intervals (occuring on the same pitch), removing
+  # all but the last occurance. Remove any duplicate links (links to the
+  # same interval), removing all but the last occurance.
+  def remove_duplicates
+    # in case of duplicate notes
+    intervals_to_remove = Set.new
+    for i in (0...@intervals.count).entries.reverse
+      @intervals.each_index do |j|
+        if j < i
+          if @intervals[i].pitch == @intervals[j].pitch
+            intervals_to_remove.add @intervals[j]
+          end
+        end
+      end
+    end
+    @intervals.delete_if { |interval| intervals_to_remove.include? interval}
+    
+    # in case of duplicate links
+    for i in (0...@intervals.count).entries.reverse
+      @intervals.each_index do |j|
+        if j < i
+          if @intervals[i].linked? && @intervals[j].linked? && @intervals[i].link.target_pitch == @intervals[j].link.target_pitch
+            @intervals[j].link = Link.new
+          end
+        end
+      end
+    end
+  end
+
 end
 
 end

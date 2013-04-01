@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Musicality::Part do
   context '.new' do
     its(:start_offset) { should eq(0) }
-    its(:note_groups) { should be_empty }
+    its(:notes) { should be_empty }
     
     it "should assign loudness profile given during construction" do
       loudness_profile = Musicality::SettingProfile.new(
@@ -17,19 +17,19 @@ describe Musicality::Part do
       part.loudness_profile.should eq(loudness_profile)
     end  
     
-    it "should assign note groups given during construction" do
-      groups = [
+    it "should assign notes given during construction" do
+      notes = [
         {
           :duration => 0.25,
-          :notes => [
+          :intervals => [
             { :pitch => PitchConstants::C1 },
             { :pitch => PitchConstants::D1 },
           ]
         }
       ]
       
-      part = Musicality::Part.new :note_groups => groups
-      part.note_groups.should eq(groups)
+      part = Musicality::Part.new :notes => notes
+      part.notes.should eq(notes)
     end
   end
   

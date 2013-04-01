@@ -21,8 +21,8 @@ class ScoreConverter
     score.parts.each do |id, part|
       offset = part.start_offset
       note_offsets << offset
-      part.note_groups.each do |group|
-        offset += group.duration
+      part.notes.each do |note|
+        offset += note.duration
         note_offsets << offset
       end
       
@@ -47,17 +47,18 @@ class ScoreConverter
         :loudness_profile => SettingProfile.new(:start_value => part.loudness_profile.start_value),
       )
       
-      part.note_groups.each do |group|
-        note_end_offset = note_start_offset + group.duration
+      part.notes.each do |note|
+        note_end_offset = note_start_offset + note.duration
 
         raise "Note-time map does not have note start offset key #{note_start_offset}" unless note_time_map.has_key?(note_start_offset)
         raise "Note-time map does not have note end offset key #{note_end_offset}" unless note_time_map.has_key?(note_end_offset)
         
         time_duration = note_time_map[note_end_offset] - note_time_map[note_start_offset]
-        new_group = Musicality::NoteGroup.new :duration => time_duration, :notes => group.notes
+        new_note = note.clone
+        new_note.duration = time_duration
         
-        note_start_offset += group.duration
-        new_part.note_groups << new_group
+        note_start_offset += note.duration
+        new_part.notes << new_note
       end
       
       part.loudness_profile.value_change_events.each do |event|

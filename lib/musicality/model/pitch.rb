@@ -83,6 +83,7 @@ class Pitch
   def initialize args={}
     @cents_per_octave = CENTS_PER_SEMITONE * SEMITONES_PER_OCTAVE
     hash_make ARG_SPECS, args
+    normalize
   end
 
   # Set @base_freq, which is used with the pitch ratio to produce the
@@ -210,8 +211,6 @@ class Pitch
   def clone
     Pitch.new(:octave => @octave, :semitone => @semitone, :cent => @cent, :base_freq => @base_freq)
   end
-  
-  private
   
   # Balance out the octave, semitone, and cent count. 
   def normalize

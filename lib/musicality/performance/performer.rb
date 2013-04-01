@@ -20,10 +20,15 @@ class Performer
     @max_attack_time = max_attack_time
     @loudness_computer = ValueComputer.new part.loudness_profile
     
-    note_sequences = Sequencer.extract_note_sequences_from_part part
-    intermediate_sequences = note_sequences.map { |note_seq| Sequencer.make_intermediate_sequence_from_note_sequence note_seq }
+    note_sequences = Sequencer.extract_note_sequences part
+    @instruction_sequences = {}
+    note_sequences.each do |note_seq|
+      id = UniqueToken.make_unique_sym(3)
+      instructions = Sequencer.make_instructions note_seq
+      @instruction_sequences[id] = instructions
+    end
+    
     # TODO - refine_intermediate_sequences(intermediate_sequences)
-    @instruction_sequences = make_instruction_sequences(intermediate_sequences)
     
     #practice_record = practice_instrument()
     # TODO - rehearsed_instructions = rehease_part(practice_record)
@@ -102,104 +107,69 @@ class Performer
     end
   end
 
-  # Determine the attack time (time to reach max value) of a note.
-  # Start by silencing all currently playing notes, then play the
-  # entire note and keep track of where the maximum value occurs.
-  def find_note_attack_time note
-    
-    all_notes_off
-    note_id = @instrument.note_on note
-
-    max_value = 0.0
-    max_index = 0
-
-    (note.duration * @instrument.sample_rate).to_i.times do |i|
-      sample = @instrument.render_sample
-      
-      if sample > max_value
-        max_value = sample
-        max_index = i
-      end
-    end
-    @instrument.note_off note_id
-    
-    max_time = max_index.to_f / @instrument.sample_rate
-    return max_time
-  end
+  ## Determine the attack time (time to reach max value) of a note.
+  ## Start by silencing all currently playing notes, then play the
+  ## entire note and keep track of where the maximum value occurs.
+  #def find_note_attack_time note
+  #  
+  #  all_notes_off
+  #  note_id = @instrument.note_on note
+  #
+  #  max_value = 0.0
+  #  max_index = 0
+  #
+  #  (note.duration * @instrument.sample_rate).to_i.times do |i|
+  #    sample = @instrument.render_sample
+  #    
+  #    if sample > max_value
+  #      max_value = sample
+  #      max_index = i
+  #    end
+  #  end
+  #  @instrument.note_off note_id
+  #  
+  #  max_time = max_index.to_f / @instrument.sample_rate
+  #  return max_time
+  #end
+  #
+  #private
   
-  private
-  
-  def refine_intermediate_sequences intermediate_sequences
-    
-    prev_seq = nil
-    # Second pass is to add a constraint to ON and RESTART_ATTACK commands
-    intermediate_sequences.each do |cur_seq|
-      
-      cur_seq.each_index do |j|
-        instr_hash = cur_seq[j]
-        limits = []
-        
-        if instr_hash[:instruction] == Instructions::On ||
-           instr_hash[:instruction] == Instructions::RestartAttack
-          
-          next_instr_hash = cur_seq[j + 1]
-          dur = next_instr_hash[:offset] - instr_hash[:offset]
-          limits << (0.3 * dur)
-          
-          if instr_hash[:instruction] == Instructions::On && prev_seq
-            prev_instr_dur = prev_seq[-2][:offset] - prev_seq[-3][:offset]  # at -1 and -2 offset should be same, so go back to -3
-            limits << (0.3 * prev_instr_dur)
-          end
-          
-          if instr_hash[:instruction] == Instructions::RestartAttack
-            prev_instr_dur = instr_hash[:offset] - cur_seq[j-2][:offset]  # at -1 should be a ChangePitch instr with same offset, so go back -2
-            limits << (0.3 * prev_instr_dur)
-          end
-          
-          instr_hash[:limit] = limits.min
-        end
-      end
-      
-      prev_seq = cur_seq
-    end
-
-    return instr_sequences
-  end
-  
-  def make_instruction_sequences intermediate_sequences
-    instruction_sequences = {}
-    
-    intermediate_sequences.each do |intermediate_sequence|
-      instruction_sequence = []
-      
-      note = intermediate_sequence.start_note
-      offset = intermediate_sequence.start_offset
-      instruction_sequence.push Instructions::On.new(offset, note)
-      
-      intermediate_sequence.instructions.each do |instruction|
-        if instruction[:class] == Instructions::RestartAttack
-          note = instruction[:note]
-          offset = instruction[:offset]
-          instruction_sequence.push Instructions::RestartAttack.new(offset, note.attack, note.sustain)
-        elsif instruction[:class] == Instructions::ChangePitch
-          note = instruction[:note]
-          offset = instruction[:offset]
-          instruction_sequence.push Instructions::ChangePitch.new(offset, note.pitch)
-        else
-          raise ArgumentError, "unknown instruction class #{instruction[:instruction]}"
-        end
-      end
-      
-      offset = intermediate_sequence.end_offset
-      instruction_sequence.push Instructions::Off.new(offset)
-      
-      id = UniqueToken.make_unique_sym(3)
-      instruction_sequences[id] = instruction_sequence
-    end
-    
-    return instruction_sequences
-  end
-
+  #def refine_intermediate_sequences intermediate_sequences
+  #  
+  #  prev_seq = nil
+  #  # Second pass is to add a constraint to ON and RESTART_ATTACK commands
+  #  intermediate_sequences.each do |cur_seq|
+  #    
+  #    cur_seq.each_index do |j|
+  #      instr_hash = cur_seq[j]
+  #      limits = []
+  #      
+  #      if instr_hash[:instruction] == Instructions::On ||
+  #         instr_hash[:instruction] == Instructions::RestartAttack
+  #        
+  #        next_instr_hash = cur_seq[j + 1]
+  #        dur = next_instr_hash[:offset] - instr_hash[:offset]
+  #        limits << (0.3 * dur)
+  #        
+  #        if instr_hash[:instruction] == Instructions::On && prev_seq
+  #          prev_instr_dur = prev_seq[-2][:offset] - prev_seq[-3][:offset]  # at -1 and -2 offset should be same, so go back to -3
+  #          limits << (0.3 * prev_instr_dur)
+  #        end
+  #        
+  #        if instr_hash[:instruction] == Instructions::RestartAttack
+  #          prev_instr_dur = instr_hash[:offset] - cur_seq[j-2][:offset]  # at -1 should be a ChangePitch instr with same offset, so go back -2
+  #          limits << (0.3 * prev_instr_dur)
+  #        end
+  #        
+  #        instr_hash[:limit] = limits.min
+  #      end
+  #    end
+  #    
+  #    prev_seq = cur_seq
+  #  end
+  #
+  #  return instr_sequences
+  #end
 end
 
 end

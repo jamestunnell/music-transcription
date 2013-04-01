@@ -47,7 +47,7 @@ class InstrumentFinder
     
     instruments = {}
     score.parts.each do |id, part|
-      instruments[id] = default_instrument_config
+      instruments[id] = Marshal.load(Marshal.dump(default_instrument_config)) # deep copy, in case it's modified
     
     #  TODO - score should contain a map of part ID to instrument/effet configs. Check there instead of in each part...
     #

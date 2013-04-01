@@ -7,9 +7,6 @@ require 'pry'
 
 class ScoreRenderer
   
-  BITS_PER_SAMPLE = 32
-  MAX_SAMPLE_VALUE = (2 **(0.size * 8 - 2) - 2)
-  
   def initialize args={}
     reqd = [:scorefile, :outfile]
     reqd.each {|key| raise ArgumentError, "args does not have required key #{key}" unless args.has_key?(key) }
@@ -25,19 +22,19 @@ class ScoreRenderer
     time_conversion_sample_rate = 250.0
     conductor = Musicality::Conductor.new score, time_conversion_sample_rate, @samplerate
     
-    format = WaveFile::Format.new(:mono, BITS_PER_SAMPLE, @samplerate.to_i)
+    format = WaveFile::Format.new(:mono, :float_32, @samplerate.to_i)
     writer = WaveFile::Writer.new(@outfile, format)
     
     puts "time   sample    "
       
     samples = []
     conductor.perform do |sample|
-      samples << (sample * MAX_SAMPLE_VALUE)
+      samples << sample
 
       if(samples.count >= 10000)
         print "%.4f:" % conductor.time_counter
         print "%08d   " % conductor.sample_counter
-        print "%.4f   " % (samples.last / MAX_SAMPLE_VALUE.to_f)
+        print "%.4f   " % samples.last
         
       #  notes_played = 0
       #  notes_being_played = 0

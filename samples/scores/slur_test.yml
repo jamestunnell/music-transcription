@@ -9,66 +9,99 @@
     excl: true
 :parts:
   1:
-    :note_sequences:
-    - :offset: 0.0
-      :notes:
-      - :duration: 0.25
-        :pitch:
+    :notes:
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
-      - :duration: 0.25
-        :pitch:
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
           :semitone: 2
-      - :duration: 0.25
-        :pitch:
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
           :semitone: 4
-      - :duration: 0.25
-        :pitch:
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
           :semitone: 5
-      - :duration: 0.25
-        :pitch:
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
           :semitone: 4
-      - :duration: 0.25
-        :pitch:
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
           :semitone: 2
-      - :duration: 0.5
-        :pitch:
+    - :duration: 0.5
+      :intervals:
+      - :pitch:
           :octave: 3
-    - :offset: 2.0
-      :notes:
-      - :duration: 0.25
-        :pitch:
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
-        :relationship: :slur
-      - :duration: 0.25
-        :pitch:
+        :link:
+          :target_pitch:
+            :octave: 3
+            :semitone: 2
+          :relationship: :slur
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
           :semitone: 2
-        :relationship: :slur
-      - :duration: 0.25
-        :pitch:
+        :link:
+          :target_pitch:
+            :octave: 3
+            :semitone: 4
+          :relationship: :slur
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
           :semitone: 4
-        :relationship: :slur
-      - :duration: 0.25
-        :pitch:
+        :link:
+          :target_pitch:
+            :octave: 3
+            :semitone: 5
+          :relationship: :slur
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
           :semitone: 5
-        :relationship: :slur
-      - :duration: 0.25
-        :pitch:
+        :link:
+          :target_pitch:
+            :octave: 3
+            :semitone: 4
+          :relationship: :slur
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
           :semitone: 4
-        :relationship: :slur
-      - :duration: 0.25
-        :pitch:
+        :link:
+          :target_pitch:
+            :octave: 3
+            :semitone: 2
+          :relationship: :slur
+    - :duration: 0.25
+      :intervals:
+      - :pitch:
           :octave: 3
           :semitone: 2
-        :relationship: :slur
-      - :duration: 0.5
-        :pitch:
+        :link:
+          :target_pitch:
+            :octave: 3
+          :relationship: :slur
+    - :duration: 0.5
+      :intervals:
+      - :pitch:
           :octave: 3

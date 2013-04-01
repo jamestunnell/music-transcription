@@ -1,18 +1,19 @@
 require 'musicality'
+include Musicality
 
-G3 = Musicality::PitchConstants::G3
-Ab3 = Musicality::PitchConstants::Ab3
-Bb3 = Musicality::PitchConstants::Bb3
-C4 = Musicality::PitchConstants::C4
+G3 = PitchConstants::G3
+Ab3 = PitchConstants::Ab3
+Bb3 = PitchConstants::Bb3
+C4 = PitchConstants::C4
 
-B5 = Musicality::PitchConstants::B5
-C5 = Musicality::PitchConstants::C5
-Db5 = Musicality::PitchConstants::Db5
-D5 = Musicality::PitchConstants::D5
-Eb5 = Musicality::PitchConstants::Eb5
-E5 = Musicality::PitchConstants::E5
-F5 = Musicality::PitchConstants::F5
-G5 = Musicality::PitchConstants::G5
+B5 = PitchConstants::B5
+C5 = PitchConstants::C5
+Db5 = PitchConstants::Db5
+D5 = PitchConstants::D5
+Eb5 = PitchConstants::Eb5
+E5 = PitchConstants::E5
+F5 = PitchConstants::F5
+G5 = PitchConstants::G5
 
 score_hash = {
   :program => {
@@ -23,64 +24,44 @@ score_hash = {
   },
   :beats_per_minute_profile => { :start_value => 120.0 },
   :parts => {
-    1 => { 
-      :start_dynamic => {
-        :offset => 0.0,
-        :loudness => 0.5
-      },
-      :note_sequences => [
-        { :offset => 0.0, :notes => [
-            { :duration => 1.0, :pitch => C4 },
-            { :duration => 1.0, :pitch => Bb3 },
-            { :duration => 1.0, :pitch => Ab3 },
-            { :duration => 0.5, :pitch => G3 },
-            { :duration => 0.5, :pitch => Bb3 },
-          ]
-        }
+    1 => {
+      :notes => [
+        { :duration => 1.0, :intervals => [ {:pitch => C4} ]},
+        { :duration => 1.0, :intervals => [ {:pitch => Bb3} ]},
+        { :duration => 1.0, :intervals => [ {:pitch => Ab3} ]},
+        { :duration => 0.5, :intervals => [ {:pitch => G3} ]},
+        { :duration => 0.5, :intervals => [ {:pitch => Bb3} ]},
       ]
     }, 
     2 => { 
-      :loudness_profile => { :start_value => 0.5 },
-      :note_sequences => [
-        { :offset => 0.0, :notes => [
-            { :duration => 0.375, :pitch => E5 },
-            { :duration => 1.0, :pitch => D5 },
-            { :duration => 1.0, :pitch => C5 },
-            { :duration => 0.625, :pitch => C5 },
-            { :duration => 0.5, :pitch => C5 },
-            { :duration => 0.5, :pitch => D5 }
-          ]
-        }
+      :notes => [
+        { :duration => 0.375, :intervals => [ {:pitch => E5 } ]},
+        { :duration => 1.0, :intervals => [ {:pitch => D5 }]},
+        { :duration => 1.0, :intervals => [ {:pitch => C5 }]},
+        { :duration => 0.625, :intervals => [ {:pitch => C5 }]},
+        { :duration => 0.5, :intervals => [ {:pitch => C5 }]},
+        { :duration => 0.5, :intervals => [ {:pitch => D5 }]}
       ]
     },
     3 => {
-      :loudness_profile => { :start_value => 0.5 },
-      :note_sequences => [
-        { :offset => 0.125, :notes => [
-            { :duration => 0.25, :pitch => G5 },
-            { :duration => 0.5, :pitch => F5 }
-          ]
-        },
-        { :offset => 1.125, :notes => [
-            { :duration => 0.25, :pitch => F5 },
-            { :duration => 0.5, :pitch => Eb5 }
-          ]
-        },
-        { :offset => 2.125, :notes => [
-            { :duration => 0.25, :pitch => Eb5 },
-            { :duration => 0.5, :pitch => Eb5 }
-          ]
-        },
-        { :offset => 3.01, :notes => [
-            { :duration => 0.5, :pitch => Eb5 },
-            { :duration => 0.5, :pitch => F5 }
-          ]
-        }
+      :notes => [
+        { :duration => 0.125 },
+        { :duration => 0.25, :intervals => [{:pitch => G5 }]},
+        { :duration => 0.5, :intervals => [{:pitch => F5 }]},
+        { :duration => 0.25 },
+        { :duration => 0.25, :intervals => [{:pitch => F5 }]},
+        { :duration => 0.5, :intervals => [{:pitch => Eb5 }]},
+        { :duration => 0.25 },
+        { :duration => 0.25, :intervals => [{:pitch => Eb5 }]},
+        { :duration => 0.5, :intervals => [{:pitch => Eb5 }]},
+        { :duration => 0.125 },
+        { :duration => 0.5, :intervals => [{:pitch => Eb5 }]},
+        { :duration => 0.5, :intervals => [{:pitch => F5 }]},
       ]
     }
   }
 }
 
-score = Musicality::Score.make_from_hash score_hash
-Musicality::ScoreFile.save score, "song2.yml"
+score = Score.new score_hash
+ScoreFile.save score, "song2.yml"
 

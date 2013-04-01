@@ -8,13 +8,13 @@ describe Musicality::Conductor do
         1 => {
           :start_offset => 0,
           :loudness_profile => { :start_value => 0.5 },
-          :note_groups => [
-            { :duration => 0.05, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.05, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.05, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.05, :notes => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.05, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.05, :notes => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+          :notes => [
+            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
           ]
         }
       },

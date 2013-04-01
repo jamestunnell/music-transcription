@@ -29,6 +29,11 @@ class SettingProfile
     (self.value_change_events == other.value_change_events)
   end
   
+  # Produce an identical SettingProfile object.
+  def clone
+    SettingProfile.new(:start_value => @start_value, :value_change_events => @value_change_events.clone)
+  end
+  
   # Returns true if start value and value changes all are between given A and B.
   def values_between? a, b
     is_ok = self.start_value.between?(a,b)

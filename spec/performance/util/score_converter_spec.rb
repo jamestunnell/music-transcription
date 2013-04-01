@@ -14,11 +14,11 @@ describe Musicality::ScoreConverter do
             :loudness_profile => {
               :start_value => 0.5
             },
-            :note_groups => [
-              { :duration => 0.1, :notes => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.2, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-              { :duration => 0.3, :notes => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.4, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            :notes => [
+              { :duration => 0.1, :intervals => [ {:pitch => { :octave => 9 }} ] },
+              { :duration => 0.2, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+              { :duration => 0.3, :intervals => [ {:pitch => { :octave => 9 }} ] },
+              { :duration => 0.4, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
             ]
           }
         },
@@ -29,10 +29,10 @@ describe Musicality::ScoreConverter do
       part = parts.values.first
       
       part.start_offset.should be_within(0.01).of(2.0)
-      part.note_groups[0].duration.should be_within(0.01).of(0.2)
-      part.note_groups[1].duration.should be_within(0.01).of(0.4)
-      part.note_groups[2].duration.should be_within(0.01).of(0.6)
-      part.note_groups[3].duration.should be_within(0.01).of(0.8)
+      part.notes[0].duration.should be_within(0.01).of(0.2)
+      part.notes[1].duration.should be_within(0.01).of(0.4)
+      part.notes[2].duration.should be_within(0.01).of(0.6)
+      part.notes[3].duration.should be_within(0.01).of(0.8)
     end
     
     it "should produce notes twice as long when tempo is half" do
@@ -48,16 +48,16 @@ describe Musicality::ScoreConverter do
             :loudness_profile => {
               :start_value => 0.5
             },
-            :note_groups => [
-              { :duration => 0.2, :notes => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.4, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-              { :duration => 0.3, :notes => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.1, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            :notes => [
+              { :duration => 0.2, :intervals => [ {:pitch => { :octave => 9 }} ] },
+              { :duration => 0.4, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+              { :duration => 0.3, :intervals => [ {:pitch => { :octave => 9 }} ] },
+              { :duration => 0.1, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
 
-              { :duration => 0.2, :notes => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.4, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-              { :duration => 0.3, :notes => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.1, :notes => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+              { :duration => 0.2, :intervals => [ {:pitch => { :octave => 9 }} ] },
+              { :duration => 0.4, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+              { :duration => 0.3, :intervals => [ {:pitch => { :octave => 9 }} ] },
+              { :duration => 0.1, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
             ]
           }
         },
@@ -69,15 +69,15 @@ describe Musicality::ScoreConverter do
       
       part.start_offset.should be_within(0.01).of(0.0)
       
-      part.note_groups[0].duration.should be_within(0.01).of(0.4)
-      part.note_groups[1].duration.should be_within(0.01).of(0.8)
-      part.note_groups[2].duration.should be_within(0.01).of(0.6)
-      part.note_groups[3].duration.should be_within(0.01).of(0.2)
+      part.notes[0].duration.should be_within(0.01).of(0.4)
+      part.notes[1].duration.should be_within(0.01).of(0.8)
+      part.notes[2].duration.should be_within(0.01).of(0.6)
+      part.notes[3].duration.should be_within(0.01).of(0.2)
       
-      part.note_groups[4].duration.should be_within(0.01).of(0.8)
-      part.note_groups[5].duration.should be_within(0.01).of(1.6)
-      part.note_groups[6].duration.should be_within(0.01).of(1.2)
-      part.note_groups[7].duration.should be_within(0.01).of(0.4)      
+      part.notes[4].duration.should be_within(0.01).of(0.8)
+      part.notes[5].duration.should be_within(0.01).of(1.6)
+      part.notes[6].duration.should be_within(0.01).of(1.2)
+      part.notes[7].duration.should be_within(0.01).of(0.4)      
     end
     
   end

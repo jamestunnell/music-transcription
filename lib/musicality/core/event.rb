@@ -37,6 +37,11 @@ class Event
     (@duration == other.duration) &&
     (@value == other.value)
   end
+  
+  # Produce an identical Event object
+  def clone
+    return Event.new(@offset, @value, @duration)
+  end
 
   # Set the event offset.
   # @param [Numeric] offset The offset of the event.

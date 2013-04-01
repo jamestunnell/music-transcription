@@ -12,7 +12,7 @@ module Musicality
 #                    RELATIONSHIP_SLUR, RELATIONSHIP_LEGATO, RELATIONSHIP_GLISSANDO, 
 #                    and RELATIONSHIP_PORTAMENTO.
 #
-class NoteLink
+class Link
   include Hashmake::HashMakeable
   
   # no relationship with the following note
@@ -46,18 +46,18 @@ class NoteLink
 
   attr_reader :target_pitch, :relationship
   
-  # A new instance of NoteLink.
+  # A new instance of Link.
   # @param [Hash] args Hashed arguments. See ARG_SPECS for details about valid keys.
   def initialize args={}
     hash_make ARG_SPECS, args
   end
   
-  # Produce an identical NoteLink object.
+  # Produce an identical Link object.
   def clone
-    NoteLink.new(:target_pitch => @target_pitch.clone, :relationship => @relationship)
+    Link.new(:target_pitch => @target_pitch.clone, :relationship => @relationship)
   end
   
-  # Compare equality of two NoteLink objects.
+  # Compare equality of two Link objects.
   def ==(other)
     return (@target_pitch == other.target_pitch) && (@relationship == other.relationship)
   end
@@ -82,29 +82,29 @@ class NoteLink
   
 end
 
-# helper method to create a NoteLink object with GLISSANDO relationship.
-def glissando_link pitch
-  NoteLink.new(:pitch => pitch, :relationship => NoteLink::RELATIONSHIP_GLISSANDO)
+# helper method to create a Link object with GLISSANDO relationship.
+def glissando pitch
+  Link.new(:target_pitch => pitch, :relationship => Link::RELATIONSHIP_GLISSANDO)
 end
 
-# helper method to create a NoteLink object with LEGATO relationship.
-def legato_link pitch
-  NoteLink.new(:pitch => pitch, :relationship => NoteLink::RELATIONSHIP_LEGATO)
+# helper method to create a Link object with LEGATO relationship.
+def legato pitch
+  Link.new(:target_pitch => pitch, :relationship => Link::RELATIONSHIP_LEGATO)
 end
 
-# helper method to create a NoteLink object with PORTAMENTO relationship.
-def portamento_link pitch
-  NoteLink.new(:pitch => pitch, :relationship => NoteLink::RELATIONSHIP_PORTAMENTO)
+# helper method to create a Link object with PORTAMENTO relationship.
+def portamento pitch
+  Link.new(:target_pitch => pitch, :relationship => Link::RELATIONSHIP_PORTAMENTO)
 end
 
-# helper method to create a NoteLink object with SLUR relationship.
-def slur_link pitch
-  NoteLink.new(:pitch => pitch, :relationship => NoteLink::RELATIONSHIP_SLUR)
+# helper method to create a Link object with SLUR relationship.
+def slur pitch
+  Link.new(:target_pitch => pitch, :relationship => Link::RELATIONSHIP_SLUR)
 end
 
-# helper method to create a NoteLink object with TIE relationship.
-def tie_link pitch
-  NoteLink.new(:pitch => pitch, :relationship => NoteLink::RELATIONSHIP_TIE)
+# helper method to create a Link object with TIE relationship.
+def tie pitch
+  Link.new(:target_pitch => pitch, :relationship => Link::RELATIONSHIP_TIE)
 end
 
 end

@@ -8,10 +8,9 @@ module Instructions
 # Stores information needed to start a note.
 class On
   attr_reader :offset, :note
-  def initialize offset, note, attack_time_max = 0.0
+  def initialize offset, note
     @offset = offset
     @note = note
-    @attack_time_max = attack_time_max
   end
 end
 
@@ -34,12 +33,11 @@ end
 
 # Stores information needed to restart note attack.
 class RestartAttack
-  attr_reader :offset, :attack, :sustain, :attack_time_max
-  def initialize offset, attack, sustain, attack_time_max = 0.0
+  attr_reader :offset, :attack, :sustain
+  def initialize offset, attack, sustain
     @offset = offset
     @attack = attack
     @sustain = sustain
-    @attack_time_max = attack_time_max
   end
 end
 
