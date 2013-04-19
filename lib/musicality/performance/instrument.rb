@@ -1,102 +1,66 @@
+require 'spnet'
+
 module Musicality
 
-# Implement the logic required for an instrument, that can be used to render notes.
-# Can be used to make custom instruments through inheritence. Implements the
-# interface expected by Performer.
-#
-# @author James Tunnell
+# Base class to make an instrument that can be used by a Performer. Can make as
+# many Key objbects as needed by performer, via increase_polyphony.
 class Instrument
+  include Hashmake::HashMakeable
+ 
+  # defines how hashed args should be formed for initialization
+  ARG_SPECS = {
+    :sample_rate => arg_spec(:reqd => true, :type => Fixnum, :validator => ->(a){ a > 0 }),
+    :key_maker => arg_spec(:reqd => true, :type => Proc, :validator => ->(a){ a.arity == 0 }),
+    :params => arg_spec_hash(:reqd => false, :type => SPNet::ParamInPort),
+  }
   
-  attr_reader :sample_rate, :envelope_plugin, :voice_plugin, :notes
+  attr_reader :keys, :sample_rate, :params
   
-  # A new instance of Instrument.
-  #
-  # @param [Numeric] sample_rate
-  # @param [PluginConfig] voice_plugin Used to make voice objects that will render musical sounds.
-  # @param [PluginConfig] envelope_plugin Used to make envelope objects that will control overall amplitude.
-  def initialize sample_rate, voice_plugin, envelope_plugin
-    @sample_rate = sample_rate
-
-    @envelope_plugin = envelope_plugin
-    raise ArgumentError, "PLUGINS does not have plugin #{@envelope_plugin.plugin_name}" unless PLUGINS.plugins.has_key?(@envelope_plugin.plugin_name.to_sym)
-    @envelope_plugin.settings[:sample_rate] = @sample_rate
-
-    @voice_plugin = voice_plugin
-    @voice_plugin.settings[:sample_rate] = @sample_rate
-    raise ArgumentError, "PLUGINS does not have plugin #{@voice_plugin.plugin_name}" unless PLUGINS.plugins.has_key?(@voice_plugin.plugin_name.to_sym)
-
-    @notes = {}
+  def initialize args
+    hash_make Instrument::ARG_SPECS, args
+    @keys = {}
   end
   
-  # Start a new note.
-  #
-  # @param [Note] note The Note to be started. Uses note attack, sustain, and pitch to get started.
-  # @param [Symbol] id Identifies the note to be added.
-  # @return [Symbol] The Symbol use to identify the note which was just started. Required for other note_ methods.
-  def note_on note, id = UniqueToken.make_unique_sym(3)
-    envelope_plugin = PLUGINS.plugins[@envelope_plugin.plugin_name.to_sym]
-    voice_plugin = PLUGINS.plugins[@voice_plugin.plugin_name.to_sym]
+  # Render samples using all of the active Key objbects.
+  # @param [Fixnum] count The number of samples to render
+  def render count
+    samples = Array.new(count, 0)
     
-    envelope = envelope_plugin.make_envelope @envelope_plugin.settings
-    envelope.attack note.attack, note.sustain 
-    
-    voice = voice_plugin.make_voice(@voice_plugin.settings)
-    voice.freq = note.intervals.first.pitch.freq
-    
-    @notes[id] = { :voice => voice, :envelope => envelope, :envelope_sample => 0.0 }
-    return id
-  end
-  
-  # Change the pitch being played for the given note ID.
-  # @param [Symbol] id Identifies the note whose pitch is to be modified.
-  # @param [Pitch] pitch The Pitch object to use.
-  def note_change_pitch id, pitch
-    voice = @notes[id][:voice]
-    voice.freq = pitch.freq
-  end
-
-  # Restart the note attack for the given note ID. Attack and sustain can be different than current.
-  # @param [Symbol] id Identifies the note whose attack is to be restarted.
-  # @param [Numeric] attack The attack amount (0.0 to 1.0) to use in new attack.
-  # @param [Numeric] sustain The sustain amount (0.0 to 1.0) to use in new attack.
-  # @raise [ArgumentError] if attack is not between 0.0 and 1.0.
-  # @raise [ArgumentError] if sustain is not between 0.0 and 1.0.
-  def note_restart_attack id, attack, sustain
-    raise ArgumentError, "attack is not between 0.0 and 1.0" unless attack.between?(0.0,1.0)
-    raise ArgumentError, "sustain is not between 0.0 and 1.0" unless sustain.between?(0.0,1.0)
-    envelope_sample = @notes[id][:envelope_sample]
-    @notes[id][:envelope].attack attack, sustain, envelope_sample
-  end
-
-  # Release the note identified by the given ID. This will start damping note output.
-  # @param [Symbol] id Identifies the note to be released.
-  # @param [Numeric] damping The damping amount (0.0 to 1.0) to use.
-  # @raise [ArgumentError] if damping is not between 0.0 and 1.0.
-  def note_release id, damping
-    raise ArgumentError, "damping is not between 0.0 and 1.0" unless damping.between?(0.0,1.0)
-    @notes[id][:envelope].release damping
-  end
-  
-  # Remove the note identified by the given ID, so it will not be played.
-  # @param [Symbol] id Identifies the note to be removed.
-  def note_off id
-    @notes.delete id
-  end
-  
-  # Renders a sample which sums the samples for each note being played.
-  def render_sample
-    output = 0.0
-    
-    @notes.each do |id, note|
-      voices_sample = note[:voice].render_sample
-      envelope_sample = note[:envelope].render_sample
-      note[:envelope_sample] = envelope_sample
-      
-      output += (voices_sample * envelope_sample)
+    @keys.each do |id, key|
+      if key.active?
+        new_samples = key.render count
+        
+        count.times do |n|
+          samples[n] += new_samples[n]
+        end
+      end
     end
     
-    return output
+    return samples
+  end
+  
+  # Selects all the Key objbects that are active.
+  def active_keys
+    @keys.select {|id, key| key.active?}
+  end
+
+  # Selects all the Key objbects that are not active.
+  def inactive_keys
+    @keys.select {|id, key| !key.active?}
+  end
+  
+  # Creates a new Key object, adding it to @keys.
+  # @return [Symbol] the id for the new Key object.
+  def increase_polyphony
+    id = UniqueToken.make_unique_sym(3)
+    @keys[id] = @key_maker.call()
+    return id
+  end
+
+  # Removes the key indicated by the given id.
+  # @param [Symbol] id Indicates which Key object to delete.
+  def decrease_polyphony id
+    @keys.delete id
   end
 end
-
 end

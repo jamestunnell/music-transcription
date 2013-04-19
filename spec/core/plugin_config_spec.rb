@@ -18,14 +18,14 @@ describe PluginConfig do
 
   it "should be hash-makeable" do
     settings = {
-      :volume => { :start_value => 0.5 },
-      :gain => { :start_value => 0.75 }
+      :volume => 0.5,
+      :gain => 0.75
     }
     hash = { :plugin_name => "MyPluginName", :settings => settings }
     cfg = PluginConfig.new hash
     
     cfg.plugin_name.should eq("MyPluginName")
-    cfg.settings[:volume].start_value.should eq(0.5)
-    cfg.settings[:gain].start_value.should eq(0.75)
+    cfg.settings[:volume].should eq(0.5)
+    cfg.settings[:gain].should eq(0.75)
   end
 end

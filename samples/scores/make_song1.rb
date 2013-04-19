@@ -1,19 +1,6 @@
 require 'musicality'
 include Musicality
 
-C2 = PitchConstants::C2
-Eb2 = PitchConstants::Eb2
-F2 = PitchConstants::F2
-
-E3 = PitchConstants::E3
-F3 = PitchConstants::F3
-G3 = PitchConstants::G3
-A3 = PitchConstants::A3
-Bb3 = PitchConstants::Bb3
-C4 = PitchConstants::C4
-D4 = PitchConstants::D4
-E4 = PitchConstants::E4
-
 score_hash = {
   :program => {
     :segments => [

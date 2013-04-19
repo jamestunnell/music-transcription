@@ -35,6 +35,7 @@ class Performer
     
     @instructions_future = {}
     @instructions_past = {}
+    @key_assignments = {}
   end
   
   # Figure which notes will be played, starting at the given offset. Must 
@@ -54,6 +55,8 @@ class Performer
         @instructions_past[id] = seq
       end
     end
+    
+    @key_assignments.clear
   end
   
   # Render an audio sample of the part at the current offset counter.
@@ -71,15 +74,25 @@ class Performer
     instructions_to_exec.each do |seq_id, instructions|
       instructions.each do |instruction|
         if instruction.class == Instructions::On
-          @instrument.note_on instruction.note, seq_id
+          key_id = @instrument.increase_polyphony
+          
+          @key_assignments[seq_id] = key_id
+          @instrument.keys[key_id].on instruction.attack, instruction.sustain, instruction.pitch
         elsif instruction.class == Instructions::Off
-          @instrument.note_off seq_id
-        elsif instruction.class == Instructions::ChangePitch
-          @instrument.note_change_pitch seq_id, instruction.pitch
-        elsif instruction.class == Instructions::RestartAttack
-          @instrument.note_restart_attack seq_id, instruction.attack, instruction.sustain
+          key_id = @key_assignments[seq_id]
+          @instrument.keys[key_id].off
+          @key_assignments.delete seq_id
+          
+          @instrument.decrease_polyphony key_id
+        elsif instruction.class == Instructions::Adjust
+          key_id = @key_assignments[seq_id]
+          @instrument.keys[key_id].adjust instruction.pitch
+        elsif instruction.class == Instructions::Restart
+          key_id = @key_assignments[seq_id]
+          @instrument.keys[key_id].restart instruction.attack, instruction.sustain
         elsif instruction.class == Instructions::Release
-          @instrument.note_release instruction.damping
+          key_id = @key_assignments[seq_id]
+          @instrument.keys[key_id].release instruction.damping
         else
           raise "Unsupported instruction class #{instruction.class} called for"
         end
@@ -91,7 +104,7 @@ class Performer
     loudness = @loudness_computer.value_at counter
     raise ArgumentError, "loudness is not between 0.0 and 1.0" if !loudness.between?(0.0,1.0)
     
-    sample = (loudness * @instrument.render_sample)
+    sample = (loudness * @instrument.render(1).first)
     
     #@effects.each do |effect|
     #  sample += effect.render_sample
@@ -131,8 +144,25 @@ class Performer
   #  max_time = max_index.to_f / @instrument.sample_rate
   #  return max_time
   #end
-  #
-  #private
+  
+  private
+  
+  def find_available_key
+    # look through instrument keys for one that is not active
+    avail_key = nil
+    
+    @keys.each do |key|
+      unless key.active?
+        avail_key = key
+        break
+      end
+    end
+    
+    # if all keys are active, take over the oldest
+    if avail_key.nil?
+      
+    end
+  end
   
   #def refine_intermediate_sequences intermediate_sequences
   #  
@@ -145,7 +175,7 @@ class Performer
   #      limits = []
   #      
   #      if instr_hash[:instruction] == Instructions::On ||
-  #         instr_hash[:instruction] == Instructions::RestartAttack
+  #         instr_hash[:instruction] == Instructions::Restart
   #        
   #        next_instr_hash = cur_seq[j + 1]
   #        dur = next_instr_hash[:offset] - instr_hash[:offset]
@@ -156,8 +186,8 @@ class Performer
   #          limits << (0.3 * prev_instr_dur)
   #        end
   #        
-  #        if instr_hash[:instruction] == Instructions::RestartAttack
-  #          prev_instr_dur = instr_hash[:offset] - cur_seq[j-2][:offset]  # at -1 should be a ChangePitch instr with same offset, so go back -2
+  #        if instr_hash[:instruction] == Instructions::Restart
+  #          prev_instr_dur = instr_hash[:offset] - cur_seq[j-2][:offset]  # at -1 should be a Adjust instr with same offset, so go back -2
   #          limits << (0.3 * prev_instr_dur)
   #        end
   #        

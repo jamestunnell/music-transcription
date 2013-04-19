@@ -6,9 +6,9 @@ describe Musicality::Sequencer do
       before :all do
         non_linked_part = Part.new(
           :notes => [
-            { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::C2 }, { :pitch => PitchConstants::E2 } ] },
-            { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::D2 }, { :pitch => PitchConstants::F2 } ] },
-            { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::E2 }, { :pitch => PitchConstants::G2 } ] },
+            { :duration => 0.25, :intervals => [ { :pitch => C2 }, { :pitch => E2 } ] },
+            { :duration => 0.25, :intervals => [ { :pitch => D2 }, { :pitch => F2 } ] },
+            { :duration => 0.25, :intervals => [ { :pitch => E2 }, { :pitch => G2 } ] },
           ]
         )
         @sequences = Sequencer.extract_note_sequences non_linked_part
@@ -17,17 +17,17 @@ describe Musicality::Sequencer do
       it 'should seperate each note from each group into its own sequence' do
         @sequences.count.should eq(6)
         @sequences[0].notes.count.should eq(1)
-        @sequences[0].notes[0].intervals.first.pitch.should eq(PitchConstants::C2)
+        @sequences[0].notes[0].intervals.first.pitch.should eq(C2)
         @sequences[1].notes.count.should eq(1)
-        @sequences[1].notes[0].intervals.first.pitch.should eq(PitchConstants::E2)
+        @sequences[1].notes[0].intervals.first.pitch.should eq(E2)
         @sequences[2].notes.count.should eq(1)
-        @sequences[2].notes[0].intervals.first.pitch.should eq(PitchConstants::D2)
+        @sequences[2].notes[0].intervals.first.pitch.should eq(D2)
         @sequences[3].notes.count.should eq(1)
-        @sequences[3].notes[0].intervals.first.pitch.should eq(PitchConstants::F2)
+        @sequences[3].notes[0].intervals.first.pitch.should eq(F2)
         @sequences[4].notes.count.should eq(1)
-        @sequences[4].notes[0].intervals.first.pitch.should eq(PitchConstants::E2)
+        @sequences[4].notes[0].intervals.first.pitch.should eq(E2)
         @sequences[5].notes.count.should eq(1)
-        @sequences[5].notes[0].intervals.first.pitch.should eq(PitchConstants::G2)
+        @sequences[5].notes[0].intervals.first.pitch.should eq(G2)
       end
       
     end
@@ -37,9 +37,9 @@ describe Musicality::Sequencer do
         non_linked_part = Part.new(
           :start_offset => 0.0,
           :notes => [
-            { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::C2 } ] },
+            { :duration => 0.25, :intervals => [ { :pitch => C2 } ] },
             { :duration => 0.25 },
-            { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::E2 } ] },
+            { :duration => 0.25, :intervals => [ { :pitch => E2 } ] },
           ]
         )
         @sequences = Sequencer.extract_note_sequences non_linked_part
@@ -57,9 +57,9 @@ describe Musicality::Sequencer do
       before :all do
         semi_linked_part = Part.new(
           :notes => [
-            { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::C2, :link => { :target_pitch => PitchConstants::D2, :relationship => Link::RELATIONSHIP_SLUR }} ] },
-            { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::D2, :link => { :target_pitch => PitchConstants::E2, :relationship => Link::RELATIONSHIP_SLUR }} ] },
-            { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::E2 }, { :pitch => PitchConstants::G2 } ] },
+            { :duration => 0.25, :intervals => [ { :pitch => C2, :link => { :target_pitch => D2, :relationship => Link::RELATIONSHIP_SLUR }} ] },
+            { :duration => 0.25, :intervals => [ { :pitch => D2, :link => { :target_pitch => E2, :relationship => Link::RELATIONSHIP_SLUR }} ] },
+            { :duration => 0.25, :intervals => [ { :pitch => E2 }, { :pitch => G2 } ] },
           ]
         )
         @sequences = Sequencer.extract_note_sequences semi_linked_part
@@ -84,37 +84,37 @@ describe Musicality::Sequencer do
           :notes => [
             { :duration => 0.25,
               :intervals => [
-                { :pitch => PitchConstants::C2, :link => { :target_pitch => PitchConstants::D2, :relationship => Link::RELATIONSHIP_SLUR }},
+                { :pitch => C2, :link => { :target_pitch => D2, :relationship => Link::RELATIONSHIP_SLUR }},
               ]
             },
             { :duration => 0.5,
               :intervals => [
-                { :pitch => PitchConstants::D2 },
-                { :pitch => PitchConstants::F2 },
+                { :pitch => D2 },
+                { :pitch => F2 },
               ]
             },
             { :duration => 0.25 },
             { :duration => 0.25,
               :intervals => [
-                { :pitch => PitchConstants::D2 },
-                { :pitch => PitchConstants::F2, :link => { :target_pitch => PitchConstants::F2, :relationship => Link::RELATIONSHIP_TIE } },
+                { :pitch => D2 },
+                { :pitch => F2, :link => { :target_pitch => F2, :relationship => Link::RELATIONSHIP_TIE } },
               ]
             },
             { :duration => 0.25,
               :intervals => [
-                { :pitch => PitchConstants::F2, :link => { :target_pitch => PitchConstants::F2, :relationship => Link::RELATIONSHIP_TIE } },
+                { :pitch => F2, :link => { :target_pitch => F2, :relationship => Link::RELATIONSHIP_TIE } },
               ]
             },
             { :duration => 0.25,
               :intervals => [
-                { :pitch => PitchConstants::D2, :link => { :target_pitch => PitchConstants::D2, :relationship => Link::RELATIONSHIP_TIE } },
-                { :pitch => PitchConstants::F2, :link => { :target_pitch => PitchConstants::E2, :relationship => Link::RELATIONSHIP_SLUR } },
+                { :pitch => D2, :link => { :target_pitch => D2, :relationship => Link::RELATIONSHIP_TIE } },
+                { :pitch => F2, :link => { :target_pitch => E2, :relationship => Link::RELATIONSHIP_SLUR } },
               ]
             },
             { :duration => 0.25,
               :intervals => [
-                { :pitch => PitchConstants::D2 },
-                { :pitch => PitchConstants::E2 },
+                { :pitch => D2 },
+                { :pitch => E2 },
               ]
             },
           ]
@@ -125,24 +125,24 @@ describe Musicality::Sequencer do
       it 'should produce...' do
         @sequences.count.should eq(5)
         @sequences[0].notes.count.should eq(2)
-        @sequences[0].notes[0].intervals.first.pitch.should eq(PitchConstants::C2)
-        @sequences[0].notes[1].intervals.first.pitch.should eq(PitchConstants::D2)
+        @sequences[0].notes[0].intervals.first.pitch.should eq(C2)
+        @sequences[0].notes[1].intervals.first.pitch.should eq(D2)
         
         @sequences[1].notes.count.should eq(1)
-        @sequences[1].notes[0].intervals.first.pitch.should eq(PitchConstants::F2)
+        @sequences[1].notes[0].intervals.first.pitch.should eq(F2)
         
         @sequences[2].notes.count.should eq(1)
-        @sequences[2].notes[0].intervals.first.pitch.should eq(PitchConstants::D2)
+        @sequences[2].notes[0].intervals.first.pitch.should eq(D2)
         
         @sequences[3].notes.count.should eq(4)
-        @sequences[3].notes[0].intervals.first.pitch.should eq(PitchConstants::F2)
-        @sequences[3].notes[1].intervals.first.pitch.should eq(PitchConstants::F2)
-        @sequences[3].notes[2].intervals.first.pitch.should eq(PitchConstants::F2)
-        @sequences[3].notes[3].intervals.first.pitch.should eq(PitchConstants::E2)
+        @sequences[3].notes[0].intervals.first.pitch.should eq(F2)
+        @sequences[3].notes[1].intervals.first.pitch.should eq(F2)
+        @sequences[3].notes[2].intervals.first.pitch.should eq(F2)
+        @sequences[3].notes[3].intervals.first.pitch.should eq(E2)
         
         @sequences[4].notes.count.should eq(2)
-        @sequences[4].notes[0].intervals.first.pitch.should eq(PitchConstants::D2)
-        @sequences[4].notes[1].intervals.first.pitch.should eq(PitchConstants::D2)
+        @sequences[4].notes[0].intervals.first.pitch.should eq(D2)
+        @sequences[4].notes[1].intervals.first.pitch.should eq(D2)
       end
     end
   end
@@ -152,7 +152,7 @@ describe Musicality::Sequencer do
       before :all do
         note_seq = NoteSequence.new(
           :offset => 0.0,
-          :notes => [ Note.new(:duration => 0.25, :intervals => [:pitch => PitchConstants::C3]) ]
+          :notes => [ Note.new(:duration => 0.25, :intervals => [:pitch => C3]) ]
         )
         @instructions= Sequencer.make_instructions note_seq
       end
@@ -177,43 +177,8 @@ describe Musicality::Sequencer do
         @note_seq = NoteSequence.new(
           :offset => 0.0,
           :notes => [
-            Note.new(:duration => 0.25, :intervals => [:pitch => PitchConstants::C3, :link => legato(PitchConstants::D3)]),
-            Note.new(:duration => 0.25, :intervals => [:pitch => PitchConstants::D3], :attack => 0.2, :sustain => 0.7),
-          ]
-        )
-        @instructions = Sequencer.make_instructions @note_seq 
-      end
-
-      it 'should have 4 instructions' do
-        @instructions.count.should eq(4)
-      end
-      
-      it 'should start with an On instruction where the note sequence starts' do
-        @instructions.first.class.should eq(Instructions::On)
-        @instructions.first.offset.should eq(0.0)
-      end
-      
-      it 'should end with an Off instruction where the note sequence ends' do
-        @instructions.last.class.should eq(Instructions::Off)
-        @instructions.last.offset.should eq(0.5)
-      end
-
-      it 'should have a ChangePitch and RestartAttack instruction in between' do
-        @instructions[1].class.should eq(Instructions::ChangePitch)
-        @instructions[1].pitch.should eq(@note_seq.notes.last.intervals.first.pitch)
-        @instructions[2].class.should eq(Instructions::RestartAttack)
-        @instructions[2].attack.should eq(@note_seq.notes.last.attack)
-        @instructions[2].sustain.should eq(@note_seq.notes.last.sustain)
-      end
-    end
-    
-    context 'a two-note sequence (connected by slur)' do
-      before :all do
-        @note_seq = NoteSequence.new(
-          :offset => 0.0,
-          :notes => [
-            Note.new(:duration => 0.25, :intervals => [:pitch => PitchConstants::C3, :link => slur(PitchConstants::D3)]),
-            Note.new(:duration => 0.25, :intervals => [:pitch => PitchConstants::D3], :attack => 0.2, :sustain => 0.7),
+            Note.new(:duration => 0.25, :intervals => [:pitch => C3, :link => legato(D3)]),
+            Note.new(:duration => 0.25, :intervals => [:pitch => D3], :attack => 0.2, :sustain => 0.7),
           ]
         )
         @instructions = Sequencer.make_instructions @note_seq 
@@ -233,26 +198,28 @@ describe Musicality::Sequencer do
         @instructions.last.offset.should eq(0.5)
       end
 
-      it 'should have a ChangePitch instruction in between' do
-        @instructions[1].class.should eq(Instructions::ChangePitch)
+      it 'should have a Restart instruction in between' do
+        @instructions[1].class.should eq(Instructions::Restart)
+        @instructions[1].attack.should eq(@note_seq.notes.last.attack)
+        @instructions[1].sustain.should eq(@note_seq.notes.last.sustain)
         @instructions[1].pitch.should eq(@note_seq.notes.last.intervals.first.pitch)
       end
     end
     
-    context 'a two-note sequence (connected by glissando), two semitones apart' do
+    context 'a two-note sequence (connected by slur)' do
       before :all do
         @note_seq = NoteSequence.new(
           :offset => 0.0,
           :notes => [
-            Note.new(:duration => 0.25, :intervals => [:pitch => PitchConstants::C3, :link => glissando(PitchConstants::D3)]),
-            Note.new(:duration => 0.25, :intervals => [:pitch => PitchConstants::D3], :attack => 0.2, :sustain => 0.7),
+            Note.new(:duration => 0.25, :intervals => [:pitch => C3, :link => slur(D3)]),
+            Note.new(:duration => 0.25, :intervals => [:pitch => D3], :attack => 0.2, :sustain => 0.7),
           ]
         )
-        @instructions = Sequencer.make_instructions @note_seq
+        @instructions = Sequencer.make_instructions @note_seq 
       end
 
-      it 'should have 6 instructions' do
-        @instructions.count.should eq(6)
+      it 'should have 3 instructions' do
+        @instructions.count.should eq(3)
       end
       
       it 'should start with an On instruction where the note sequence starts' do
@@ -265,20 +232,50 @@ describe Musicality::Sequencer do
         @instructions.last.offset.should eq(0.5)
       end
 
-      it 'should have two ChangePitch and two RestartAttack instructions in between' do
-        @instructions[1].class.should eq(Instructions::ChangePitch)
+      it 'should have an Adjust instruction in between' do
+        @instructions[1].class.should eq(Instructions::Adjust)
+        @instructions[1].pitch.should eq(@note_seq.notes.last.intervals.first.pitch)
+      end
+    end
+    
+    context 'a two-note sequence (connected by glissando), two semitones apart' do
+      before :all do
+        @note_seq = NoteSequence.new(
+          :offset => 0.0,
+          :notes => [
+            Note.new(:duration => 0.25, :intervals => [:pitch => C3, :link => glissando(D3)]),
+            Note.new(:duration => 0.25, :intervals => [:pitch => D3], :attack => 0.2, :sustain => 0.7),
+          ]
+        )
+        @instructions = Sequencer.make_instructions @note_seq
+      end
+
+      it 'should have 4 instructions' do
+        @instructions.count.should eq(4)
+      end
+      
+      it 'should start with an On instruction where the note sequence starts' do
+        @instructions.first.class.should eq(Instructions::On)
+        @instructions.first.offset.should eq(0.0)
+      end
+      
+      it 'should end with an Off instruction where the note sequence ends' do
+        @instructions.last.class.should eq(Instructions::Off)
+        @instructions.last.offset.should eq(0.5)
+      end
+
+      it 'should have two Restart instructions in between' do
+        @instructions[1].class.should eq(Instructions::Restart)
         (@instructions[1].pitch.total_semitone - @note_seq.notes.first.intervals.first.pitch.total_semitone).should eq(1)
         (@note_seq.notes.last.intervals.first.pitch.total_semitone - @instructions[1].pitch.total_semitone).should eq(1)
-        @instructions[2].class.should eq(Instructions::RestartAttack)
-        @instructions[2].attack.should eq(@note_seq.notes.first.attack)
-        @instructions[2].sustain.should eq(@note_seq.notes.first.sustain)
+        @instructions[1].attack.should eq(@note_seq.notes.first.attack)
+        @instructions[1].sustain.should eq(@note_seq.notes.first.sustain)
 
-        @instructions[3].class.should eq(Instructions::ChangePitch)
-        (@instructions[3].pitch.total_semitone - @note_seq.notes.first.intervals.first.pitch.total_semitone).should eq(2)
-        (@note_seq.notes.last.intervals.first.pitch.total_semitone - @instructions[3].pitch.total_semitone).should eq(0)
-        @instructions[4].class.should eq(Instructions::RestartAttack)
-        @instructions[4].attack.should eq(@note_seq.notes.last.attack)
-        @instructions[4].sustain.should eq(@note_seq.notes.last.sustain)
+        @instructions[2].class.should eq(Instructions::Restart)
+        (@instructions[2].pitch.total_semitone - @note_seq.notes.first.intervals.first.pitch.total_semitone).should eq(2)
+        (@note_seq.notes.last.intervals.first.pitch.total_semitone - @instructions[2].pitch.total_semitone).should eq(0)
+        @instructions[2].attack.should eq(@note_seq.notes.last.attack)
+        @instructions[2].sustain.should eq(@note_seq.notes.last.sustain)
       end
     end
   end

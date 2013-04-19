@@ -1,28 +1,11 @@
 module Musicality
+require 'spcore'
 
 # Responsible for find an instrument plugin for each part in a score.
 #
 # @author James Tunnell
 class InstrumentFinder
-  
-  # A plugin config object to load default instrument.
-  DEFAULT_INSTRUMENT_PLUGIN = PluginConfig.new(
-    :plugin_name => 'oscillator_instrument',
-    :settings => {
-      
-      :attack_rate_min => SettingProfile.new( :start_value => 150.0 ),
-      :attack_rate_max => SettingProfile.new( :start_value => 250.0 ),
-      :decay_rate_min => SettingProfile.new( :start_value => 25.0 ),
-      :decay_rate_max => SettingProfile.new( :start_value => 50.0 ),
-      :sustain_level_min => SettingProfile.new( :start_value => 0.2 ),
-      :sustain_level_max => SettingProfile.new( :start_value => 0.6 ),
-      :damping_rate_min => SettingProfile.new( :start_value => 100.0 ),
-      :damping_rate_max => SettingProfile.new( :start_value => 200.0 ),
-      
-      :wave_type => SettingProfile.new( :start_value => 'square' )
-    }
-  )
-  
+    
   # Find an instrument to use for each part. Uses assigned instrument if
   # it can be found, or the default instrument if none is assigned or
   # if the assigned can't be found.
@@ -34,7 +17,7 @@ class InstrumentFinder
   #                                                 is not assigned to the part
   #                                                 or if the one assigned can't
   #                                                 be found.
-  def self.find_instruments score, plugin_dirs, default_instrument_config = DEFAULT_INSTRUMENT_PLUGIN
+  def self.find_instruments score, plugin_dirs, default_instrument_config
 
     plugin_dirs.each do |dir|
       puts "loading plugins from #{dir}"

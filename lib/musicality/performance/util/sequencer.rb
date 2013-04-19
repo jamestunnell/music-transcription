@@ -75,18 +75,17 @@ class Sequencer
       duration = note.duration
       
       if instructions.empty?
-        instructions.push Instructions::On.new offset, note
+        instructions.push Instructions::On.new offset, note.attack, note.sustain, note.intervals.first.pitch
       else
         prev_relationship = note_seq.notes[i-1].intervals.first.link.relationship
         
         if (prev_relationship == Link::RELATIONSHIP_TIE) or
             (prev_relationship == Link::RELATIONSHIP_SLUR) or
             (prev_relationship == Link::RELATIONSHIP_PORTAMENTO)
-          instructions.push Instructions::ChangePitch.new offset, note.intervals.first.pitch
+          instructions.push Instructions::Adjust.new offset, note.intervals.first.pitch
         elsif (prev_relationship == Link::RELATIONSHIP_LEGATO) or
             (prev_relationship == Link::RELATIONSHIP_GLISSANDO)
-          instructions.push Instructions::ChangePitch.new offset, note.intervals.first.pitch
-          instructions.push Instructions::RestartAttack.new offset, note.attack, note.sustain
+          instructions.push Instructions::Restart.new offset, note.attack, note.sustain, note.intervals.first.pitch
         else
           raise "prev_relationship #{prev_relationship} not supported"
         end
@@ -122,10 +121,11 @@ class Sequencer
             current_pitch += pitch_incr
             current_offset += subnote_duration
             #binding.pry
-            instructions.push Instructions::ChangePitch.new current_offset, current_pitch
             
-            if (relationship == Link::RELATIONSHIP_GLISSANDO)
-              instructions.push Instructions::RestartAttack.new current_offset, note.attack, note.sustain
+            if (relationship == Link::RELATIONSHIP_PORTAMENTO)
+              instructions.push Instructions::Adjust.new current_offset, current_pitch
+            elsif (relationship == Link::RELATIONSHIP_GLISSANDO)
+              instructions.push Instructions::Restart.new current_offset, note.attack, note.sustain, current_pitch
             end
           end
         end

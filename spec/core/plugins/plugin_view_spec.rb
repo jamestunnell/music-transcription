@@ -9,16 +9,17 @@ describe Musicality::PluginView do
   it "should show :flat_plugin when :envelope extension point is given" do
     view = PluginView.new [ :envelope ]
     view.plugins.should have_key :flat_envelope
+    view.plugins.should_not have_key :synth_instr_6_1
   end
 
-  it "should show no :oscillator_voice when :voice extension point is given" do
-    view = PluginView.new [ :voice ]
-    view.plugins.should have_key :oscillator_voice
+  it "should show :synth_instr_6_1 when :instrument extension point is given" do
+    view = PluginView.new [ :instrument ]
+    view.plugins.should have_key :synth_instr_1
   end
 
-  it "should show no :oscillator_voice and :flat_envelope when :envelope and :voice extension points are given" do
-    view = PluginView.new [ :envelope, :voice ]
+  it "should show both :synth_instr_6_1 and :flat_envelope when :envelope and :instrument extension points are given" do
+    view = PluginView.new [ :envelope, :instrument ]
     view.plugins.should have_key :flat_envelope
-    view.plugins.should have_key :oscillator_voice
+    view.plugins.should have_key :synth_instr_1
   end
 end

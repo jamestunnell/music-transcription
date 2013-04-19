@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Interval do
   before :all do
-    @pitch = PitchConstants::C4
+    @pitch = C4
   end
   
   context '.new' do
@@ -21,14 +21,14 @@ describe Musicality::Interval do
   context '#pitch=' do
     it "should assign pitch" do
       interval = Interval.new :pitch => @pitch
-      interval.pitch = PitchConstants::Gb4
-      interval.pitch.should eq PitchConstants::Gb4
+      interval.pitch = Gb4
+      interval.pitch.should eq Gb4
     end
   end
   
   context '#link=' do
     it "should assign link" do
-      link = Link.new(:relationship => Link::RELATIONSHIP_SLUR, :target_pitch => PitchConstants::G2)
+      link = Link.new(:relationship => Link::RELATIONSHIP_SLUR, :target_pitch => G2)
       interval = Interval.new :pitch => @pitch
       interval.link = link
       interval.link.should eq(link)

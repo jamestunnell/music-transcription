@@ -7,10 +7,12 @@ module Instructions
 
 # Stores information needed to start a note.
 class On
-  attr_reader :offset, :note
-  def initialize offset, note
+  attr_reader :offset, :attack, :sustain, :pitch
+  def initialize offset, attack, sustain, pitch
     @offset = offset
-    @note = note
+    @attack = attack
+    @sustain = sustain
+    @pitch = pitch
   end
 end
 
@@ -23,7 +25,7 @@ class Off
 end
 
 # Stores information needed to change note pitch.
-class ChangePitch
+class Adjust
   attr_reader :offset, :pitch
   def initialize offset, pitch
     @offset = offset
@@ -32,12 +34,13 @@ class ChangePitch
 end
 
 # Stores information needed to restart note attack.
-class RestartAttack
-  attr_reader :offset, :attack, :sustain
-  def initialize offset, attack, sustain
+class Restart
+  attr_reader :offset, :attack, :sustain, :pitch
+  def initialize offset, attack, sustain, pitch
     @offset = offset
     @attack = attack
     @sustain = sustain
+    @pitch = pitch
   end
 end
 

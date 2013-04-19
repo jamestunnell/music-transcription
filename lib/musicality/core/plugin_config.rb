@@ -13,7 +13,7 @@ class PluginConfig
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
     :plugin_name => arg_spec(:reqd => true, :type => String),
-    :settings => arg_spec_hash(:reqd => false, :type => SettingProfile)
+    :settings => arg_spec_hash(:reqd => false, :type => Object)
   }
   
   # A new instance of PluginConfig.

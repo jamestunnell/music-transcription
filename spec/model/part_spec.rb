@@ -22,8 +22,8 @@ describe Musicality::Part do
         {
           :duration => 0.25,
           :intervals => [
-            { :pitch => PitchConstants::C1 },
-            { :pitch => PitchConstants::D1 },
+            { :pitch => C1 },
+            { :pitch => D1 },
           ]
         }
       ]

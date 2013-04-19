@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Note do
   before :all do
-    @pitch = PitchConstants::C4
+    @pitch = C4
   end
   
   context '.new' do
@@ -24,8 +24,8 @@ describe Musicality::Note do
     
     it 'should assign intervals when given' do
       intervals = [
-        Interval.new(:pitch => PitchConstants::C2),
-        Interval.new(:pitch => PitchConstants::D2),
+        Interval.new(:pitch => C2),
+        Interval.new(:pitch => D2),
       ]
       Note.new(:duration => 2, :intervals => intervals).intervals.should eq(intervals)
     end
@@ -71,7 +71,7 @@ describe Musicality::Note do
       :attack => 0.2,
       :seperation => 0.6,
       :intervals => [
-        { :pitch => @pitch, :link => tie(PitchConstants::Eb2) }
+        { :pitch => @pitch, :link => tie(Eb2) }
       ]
     }
     note = Note.new hash

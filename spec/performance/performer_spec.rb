@@ -4,24 +4,21 @@ describe Performer do
 
   before :all do
     @notes = [
-      { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::C7 } ]},
-      { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::D7 } ]},
-      { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::E7 } ]},
-      { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::C7 } ]},
-      { :duration => 0.25, :intervals => [ { :pitch => PitchConstants::D7 } ]},
-      { :duration => 0.75, :intervals => [ { :pitch => PitchConstants::E7 } ]},
+      { :duration => 0.25, :intervals => [ { :pitch => C7 } ]},
+      { :duration => 0.25, :intervals => [ { :pitch => D7 } ]},
+      { :duration => 0.25, :intervals => [ { :pitch => E7 } ]},
+      { :duration => 0.25, :intervals => [ { :pitch => C7 } ]},
+      { :duration => 0.25, :intervals => [ { :pitch => D7 } ]},
+      { :duration => 0.75, :intervals => [ { :pitch => E7 } ]},
     ]
     loudness_profile = SettingProfile.new :start_value => 0.5
     part = Part.new(:start_offset => 0.0, :notes => @notes, :loudness_profile => loudness_profile)
     
-    sample_rate = 5000.0
+    sample_rate = 5000
     max_attack_time = 0.15
-    
-    instrument_config = InstrumentFinder::DEFAULT_INSTRUMENT_PLUGIN
-    settings = { :sample_rate => sample_rate }.merge(instrument_config.settings)
-    plugin = PLUGINS.plugins[instrument_config.plugin_name.to_sym]
-    instrument = plugin.make_instrument(settings)
 
+    plugin = PLUGINS.plugins[Conductor::DEFAULT_INSTRUMENT_PLUGIN.plugin_name.to_sym]
+    instrument = plugin.make_instrument(:sample_rate => sample_rate)
     @performer = Performer.new part, instrument, max_attack_time
   end
 

@@ -41,7 +41,7 @@ module Musicality
 #                    modify CENTS_PER_SEMITONE (default 12) and/or 
 #                    SEMITONES_PER_OCTAVE (default 100).
 # @!attribute [r] base_freq
-#   @return [Float] Multiplied with pitch ratio to determine the final frequency
+#   @return [Numeric] Multiplied with pitch ratio to determine the final frequency
 #                   of the pitch. Defaults to DEFAULT_BASE_FREQ, but can be set 
 #                   during initialization to something else using the :base_freq key.
 #
@@ -63,21 +63,14 @@ class Pitch
 
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
-    :octave => arg_spec(:reqd => false, :type => Numeric, :default => 0),
-    :semitone => arg_spec(:reqd => false, :type => Numeric, :default => 0), 
-    :cent => arg_spec(:reqd => false, :type => Numeric, :default => 0), 
+    :octave => arg_spec(:reqd => false, :type => Fixnum, :default => 0),
+    :semitone => arg_spec(:reqd => false, :type => Fixnum, :default => 0), 
+    :cent => arg_spec(:reqd => false, :type => Fixnum, :default => 0), 
     :base_freq => arg_spec(:reqd => false, :type => Numeric, :validator => ->(a){ a > 0.0 }, :default => DEFAULT_BASE_FREQ)
   }
   
   # A new instance of Pitch.
-  # @param [Hash] args Hashed args. Valid, optional keys are :octave, 
-  #                    :semitone, :cent, :total_cent, and :ratio.
-  #                    When :total_cent is set, it will override all 
-  #                    other arguments.
-  #                    When :ratio is set, it will override all other
-  #                    arguments except :total_cent.
-  #                    Otherwise, when :octave, :semitone, and :cent 
-  #                    are set, each will override the default of zero.
+  # @param [Hash] args Hashed args. See ARG_SPECS for details.
   # @raise [ArgumentError] if any of :octave, :semitone, or :cent is
   #                        not a Fixnum.
   def initialize args={}

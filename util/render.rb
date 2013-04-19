@@ -13,7 +13,7 @@ class ScoreRenderer
     @scorefile = args[:scorefile]
     @outfile = args[:outfile]
     
-    opts = { :samplerate => 48000.0 }.merge args
+    opts = { :samplerate => 48000 }.merge args
     @samplerate = opts[:samplerate]
   end
   
@@ -35,17 +35,13 @@ class ScoreRenderer
         print "%.4f:" % conductor.time_counter
         print "%08d   " % conductor.sample_counter
         print "%.4f   " % samples.last
-        
-      #  notes_played = 0
-      #  notes_being_played = 0
 
-        active_pitches = 0
+        active_keys = 0
         conductor.performers.each do |performer|  
-          active_pitches += performer.instrument.notes.count
+          active_keys += performer.instrument.active_keys.count
         end
 
-      #  print "#{notes_played} notes played, #{notes_being_played} notes being played"
-        print "#{active_pitches} active pitches"
+        print "#{active_keys} active keys"
         puts ""
 
         buffer = WaveFile::Buffer.new(samples, format)
@@ -75,7 +71,7 @@ Options:
 END
   p.version = "0.1"
   p.option :outdir, "set output directory", :default => "./", :value_satisfies => lambda { |path| Dir.exist? path }
-  p.option :samplerate, "set sample rate", :default => 48000.0, :value_satisfies => lambda { |rate| rate > 1000.0 }
+  p.option :samplerate, "set sample rate", :default => 48000, :value_satisfies => lambda { |rate| rate.is_a?(Fixnum) && rate > 1000 }
 end.process!
 
 puts "Rendering to output directory #{options[:outdir]} at sample rate #{options[:samplerate]}"

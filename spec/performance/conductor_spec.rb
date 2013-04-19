@@ -33,7 +33,7 @@ describe Musicality::Conductor do
     }
     
     @score = Score.new hash
-    @sample_rate = 250.0
+    @sample_rate = 250
   end
 
   describe "#perform_score" do
