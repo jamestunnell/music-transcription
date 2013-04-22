@@ -33,13 +33,14 @@ describe Musicality::Conductor do
     }
     
     @score = Score.new hash
+    @arrangement = Arrangement.new(:score => @score)
     @sample_rate = 250
   end
 
-  describe "#perform_score" do
+  describe "#perform" do
     before :each do
       time_conversion_rate = 250.0
-      @conductor = Musicality::Conductor.new @score, time_conversion_rate, @sample_rate
+      @conductor = Musicality::Conductor.new @arrangement, time_conversion_rate, @sample_rate
       @conductor.perform
     end
 

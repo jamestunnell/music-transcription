@@ -17,7 +17,7 @@ describe Performer do
     sample_rate = 5000
     max_attack_time = 0.15
 
-    plugin = PLUGINS.plugins[Conductor::DEFAULT_INSTRUMENT_PLUGIN.plugin_name.to_sym]
+    plugin = PLUGINS.plugins[DEFAULT_INSTRUMENT_CONFIG.plugin_name.to_sym]
     instrument = plugin.make_instrument(:sample_rate => sample_rate)
     @performer = Performer.new part, instrument, max_attack_time
   end

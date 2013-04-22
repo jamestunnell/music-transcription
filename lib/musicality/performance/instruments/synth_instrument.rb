@@ -146,18 +146,17 @@ class SynthInstrument < Musicality::Instrument
   
   def initialize args
     hash_make SynthInstrument::ARG_SPECS, args
-    
     @harmonic_settings = []
     
     params = {}
     @harmonics.times do |n|
-      @harmonic_settings.push(:partial => 0, :wave_type => SPCore::Oscillator::WAVES.first, :amplitude => 1.0)
+      @harmonic_settings.push(:partial => 0, :wave_type => SPCore::Oscillator::WAVES.first, :amplitude => 0.0)
       
       params["harmonic_#{n}_partial"] = SPNet::ParamInPort.new(
         :get_value_handler => ->(){ @harmonic_settings[n][:partial] },
         :set_value_handler => lambda do |partial|
           @harmonic_settings[n][:partial] = partial
-          keys.each {|id,key| key.handler.harmonics[n].partial = partial }
+          @keys.each {|id,key| key.handler.harmonics[n].partial = partial }
         end,
         :limiter => SPNet::LowerLimiter.new(0,true)
       )
@@ -166,7 +165,7 @@ class SynthInstrument < Musicality::Instrument
         :get_value_handler => ->(){ @harmonic_settings[n][:wave_type] },
         :set_value_handler => lambda do |wave_type|
           @harmonic_settings[n][:wave_type] = wave_type
-          keys.each {|id,key| key.handler.harmonics[n].oscillator.wave_type = wave_type }
+          @keys.each {|id,key| key.handler.harmonics[n].oscillator.wave_type = wave_type }
         end,
         :limiter => SPNet::EnumLimiter.new(SPCore::Oscillator::WAVES)
       )
@@ -175,7 +174,7 @@ class SynthInstrument < Musicality::Instrument
         :get_value_handler => ->(){ @harmonic_settings[n][:amplitude] },
         :set_value_handler => lambda do |amplitude|
           @harmonic_settings[n][:amplitude] = amplitude
-          keys.each {|id,key| key.handler.harmonics[n].oscillator.amplitude = amplitude }
+          @keys.each {|id,key| key.handler.harmonics[n].oscillator.amplitude = amplitude }
         end,
       )
     end
@@ -193,6 +192,8 @@ class SynthInstrument < Musicality::Instrument
         return key
       end
     )
+    
+    params["harmonic_0_amplitude"].set_value 1.0
   end
 end
 

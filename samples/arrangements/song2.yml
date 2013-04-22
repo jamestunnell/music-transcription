@@ -1,0 +1,135 @@
+---
+:score:
+  :beats_per_minute_profile:
+    :start_value: 120.0
+  :program:
+    :segments:
+    - !ruby/range
+      begin: 0
+      end: 4.0
+      excl: true
+    - !ruby/range
+      begin: 0
+      end: 4.0
+      excl: true
+  :parts:
+    1:
+      :notes:
+      - :duration: 1.0
+        :intervals:
+        - :pitch:
+            :octave: 4
+      - :duration: 1.0
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 10
+      - :duration: 1.0
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 8
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 7
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 10
+    2:
+      :notes:
+      - :duration: 0.375
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 4
+      - :duration: 1.0
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 2
+      - :duration: 1.0
+        :intervals:
+        - :pitch:
+            :octave: 5
+      - :duration: 0.625
+        :intervals:
+        - :pitch:
+            :octave: 5
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 5
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 2
+    3:
+      :notes:
+      - :duration: 0.125
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 7
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 5
+      - :duration: 0.25
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 5
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 3
+      - :duration: 0.25
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 3
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 3
+      - :duration: 0.125
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 3
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 5
+            :semitone: 5
+:instrument_configs:
+  1:
+    :plugin_name: synth_instr_1
+    :settings:
+      harmonic_1_partial: 0
+      harmonic_1_wave_type: :waveSawtooth
+      harmonic_1_amplitude: 0.2
+  2:
+    :plugin_name: synth_instr_1
+    :settings:
+      harmonic_1_partial: 0
+      harmonic_1_wave_type: :waveSquare
+      harmonic_1_amplitude: 0.4
+  3:
+    :plugin_name: synth_instr_1
+    :settings:
+      harmonic_1_partial: 0
+      harmonic_1_wave_type: :waveSquare
+      harmonic_1_amplitude: 0.4

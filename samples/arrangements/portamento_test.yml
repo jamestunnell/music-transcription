@@ -1,0 +1,35 @@
+---
+:score:
+  :beats_per_minute_profile:
+    :start_value: 120.0
+  :program:
+    :segments:
+    - !ruby/range
+      begin: 0
+      end: 4.0
+      excl: true
+  :parts:
+    1:
+      :notes:
+      - :duration: 0.75
+        :intervals:
+        - :pitch:
+            :octave: 3
+          :link:
+            :target_pitch:
+              :octave: 3
+              :semitone: 5
+            :relationship: :portamento
+      - :duration: 0.75
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 5
+          :link:
+            :target_pitch:
+              :octave: 3
+            :relationship: :portamento
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 3

@@ -4,61 +4,11 @@ require 'micro-optparse'
 require 'musicality'
 require 'wavefile.rb'
 require 'pry'
-
-class ScoreRenderer
-  
-  def initialize args={}
-    reqd = [:scorefile, :outfile]
-    reqd.each {|key| raise ArgumentError, "args does not have required key #{key}" unless args.has_key?(key) }
-    @scorefile = args[:scorefile]
-    @outfile = args[:outfile]
-    
-    opts = { :samplerate => 48000 }.merge args
-    @samplerate = opts[:samplerate]
-  end
-  
-  def run
-    score = Musicality::ScoreFile.load @scorefile
-    time_conversion_sample_rate = 250.0
-    conductor = Musicality::Conductor.new score, time_conversion_sample_rate, @samplerate
-    
-    format = WaveFile::Format.new(:mono, :float_32, @samplerate.to_i)
-    writer = WaveFile::Writer.new(@outfile, format)
-    
-    puts "time   sample    "
-      
-    samples = []
-    conductor.perform do |sample|
-      samples << sample
-
-      if(samples.count >= 10000)
-        print "%.4f:" % conductor.time_counter
-        print "%08d   " % conductor.sample_counter
-        print "%.4f   " % samples.last
-
-        active_keys = 0
-        conductor.performers.each do |performer|  
-          active_keys += performer.instrument.active_keys.count
-        end
-
-        print "#{active_keys} active keys"
-        puts ""
-
-        buffer = WaveFile::Buffer.new(samples, format)
-        writer.write(buffer)
-        
-        samples.clear
-      end
-    end
-
-    writer.close()
-  end
-end
-
+require 'yaml'
 
 options = Parser.new do |p|
   p.banner = <<-END
-Render a Musicality score.
+Render a Musicality arrangement.
 
 Usage:
       ruby render.rb [options] <filenames>+
@@ -76,19 +26,30 @@ end.process!
 
 puts "Rendering to output directory #{options[:outdir]} at sample rate #{options[:samplerate]}"
 
-ARGV.each do |scorefile|
-  if !File.exist?(scorefile)
-    puts "Could not find score file #{scorefile}, skipping."
+ARGV.each do |filename|
+  if !File.exist?(filename)
+    puts "Could not find arrangement file #{filename}, skipping."
     next
   end
-  
-  samplerate = options[:samplerate]
-  outfile = File.basename(scorefile, ".*") + ".wav"
-  outpath = options[:outdir] + outfile
-  
-  puts "Rendering #{File.basename(scorefile)} -> #{outfile}"
 
-  renderer = ScoreRenderer.new :scorefile => scorefile, :outfile => outfile, :sample_rate => samplerate
-  renderer.run
+  samplerate = options[:samplerate]
+  outfile = File.basename(filename, ".*") + ".wav"
+  outpath = options[:outdir] + outfile
+
+  File.open(filename, "r") do |file|
+    hash = YAML.load file.read
+    arrangement = Musicality::Arrangement.new hash
+
+    format = WaveFile::Format.new(:mono, :float_32, samplerate.to_i)
+    writer = WaveFile::Writer.new(outfile, format)
+    
+    puts "Rendering #{File.basename(filename)} -> #{outfile}"
+    
+    samples = Musicality::Renderer.render(arrangement, samplerate)
+    buffer = WaveFile::Buffer.new(samples, format)
+    
+    writer.write(buffer)
+    writer.close()
+  end
 end
 

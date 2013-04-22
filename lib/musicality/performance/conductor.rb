@@ -10,32 +10,6 @@ module Musicality
 # 
 class Conductor
 
-  # A plugin config object to load default instrument.
-  DEFAULT_INSTRUMENT_PLUGIN = PluginConfig.new(
-    :plugin_name => 'synth_instr_3',
-    :settings => {
-      "harmonic_1_partial" => 0,
-      "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SAWTOOTH,
-      "harmonic_1_amplitude" => 0.2,
-      "harmonic_2_partial" => 3,
-      "harmonic_2_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
-      "harmonic_2_amplitude" => 0.10,
-      "harmonic_3_partial" => 5,
-      "harmonic_3_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
-      "harmonic_3_amplitude" => 0.05,
-      #:attack_rate_min => SettingProfile.new( :start_value => 150.0 ),
-      #:attack_rate_max => SettingProfile.new( :start_value => 250.0 ),
-      #:decay_rate_min => SettingProfile.new( :start_value => 25.0 ),
-      #:decay_rate_max => SettingProfile.new( :start_value => 50.0 ),
-      #:sustain_level_min => SettingProfile.new( :start_value => 0.2 ),
-      #:sustain_level_max => SettingProfile.new( :start_value => 0.6 ),
-      #:damping_rate_min => SettingProfile.new( :start_value => 100.0 ),
-      #:damping_rate_max => SettingProfile.new( :start_value => 200.0 ),
-      #
-      #:wave_type => SettingProfile.new( :start_value => 'square' )
-    }
-  )
-
   attr_reader :sample_rate, :start_of_score, :end_of_score,
                :performers, :time_counter, :sample_counter
   
@@ -49,12 +23,12 @@ class Conductor
   # @param [Hash] optional_args Hashed args that are not required. Valid keys
   #                             are :max_attack_time, :default_instrument_config,
   #                             and :plugin_dirs.
-  def initialize score, time_conversion_sample_rate, rendering_sample_rate, optional_args = {} #arrangement, sample_rate = DEFAULT_SAMPLE_RATE, max_attack_time = 0.15
-    raise ArgumentError, "score is not a Score" unless score.is_a?(Score)
+  def initialize arrangement, time_conversion_sample_rate, rendering_sample_rate, optional_args = {} #arrangement, sample_rate = DEFAULT_SAMPLE_RATE, max_attack_time = 0.15
+    score = arrangement.score
     raise ArgumentError, "score contains no parts" if score.parts.empty?
     raise ArgumentError, "time_conversion_sample_rate is not a Numeric" unless time_conversion_sample_rate.is_a?(Numeric)
     raise ArgumentError, "time_conversion_sample_rate is less than 100.0" if time_conversion_sample_rate < 100.0
-
+    
     ScoreCollator.collate_score!(score)
     parts = ScoreConverter.make_time_based_parts_from_score score, time_conversion_sample_rate
     
@@ -64,33 +38,26 @@ class Conductor
     opts = {
       :max_attack_time => 0.15,
       :plugin_dirs => [], # File.expand_path(File.dirname(__FILE__))
-      :default_instrument_config => DEFAULT_INSTRUMENT_PLUGIN,
     }.merge optional_args
     
     max_attack_time = opts[:max_attack_time]
-    plugin_dirs = opts[:plugin_dirs]
-    instrument_map = InstrumentFinder.find_instruments score, plugin_dirs, opts[:default_instrument_config]
-
+    
+    opts[:plugin_dirs].each do |dir|
+      puts "loading plugins from #{dir}"
+      PLUGINS.load_plugins dir
+    end
+    
     raise ArgumentError, "rendering_sample_rate is not a Numeric" unless rendering_sample_rate.is_a?(Numeric)
     raise ArgumentError, "rendering_sample_rate is less than 100.0" if rendering_sample_rate < 100.0
     @sample_rate = rendering_sample_rate
     @sample_period = 1.0 / @sample_rate
     
+    instruments = arrangement.make_instruments @sample_rate
+    
     @performers = []
-    parts.each do |id, part|
-      raise ArgumentError, "instrument_map does not have key for id #{id}" unless instrument_map.has_key?(id)
-      instrument_config = instrument_map[id]
-      
-      plugin = PLUGINS.plugins[instrument_config.plugin_name.to_sym]
-      instrument = plugin.make_instrument(:sample_rate => @sample_rate)
-      
-      instrument_config.settings.each do |name, val|
-        if instrument.params.include? name
-          instrument.params[name].set_value val
-        end
-      end
-      
-      @performers << Performer.new(part, instrument, max_attack_time)
+    parts.each do |part_id, part|
+      raise ArgumentError, "instruments does not have key for part id #{part_id}" unless instruments.has_key?(part_id)
+      @performers << Performer.new(part, instruments[part_id], max_attack_time)
     end
     
     @time_counter = 0.0

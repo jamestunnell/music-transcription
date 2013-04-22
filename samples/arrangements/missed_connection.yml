@@ -1,0 +1,176 @@
+---
+:score:
+  :beats_per_minute_profile:
+    :start_value: 120.0
+  :program:
+    :segments:
+    - !ruby/range
+      begin: 0
+      end: 8.0
+      excl: true
+  :parts:
+    bass:
+      :notes:
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 3
+      - :duration: 0.25
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+      - :duration: 0.25
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 3
+      - :duration: 0.125
+      - :duration: 0.125
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 11
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 8
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 3
+      - :duration: 0.25
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+      - :duration: 0.25
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 3
+      - :duration: 0.125
+      - :duration: 0.125
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 11
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 8
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+      - :duration: 0.125
+      - :duration: 0.125
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 5
+          :link:
+            :target_pitch:
+              :octave: 3
+              :semitone: 5
+            :relationship: :tie
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 5
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+      - :duration: 0.125
+      - :duration: 0.125
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 5
+          :link:
+            :target_pitch:
+              :octave: 3
+              :semitone: 5
+            :relationship: :tie
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 5
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 11
+      - :duration: 0.125
+      - :duration: 0.125
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 6
+          :link:
+            :target_pitch:
+              :octave: 3
+              :semitone: 6
+            :relationship: :tie
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 6
+      - :duration: 0.25
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 11
+      - :duration: 0.125
+      - :duration: 0.125
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 6
+          :link:
+            :target_pitch:
+              :octave: 3
+              :semitone: 6
+            :relationship: :tie
+      - :duration: 0.5
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 6
+:instrument_configs:
+  bass:
+    :plugin_name: synth_instr_3
+    :settings:
+      harmonic_0_partial: 0
+      harmonic_0_wave_type: :waveSquare
+      harmonic_0_amplitude: 0.2
+      harmonic_1_partial: 1
+      harmonic_1_wave_type: :waveSine
+      harmonic_1_amplitude: 0.1
+      harmonic_2_partial: 2
+      harmonic_2_wave_type: :waveSawtooth
+      harmonic_2_amplitude: 0.05
