@@ -2,8 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::ValueComputer do
   before :all do
-    @value_change1 = Musicality::Event.new 1.0, 0.6
-    @value_change2 = Musicality::Event.new 1.0, 0.6, 1.0
+    @value_change1 = value_change(1.0, 0.6)
+    @value_change2 = value_change(1.0, 0.6, linear(1.0))
   end
   
   describe "constant value" do
@@ -12,7 +12,7 @@ describe Musicality::ValueComputer do
     end
     
     it "should always return default value if no changes are given" do
-      [Musicality::Event::MIN_OFFSET, -1000, 0, 1, 5, 100, 10000, Musicality::Event::MAX_OFFSET].each do |offset|
+      [ValueComputer.domain_min, -1000, 0, 1, 5, 100, 10000, ValueComputer.domain_max].each do |offset|
         @comp.value_at(offset).should eq(0.5)
       end
     end
@@ -20,7 +20,7 @@ describe Musicality::ValueComputer do
   
   describe "one change, no transition" do
     before :each do
-      setting_profile = SettingProfile.new :start_value => 0.5, :value_change_events => [@value_change1]
+      setting_profile = SettingProfile.new :start_value => 0.5, :value_changes => [@value_change1]
       @comp = Musicality::ValueComputer.new setting_profile
     end
     
@@ -33,17 +33,17 @@ describe Musicality::ValueComputer do
     end
 
     it "should be the first value for all time before" do
-      @comp.value_at(Musicality::Event::MIN_OFFSET).should eq(0.5)
+      @comp.value_at(ValueComputer.domain_min).should eq(0.5)
     end
     
     it "should be at the second value for all time after" do
-      @comp.value_at(Musicality::Event::MAX_OFFSET).should eq(0.6)
+      @comp.value_at(ValueComputer.domain_max).should eq(0.6)
     end
   end
   
   context "one change, linear transition" do
     before :each do
-      setting_profile = SettingProfile.new :start_value => 0.2, :value_change_events => [@value_change2]
+      setting_profile = SettingProfile.new :start_value => 0.2, :value_changes => [@value_change2]
       @comp = Musicality::ValueComputer.new setting_profile
     end
     

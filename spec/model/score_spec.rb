@@ -14,8 +14,8 @@ describe Musicality::Score do
     
     loudness_profile = Musicality::SettingProfile.new(
       :start_value => 0.5,
-      :value_change_events => [
-        Musicality::Event.new(1.0, 1.0, 2.0)
+      :value_changes => [
+        value_change(1.0, 1.0, linear(2.0))
       ]
     )
 
@@ -26,8 +26,8 @@ describe Musicality::Score do
 
     @bpm_profile = Musicality::SettingProfile.new(
       :start_value => 120,
-      :value_change_events => [
-        Musicality::Event.new( 0.5, 60, 0.25 )
+      :value_changes => [
+        value_change(0.5, 60, linear(0.25))
       ]
     )
     

@@ -24,8 +24,8 @@ describe Musicality::NoteTimeConverter do
     context "linear tempo-change" do
       before :each do
         beat_duration_profile = Musicality::SettingProfile.new :start_value => 0.25
-        bpm_profile = Musicality::SettingProfile.new :start_value => 120.0, :value_change_events => [
-          Musicality::Event.new(1.0, 60.0, 1.0)
+        bpm_profile = Musicality::SettingProfile.new :start_value => 120.0, :value_changes => [
+          value_change(1.0, 60.0, linear(1.0))
         ]
         @tempo_computer = Musicality::TempoComputer.new beat_duration_profile, bpm_profile
         sample_rate = 200

@@ -39,7 +39,7 @@ describe Musicality::ScoreConverter do
       score_hash = {
         :beats_per_minute_profile => {
           :start_value => 120,
-          :value_change_events => [ Event.new(1.0, 60) ]
+          :value_changes => [ value_change(1.0, 60) ]
         },
         :program => { :segments => [0.0...2.0] },
         :parts => {

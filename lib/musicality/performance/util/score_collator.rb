@@ -71,8 +71,8 @@ class ScoreCollator
   private
   
   def self.modify_event_for_segment event, seg, computer
-    if(event.offset + event.duration) > seg.last
-      event.duration = seg.last - event.offset
+    if(event.offset + event.transition.duration) > seg.last
+      event.transition.duration = seg.last - event.offset
       event.value = computer.value_at seg.last
     end
   end
@@ -85,7 +85,7 @@ class ScoreCollator
   
     program_segments.each do |seg|
       # figure which dynamics to keep/modify
-      changes = Marshal.load(Marshal.dump(profile.value_change_events))
+      changes = Marshal.load(Marshal.dump(profile.value_changes))
       changes.keep_if {|change| change.offset >= seg.first && change.offset < seg.last}
       changes.each do |change|
 	modify_event_for_segment change, seg, comp
@@ -94,12 +94,12 @@ class ScoreCollator
       # find & add segment start dynamic first
       value = comp.value_at seg.first
       offset = segment_start_offset
-      new_profile.value_change_events << Event.new(offset, value)
+      new_profile.value_changes << value_change(offset, value)
       
       # add dynamics to part, adjusting for segment start offset
       changes.each do |change|
 	change.offset = (change.offset - seg.first) + segment_start_offset
-	new_profile.value_change_events << change
+	new_profile.value_changes << change
       end	
       
       segment_start_offset += (seg.last - seg.first)

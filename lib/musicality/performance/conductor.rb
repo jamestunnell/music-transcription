@@ -14,7 +14,8 @@ class Conductor
                :performers, :time_counter, :sample_counter
   
   # A new instance of Conductor.
-  # @param [Score] score The score is used to prepare a performance.
+  # @param [Arrangement] arrangement Used to prepare a performance. Contains the
+  #                                  score and instrument configurations.
   # @param [Numeric] time_conversion_sample_rate The sample rate used in
   #                                              converting the score from
   #                                              a note base to a time base.

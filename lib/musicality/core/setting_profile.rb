@@ -7,17 +7,17 @@ module Musicality
 class SettingProfile
   include Hashmake::HashMakeable
   
-  attr_accessor :start_value, :value_change_events
+  attr_accessor :start_value, :value_changes
   
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
     :start_value => arg_spec(:reqd => true),
-    :value_change_events => arg_spec_array(:reqd => false, :type => Event)
+    :value_changes => arg_spec_array(:reqd => false, :type => ValueChange)
   }
 
   # A new instance of SettingProfile.
   #
-  # @param [Hash] args Hashed args. Required key is :start_value. Optional key is :value_change_events.
+  # @param [Hash] args Hashed args. Required key is :start_value. Optional key is :value_changes.
   def initialize args
     hash_make SettingProfile::ARG_SPECS, args
   end
@@ -26,12 +26,12 @@ class SettingProfile
   def == other
     (self.class == other.class) && 
     (self.start_value == other.start_value) &&
-    (self.value_change_events == other.value_change_events)
+    (self.value_changes == other.value_changes)
   end
   
   # Produce an identical SettingProfile object.
   def clone
-    SettingProfile.new(:start_value => @start_value, :value_change_events => @value_change_events.clone)
+    SettingProfile.new(:start_value => @start_value, :value_changes => @value_changes.clone)
   end
   
   # Returns true if start value and value changes all are between given A and B.
@@ -39,7 +39,7 @@ class SettingProfile
     is_ok = self.start_value.between?(a,b)
     
     if is_ok
-      self.value_change_events.each do |event|
+      self.value_changes.each do |event|
         event.value.between?(a,b)
       end
     end
@@ -51,7 +51,7 @@ class SettingProfile
     is_ok = self.start_value > 0.0
     
     if is_ok
-      self.value_change_events.each do |event|
+      self.value_changes.each do |event|
         event.value > 0.0
       end
     end

@@ -33,6 +33,7 @@ DEFAULT_INSTRUMENT_CONFIG = PluginConfig.new(
 class Arrangement
   include Hashmake::HashMakeable
   
+  # specifies which hashed args can be used for initialize.
   ARG_SPECS = {
     :score => arg_spec(:reqd => true, :type => Score),
     :instrument_configs => arg_spec_hash(:reqd => false, :type => PluginConfig),
@@ -44,6 +45,10 @@ class Arrangement
     hash_make Arrangement::ARG_SPECS, args
   end
   
+  # Builds instruments for each part. If no configuration is given for a part,
+  # the default configuration is used.
+  # @param [Fixnum] sample_rate
+  # @param [PluginConfig] default_config
   def make_instruments sample_rate, default_config = DEFAULT_INSTRUMENT_CONFIG
     instrument_map = {}
     

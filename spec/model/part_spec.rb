@@ -8,8 +8,8 @@ describe Musicality::Part do
     it "should assign loudness profile given during construction" do
       loudness_profile = Musicality::SettingProfile.new(
         :start_value => 0.5,
-        :value_change_events => [
-          Musicality::Event.new(1.0, 1.0, 2.0)
+        :value_changes => [
+          value_change(1.0, 1.0, linear(2.0))
         ]
       )
   

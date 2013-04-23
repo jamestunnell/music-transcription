@@ -1,7 +1,8 @@
 require 'hashmake'
 require 'musicality/version'
 
-require 'musicality/core/event'
+require 'musicality/core/transition'
+require 'musicality/core/value_change'
 require 'musicality/core/setting_profile'
 require 'musicality/core/plugin_config'
 require 'musicality/core/unique_token'

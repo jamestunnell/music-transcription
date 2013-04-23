@@ -221,6 +221,9 @@ class Pitch
   
 end
 
+# Create a Pitch object from a string (e.g. "C2"). String can contain a letter (A-G),
+# to indicate the semitone, followed by an optional sharp/flat (#/b) and then the
+# octave number (non-negative integer).
 def pitch string
   if string =~ /[AaBbCcDdEeFfGg][#b][\d]+/
     semitone = letter_to_semitone string[0]

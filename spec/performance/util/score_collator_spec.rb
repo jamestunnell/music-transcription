@@ -5,7 +5,7 @@ describe Musicality::ScoreCollator do
     @simple_score_hash = {
       :beats_per_minute_profile => {
         :start_value => 120,
-        :value_change_events => [ Event.new(0.5, 60, 1.0) ]
+        :value_changes => [ value_change(0.5,60,linear(1.0)) ]
       },
       :program => { :segments => [0.0...1.0, 0.0...2.0] },
       :parts => {
@@ -13,7 +13,7 @@ describe Musicality::ScoreCollator do
           :start_offset => 0.0,
           :loudness_profile => {
             :start_value => 0.5,
-            :value_change_events => [ Event.new(0.5, 1.0, 1.0) ]
+            :value_changes => [ value_change(0.5,1.0,linear(1.0)) ]
           },
           :notes => [
             { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
