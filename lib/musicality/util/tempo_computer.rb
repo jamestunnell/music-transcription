@@ -31,6 +31,7 @@ class TempoComputer
   def notes_per_second_at offset
     bpm = @beats_per_minute_computer.value_at(offset)
     nps = (bpm / 60.0) * @beat_duration_computer.value_at(offset)
+    return nps
   end
 end
 

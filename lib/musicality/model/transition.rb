@@ -20,7 +20,7 @@ class Transition
     hash_make Transition::ARG_SPECS, args
   end
 
-  # Compare the equality of another ValueChange object.
+  # Compare the equality of another Transition object.
   def == other
     return (@type == other.type) &&
     (@duration == other.duration)
@@ -40,17 +40,17 @@ class Transition
 end
 
 # Create a Transition object with 0 duration and of IMMEDIATE type.
-def immediate
+def self.immediate
   Transition.new(:duration => 0.0, :type => Transition::IMMEDIATE)
 end
 
 # Create a Transition object of IMMEDIATE type, with the given duration.
-def linear duration
+def self.linear duration
   Transition.new(:duration => duration, :type => Transition::LINEAR)
 end
 
 # Create a Transition object of SIGMOID type, with the given duration.
-def sigmoid duration
+def self.sigmoid duration
   Transition.new(:duration => duration, :type => Transition::LINEAR)
 end
 

@@ -7,7 +7,7 @@ describe Musicality::ScoreFile do
     @score_hash = {
       :beats_per_minute_profile => {
         :start_value => 300,
-        :value_changes => [ value_change(1.0, 100, linear(1.25)) ]
+        :value_changes => { 1.0 => Musicality::linear_change(100, 1.25) }
       },
       :program => { :segments => [0.0...3.75] },
       :parts => {

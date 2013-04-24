@@ -154,18 +154,18 @@ class ADSREnvelope
   end
 end
 
-# Register the plugin with Musicality::PLUGINS registry
-PLUGINS.register :adsr_envelope do
-  self.author = "James Tunnell"
-  self.version = "1.0.0"
-  self.extends  = [:envelope]
-  #requires []
-  self.extension_points = []
-  self.params = { :description => 'Makes a ADSR  envelope, where attack and decay time depend on attack and sustain settings.' }
-
-  def make_envelope settings
-    Musicality::ADSREnvelope.new settings
-  end
-end
+## Register the plugin with Musicality::PLUGINS registry
+#PLUGINS.register :adsr_envelope do
+#  self.author = "James Tunnell"
+#  self.version = "1.0.0"
+#  self.extends  = [:envelope]
+#  #requires []
+#  self.extension_points = []
+#  self.params = { :description => 'Makes a ADSR  envelope, where attack and decay time depend on attack and sustain settings.' }
+#
+#  def make_envelope settings
+#    Musicality::ADSREnvelope.new settings
+#  end
+#end
 
 end

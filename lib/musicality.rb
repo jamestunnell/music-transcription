@@ -1,26 +1,27 @@
 require 'hashmake'
+
 require 'musicality/version'
+require 'musicality/unique_token'
+require 'musicality/offset_limits'
 
-require 'musicality/core/transition'
-require 'musicality/core/value_change'
-require 'musicality/core/setting_profile'
-require 'musicality/core/plugin_config'
-require 'musicality/core/unique_token'
-require 'musicality/core/piecewise_function'
-require 'musicality/core/value_computer'
-require 'musicality/core/value_updater'
-require 'musicality/core/plugins/plugin'
-require 'musicality/core/plugins/plugin_registry'
-require 'musicality/core/plugins/plugins'
-require 'musicality/core/plugins/plugin_view'
+# Model-related code
 
+# note level
 require 'musicality/model/pitch'
 require 'musicality/model/link'
 require 'musicality/model/interval'
 require 'musicality/model/note'
+
+# value/settings
+require 'musicality/model/transition'
+require 'musicality/model/value_change'
+require 'musicality/model/profile'
+
+# score/arrangement level
 require 'musicality/model/part'
 require 'musicality/model/program'
 require 'musicality/model/score'
+require 'musicality/model/instrument_config'
 require 'musicality/model/arrangement'
 
 require 'musicality/util/pitch_constants'
@@ -29,6 +30,18 @@ require 'musicality/util/tempo_computer'
 require 'musicality/util/note_time_converter'
 require 'musicality/util/optimization/vector'
 require 'musicality/util/optimization/particle_swarm'
+
+# Performance-related code
+
+# settings
+require 'musicality/performance/settings/piecewise_function'
+require 'musicality/performance/settings/value_computer'
+require 'musicality/performance/settings/value_updater'
+
+# instrument plugins
+require 'musicality/performance/instruments/instrument_plugin'
+require 'musicality/performance/instruments/instrument_plugin_registry'
+require 'musicality/performance/instruments/instrument_plugins'
 
 require 'musicality/performance/util/score_collator'
 require 'musicality/performance/util/score_converter'

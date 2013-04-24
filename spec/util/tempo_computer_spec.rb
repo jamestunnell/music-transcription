@@ -3,11 +3,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Musicality::TempoComputer do
 
   before :all do
-    @beat_duration_profile = Musicality::SettingProfile.new :start_value => 0.25
+    @beat_duration_profile = Musicality::Profile.new :start_value => 0.25
   end
   
   before :each do
-    @bpm_profile = Musicality::SettingProfile.new :start_value => 120.0
+    @bpm_profile = Musicality::Profile.new :start_value => 120.0
   end
 
   it "should always return starting tempo if only tempo given" do
@@ -24,9 +24,9 @@ describe Musicality::TempoComputer do
 
   context "two tempos, no transition" do
     before :each do
-      @bpm_profile = Musicality::SettingProfile.new :start_value => 120.0, :value_changes => [
-        value_change(1.0, 60.0)
-      ]
+      @bpm_profile = Musicality::Profile.new :start_value => 120.0, :value_changes => {
+        1.0 => Musicality::immediate_change(60.0)
+      }
       @tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
     end
 
@@ -49,9 +49,9 @@ describe Musicality::TempoComputer do
 
   context "two tempos, linear transition" do
     before :each do
-      @bpm_profile = Musicality::SettingProfile.new :start_value => 120.0, :value_changes => [
-        value_change(1.0, 60.0, linear(1.0))
-      ]
+      @bpm_profile = Musicality::Profile.new :start_value => 120.0, :value_changes => {
+        1.0 => Musicality::linear_change(60.0, 1.0)
+      }
       @tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
     end
 

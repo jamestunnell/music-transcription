@@ -24,10 +24,10 @@ class Score
 
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
-    :beats_per_minute_profile => arg_spec(:reqd => true, :type => SettingProfile, :validator => ->(a){ a.values_positive? }),
+    :beats_per_minute_profile => arg_spec(:reqd => true, :type => Profile, :validator => ->(a){ a.values_positive? }),
     :program => arg_spec(:reqd => true, :type => Program),
     :parts => arg_spec_hash(:reqd => false, :type => Part),
-    :beat_duration_profile => arg_spec(:reqd => false, :type => SettingProfile, :validator => ->(a){ a.values_positive? }, :default => ->{ SettingProfile.new :start_value => 0.25 })
+    :beat_duration_profile => arg_spec(:reqd => false, :type => Profile, :validator => ->(a){ a.values_positive? }, :default => ->{ Profile.new :start_value => 0.25 })
   }
   
   # A new instance of Score.
@@ -54,16 +54,16 @@ class Score
     @parts = parts
   end
 
-  # Set the score beat duration SettingProfile.
-  # @param [Tempo] beat_duration_profile The SettingProfile for beat duration.
-  # @raise [ArgumentError] if beat_duration_profile is not a SettingProfile.
+  # Set the score beat duration Profile.
+  # @param [Tempo] beat_duration_profile The Profile for beat duration.
+  # @raise [ArgumentError] if beat_duration_profile is not a Profile.
   def beat_duration_profile= beat_duration_profile
     validate_arg ARG_SPECS[:beat_duration_profile], beat_duration_profile
   end
   
-  # Set the score beats per minute SettingProfile.
-  # @param [Tempo] beats_per_minute_profile The SettingProfile for beats per minute.
-  # @raise [ArgumentError] if beats_per_minute_profile is not a SettingProfile.
+  # Set the score beats per minute Profile.
+  # @param [Tempo] beats_per_minute_profile The Profile for beats per minute.
+  # @raise [ArgumentError] if beats_per_minute_profile is not a Profile.
   def beats_per_minute_profile= beats_per_minute_profile
     validate_arg ARG_SPECS[:beats_per_minute_profile], beats_per_minute_profile
     @beats_per_minute_profile = beats_per_minute_profile

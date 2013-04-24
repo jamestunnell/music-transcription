@@ -23,18 +23,18 @@ class FlatEnvelope
   end
 end
 
-# Register the plugin with Musicality::PLUGINS registry
-PLUGINS.register :flat_envelope do
-  self.author = "James Tunnell"
-  self.version = "1.0.0"
-  self.extends  = [:envelope]
-  #requires []
-  self.extension_points = []
-  self.params = { :description => 'Makes a trivial constant 1.0 "envelope."' }
-
-  def make_envelope settings
-    Musicality::FlatEnvelope.new settings
-  end
-end
+## Register the plugin with Musicality::PLUGINS registry
+#PLUGINS.register :flat_envelope do
+#  self.author = "James Tunnell"
+#  self.version = "1.0.0"
+#  self.extends  = [:envelope]
+#  #requires []
+#  self.extension_points = []
+#  self.params = { :description => 'Makes a trivial constant 1.0 "envelope."' }
+#
+#  def make_envelope settings
+#    Musicality::FlatEnvelope.new settings
+#  end
+#end
 
 end

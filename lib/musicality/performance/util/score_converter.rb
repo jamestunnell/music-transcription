@@ -1,3 +1,5 @@
+require 'set'
+
 module Musicality
 
 # Utility class to perform conversions on a score. 
@@ -26,14 +28,14 @@ class ScoreConverter
         note_offsets << offset
       end
       
-      part.loudness_profile.value_changes.each do |a|
-        note_offsets << a.offset
+      part.loudness_profile.value_changes.each do |change_offset, change|
+        note_offsets << change_offset
       end
     end
     
     # convert note offsets to time offsets
     
-    tempo_computer = TempoComputer.new( score.beat_duration_profile, score.beats_per_minute_profile )
+    tempo_computer = TempoComputer.new( score.beat_duration_profile, score.beats_per_minute_profile,  )
     note_time_converter = NoteTimeConverter.new tempo_computer, conversion_sample_rate
     note_time_map = note_time_converter.map_note_offsets_to_time_offsets note_offsets
 
@@ -44,7 +46,7 @@ class ScoreConverter
       
       new_part = Musicality::Part.new(
         :start_offset => note_time_map[note_start_offset],
-        :loudness_profile => SettingProfile.new(:start_value => part.loudness_profile.start_value),
+        :loudness_profile => Profile.new(:start_value => part.loudness_profile.start_value),
       )
       
       part.notes.each do |note|
@@ -61,19 +63,18 @@ class ScoreConverter
         new_part.notes << new_note
       end
       
-      part.loudness_profile.value_changes.each do |event|
-        note_start_offset = event.offset
-        note_end_offset = note_start_offset + event.transition.duration
+      part.loudness_profile.value_changes.each do |offset, change|
+        note_start_offset = offset
+        note_end_offset = note_start_offset + change.transition.duration
         raise "Note-time map does not have note start offset key #{note_start_offset}" unless note_time_map.has_key?(note_start_offset)
         raise "Note-time map does not have note end offset key #{note_end_offset}" unless note_time_map.has_key?(note_end_offset)
         
         start_time = note_time_map[note_start_offset]
         duration = note_time_map[note_end_offset] - start_time
         
-        new_event = event.clone
-        new_event.offset = start_time
-        new_event.transition.duration = duration
-        new_part.loudness_profile.value_changes << new_event
+        new_change = change.clone
+        new_change.transition.duration = duration
+        new_part.loudness_profile.value_changes[start_time] = new_change
       end
       
       new_parts[id] = new_part

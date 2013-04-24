@@ -1,10 +1,10 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Musicality::ValueComputer do
   
   before :each do
-    value_change = value_change(0.5, 0.2, linear(0.5))
-    setting_profile = SettingProfile.new :start_value => 1.0, :value_changes => [value_change]
+    value_change = Musicality::linear_change(0.2, 0.5)
+    setting_profile = Profile.new :start_value => 1.0, :value_changes => { 0.5 => value_change }
     value_computer = ValueComputer.new setting_profile
     @value_updater = ValueUpdater.new value_computer, 0.0
   end

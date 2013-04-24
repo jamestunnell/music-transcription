@@ -12,11 +12,11 @@ describe Musicality::Score do
       }
     ]
     
-    loudness_profile = Musicality::SettingProfile.new(
+    loudness_profile = Musicality::Profile.new(
       :start_value => 0.5,
-      :value_changes => [
-        value_change(1.0, 1.0, linear(2.0))
-      ]
+      :value_changes => {
+        1.0 => Musicality::linear_change(1.0, 2.0)
+      }
     )
 
     @parts = 
@@ -24,11 +24,11 @@ describe Musicality::Score do
       "piano (LH)" => Musicality::Part.new( :loudness_profile => loudness_profile, :notes => notes),
     }
 
-    @bpm_profile = Musicality::SettingProfile.new(
+    @bpm_profile = Musicality::Profile.new(
       :start_value => 120,
-      :value_changes => [
-        value_change(0.5, 60, linear(0.25))
-      ]
+      :value_changes => {
+        0.5 => Musicality::linear_change(60, 0.25)
+      }
     )
     
     @program = Musicality::Program.new :segments => [0...0.75, 0...0.75]

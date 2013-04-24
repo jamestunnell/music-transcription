@@ -12,7 +12,7 @@ class ValueUpdater
   
   attr_reader :value
   
-  # Given an offset, update the current value and fire :value_changed notification.
+  # Given an offset, update the current value and fire :settingd notification.
   def update_value offset
     value = @value_computer.value_at offset
     

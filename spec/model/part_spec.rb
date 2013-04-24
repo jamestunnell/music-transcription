@@ -5,14 +5,13 @@ describe Musicality::Part do
     its(:start_offset) { should eq(0) }
     its(:notes) { should be_empty }
     
-    it "should assign loudness profile given during construction" do
-      loudness_profile = Musicality::SettingProfile.new(
+    it "should assign loudness_profile profile given during construction" do
+      loudness_profile = Profile.new(
         :start_value => 0.5,
-        :value_changes => [
-          value_change(1.0, 1.0, linear(2.0))
-        ]
+        :value_changes => {
+          1.0 => Musicality::linear_change(1.0, 2.0)
+        }
       )
-  
       part = Musicality::Part.new :loudness_profile => loudness_profile
       part.loudness_profile.should eq(loudness_profile)
     end  

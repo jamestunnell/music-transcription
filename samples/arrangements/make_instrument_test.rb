@@ -21,15 +21,15 @@ hash = {
   :instrument_configs => {
     1 => {
       :plugin_name => 'synth_instr_3',
-      :settings => {
+      :initial_settings => {
         "harmonic_0_partial" => 0,
-        "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
+        "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SINE,
         "harmonic_0_amplitude" => 0.2,
         "harmonic_1_partial" => 1,
         "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SINE,
         "harmonic_1_amplitude" => 0.1,
         "harmonic_2_partial" => 2,
-        "harmonic_2_wave_type" => SPCore::Oscillator::WAVE_SAWTOOTH,
+        "harmonic_2_wave_type" => SPCore::Oscillator::WAVE_SINE,
         "harmonic_2_amplitude" => 0.05,
       }
     },

@@ -2,7 +2,7 @@ require 'hashmake'
 
 module Musicality
 
-# Abstraction of a musical part. Contains start offset, notes, and loudness settings.
+# Abstraction of a musical part. Contains start offset, notes, and loudness_profile settings.
 #
 # @author James Tunnell
 #
@@ -10,7 +10,7 @@ module Musicality
 #   @return [Array] The notes to be played.
 #
 # @!attribute [rw] loudness_profile
-#   @return [SettingProfile] The parts loudness profile.
+#   @return [Profile] The parts loudness_profile profile.
 #
 class Part
   include Hashmake::HashMakeable
@@ -19,7 +19,7 @@ class Part
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
     :start_offset => arg_spec(:reqd => false, :type => Numeric, :default => 0),
-    :loudness_profile => arg_spec(:reqd => false, :type => SettingProfile, :validator => ->(a){ a.values_between?(0.0,1.0) }, :default => ->(){ SettingProfile.new(:start_value => 0.5) }),
+    :loudness_profile => arg_spec(:reqd => false, :type => Profile, :validator => ->(a){ a.values_between?(0.0,1.0) }, :default => ->(){ Profile.new(:start_value => 0.5) }),
     :notes => arg_spec_array(:reqd => false, :type => Note),
   }
   
@@ -45,9 +45,9 @@ class Part
     @start_offset = start_offset
   end
 
-  # Set the loudness SettingProfile.
-  # @param [Tempo] loudness_profile The SettingProfile for part loudness.
-  # @raise [ArgumentError] if loudness_profile is not a SettingProfile.
+  # Set the loudness_profile Profile.
+  # @param [Tempo] loudness_profile The Profile for part loudness_profile.
+  # @raise [ArgumentError] if loudness_profile is not a Profile.
   def loudness_profile= loudness_profile
     validate_arg ARG_SPECS[:loudness_profile], loudness_profile
     @loudness_profile = loudness_profile

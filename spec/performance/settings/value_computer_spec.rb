@@ -1,14 +1,14 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Musicality::ValueComputer do
   before :all do
-    @value_change1 = value_change(1.0, 0.6)
-    @value_change2 = value_change(1.0, 0.6, linear(1.0))
+    @value_change1 = Musicality::immediate_change(0.6)
+    @value_change2 = Musicality::linear_change(0.6, 1.0)
   end
   
   describe "constant value" do
     before :each do
-      @comp = Musicality::ValueComputer.new SettingProfile.new(:start_value => 0.5)
+      @comp = ValueComputer.new Profile.new(:start_value => 0.5)
     end
     
     it "should always return default value if no changes are given" do
@@ -20,8 +20,8 @@ describe Musicality::ValueComputer do
   
   describe "one change, no transition" do
     before :each do
-      setting_profile = SettingProfile.new :start_value => 0.5, :value_changes => [@value_change1]
-      @comp = Musicality::ValueComputer.new setting_profile
+      profile = Profile.new :start_value => 0.5, :value_changes => { 1.0 => @value_change1 }
+      @comp = ValueComputer.new profile
     end
     
     it "should be the default value just before the first change" do
@@ -43,8 +43,8 @@ describe Musicality::ValueComputer do
   
   context "one change, linear transition" do
     before :each do
-      setting_profile = SettingProfile.new :start_value => 0.2, :value_changes => [@value_change2]
-      @comp = Musicality::ValueComputer.new setting_profile
+      profile = Profile.new :start_value => 0.2, :value_changes => { 1.0 => @value_change2 }
+      @comp = Musicality::ValueComputer.new profile
     end
     
     it "should be the first (starting) value just before the second value" do

@@ -62,44 +62,43 @@ class ScoreCollator
     end    
     
     score.parts = new_parts
-    score.beat_duration_profile = clone_and_collate_profile(score.beat_duration_profile, score.program.segments)
     score.beats_per_minute_profile = clone_and_collate_profile(score.beats_per_minute_profile, score.program.segments)
-    
+    score.beat_duration_profile = clone_and_collate_profile(score.beats_per_minute_profile, score.program.segments)
     score.program.segments = [score.find_start...score.find_end]
   end
 
   private
   
-  def self.modify_event_for_segment event, seg, computer
-    if(event.offset + event.transition.duration) > seg.last
-      event.transition.duration = seg.last - event.offset
-      event.value = computer.value_at seg.last
+  def self.modify_change_for_segment change, offset, seg, computer
+    if(offset + change.transition.duration) > seg.last
+      change.transition.duration = seg.last - offset
+      change.value = computer.value_at seg.last
     end
   end
 
   def self.clone_and_collate_profile profile, program_segments
-    new_profile = SettingProfile.new :start_value => profile.start_value
+    new_profile = Profile.new :start_value => profile.start_value
     
     segment_start_offset = 0.0
     comp = ValueComputer.new profile
-  
+    
     program_segments.each do |seg|
       # figure which dynamics to keep/modify
       changes = Marshal.load(Marshal.dump(profile.value_changes))
-      changes.keep_if {|change| change.offset >= seg.first && change.offset < seg.last}
-      changes.each do |change|
-	modify_event_for_segment change, seg, comp
+      changes.keep_if {|offset,change| seg.include?(offset) }
+      changes.each do |offset, change|
+	modify_change_for_segment change, offset, seg, comp
       end
       
       # find & add segment start dynamic first
       value = comp.value_at seg.first
       offset = segment_start_offset
-      new_profile.value_changes << value_change(offset, value)
+      new_profile.value_changes[offset] = Musicality::value_change(value)
       
       # add dynamics to part, adjusting for segment start offset
-      changes.each do |change|
-	change.offset = (change.offset - seg.first) + segment_start_offset
-	new_profile.value_changes << change
+      changes.each do |offset2, change|
+	offset3 = (offset2 - seg.first) + segment_start_offset
+	new_profile.value_changes[offset3] = change
       end	
       
       segment_start_offset += (seg.last - seg.first)

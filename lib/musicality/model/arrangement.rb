@@ -3,9 +3,9 @@ require 'spcore'
 module Musicality
 
 # A plugin config object to load default instrument.
-DEFAULT_INSTRUMENT_CONFIG = PluginConfig.new(
-  :plugin_name => 'synth_instr_3',
-  :settings => {
+DEFAULT_INSTRUMENT_CONFIG = InstrumentConfig.new(
+  :plugin_name => "synth_instr_3",
+  :initial_settings => {
     "harmonic_1_partial" => 0,
     "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SAWTOOTH,
     "harmonic_1_amplitude" => 0.2,
@@ -15,16 +15,10 @@ DEFAULT_INSTRUMENT_CONFIG = PluginConfig.new(
     "harmonic_3_partial" => 5,
     "harmonic_3_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
     "harmonic_3_amplitude" => 0.05,
-    #:attack_rate_min => SettingProfile.new( :start_value => 150.0 ),
-    #:attack_rate_max => SettingProfile.new( :start_value => 250.0 ),
-    #:decay_rate_min => SettingProfile.new( :start_value => 25.0 ),
-    #:decay_rate_max => SettingProfile.new( :start_value => 50.0 ),
-    #:sustain_level_min => SettingProfile.new( :start_value => 0.2 ),
-    #:sustain_level_max => SettingProfile.new( :start_value => 0.6 ),
-    #:damping_rate_min => SettingProfile.new( :start_value => 100.0 ),
-    #:damping_rate_max => SettingProfile.new( :start_value => 200.0 ),
-    #
-    #:wave_type => SettingProfile.new( :start_value => 'square' )
+    "attack_rate" => 150.0,
+    "decay_rate" => 25.0,
+    "sustain_level" => 0.5,
+    "damping_rate" => 100.0
   }
 )
 
@@ -36,7 +30,7 @@ class Arrangement
   # specifies which hashed args can be used for initialize.
   ARG_SPECS = {
     :score => arg_spec(:reqd => true, :type => Score),
-    :instrument_configs => arg_spec_hash(:reqd => false, :type => PluginConfig),
+    :instrument_configs => arg_spec_hash(:reqd => false, :type => InstrumentConfig),
   }
 
   attr_reader :score, :instrument_configs
@@ -68,14 +62,14 @@ class Arrangement
   private
   
   def make_instrument config, sample_rate
-    unless PLUGINS.plugins.has_key?(config.plugin_name.to_sym)
+    unless INSTRUMENTS.plugins.has_key?(config.plugin_name)
       raise ArgumentError, "instrument plugin #{config.plugin_name} is not registered"
     end
     
-    plugin = PLUGINS.plugins[config.plugin_name.to_sym]
-    instrument = plugin.make_instrument(:sample_rate => sample_rate)
+    plugin = INSTRUMENTS.plugins[config.plugin_name]
+    instrument = plugin.make_instrument(sample_rate)
 
-    config.settings.each do |name, val|
+    config.initial_settings.each do |name, val|
       if instrument.params.include? name
         instrument.params[name].set_value val
       end

@@ -11,14 +11,14 @@ describe Performer do
       { :duration => 0.25, :intervals => [ { :pitch => D7 } ]},
       { :duration => 0.75, :intervals => [ { :pitch => E7 } ]},
     ]
-    loudness_profile = SettingProfile.new :start_value => 0.5
-    part = Part.new(:start_offset => 0.0, :notes => @notes, :loudness_profile => loudness_profile)
+    loudness = Profile.new :start_value => 0.5
+    part = Part.new(:start_offset => 0.0, :notes => @notes, :loudness => loudness)
     
     sample_rate = 5000
     max_attack_time = 0.15
-
-    plugin = PLUGINS.plugins[DEFAULT_INSTRUMENT_CONFIG.plugin_name.to_sym]
-    instrument = plugin.make_instrument(:sample_rate => sample_rate)
+    
+    plugin = INSTRUMENTS.plugins[DEFAULT_INSTRUMENT_CONFIG.plugin_name]
+    instrument = plugin.make_instrument(sample_rate)
     @performer = Performer.new part, instrument, max_attack_time
   end
 

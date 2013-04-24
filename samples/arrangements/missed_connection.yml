@@ -164,7 +164,7 @@
 :instrument_configs:
   bass:
     :plugin_name: synth_instr_3
-    :settings:
+    :initial_settings:
       harmonic_0_partial: 0
       harmonic_0_wave_type: :waveSquare
       harmonic_0_amplitude: 0.2

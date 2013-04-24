@@ -1,6 +1,6 @@
 module Musicality
 
-# Compute the value of a SettingProfile for any offset.
+# Compute the value of a Profile for any offset.
 # @author James Tunnell
 #
 # @!attribute [r] piecewise_function
@@ -15,16 +15,17 @@ class ValueComputer
     set_default_value setting_profile.start_value
     
     if setting_profile.value_changes.any?
-      value_changes = setting_profile.value_changes.sort_by {|a| a.offset }
+      setting_profile.value_changes.sort.each do |pair|
+        offset = pair.first
+        value_change = pair.last
         
-      value_changes.each do |event|
-        case event.transition.type
+        case value_change .transition.type
         when Transition::IMMEDIATE
-          add_immediate_value_change event
+          add_immediate_change value_change, offset
         when Transition::LINEAR
-          add_linear_value_change event
+          add_linear_change value_change, offset
         when Transition::SIGMOID
-          add_sigmoid_value_change event
+          add_sigmoid_change value_change, offset
         end
         
       end
@@ -39,22 +40,22 @@ class ValueComputer
   
   # finds the minimum domain value
   def domain_min
-    ValueChange::MIN_OFFSET
+    Musicality::MIN_OFFSET
   end
 
   # finds the maximum domain value
   def domain_max
-    ValueChange::MAX_OFFSET
+    Musicality::MAX_OFFSET
   end
   
   # finds the minimum domain value
   def self.domain_min
-    ValueChange::MIN_OFFSET
+    Musicality::MIN_OFFSET
   end
 
   # finds the maximum domain value
   def self.domain_max
-    ValueChange::MAX_OFFSET
+    Musicality::MAX_OFFSET
   end
   
   private
@@ -68,10 +69,10 @@ class ValueComputer
   # for a matching note offset. Transition duration will be ignored since the
   # change is immediate.
   #
-  # @param [Numeric] value_change An event with information about the new value.
-  def add_immediate_value_change value_change
+  # @param [ValueChange] value_change An event with information about the new value.
+  # @param [Numeric] offset
+  def add_immediate_change value_change, offset
     func = nil
-    offset = value_change.offset
     value = value_change.value
     duration = value_change.transition.duration
     domain = offset...(domain_max + 1)
@@ -84,11 +85,11 @@ class ValueComputer
   # for a matching note offset. If the dynamic event duration is non-zero, a 
   # linear transition function is created.
   #
-  # @param [Numeric] value_change An event with information about the new value.
-  def add_linear_value_change value_change
+  # @param [ValueChange] value_change An event with information about the new value.
+  # @param [Numeric] offset
+  def add_linear_change value_change, offset
     
     func = nil
-    offset = value_change.offset
     value = value_change.value
     duration = value_change.transition.duration
     domain = offset...(domain_max + 1)
@@ -117,13 +118,13 @@ class ValueComputer
   # for a matching note offset. If the dynamic event duration is non-zero, a 
   # linear transition function is created.
   #
-  # @param [Numeric] value_change An event with information about the new value.
-  def add_sigmoid_value_change value_change
+  # @param [ValueChange] value_change An event with information about the new value.
+  # @param [Numeric] offset
+  def add_sigmoid_change value_change, offset
     
     func = nil
-    offset = value_change.offset
     value = value_change.value
-    duration = value_change.duration
+    duration = value_change.transition.duration
     domain = offset...(domain_max + 1)
     
     if duration == 0
