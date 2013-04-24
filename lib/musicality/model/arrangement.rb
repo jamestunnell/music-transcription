@@ -47,35 +47,16 @@ class Arrangement
     instrument_map = {}
     
     @instrument_configs.each do |part_id, config|
-      instrument_map[part_id] = make_instrument config, sample_rate
+      instrument_map[part_id] = InstrumentPlugin.make_instrument sample_rate, config
     end
    
     @score.parts.keys.each do |part_id|
       unless instrument_map.has_key?(part_id)
-        instrument_map[part_id] = make_instrument default_config, sample_rate
+        instrument_map[part_id] = InstrumentPlugin.make_instrument sample_rate, default_config
       end
     end
     
     return instrument_map
-  end
-  
-  private
-  
-  def make_instrument config, sample_rate
-    unless INSTRUMENTS.plugins.has_key?(config.plugin_name)
-      raise ArgumentError, "instrument plugin #{config.plugin_name} is not registered"
-    end
-    
-    plugin = INSTRUMENTS.plugins[config.plugin_name]
-    instrument = plugin.make_instrument(sample_rate)
-
-    config.initial_settings.each do |name, val|
-      if instrument.params.include? name
-        instrument.params[name].set_value val
-      end
-    end
-    
-    return instrument
   end
 end
 end
