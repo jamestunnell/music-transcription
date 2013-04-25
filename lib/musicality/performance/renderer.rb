@@ -4,33 +4,31 @@ module Musicality
 class Renderer
   
   # Render the given arrangement at the given sample rate.
-  def self.render arrangement, sample_rate
+  def self.render arrangement, sample_rate, verbose = false
     time_conversion_sample_rate = 250.0
     conductor = Musicality::Conductor.new arrangement, time_conversion_sample_rate, sample_rate
     
-    unless block_given?
-      puts "time   sample    "
+    if verbose
+      puts "time   sample   avg    active keys"
     end
     
     samples = []
-    conductor.perform do |sample|
-      if block_given?
-        yield sample
-      else
-        samples << sample
-
-        if(samples.count % 10000 == 0)
-          print "%.4f:" % conductor.time_counter
-          print "%08d   " % conductor.sample_counter
-          print "%.4f   " % samples.last
-  
-          active_keys = 0
-          conductor.performers.each do |performer|  
-            active_keys += performer.instrument.active_keys.count
-          end
-  
-          print "#{active_keys} active keys"
-          puts ""
+    while conductor.time_counter < conductor.end_of_score
+      conductor.perform_samples 10000 do |new_samples|
+        if block_given?
+          yield new_samples
+        else
+          samples += new_samples
+        end
+        
+        if verbose
+          avg = new_samples.inject(0){|sum,a| sum + a } / new_samples.count
+          keys = conductor.performers.inject(0){|active_keys, performer| active_keys + performer.instrument.active_keys.count }
+          
+          print "%.4f " % conductor.time_counter
+          print "%08d " % conductor.sample_counter
+          print "%.4f " % avg
+          puts keys
         end
       end
     end
