@@ -13,32 +13,22 @@ class Renderer
   def self.render arrangement, sample_rate
     time_conversion_sample_rate = 250.0
     conductor = Musicality::Conductor.new arrangement, time_conversion_sample_rate, sample_rate
-    #binding.pry
     
     unless block_given?
-      puts "time   sample    "
+      puts "time   sample   avg    active keys"
     end
     
     samples = []
-    conductor.perform do |sample|
-      if block_given?
-        yield sample
-      else
-        samples << sample
-
-        if(samples.count % 10000 == 0)
-          print "%.4f:" % conductor.time_counter
-          print "%08d   " % conductor.sample_counter
-          print "%.4f   " % samples.last
-  
-          active_keys = 0
-          conductor.performers.each do |performer|  
-            active_keys += performer.instrument.active_keys.count
-          end
-  
-          print "#{active_keys} active keys"
-          puts ""
-        end
+    while conductor.time_counter < conductor.end_of_score
+      conductor.perform_samples 10000 do |new_samples|
+        avg = new_samples.inject(0){|sum,a| sum + a } / new_samples.count
+        
+        samples += new_samples
+        
+        print "%.4f " % conductor.time_counter
+        print "%08d " % conductor.sample_counter
+        print "%.4f " % avg
+        puts conductor.performers.inject(0){|active_keys, performer| active_keys + performer.instrument.active_keys.count }
       end
     end
     

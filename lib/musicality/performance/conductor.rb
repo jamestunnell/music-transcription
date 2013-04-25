@@ -97,13 +97,11 @@ class Conductor
     samples = []
 
     while @time_counter < (@end_of_score + lead_out_time) do
-      sample = perform_sample
-      
-      if block_given?
-        yield sample
-      else
-        samples << sample
-      end
+      samples << perform_sample
+    end
+
+    if block_given?
+      yield samples
     end
     
     @prepared_at_sample = @sample_counter
@@ -122,13 +120,11 @@ class Conductor
     samples = []
 
     n_samples.to_i.times do
-      sample = perform_sample
-
-      if block_given?
-        yield sample
-      else
-        samples << sample
-      end
+      samples << perform_sample
+    end
+    
+    if block_given?
+      yield samples
     end
     
     @prepared_at_sample = @sample_counter
@@ -146,15 +142,14 @@ class Conductor
     samples = []
     
     n_samples.times do
-      sample = perform_sample
-
-      if block_given?
-        yield sample
-      else
-        samples << sample
-      end
+      samples << perform_sample
     end
     
+    if block_given?
+      yield samples
+    end
+    
+    @prepared_at_sample = @sample_counter    
     return samples
   end
   
