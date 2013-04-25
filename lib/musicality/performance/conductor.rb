@@ -65,13 +65,63 @@ class Conductor
     @sample_counter = 0
   end
   
-  # Perform the entire score, producing however many samples as is necessary to
-  # render the entire program length.
-  def perform start_time = @start_of_score, lead_out_time = 0.0
-    prepare_performance_at start_time
+  # Prepare to perform the score (at start of score). Gives the conductor a
+  # chance to set up counters, and for performers to figure which notes will be
+  # played. Must be called before any calls to perform_xxx.
+  def prepare_performance
+    prepare_performance_at @start_of_score
+  end
+  
+  # Prepare to perform the score (at given start time). Gives the conductor a
+  # chance to set up counters, and for performers to figure which notes will be
+  # played. Must be called before any calls to perform_xxx.
+  def prepare_performance_at start_time = 0.0
+    @time_counter = start_time
+    @sample_counter = (@time_counter * @sample_period).to_i
+    @prepared_at_sample = @sample_counter
+    
+    @performers.each do |performer|
+      performer.prepare_performance_at @time_counter
+    end
+  end
+
+  # Perform the entire score, including given lead out time. If performance has not
+  # already been prepared, it will be prepared for start of score.
+  # @param [Numeric] lead_out_time The amount of time to go past the end of the
+  #                                score during performance.
+  def perform lead_out_time = 0.0
+    if @sample_counter != @prepared_at_sample
+      prepare_performance
+    end
+    
     samples = []
 
     while @time_counter < (@end_of_score + lead_out_time) do
+      sample = perform_sample
+      
+      if block_given?
+        yield sample
+      else
+        samples << sample
+      end
+    end
+    
+    @prepared_at_sample = @sample_counter
+    return samples
+  end
+  
+  # Perform score for the given duration in seconds. If performance has not
+  # already been prepared, it will be prepared for start of score.
+  # @param [Numeric] time_sec
+  def perform_seconds time_sec
+    if @sample_counter != @prepared_at_sample
+      prepare_performance
+    end
+    
+    n_samples = time_sec / @sample_period
+    samples = []
+
+    n_samples.to_i.times do
       sample = perform_sample
 
       if block_given?
@@ -81,13 +131,18 @@ class Conductor
       end
     end
     
+    @prepared_at_sample = @sample_counter
     return samples
   end
 
-  # Perform part of the score, producing as many samples as is given by n_samples.
+  # Perform score for the given number of samples. If performance has not
+  # already been prepared, it will be prepared for start of score.
   # @param [Numeric] n_samples The number of samples of the score to render.
-  def perform_samples n_samples, start_time = @start_of_score
-    prepare_performance_at start_time
+  def perform_samples n_samples
+    if @sample_counter != @prepared_at_sample
+      prepare_performance
+    end
+    
     samples = []
     
     n_samples.times do
@@ -102,61 +157,9 @@ class Conductor
     
     return samples
   end
-
-  # Perform part of the score, producing as many samples as is necessary to 
-  # render t_seconds seconds of the score. 
-  # @param [Numeric] t_seconds The number of seconds of the score to render.  
-  def perform_seconds t_seconds, start_time = @start_of_score
-    prepare_performance_at start_time
-    samples = []
-    
-    while @time_counter < t_seconds do
-      sample = perform_sample
-
-      if block_given?
-        yield sample
-      else
-        samples << sample
-      end
-    end
-    
-    return samples
-  end
-
-  ## Perform part of the score, producing as many samples as is necessary to 
-  ## render n_notes notes of the score. 
-  ## @param [Numeric] n_notes The number of notes of the score to render.    
-  #def perform_notes
-  #  prepare_performance
-  #  samples = []
-  #
-  #  while @note_counter < n_notes
-  #    sample = perform_sample
-  #
-  #    if block_given?
-  #      yield sample
-  #    else
-  #      samples << sample
-  #    end
-  #  end
-  #  
-  #  return samples
-  #end
-
+  
   private
   
-  # Give the conductor a chance to set up counters, and for performers to figure
-  # which notes will be played. Must be called before any calls to 
-  # perform_sample.
-  def prepare_performance_at start_time = 0.0
-    @time_counter = start_time
-    @sample_counter = (@time_counter * @sample_period).to_i
-    
-    @performers.each do |performer|
-      performer.prepare_performance_at @time_counter
-    end
-  end
-
   # Render an audio sample of the performance at the current note counter.
   # Increments the note counter by the current notes per sample (computed from 
   # current tempo). Increments the sample counter by 1 and the time counter by 
@@ -172,6 +175,10 @@ class Conductor
     
     @time_counter += @sample_period
     @sample_counter += 1
+
+    if block_given?
+      yield sample
+    end
     
     return sample
   end
