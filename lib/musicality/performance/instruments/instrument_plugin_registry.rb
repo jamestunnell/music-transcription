@@ -61,4 +61,6 @@ class InstrumentPluginRegistry
   end
 end
 
+INSTRUMENTS = InstrumentPluginRegistry.new
+
 end

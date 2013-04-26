@@ -41,7 +41,6 @@ require 'musicality/performance/settings/value_updater'
 # instrument plugins
 require 'musicality/performance/instruments/instrument_plugin'
 require 'musicality/performance/instruments/instrument_plugin_registry'
-require 'musicality/performance/instruments/instrument_plugins'
 
 require 'musicality/performance/util/score_collator'
 require 'musicality/performance/util/score_converter'

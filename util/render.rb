@@ -52,17 +52,21 @@ ARGV.each do |filename|
     format = WaveFile::Format.new(:mono, :float_32, samplerate.to_i)
     writer = WaveFile::Writer.new(outfile, format)
     
-    print "Rendering #{File.basename(filename)} -> #{outfile}"
+    print "Rendering #{File.basename(filename)} -> #{outfile} "
     if verbose
       puts
+    else
+      print "  0.0%"
     end
     
-    Musicality::Renderer.render(arrangement, samplerate, verbose) do |samples|
+    chunk_size = 1000
+    Musicality::Renderer.render(arrangement, samplerate, chunk_size, verbose) do |samples, conductor|
       buffer = WaveFile::Buffer.new(samples, format)
       writer.write(buffer)
       
       unless verbose
-        print '.'
+        print "\b" * 6
+        print "%5.1f%%" % (100 * conductor.time_counter / conductor.end_of_score)
       end
     end
 

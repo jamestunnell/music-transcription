@@ -4,7 +4,7 @@ module Musicality
 class Renderer
   
   # Render the given arrangement at the given sample rate.
-  def self.render arrangement, sample_rate, verbose = false
+  def self.render arrangement, sample_rate, chunk_size, verbose = false
     time_conversion_sample_rate = 250.0
     conductor = Musicality::Conductor.new arrangement, time_conversion_sample_rate, sample_rate
     
@@ -14,9 +14,9 @@ class Renderer
     
     samples = []
     while conductor.time_counter < conductor.end_of_score
-      conductor.perform_samples 10000 do |new_samples|
+      conductor.perform_samples chunk_size do |new_samples|
         if block_given?
-          yield new_samples
+          yield new_samples, conductor
         else
           samples += new_samples
         end

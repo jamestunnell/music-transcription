@@ -195,12 +195,13 @@ class SynthInstrument < Musicality::Instrument
     params["harmonic_0_amplitude"].set_value 1.0
   end
 
-  def self.make_and_register_plugin harmonics
+  def self.make_and_register_plugin harmonics, presets = {}
     INSTRUMENTS.register InstrumentPlugin.new(
       :name => "synth_instr_#{harmonics}",
       :version => "1.0.0",
       :author => "James Tunnell",
       :description => "A synthesizer with #{harmonics} harmonic(s) per note.",
+      :presets => presets,
       :maker_proc => lambda do |sample_rate|
         SynthInstrument.new(:harmonics => harmonics, :sample_rate => sample_rate)
       end
@@ -209,36 +210,28 @@ class SynthInstrument < Musicality::Instrument
 end
 
 SynthInstrument.make_and_register_plugin 1
-SynthInstrument.make_and_register_plugin 3
-
-#PRESETS.register :"blend" do
-#  self.instrument = :synth_instr_3
-#  self.settings = {
-#    "harmonic_0_partial" => 0,
-#    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
-#    "harmonic_0_amplitude" => 0.2,
-#    "harmonic_1_partial" => 1,
-#    "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SINE,
-#    "harmonic_1_amplitude" => 0.1,
-#    "harmonic_2_partial" => 2,
-#    "harmonic_2_wave_type" => SPCore::Oscillator::WAVE_SAWTOOTH,
-#    "harmonic_2_amplitude" => 0.05,
-#  }
-#end
-#
-#PRESETS.register :"sines" do
-#  self.instrument = :synth_instr_3
-#  self.settings = {
-#    "harmonic_0_partial" => 0,
-#    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SINE,
-#    "harmonic_0_amplitude" => 0.5,
-#    "harmonic_1_partial" => 1,
-#    "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SINE,
-#    "harmonic_1_amplitude" => 0.3,
-#    "harmonic_2_partial" => 2,
-#    "harmonic_2_wave_type" => SPCore::Oscillator::WAVE_SINE,
-#    "harmonic_2_amplitude" => 0.2,
-#  }
-#end
+SynthInstrument.make_and_register_plugin 3,
+  "blend" => {
+    "harmonic_0_partial" => 0,
+    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
+    "harmonic_0_amplitude" => 0.2,
+    "harmonic_1_partial" => 1,
+    "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SINE,
+    "harmonic_1_amplitude" => 0.1,
+    "harmonic_2_partial" => 2,
+    "harmonic_2_wave_type" => SPCore::Oscillator::WAVE_SAWTOOTH,
+    "harmonic_2_amplitude" => 0.05,
+  },
+  "sines" => {
+    "harmonic_0_partial" => 0,
+    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SINE,
+    "harmonic_0_amplitude" => 0.5,
+    "harmonic_1_partial" => 1,
+    "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SINE,
+    "harmonic_1_amplitude" => 0.3,
+    "harmonic_2_partial" => 2,
+    "harmonic_2_wave_type" => SPCore::Oscillator::WAVE_SINE,
+    "harmonic_2_amplitude" => 0.2,
+  }
 
 end
