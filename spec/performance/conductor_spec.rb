@@ -37,8 +37,12 @@ describe Musicality::Conductor do
 
   describe "#perform" do
     before :each do
-      time_conversion_rate = 250.0
-      @conductor = Musicality::Conductor.new @arrangement, time_conversion_rate, @sample_rate
+      time_conversion_rate = 250
+      @conductor = Musicality::Conductor.new(
+        :arrangement => @arrangement,
+        :time_conversion_sample_rate => time_conversion_rate,
+        :rendering_sample_rate => @sample_rate
+      )
       @conductor.perform
     end
 

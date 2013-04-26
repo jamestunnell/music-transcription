@@ -5,8 +5,12 @@ class Renderer
   
   # Render the given arrangement at the given sample rate.
   def self.render arrangement, sample_rate, chunk_size, verbose = false
-    time_conversion_sample_rate = 250.0
-    conductor = Musicality::Conductor.new arrangement, time_conversion_sample_rate, sample_rate
+    time_conversion_sample_rate = 250
+    conductor = Musicality::Conductor.new(
+      :arrangement => arrangement,
+      :time_conversion_sample_rate => time_conversion_sample_rate,
+      :rendering_sample_rate => sample_rate
+    )
     
     if verbose
       puts "time   sample   avg    active keys"

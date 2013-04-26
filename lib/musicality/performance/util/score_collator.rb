@@ -6,14 +6,25 @@ module Musicality
 #
 # @author James Tunnell
 class ScoreCollator
-  
-  # Combine multiple program segments to one, using
-  # tempo/note/dynamic replication and truncation where necessary.
+
+  # Combine multiple program segments to one, using tempo/note/dynamic replication
+  # and truncation where necessary. Returns a modified clone of the given score.
   #
-  # @param [Score] score The score to be collated.
+  # @param [Score] score The score to be collated. Not modified by this method.
+  # 
+  def self.collate_score score
+    score = Marshal.load(Marshal.dump(score))
+    self.collate_score! score
+    return score
+  end
+  
+  # Combine multiple program segments to one, using tempo/note/dynamic replication
+  # and truncation where necessary. Modifies given score.
+  #
+  # @param [Score] score The score to be collated. Modified in place.
   #
   def self.collate_score! score
-    return if score.program.segments.count <= 1
+    return score if score.program.segments.count <= 1
     
     new_parts = {}
     
@@ -65,6 +76,8 @@ class ScoreCollator
     score.beats_per_minute_profile = clone_and_collate_profile(score.beats_per_minute_profile, score.program.segments)
     score.beat_duration_profile = clone_and_collate_profile(score.beats_per_minute_profile, score.program.segments)
     score.program.segments = [score.find_start...score.find_end]
+    
+    return score
   end
 
   private

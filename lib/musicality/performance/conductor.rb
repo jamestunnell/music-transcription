@@ -9,7 +9,17 @@ module Musicality
 # @author James Tunnell
 # 
 class Conductor
-
+  include Hashmake::HashMakeable
+  
+  ARG_SPECS = {
+    :arrangement => arg_spec(:reqd => true, :type => Arrangement),
+    :time_conversion_sample_rate => arg_spec(:reqd => true, :type => Fixnum, :validator => ->(a){ a > 0 } ),
+    :rendering_sample_rate => arg_spec(:reqd => true, :type => Fixnum, :validator => ->(a){ a > 0 } ),
+    :plugin_dirs => arg_spec_array(:reqd => false, :type => String),
+    :max_attack_time => arg_spec(:reqd => false, :type => Numeric, :validator => ->(a){ a > 0.0 }, :default => 0.25),
+    
+  }
+  
   attr_reader :sample_rate, :start_of_score, :end_of_score,
                :performers, :time_counter, :sample_counter
   
@@ -24,41 +34,29 @@ class Conductor
   # @param [Hash] optional_args Hashed args that are not required. Valid keys
   #                             are :max_attack_time, :default_instrument_config,
   #                             and :plugin_dirs.
-  def initialize arrangement, time_conversion_sample_rate, rendering_sample_rate, optional_args = {} #arrangement, sample_rate = DEFAULT_SAMPLE_RATE, max_attack_time = 0.15
-    score = arrangement.score
-    raise ArgumentError, "score contains no parts" if score.parts.empty?
-    raise ArgumentError, "time_conversion_sample_rate is not a Numeric" unless time_conversion_sample_rate.is_a?(Numeric)
-    raise ArgumentError, "time_conversion_sample_rate is less than 100.0" if time_conversion_sample_rate < 100.0
+  def initialize args
+    hash_make Conductor::ARG_SPECS, args
     
-    ScoreCollator.collate_score!(score)
-    parts = ScoreConverter.make_time_based_parts_from_score score, time_conversion_sample_rate
+    score = ScoreCollator.collate_score!(@arrangement.score)
+    parts = ScoreConverter.make_time_based_parts_from_score score, @time_conversion_sample_rate
     
     @start_of_score = parts.values.inject(parts.values.first.start_offset) {|so_far, part| now = part.start_offset; (now < so_far) ? now : so_far }
     @end_of_score = parts.values.inject(parts.values.first.end_offset) {|so_far, part| now = part.end_offset; (now > so_far) ? now : so_far }
     
-    opts = {
-      :max_attack_time => 0.15,
-      :plugin_dirs => [], # File.expand_path(File.dirname(__FILE__))
-    }.merge optional_args
-    
-    max_attack_time = opts[:max_attack_time]
-    
-    opts[:plugin_dirs].each do |dir|
+    @plugin_dirs.each do |dir|
       puts "loading plugins from #{dir}"
       PLUGINS.load_plugins dir
     end
     
-    raise ArgumentError, "rendering_sample_rate is not a Numeric" unless rendering_sample_rate.is_a?(Numeric)
-    raise ArgumentError, "rendering_sample_rate is less than 100.0" if rendering_sample_rate < 100.0
-    @sample_rate = rendering_sample_rate
+    @sample_rate = @rendering_sample_rate
     @sample_period = 1.0 / @sample_rate
     
-    instruments = arrangement.make_instruments @sample_rate
+    instruments = @arrangement.make_instruments @sample_rate
     
     @performers = []
     parts.each do |part_id, part|
       raise ArgumentError, "instruments does not have key for part id #{part_id}" unless instruments.has_key?(part_id)
-      @performers << Performer.new(part, instruments[part_id], max_attack_time)
+      @performers << Performer.new(part, instruments[part_id], @max_attack_time)
     end
     
     @time_counter = 0.0
