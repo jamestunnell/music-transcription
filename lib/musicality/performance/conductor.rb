@@ -93,18 +93,22 @@ class Conductor
     end
     
     samples = []
-
-    while @time_counter < (@end_of_score + lead_out_time) do
-      new_samples = perform_chunk
-      
-      if block_given?
-        yield new_samples
-      end
-      
-      samples += new_samples
+    to_perform = (@end_of_score + lead_out_time - @time_counter) / @sample_period
+    while to_perform >= @sample_chunk_size
+      samples += perform_chunk
+      to_perform -= @sample_chunk_size
     end
     
-    @prepared_at_sample = @sample_counter
+    while to_perform > 0
+      samples << perform_sample
+      to_perform -= 1
+    end
+    
+    if block_given?
+      yield samples
+    end
+    
+    @prepared_at_sample = @sample_counter    
     return samples
   end
   
