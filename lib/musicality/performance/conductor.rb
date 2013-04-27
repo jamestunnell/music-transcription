@@ -15,7 +15,7 @@ class Conductor
     :arrangement => arg_spec(:reqd => true, :type => Arrangement),
     :time_conversion_sample_rate => arg_spec(:reqd => true, :type => Fixnum, :validator => ->(a){ a > 0 } ),
     :rendering_sample_rate => arg_spec(:reqd => true, :type => Fixnum, :validator => ->(a){ a > 0 } ),
-    :plugin_dirs => arg_spec_array(:reqd => false, :type => String),
+    :instrument_plugin_dirs => arg_spec_array(:reqd => false, :type => String),
     :max_attack_time => arg_spec(:reqd => false, :type => Numeric, :validator => ->(a){ a > 0.0 }, :default => 0.25),
     :sample_chunk_size => arg_spec(:reqd => false, :type => Fixnum, :default => 100, :validator => ->(a){ a > 0 })
   }
@@ -43,9 +43,9 @@ class Conductor
     @start_of_score = parts.values.inject(parts.values.first.start_offset) {|so_far, part| now = part.start_offset; (now < so_far) ? now : so_far }
     @end_of_score = parts.values.inject(parts.values.first.end_offset) {|so_far, part| now = part.end_offset; (now > so_far) ? now : so_far }
     
-    @plugin_dirs.each do |dir|
-      puts "loading plugins from #{dir}"
-      PLUGINS.load_plugins dir
+    @instrument_plugin_dirs.each do |dir|
+      puts "loading instrument plugins from #{dir}"
+      INSTRUMENTS.load_plugins dir
     end
     
     @sample_rate = @rendering_sample_rate

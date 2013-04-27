@@ -52,15 +52,3 @@ require 'musicality/performance/key'
 require 'musicality/performance/instrument'
 require 'musicality/performance/performer'
 require 'musicality/performance/conductor'
-
-require 'musicality/performance/envelopes/adsr_envelope'
-require 'musicality/performance/envelopes/flat_envelope'
-#
-#require 'musicality/performance/voices/oscillator_voice'
-#require 'musicality/performance/voices/oscillator/oscillator'
-#require 'musicality/performance/voices/oscillator/sawtooth_wave'
-#require 'musicality/performance/voices/oscillator/sine_wave'
-#require 'musicality/performance/voices/oscillator/square_wave'
-#require 'musicality/performance/voices/oscillator/triangle_wave'
-
-require 'musicality/performance/instruments/synth_instrument'

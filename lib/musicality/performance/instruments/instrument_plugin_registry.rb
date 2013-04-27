@@ -19,14 +19,11 @@ class InstrumentPluginRegistry
   end
   
   # Load all the plugins in the given plugin dir.
-  def load_plugins(plugin_dir)
+  def load_plugins(dir)
     prev_plugins = @plugins.clone
     
-    Find.find(plugin_dir) do |path|
-      if path =~ /\.rb$/
-        @current_load_path = path # nasty, nasty, nasty.  Need a better way to pass a plugin's load path to it.
-        load path
-      end
+    Find.find(dir) do |path|
+      load path if path =~ /\.rb$/
     end
     
     new_plugins = @plugins.reject {|key, plugin| prev_plugins.has_key? key}

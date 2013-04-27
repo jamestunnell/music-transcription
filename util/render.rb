@@ -26,10 +26,16 @@ END
 end.process!
 
 samplerate = options[:samplerate]
-outdir = options[:outdir]
+outdir = File.expand_path(options[:outdir])
 verbose = options[:verbose]
 
-puts "Rendering to output dir #{outdir} at sample rate #{samplerate}"
+# load sample (built-in) instrument plugins
+instrument_plugins_dir = File.expand_path File.dirname(__FILE__) + '/../samples/instruments'
+puts "Loading built-in instrument plugins from #{instrument_plugins_dir}"
+Musicality::INSTRUMENTS.load_plugins instrument_plugins_dir
+
+puts "Output set to #{outdir}"
+puts "Sample rate set to #{samplerate}"
 
 ARGV.each do |filename|
  
