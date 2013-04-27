@@ -52,7 +52,6 @@ require 'musicality/performance/key'
 require 'musicality/performance/instrument'
 require 'musicality/performance/performer'
 require 'musicality/performance/conductor'
-require 'musicality/performance/renderer'
 
 require 'musicality/performance/envelopes/adsr_envelope'
 require 'musicality/performance/envelopes/flat_envelope'

@@ -55,23 +55,56 @@ ARGV.each do |filename|
     print "Rendering #{File.basename(filename)} -> #{outfile} "
     if verbose
       puts
+      puts "time   sample   avg    active keys"
     else
       print "  0.0%"
     end
     
-    chunk_size = 1000
-    Musicality::Renderer.render(arrangement, samplerate, chunk_size, verbose) do |samples, conductor|
-      buffer = WaveFile::Buffer.new(samples, format)
-      writer.write(buffer)
-      
-      unless verbose
-        print "\b" * 6
-        print "%5.1f%%" % (100 * conductor.time_counter / conductor.end_of_score)
+    chunk_size = 100
+    start_time = Time.now
+    
+    conductor = Musicality::Conductor.new(
+      :arrangement => arrangement,
+      :time_conversion_sample_rate => 250,
+      :rendering_sample_rate => samplerate,
+      :sample_chunk_size => chunk_size
+    )
+    
+    while conductor.time_counter < conductor.end_of_score
+      conductor.perform_samples(chunk_size) do |new_samples|
+        buffer = WaveFile::Buffer.new(new_samples, format)
+        writer.write(buffer)
+        
+        if verbose
+          avg = new_samples.inject(0){|sum,a| sum + a } / new_samples.count
+          keys = conductor.performers.inject(0){|active_keys, performer| active_keys + performer.instrument.active_keys.count }
+          
+          print "%.4f " % conductor.time_counter
+          print "%08d " % conductor.sample_counter
+          print "%.4f " % avg
+          puts keys
+        else
+          print "\b" * 6
+          print "%5.1f%%" % (100 * conductor.time_counter / conductor.end_of_score)
+        end
       end
     end
 
-    unless verbose
+    elapsed_sec = Time.now - start_time
+    minutes = (elapsed_sec / 60).to_i
+    seconds = (elapsed_sec % 60)
+    
+    if(minutes == 0)
+      elapsed_time_str = "%.1f sec" % seconds
+    else
+      elapsed_time_str = "%d min %.1f sec" % [minutes, seconds]
+    end
+
+    if verbose
       puts
+      puts "Completed in #{elapsed_time_str}"
+    else
+      puts " in #{elapsed_time_str}"
     end
     
     writer.close()

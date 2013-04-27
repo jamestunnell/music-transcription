@@ -63,7 +63,7 @@ class Performer
   # Start or end notes as needed.
   #
   # @param [Numeric] counter The offset to sample performance at.
-  def perform_sample counter
+  def perform_samples counter, n_to_perform
     instructions_to_exec = {}
     
     @instructions_future.each do |seq_id, instrs|
@@ -104,13 +104,14 @@ class Performer
     loudness = @loudness_computer.value_at counter
     raise ArgumentError, "loudness is not between 0.0 and 1.0" if !loudness.between?(0.0,1.0)
     
-    sample = (loudness * @instrument.render(1).first)
+    samples = @instrument.render(n_to_perform)
+    samples = samples.map {|el| el * loudness }
     
     #@effects.each do |effect|
     #  sample += effect.render_sample
     #end
     
-    return sample
+    return samples
   end
 
   # Release any currently playing notes

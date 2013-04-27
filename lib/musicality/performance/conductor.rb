@@ -17,7 +17,7 @@ class Conductor
     :rendering_sample_rate => arg_spec(:reqd => true, :type => Fixnum, :validator => ->(a){ a > 0 } ),
     :plugin_dirs => arg_spec_array(:reqd => false, :type => String),
     :max_attack_time => arg_spec(:reqd => false, :type => Numeric, :validator => ->(a){ a > 0.0 }, :default => 0.25),
-    
+    :sample_chunk_size => arg_spec(:reqd => false, :type => Fixnum, :default => 100, :validator => ->(a){ a > 0 })
   }
   
   attr_reader :sample_rate, :start_of_score, :end_of_score,
@@ -95,11 +95,13 @@ class Conductor
     samples = []
 
     while @time_counter < (@end_of_score + lead_out_time) do
-      samples << perform_sample
-    end
-
-    if block_given?
-      yield samples
+      new_samples = perform_chunk
+      
+      if block_given?
+        yield new_samples
+      end
+      
+      samples += new_samples
     end
     
     @prepared_at_sample = @sample_counter
@@ -114,18 +116,23 @@ class Conductor
       prepare_performance
     end
     
-    n_samples = time_sec / @sample_period
     samples = []
-
-    n_samples.to_i.times do
+    to_perform = time_sec / @sample_period
+    while to_perform >= @sample_chunk_size
+      samples += perform_chunk
+      to_perform -= @sample_chunk_size
+    end
+    
+    while to_perform > 0
       samples << perform_sample
+      to_perform -= 1
     end
     
     if block_given?
       yield samples
     end
     
-    @prepared_at_sample = @sample_counter
+    @prepared_at_sample = @sample_counter    
     return samples
   end
 
@@ -138,9 +145,15 @@ class Conductor
     end
     
     samples = []
+    to_perform = n_samples
+    while to_perform >= @sample_chunk_size
+      samples += perform_chunk
+      to_perform -= @sample_chunk_size
+    end
     
-    n_samples.times do
+    while to_perform > 0
       samples << perform_sample
+      to_perform -= 1
     end
     
     if block_given?
@@ -162,7 +175,7 @@ class Conductor
 
     if @time_counter <= @end_of_score
       @performers.each do |performer|
-        sample += performer.perform_sample(@time_counter)
+        sample += performer.perform_samples(@time_counter, 1).first
       end
     end
     
@@ -176,6 +189,31 @@ class Conductor
     return sample
   end
 
+  # Render an audio sample chunk of the performance at the current note counter.
+  # Increments the note counter by the current notes per sample (computed from 
+  # current tempo) times the sample chunk size. Increments the sample counter by
+  # the sample chunk size and the time counter by the sample period * sample chunk size.
+  def perform_chunk
+    performer_samples = []
+
+    if @time_counter <= @end_of_score
+      @performers.each do |performer|
+        performer_samples << performer.perform_samples(@time_counter, @sample_chunk_size)
+      end
+    end
+    
+    m = Matrix.rows(performer_samples)
+    samples = Array.new(@sample_chunk_size) {|n| m.column(n).inject(0) {|sum, el| sum + el } }
+    
+    @time_counter += @sample_period * @sample_chunk_size
+    @sample_counter += @sample_chunk_size
+
+    if block_given?
+      yield samples
+    end
+    
+    return samples
+  end
 end
 
 end

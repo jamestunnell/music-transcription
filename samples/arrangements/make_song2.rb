@@ -52,28 +52,16 @@ hash = {
   },
   :instrument_configs => {
     1 => {
-      :plugin_name => 'synth_instr_1',
-      :initial_settings => {
-        "harmonic_1_partial" => 0,
-        "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SAWTOOTH,
-        "harmonic_1_amplitude" => 0.2,
-      }
+      :plugin_name => 'synth_instr_3',
+      :initial_settings => "blend"
     },
     2 => {
-      :plugin_name => 'synth_instr_1',
-      :initial_settings => {
-        "harmonic_1_partial" => 0,
-        "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
-        "harmonic_1_amplitude" => 0.4,
-      }
+      :plugin_name => 'synth_instr_3',
+      :initial_settings => "blend"
     },
     3 => {
-      :plugin_name => 'synth_instr_1',
-      :initial_settings => {
-        "harmonic_1_partial" => 0,
-        "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
-        "harmonic_1_amplitude" => 0.4,
-      }
+      :plugin_name => 'synth_instr_3',
+      :initial_settings => "blend"
     }
   }
 }

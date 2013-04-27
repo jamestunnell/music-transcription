@@ -41,7 +41,8 @@ describe Musicality::Conductor do
       @conductor = Musicality::Conductor.new(
         :arrangement => @arrangement,
         :time_conversion_sample_rate => time_conversion_rate,
-        :rendering_sample_rate => @sample_rate
+        :rendering_sample_rate => @sample_rate,
+        :sample_chunk_size => 5
       )
       @conductor.perform
     end
