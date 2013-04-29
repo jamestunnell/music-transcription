@@ -1,57 +1,49 @@
 require 'hashmake'
 
+# basic core classes
 require 'musicality/version'
 require 'musicality/unique_token'
 require 'musicality/offset_limits'
 
 # Model-related code
-
-# note level
 require 'musicality/model/pitch'
 require 'musicality/model/link'
 require 'musicality/model/interval'
 require 'musicality/model/note'
-
-# value/settings
 require 'musicality/model/transition'
 require 'musicality/model/value_change'
 require 'musicality/model/profile'
-
-# score/arrangement level
 require 'musicality/model/part'
 require 'musicality/model/program'
 require 'musicality/model/score'
 require 'musicality/model/instrument_config'
 require 'musicality/model/arrangement'
 
-require 'musicality/util/pitch_constants'
-require 'musicality/util/score_file'
-require 'musicality/util/tempo_computer'
-require 'musicality/util/note_time_converter'
-require 'musicality/util/optimization/vector'
-require 'musicality/util/optimization/particle_swarm'
+# plugin architecture
+require 'musicality/plugins/instrument_plugin'
+require 'musicality/plugins/instrument_plugin_registry'
 
-# Performance-related code
-
-# settings
-require 'musicality/performance/settings/piecewise_function'
-require 'musicality/performance/settings/value_computer'
-require 'musicality/performance/settings/value_updater'
-
-# instrument plugins
-require 'musicality/performance/instruments/instrument_plugin'
-require 'musicality/performance/instruments/instrument_plugin_registry'
-
+# performance utility classes
+require 'musicality/performance/util/piecewise_function'
+require 'musicality/performance/util/value_computer'
+require 'musicality/performance/util/value_updater'
+require 'musicality/performance/util/note_time_converter'
+require 'musicality/performance/util/tempo_computer'
 require 'musicality/performance/util/score_collator'
 require 'musicality/performance/util/score_converter'
-require 'musicality/performance/util/sequencer'
-require 'musicality/performance/util/instrument_finder'
 require 'musicality/performance/util/instruction'
+require 'musicality/performance/util/sequencer'
 
+# performance classes
 require 'musicality/performance/key'
 require 'musicality/performance/instrument'
 require 'musicality/performance/performer'
 require 'musicality/performance/conductor'
 
-require 'musicality/sampling/sample_file'
-require 'musicality/sampling/sampler'
+# misc utility classes
+require 'musicality/util/envelopes/adsr_envelope'
+require 'musicality/util/optimization/vector'
+require 'musicality/util/optimization/particle_swarm'
+require 'musicality/util/sampling/sample_file'
+require 'musicality/util/sampling/sampler'
+require 'musicality/util/pitch_constants'
