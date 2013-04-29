@@ -52,3 +52,6 @@ require 'musicality/performance/key'
 require 'musicality/performance/instrument'
 require 'musicality/performance/performer'
 require 'musicality/performance/conductor'
+
+require 'musicality/sampling/sample_file'
+require 'musicality/sampling/sampler'
