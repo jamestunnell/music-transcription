@@ -34,7 +34,7 @@ instrument_plugins_dir = File.expand_path File.dirname(__FILE__) + '/../samples/
 puts "Loading built-in instrument plugins from #{instrument_plugins_dir}"
 Musicality::INSTRUMENTS.load_plugins instrument_plugins_dir
 
-puts "Output set to #{outdir}"
+puts "Output dir set to #{outdir}"
 puts "Sample rate set to #{samplerate}"
 
 ARGV.each do |filename|

@@ -1,4 +1,5 @@
 require 'wavefile'
+require 'fileutils'
 
 module Musicality
 class Sampler
@@ -12,15 +13,42 @@ class Sampler
   
   def initialize args
     hash_make Sampler::ARG_SPECS, args
-    Dir.mkdir(@output_dir) unless Dir.exist?(@output_dir)
+    unless Dir.exist?(@output_dir)
+      FileUtils.mkdir_p(@output_dir)
+    end
   end
   
+  def render_wav sample_file
+    sample_file.file_name.concat(".wav") if sample_file.file_name !~ /\.wav/
+    tgt_path = "#{@output_dir}/#{sample_file.file_name}"
+    format = WaveFile::Format.new(:mono, :float_32, sample_file.sample_rate)
+    
+    WaveFile::Writer.new(tgt_path, format) do |writer|
+      render(sample_file) do |new_samples|
+        buffer = WaveFile::Buffer.new(new_samples, format)
+        writer.write(buffer)
+      end
+    end
+    
+    return sample_file
+  end
+  
+  private
+  
   def render sample_file
+    
     tempo_bpm = 120.0
     beat_duration = 0.25
     notes_per_sec = (tempo_bpm / 60.0) * beat_duration
-    note_duration = sample_file.duration_sec * notes_per_sec
-
+    note_duration = sample_file.duration_sec * notes_per_sec 
+    note = Musicality::Note.new(
+      :duration => note_duration,
+      :attack => sample_file.attack,
+      :sustain => sample_file.sustain,
+      :separation => sample_file.separation,
+      :intervals => [ {:pitch => sample_file.pitch} ]
+    )
+    
     arrangement = Musicality::Arrangement.new(
       :score => {
         :program => {
@@ -31,7 +59,7 @@ class Sampler
         :parts => {
           1 => {
             :loudness_profile => { :start_value => 1.0 },
-            :notes => []
+            :notes => [note]
           }
         }
       },
@@ -39,39 +67,25 @@ class Sampler
         1 => sample_file.instrument_config
       }
     )
-    
-    note = Musicality::Note.new(
-      :duration => note_duration,
-      :attack => sample_file.attack,
-      :sustain => sample_file.sustain,
-      :separation => sample_file.separation,
-      :intervals => [ {:pitch => sample_file.pitch} ]
+        
+    time_conversion_sample_rate = (250.0 / sample_file.duration_sec).to_i
+    conductor = Musicality::Conductor.new(
+      :arrangement => arrangement,
+      :time_conversion_sample_rate => time_conversion_sample_rate,
+      :rendering_sample_rate => sample_file.sample_rate,
+      :sample_chunk_size => 100,
     )
     
-    arrangement.score.parts[1].notes.clear
-    arrangement.score.parts[1].notes.push note
-    
-    sample_file.file_name.concat(".wav") if sample_file.file_name !~ /\.wav/
-    tgt_path = "#{@output_dir}/#{sample_file.file_name}"
-    format = WaveFile::Format.new(:mono, :float_32, sample_file.sample_rate)
-    
-    time_conversion_sample_rate = (250.0 / sample_file.duration_sec).to_i
-    
-    WaveFile::Writer.new(tgt_path, format) do |writer|
-      conductor = Musicality::Conductor.new(
-        :arrangement => arrangement,
-        :time_conversion_sample_rate => time_conversion_sample_rate,
-        :rendering_sample_rate => sample_file.sample_rate,
-        :sample_chunk_size => 100,
-      )
-      
+    samples = []
+    if block_given?
       conductor.perform do |new_samples|
-        buffer = WaveFile::Buffer.new(new_samples, format)
-        writer.write(buffer)
-      end
+        yield new_samples
+      end      
+    else
+      samples = conductor.perform
     end
     
-    return sample_file
+    return samples
   end
 end
 end

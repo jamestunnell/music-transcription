@@ -27,12 +27,12 @@ DESCRIPTION
   gem.add_dependency 'hashmake'
   gem.add_dependency 'spnet'
   gem.add_dependency 'spcore'
-
+  gem.add_dependency 'wavefile'
+  
   gem.add_development_dependency 'bundler', '~> 1.0'
   gem.add_development_dependency 'rake', '~> 0.8'
   gem.add_development_dependency 'rspec', '~> 2.4'
   gem.add_development_dependency 'yard', '~> 0.8'
   gem.add_development_dependency 'micro-optparse'
-  gem.add_development_dependency 'wavefile'
   gem.add_development_dependency 'pry'
 end

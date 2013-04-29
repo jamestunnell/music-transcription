@@ -14,7 +14,7 @@ describe Musicality::Link do
   end
   
   it 'should assign the given target pitch' do
-    [C0, D0].each do |pitch|
+    [A0, B0].each do |pitch|
       link = Link.new(:target_pitch => pitch)
       link.target_pitch.should eq(pitch)
     end

@@ -23,7 +23,7 @@ describe Musicality::Sampler do
     end
   end
 
-  describe '#render' do
+  describe '#render_wav' do
     it 'should render the given SampleFile' do
       sf = SampleFile.new(
         :file_name => "abc",
@@ -40,7 +40,7 @@ describe Musicality::Sampler do
       )
       
       sampler = Sampler.new(:output_dir => 'mydir')
-      sampler.render sf
+      sampler.render_wav sf
       
       sf.file_name.should match(/\.wav$/)
       File.exist?('mydir/abc.wav').should be_true
