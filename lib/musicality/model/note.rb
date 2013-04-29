@@ -4,7 +4,7 @@ module Musicality
 
 # Abstraction of a musical note. The note can contain multiple intervals
 # (at different pitches). Each interval can also contain a link to an interval
-# in a following note. Contains values for attack, sustain, and seperation,
+# in a following note. Contains values for attack, sustain, and separation,
 # which will be used to form the envelope profile for the note.
 #
 # @author James Tunnell
@@ -26,14 +26,14 @@ module Musicality
 #                     Sustain controls how much the note's loudness is 
 #                     sustained after the attack.
 #
-# @!attribute [rw] seperation
+# @!attribute [rw] separation
 #   @return [Numeric] Shift the note release towards or away the beginning
 #                   of the note. From 0.0 (towards end of the note) to 
 #                   1.0 (towards beginning of the note).
 #
 class Note
   include Hashmake::HashMakeable
-  attr_reader :duration, :intervals, :sustain, :attack, :seperation
+  attr_reader :duration, :intervals, :sustain, :attack, :separation
 
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
@@ -41,7 +41,7 @@ class Note
     :intervals => arg_spec_array(:type => Interval, :reqd => false),
     :sustain => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
     :attack => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
-    :seperation => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
+    :separation => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
   }
   
   # A new instance of Note.
@@ -56,7 +56,7 @@ class Note
     (@intervals == other.intervals) &&
     (@sustain == other.sustain) &&
     (@attack == other.attack) &&
-    (@seperation == other.seperation)
+    (@separation == other.separation)
   end
 
   # Set the note duration.
@@ -85,18 +85,18 @@ class Note
     @attack = attack
   end
 
-  # Set the note seperation.
-  # @param [Numeric] seperation The seperation of the note.
-  # @raise [ArgumentError] if seperation is not a Numeric.
-  # @raise [RangeError] if seperation is outside the range 0.0..1.0.
-  def seperation= seperation
-    validate_arg ARG_SPECS[:seperation], seperation
-    @seperation = seperation
+  # Set the note separation.
+  # @param [Numeric] separation The separation of the note.
+  # @raise [ArgumentError] if separation is not a Numeric.
+  # @raise [RangeError] if separation is outside the range 0.0..1.0.
+  def separation= separation
+    validate_arg ARG_SPECS[:separation], separation
+    @separation = separation
   end
   
   # Produce an identical Note object.
   def clone
-    Note.new(:duration => @duration, :intervals => @intervals.clone, :sustain => @sustain, :attack => @attack, :seperation => @seperation)
+    Note.new(:duration => @duration, :intervals => @intervals.clone, :sustain => @sustain, :attack => @attack, :separation => @separation)
   end
   
   # Remove any duplicate intervals (occuring on the same pitch), removing

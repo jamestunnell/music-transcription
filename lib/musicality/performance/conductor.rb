@@ -177,10 +177,8 @@ class Conductor
   def perform_sample
     sample = 0.0
 
-    if @time_counter <= @end_of_score
-      @performers.each do |performer|
-        sample += performer.perform_samples(@time_counter, 1).first
-      end
+    @performers.each do |performer|
+      sample += performer.perform_samples(@time_counter, 1).first
     end
     
     @time_counter += @sample_period
@@ -200,10 +198,8 @@ class Conductor
   def perform_chunk
     performer_samples = []
 
-    if @time_counter <= @end_of_score
-      @performers.each do |performer|
-        performer_samples << performer.perform_samples(@time_counter, @sample_chunk_size)
-      end
+    @performers.each do |performer|
+      performer_samples << performer.perform_samples(@time_counter, @sample_chunk_size)
     end
     
     m = Matrix.rows(performer_samples)

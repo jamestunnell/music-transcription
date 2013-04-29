@@ -106,7 +106,7 @@ describe Musicality::Pitch do
     a4.freq.should be_within(0.01).of(440.0)
   end
   
-  context 'Musicality::pitch' do
+  context 'String#to_pitch' do
     it 'should create a Pitch object that matches the musical note' do
       {
 	"Ab2" => Pitch.new(:octave => 2, :semitone => 8),
@@ -117,7 +117,7 @@ describe Musicality::Pitch do
 	"G9" => Pitch.new(:octave => 9, :semitone => 7),
 	"Bb10" => Pitch.new(:octave => 10, :semitone => 10),
       }.each do |str, expected_pitch|
-	pitch(str).should eq(expected_pitch)
+	str.to_pitch.should eq(expected_pitch)
       end
     end
   end

@@ -11,11 +11,11 @@ describe Musicality::Note do
       note.duration.should eq(2)
     end
     
-    it "should assign :sustain, :attack, and :seperation parameters if given during construction" do
-      note = Note.new :duration => 2, :sustain => 0.1, :attack => 0.2, :seperation => 0.3
+    it "should assign :sustain, :attack, and :separation parameters if given during construction" do
+      note = Note.new :duration => 2, :sustain => 0.1, :attack => 0.2, :separation => 0.3
       note.sustain.should eq(0.1)
       note.attack.should eq(0.2)
-      note.seperation.should eq(0.3)
+      note.separation.should eq(0.3)
     end
     
     it 'should have no intervals if not given' do
@@ -55,11 +55,11 @@ describe Musicality::Note do
     end
   end
   
-  context '#seperation=' do
-    it "should assign seperation" do
+  context '#separation=' do
+    it "should assign separation" do
       note = Note.new :pitch => @pitch, :duration => 2
-      note.seperation = 0.123
-      note.seperation.should eq 0.123
+      note.separation = 0.123
+      note.separation.should eq 0.123
     end
   end
   
@@ -69,7 +69,7 @@ describe Musicality::Note do
     hash = {
       :duration => 2,
       :attack => 0.2,
-      :seperation => 0.6,
+      :separation => 0.6,
       :intervals => [
         { :pitch => @pitch, :link => tie(Eb2) }
       ]

@@ -218,46 +218,72 @@ class Pitch
     @cent = centTotal
     return true
   end
-  
-end
 
-# Create a Pitch object from a string (e.g. "C2"). String can contain a letter (A-G),
-# to indicate the semitone, followed by an optional sharp/flat (#/b) and then the
-# octave number (non-negative integer).
-def pitch string
-  if string =~ /[AaBbCcDdEeFfGg][#b][\d]+/
-    semitone = letter_to_semitone string[0]
-    semitone = case string[1]
-    when "#" then semitone + 1
-    when "b" then semitone - 1
-    else raise ArgumentError, "unexpected symbol found"
+  # Produce a string representation of a pitch (e.g. "C2")
+  def to_s
+    if @cents_per_octave != 1200
+      raise "Don't know how to produce a string representation since cents_per_octave is not 1200."
     end
-    octave = string[2..-1].to_i
-    return Pitch.new(:octave => octave, :semitone => semitone)
-  elsif string =~ /[AaBbCcDdEeFfGg][\d]+/
-    semitone = letter_to_semitone string[0]
-    octave = string[1..-1].to_i
-    return Pitch.new(:octave => octave, :semitone => semitone)
-  else
-    raise ArgumentError, "string #{string} cannot be converted to a pitch"
+    
+    semitone_str = case @semitone
+    when 0 then "C"
+    when 1 then "C#"
+    when 2 then "D"
+    when 3 then "D#"
+    when 4 then "E"
+    when 5 then "F"
+    when 6 then "F#"
+    when 7 then "G"
+    when 8 then "G#"
+    when 9 then "A"
+    when 10 then "A#"
+    when 11 then "C"
+    end
+    
+    return semitone_str + @octave.to_s
   end
 end
+end
 
-private
-
-def letter_to_semitone letter
-  semitone = case letter
-  when /[Cc]/ then 0
-  when /[Dd]/ then 2
-  when /[Ee]/ then 4
-  when /[Ff]/ then 5
-  when /[Gg]/ then 7
-  when /[Aa]/ then 9
-  when /[Bb]/ then 11
-  else raise ArgumentError, "invalid letter \"#{letter}\" given"
+class String
+  # Create a Pitch object from a string (e.g. "C2"). String can contain a letter (A-G),
+  # to indicate the semitone, followed by an optional sharp/flat (#/b) and then the
+  # octave number (non-negative integer).
+  def to_pitch
+    string = self
+    if string =~ /[AaBbCcDdEeFfGg][#b][\d]+/
+      semitone = letter_to_semitone string[0]
+      semitone = case string[1]
+      when "#" then semitone + 1
+      when "b" then semitone - 1
+      else raise ArgumentError, "unexpected symbol found"
+      end
+      octave = string[2..-1].to_i
+      return Musicality::Pitch.new(:octave => octave, :semitone => semitone)
+    elsif string =~ /[AaBbCcDdEeFfGg][\d]+/
+      semitone = letter_to_semitone string[0]
+      octave = string[1..-1].to_i
+      return Musicality::Pitch.new(:octave => octave, :semitone => semitone)
+    else
+      raise ArgumentError, "string #{string} cannot be converted to a pitch"
+    end    
   end
+
+  private
   
-  return semitone
-end
+  def letter_to_semitone letter
+    semitone = case letter
+    when /[Cc]/ then 0
+    when /[Dd]/ then 2
+    when /[Ee]/ then 4
+    when /[Ff]/ then 5
+    when /[Gg]/ then 7
+    when /[Aa]/ then 9
+    when /[Bb]/ then 11
+    else raise ArgumentError, "invalid letter \"#{letter}\" given"
+    end
+    
+    return semitone
+  end
 
 end
