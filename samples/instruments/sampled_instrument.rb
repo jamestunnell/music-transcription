@@ -150,27 +150,31 @@ end
 
 root = File.dirname(File.expand_path(__FILE__)) + '/sample_files/'
 
-Find.find(root) do |path|
-  if path =~ /\.yml$/
-    File.open(path, "r") do |file|
-      begin
-        sample_files = YAML.load(file.read)
-        
-        if sample_files.is_a?(Array)
-          #sample_files.keep_if {|sf| sf.is_a?(SampleFile) }
-        end
-        
-        if sample_files.any?
-          dirname = File.dirname(path)
-          sample_files.each do |sf|
-            sf.file_name = dirname + '/' + sf.file_name
+if Dir.exist?(root)
+  # if sample file root does exist, look for .yml files that contain
+  # sample file information.
+  Find.find(root) do |path|
+    if path =~ /\.yml$/
+      File.open(path, "r") do |file|
+        begin
+          sample_files = YAML.load(file.read)
+          
+          if sample_files.is_a?(Array)
+            #sample_files.keep_if {|sf| sf.is_a?(SampleFile) }
           end
           
-          instr_name = path.gsub(root,"")
-          SampledInstrument.make_and_register_plugin sample_files, instr_name
+          if sample_files.any?
+            dirname = File.dirname(path)
+            sample_files.each do |sf|
+              sf.file_name = dirname + '/' + sf.file_name
+            end
+            
+            instr_name = path.gsub(root,"")
+            SampledInstrument.make_and_register_plugin sample_files, instr_name
+          end
+        rescue
+          puts "Couldn't load YAML from file #{path}"
         end
-      rescue
-        puts "Couldn't load YAML from file #{path}"
       end
     end
   end
