@@ -18,13 +18,13 @@ class Sampler
     end
   end
   
-  def render_wav sample_file
+  def render_wav instrument_config, sample_file
     sample_file.file_name.concat(".wav") if sample_file.file_name !~ /\.wav/
     tgt_path = "#{@output_dir}/#{sample_file.file_name}"
     format = WaveFile::Format.new(:mono, :float_32, sample_file.sample_rate)
     
     WaveFile::Writer.new(tgt_path, format) do |writer|
-      render(sample_file) do |new_samples|
+      render(instrument_config, sample_file) do |new_samples|
         buffer = WaveFile::Buffer.new(new_samples, format)
         writer.write(buffer)
       end
@@ -35,7 +35,7 @@ class Sampler
   
   private
   
-  def render sample_file
+  def render instrument_config, sample_file
     
     tempo_bpm = 120.0
     beat_duration = 0.25
@@ -64,7 +64,7 @@ class Sampler
         }
       },
       :instrument_configs => {
-        1 => sample_file.instrument_config
+        1 => instrument_config
       }
     )
         

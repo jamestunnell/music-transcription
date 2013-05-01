@@ -3,6 +3,7 @@
 require 'micro-optparse'
 require 'pry'
 require 'musicality'
+require 'yaml'
 
 include Musicality
 
@@ -20,14 +21,14 @@ Notes:
 Options:
 END
   p.version = "0.1"
-  p.option :outdir, "set output directory", :default => "./", :value_satisfies => lambda { |path| Dir.exist? path }
+  p.option :rootdir, "set root sample file directory", :default => "./", :value_satisfies => lambda { |path| Dir.exist? path }
   p.option :samplerate, "set sample rate", :default => 48000, :value_satisfies => lambda { |rate| rate.is_a?(Fixnum) && rate > 1000 }
   p.option :duration_sec, "duration of sample file", :default => 0.5, :value_satisfies => lambda { |duration| duration > 0 }
   p.option :verbose, "is verbose?", :default => false
 end.process!
 
 samplerate = options[:samplerate]
-outdir = File.expand_path(options[:outdir])
+rootdir = File.expand_path(options[:rootdir])
 verbose = options[:verbose]
 duration_sec = options[:duration_sec].to_f
 
@@ -36,7 +37,7 @@ if ARGV.count != 2
   return
 end
 
-instrument_config = InstrumentConfig.new(
+cfg = InstrumentConfig.new(
   :plugin_name => ARGV[0],
   :initial_settings => ARGV[1]
 )
@@ -46,30 +47,37 @@ instrument_plugins_dir = File.expand_path File.dirname(__FILE__) + '/../samples/
 puts "Loading built-in instrument plugins from #{instrument_plugins_dir}"
 Musicality::INSTRUMENTS.load_plugins instrument_plugins_dir
 
-puts "Output dir: #{outdir}"
+puts "Root sample file dir: #{rootdir}"
 puts "Sample rate: #{samplerate}"
 puts "Duration (sec): #{duration_sec}"
-puts "Instrument: #{instrument_config.plugin_name}"
-puts "Preset: #{instrument_config.initial_settings}"
+puts "Instrument: #{cfg.plugin_name}"
+puts "Preset: #{cfg.initial_settings}"
 puts 
 print "Rendering sample files:"
 
 start_time = Time.now
-sampler = Sampler.new(:output_dir => "#{outdir}/#{instrument_config.plugin_name}/#{instrument_config.initial_settings}")
+
+sample_files = []
+sampler = Sampler.new(:output_dir => "#{rootdir}/#{cfg.plugin_name}/#{cfg.initial_settings}")
 PITCHES.each do |pitch|
   print " #{pitch.to_s}"
   
   sf = SampleFile.new(
-    :file_name => "#{pitch.to_s}.wav",
+    :file_name => "#{samplerate}_hz_#{duration_sec}_sec_#{pitch.octave}_octave_#{pitch.semitone}_semitone.wav",
     :sample_rate => samplerate,
     :duration_sec => duration_sec,
-    :instrument_config => instrument_config,
     :pitch => pitch,
     :attack => 0.5,
     :sustain => 0.5,
     :separation => 0.5,
   )
-  sampler.render_wav sf
+  sampler.render_wav cfg, sf
+  sf.file_name.prepend "#{cfg.initial_settings}/"
+  sample_files.push sf
+end
+
+File.open("#{sampler.output_dir}.yml", "w") do |file|
+  file.write sample_files.to_yaml
 end
 
 elapsed_sec = Time.now - start_time

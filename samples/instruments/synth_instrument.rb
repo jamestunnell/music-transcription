@@ -209,7 +209,20 @@ class SynthInstrument < Musicality::Instrument
   end
 end
 
-SynthInstrument.make_and_register_plugin 1
+SynthInstrument.make_and_register_plugin 1,
+  "sine" => {
+    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
+  },
+  "square" => {
+    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SINE,
+  },
+  "triangle" => {
+    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SINE,
+  },
+  "sawtooth" => {
+    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SAWTOOTH,
+  }
+
 SynthInstrument.make_and_register_plugin 3,
   "blend" => {
     "harmonic_0_partial" => 0,

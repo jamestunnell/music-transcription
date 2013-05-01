@@ -31,7 +31,7 @@ class Key
     }),
   }
   
-  attr_reader :inactivity_threshold, :inactivity_timeout_sec, :sample_rate, :pitch_range, :start_pitch, :pitch, :handler
+  attr_reader :inactivity_threshold, :inactivity_timeout_sec, :sample_rate, :pitch_range, :start_pitch, :current_pitch, :handler
   
   def initialize args
     hash_make Key::ARG_SPECS, args
@@ -39,7 +39,7 @@ class Key
     
     @max_inactivity_samples = @inactivity_timeout_sec * @sample_rate
     @current_inactivity_samples = 0
-    @pitch = @start_pitch
+    @current_pitch = @start_pitch
     @active = false
   end
   
@@ -60,7 +60,7 @@ class Key
   # @param [Numeric] attack The intensity put into starting the note.
   # @param [Numeric] sustain The desired level of sustain after starting the note.
   # @param [Pitch] pitch The pitch to be used in playing the note.
-  def on(attack, sustain, pitch)
+  def on(attack, sustain, pitch = @current_pitch)
     @handler.on(attack,sustain,pitch)
     activate
   end
@@ -99,7 +99,7 @@ class Key
     
     check_pitch pitch
     @handler.adjust(pitch)
-    @pitch = pitch
+    @current_pitch = pitch
   end
 
   # Let the note die out according to the given damping rate.
@@ -147,8 +147,8 @@ class Key
   
   # Make sure a pitch fits in the key's allowed range.
   def check_pitch pitch
-    raise ArgumentError, "pitch is less than pitch range min" if @start_pitch < @pitch_range.min
-    raise ArgumentError, "pitch is more than pitch range max" if @start_pitch > @pitch_range.max
+    raise ArgumentError, "pitch is less than pitch range min" if pitch < @pitch_range.min
+    raise ArgumentError, "pitch is more than pitch range max" if pitch > @pitch_range.max
   end
   
   private

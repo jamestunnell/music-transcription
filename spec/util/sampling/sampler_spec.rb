@@ -25,14 +25,15 @@ describe Musicality::Sampler do
 
   describe '#render_wav' do
     it 'should render the given SampleFile' do
+      cfg = InstrumentConfig.new(
+        :plugin_name => "synth_instr_3",
+        :initial_settings => "blend"
+      )
+
       sf = SampleFile.new(
         :file_name => "abc",
         :sample_rate => 44100,
         :duration_sec => 0.25,
-        :instrument_config => {
-          :plugin_name => "synth_instr_3",
-          :initial_settings => "blend"
-        },
         :pitch => "C4".to_pitch,
         :attack => 0.5,
         :sustain => 0.5,
@@ -40,7 +41,7 @@ describe Musicality::Sampler do
       )
       
       sampler = Sampler.new(:output_dir => 'mydir')
-      sampler.render_wav sf
+      sampler.render_wav cfg, sf
       
       sf.file_name.should match(/\.wav$/)
       File.exist?('mydir/abc.wav').should be_true
