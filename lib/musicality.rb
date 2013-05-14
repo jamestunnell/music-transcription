@@ -23,6 +23,9 @@ require 'musicality/model/arrangement'
 require 'musicality/plugins/instrument_plugin'
 require 'musicality/plugins/instrument_plugin_registry'
 
+# practice - for learning about how to play (perform) instruments
+require 'musicality/practice/envelope_dissection'
+
 # performance utility classes
 require 'musicality/performance/util/piecewise_function'
 require 'musicality/performance/util/value_computer'

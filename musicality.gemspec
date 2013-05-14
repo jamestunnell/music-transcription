@@ -28,6 +28,7 @@ DESCRIPTION
   gem.add_dependency 'spnet'
   gem.add_dependency 'spcore'
   gem.add_dependency 'wavefile'
+  gem.add_dependency 'facets'
   
   gem.add_development_dependency 'bundler', '~> 1.0'
   gem.add_development_dependency 'rake', '~> 0.8'
