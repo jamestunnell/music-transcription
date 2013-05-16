@@ -25,6 +25,7 @@ require 'musicality/plugins/instrument_plugin_registry'
 
 # practice - for learning about how to play (perform) instruments
 require 'musicality/practice/envelope_dissection'
+require 'musicality/practice/measurement/adsr_measurement'
 
 # performance utility classes
 require 'musicality/performance/util/piecewise_function'

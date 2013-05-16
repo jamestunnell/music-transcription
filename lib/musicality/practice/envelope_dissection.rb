@@ -3,18 +3,27 @@ require 'facets/equitable'
 module Musicality
 
 class EnvelopeFeature
-  include Equitable(:type, :count)
+  include Equitable(:type, :range)
   
   RISING = :envelopeSegmentRising
   FALLING = :envelopeSegmentFalling
   HOLDING = :envelopeSegmentHolding
   
   attr_reader :type
-  attr_accessor :count
+  attr_accessor :range
   
-  def initialize type, count
+  def initialize type, range
     @type = type
-    @count = count
+    @range = range
+  end
+  
+  def count
+    @range.count
+  end
+  
+  def count= count
+    raise ArgumentError, "count #{count} is not at least 1" unless count >= 1
+    @range = @range.first...(@range.first + count)
   end
   
   def rising?
@@ -30,16 +39,16 @@ class EnvelopeFeature
   end
 end
 
-def rising count
-  EnvelopeFeature.new(EnvelopeFeature::RISING, count)
+def rising range
+  EnvelopeFeature.new(EnvelopeFeature::RISING, range)
 end
 
-def falling count
-  EnvelopeFeature.new(EnvelopeFeature::FALLING, count)
+def falling range
+  EnvelopeFeature.new(EnvelopeFeature::FALLING, range)
 end
 
-def holding count
-  EnvelopeFeature.new(EnvelopeFeature::HOLDING, count)
+def holding range
+  EnvelopeFeature.new(EnvelopeFeature::HOLDING, range)
 end
 
 # Methods for breaking up an envelope into segments of
@@ -47,39 +56,25 @@ end
 class EnvelopeDissection
 
   # break up an envelope into segments of rising, falling, and holding.
-  # @return [Array] of EnvelopeSegment objects.
+  # @return [Array] of EnvelopeFeature objects.
   def self.identify_features envelope, feature_threshold
     derivative = @envelope.derivative.normalize
+    features = []
+    last_type_start = 0
+    last_type = identify_feature_type derivative.data[0]
     
-    segments = []
-    
-    current_count = 0
-    current_type = nil
-    derivative.data.each_index do |i|
-      if derivative.data[i] > feature_threshold
-        type = RISING
-      elsif derivative.data[i] < -feature_threshold
-        type = FALLING
-      else
-        type = HOLDING
-      end
+    for i in 1...derivative.data.count
+      type = identify_feature_type derivative.data[i]
       
-      if type == current_type
-        current_count += 1
-      else
-        unless current_type.nil?
-          segments.push(EnvelopeSegment.new(current_type, current_count))
-        end
-        current_type = type
-        current_count = 1
+      if type != last_type
+        features.push(EnvelopeFeature.new(last_type, last_type_start...i))
+        last_type = type
+        last_type_start = i
       end
     end
     
-    unless current_type.nil?
-      segments.push(EnvelopeSegment.new(current_type, current_count))
-    end
-    
-    return segments
+    features.push(EnvelopeFeature.new(last_type, last_type_start...derivative.data.count))
+    return features
   end
 
   # Tries to eliminate segments with count shorter than given min count
@@ -97,6 +92,7 @@ class EnvelopeDissection
       feature = features[i]
       
       incr = 1
+      
       if feature.count < min_feature_count
         if feature.holding?
           coalesced.last.count += feature.count
@@ -131,5 +127,18 @@ class EnvelopeDissection
     return coalesced
   end
 
+  private
+  
+  def self.identify_feature_type sample
+    if sample > feature_threshold
+      type = RISING
+    elsif sample < -feature_threshold
+      type = FALLING
+    else
+      type = HOLDING
+    end
+    
+    return type
+  end
 end
 end

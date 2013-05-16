@@ -18,25 +18,25 @@ describe Musicality::EnvelopeDissection do
     
     it 'should coalesce any short, non-first HOLDING features by adding them to prev feature' do
       test_cases(
-        [ falling(40), holding(10) ] => [ falling(50) ],
-        [ rising(30), falling(40), holding(10) ] => [ rising(30), falling(50) ],
-        [ holding(100), holding(19), falling(40), holding(6) ] => [ holding(119), falling(46) ],
-        [ holding(24), rising(22), holding(4), falling(90), holding(3), rising(33) ] => [ holding(24), rising(26), falling(93), rising(33) ],
+        [ falling(0...40), holding(40...50) ] => [ falling(0...50) ],
+        [ rising(0...30), falling(30...70), holding(70...80) ] => [ rising(0...30), falling(30...80) ],
+        [ holding(0...100), holding(100...115), falling(115...155), holding(155...160) ] => [ holding(0...115), falling(115...160) ],
+        [ holding(0...25), rising(25...50), holding(50...55), falling(55...150), holding(150...155), rising(155...190) ] => [ holding(0...25), rising(25...55), falling(55...155), rising(155...190) ],
       )
     end
     
     it 'should coalesce any consecutive features of the same type' do
       test_cases(
-        [ falling(40), falling(11), holding(20), holding(22) ] => [ falling(51), holding(42) ],
-        [ rising(40), rising(11), rising(20), rising(22) ] => [ rising(93) ],
-        [ rising(200), falling(30), falling(35), rising(25), falling(50) ] => [ rising(200), falling(65), rising(25), falling(50) ],
+        [ falling(0...40), falling(40...50), holding(50...70), holding(70...95) ] => [ falling(0...50), holding(50...95) ],
+        [ rising(0...40), rising(40...50), rising(50...70), rising(70...95) ] => [ rising(0...95) ],
+        [ rising(0...200), falling(200...230), falling(230...265), rising(265...290), falling(290...340) ] => [ rising(0...200), falling(200...265), rising(265...290), falling(290...340) ],
       )
     end
     
     it 'should coalesce any short feature surrounded by two features of the same type' do
       test_cases(
-        [ falling(40), rising(11), falling(20) ] => [ falling(71) ],
-        [ rising(40), rising(20), falling(18), rising(22) ] => [ rising(100) ],
+        [ falling(0...40), rising(40...50), falling(50...70) ] => [ falling(0...70) ],
+        [ rising(0...40), rising(40...60), falling(60...75), rising(75...100) ] => [ rising(0...100) ],
       )
     end
 
