@@ -17,6 +17,19 @@ class EnvelopeFeature
     @range = range
   end
   
+  def to_s
+    case type
+    when RISING
+      return "R"
+    when FALLING
+      return "F"
+    when HOLDING
+      return "H"
+    else
+      return "?"
+    end
+  end
+  
   def count
     @range.count
   end
@@ -58,13 +71,13 @@ class EnvelopeDissection
   # break up an envelope into segments of rising, falling, and holding.
   # @return [Array] of EnvelopeFeature objects.
   def self.identify_features envelope, feature_threshold
-    derivative = @envelope.derivative.normalize
+    derivative = envelope.derivative.normalize
     features = []
     last_type_start = 0
-    last_type = identify_feature_type derivative.data[0]
+    last_type = identify_feature_type derivative.data[0], feature_threshold
     
     for i in 1...derivative.data.count
-      type = identify_feature_type derivative.data[i]
+      type = identify_feature_type derivative.data[i], feature_threshold
       
       if type != last_type
         features.push(EnvelopeFeature.new(last_type, last_type_start...i))
@@ -126,16 +139,24 @@ class EnvelopeDissection
     
     return coalesced
   end
+  
+  def self.make_feature_string features
+    str = ""
+    features.each do |feature|
+      str = str.concat feature.to_s
+    end
+    return str
+  end
 
   private
   
-  def self.identify_feature_type sample
+  def self.identify_feature_type sample, feature_threshold
     if sample > feature_threshold
-      type = RISING
+      type = EnvelopeFeature::RISING
     elsif sample < -feature_threshold
-      type = FALLING
+      type = EnvelopeFeature::FALLING
     else
-      type = HOLDING
+      type = EnvelopeFeature::HOLDING
     end
     
     return type
