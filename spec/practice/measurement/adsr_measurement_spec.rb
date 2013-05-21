@@ -13,8 +13,9 @@ describe Musicality::ADSRMeasurement do
     half_time = total_time / 2.0
     margin = total_time / 10.0
       
-    #measurement = ADSRMeasurement.new(:signal => signal)
-    #measurement.attack_time.should be_within(margin).of(half_time)
+    measurement = ADSRMeasurement.new(:signal => signal)
+    measurement.attack_time.should be_within(margin).of(half_time)
+    measurement.attack_height.should be_within(0.1).of(1.0)
     #measurement.decay_time.should be_within(margin).of(half_time)
     #measurement.sustain_time.should be_within(margin).of(0.0)
   end
@@ -31,8 +32,9 @@ describe Musicality::ADSRMeasurement do
     half_time = total_time / 2.0
     margin = total_time / 10.0
 
-    #measurement = ADSRMeasurement.new(:signal => half)      
-    #measurement.attack_time.should be_within(margin).of(0.0)
+    measurement = ADSRMeasurement.new(:signal => half)      
+    measurement.attack_time.should be_within(margin).of(0.0)
+    measurement.attack_height.should be_within(0.1).of(1.0)
     #measurement.decay_time.should be_within(margin).of(half_time)
     #measurement.sustain_time.should be_within(margin).of(0.0)
   end
@@ -42,9 +44,9 @@ describe Musicality::ADSRMeasurement do
     
     segment_size = 256
     bell_size = 2 * segment_size
-    plateau_size = 2 * segment_size
+    plateau_size = 4 * segment_size
     
-    bell = SPCore::HannWindow.new(bell_size).data + Array.new(1 * segment_size, 0.0)
+    bell = SPCore::HannWindow.new(bell_size).data + Array.new(3 * segment_size, 0.0)
     plateau = Array.new(1 * segment_size, 0.0) + SPCore::TukeyWindow.new(plateau_size).data
     modulation = SPCore::Signal.new(:sample_rate => sample_rate, :data => plateau)
     modulation.multiply! 0.7
@@ -58,20 +60,22 @@ describe Musicality::ADSRMeasurement do
     
     #SPCore::Plotter.new.plot_signals("unmodulated signal" => signal, "modulation" => modulation, "modulated signal" => modulated_signal)
     
+    envelope = modulated_signal.envelope
+    
     expected_attack_time = (bell_size / 2.0) / sample_rate
-    expected_attack_height = 1.0
-    expected_decay_time = expected_attack_time
-    expected_sustain_height = 0.25
-    expected_sustain_time = (plateau_size / 2.0) / sample_rate
-    expected_release_time = (plateau_size / 4.0) / sample_rate
+    expected_attack_height = envelope[(expected_attack_time * sample_rate).to_i]
+    #expected_decay_time = expected_attack_time
+    #expected_sustain_height = 0.25
+    #expected_sustain_time = (plateau_size / 2.0) / sample_rate
+    #expected_release_time = (plateau_size / 4.0) / sample_rate
     
     time_margin = 0.01
     height_margin = 1.0 / 10.0
-  
-    #measurement = ADSRMeasurement.new(:signal => modulated_signal)
     
-    #measurement.attack_time.should be_within(time_margin).of(expected_attack_time)
-    #measurement.attack_height.should be_within(height_margin).of(expected_attack_height)
+    measurement = ADSRMeasurement.new(:signal => modulated_signal)
+    
+    measurement.attack_time.should be_within(time_margin).of(expected_attack_time)
+    measurement.attack_height.should be_within(height_margin).of(expected_attack_height)
     #measurement.decay_time.should be_within(time_margin).of(expected_decay_time)
     #measurement.sustain_time.should be_within(time_margin).of(expected_sustain_time)
     #measurement.sustain_height.should be_within(height_margin).of(expected_sustain_height)
