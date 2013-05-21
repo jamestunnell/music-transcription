@@ -17,7 +17,8 @@ describe Musicality::ADSRMeasurement do
     measurement.attack_time.should be_within(margin).of(half_time)
     measurement.attack_height.should be_within(0.1).of(1.0)
     #measurement.decay_time.should be_within(margin).of(half_time)
-    #measurement.sustain_time.should be_within(margin).of(0.0)
+    measurement.sustain_time.should be_within(margin).of(signal.duration / 2.0)
+    measurement.sustain_height.should be_within(0.1).of(0.5)
   end
 
   it 'should correctly measure signal with half a bell-shaped envelope' do
@@ -36,7 +37,8 @@ describe Musicality::ADSRMeasurement do
     measurement.attack_time.should be_within(margin).of(0.0)
     measurement.attack_height.should be_within(0.1).of(1.0)
     #measurement.decay_time.should be_within(margin).of(half_time)
-    #measurement.sustain_time.should be_within(margin).of(0.0)
+    measurement.sustain_time.should be_within(margin).of(half.duration)
+    measurement.sustain_height.should be_within(0.1).of(0.5)
   end
 
   it 'should correctly measure signal with envelope that starts with bell-shape and sustains before release' do
@@ -45,11 +47,12 @@ describe Musicality::ADSRMeasurement do
     segment_size = 256
     bell_size = 2 * segment_size
     plateau_size = 4 * segment_size
+    plateau_height = 0.7
     
     bell = SPCore::HannWindow.new(bell_size).data + Array.new(3 * segment_size, 0.0)
     plateau = Array.new(1 * segment_size, 0.0) + SPCore::TukeyWindow.new(plateau_size).data
     modulation = SPCore::Signal.new(:sample_rate => sample_rate, :data => plateau)
-    modulation.multiply! 0.7
+    modulation.multiply! plateau_height
     modulation.add! bell
     
     total_size = modulation.size
@@ -65,8 +68,8 @@ describe Musicality::ADSRMeasurement do
     expected_attack_time = (bell_size / 2.0) / sample_rate
     expected_attack_height = envelope[(expected_attack_time * sample_rate).to_i]
     #expected_decay_time = expected_attack_time
-    #expected_sustain_height = 0.25
-    #expected_sustain_time = (plateau_size / 2.0) / sample_rate
+    expected_sustain_height = plateau_height
+    expected_sustain_time = plateau_size.to_f / sample_rate
     #expected_release_time = (plateau_size / 4.0) / sample_rate
     
     time_margin = 0.01
@@ -77,8 +80,8 @@ describe Musicality::ADSRMeasurement do
     measurement.attack_time.should be_within(time_margin).of(expected_attack_time)
     measurement.attack_height.should be_within(height_margin).of(expected_attack_height)
     #measurement.decay_time.should be_within(time_margin).of(expected_decay_time)
-    #measurement.sustain_time.should be_within(time_margin).of(expected_sustain_time)
-    #measurement.sustain_height.should be_within(height_margin).of(expected_sustain_height)
+    measurement.sustain_time.should be_within(time_margin).of(expected_sustain_time)
+    measurement.sustain_height.should be_within(height_margin).of(expected_sustain_height)
     #measurement.release_time.should be_within(time_margin).of(expected_release_time)
   end
 
