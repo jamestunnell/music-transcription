@@ -99,12 +99,10 @@ class Sequencer
           
           if (relationship == Link::RELATIONSHIP_GLISSANDO)
             subnote_count = (next_note.intervals.first.pitch - note.intervals.first.pitch).total_semitone.abs
-            #binding.pry
           elsif (relationship == Link::RELATIONSHIP_PORTAMENTO)
             cent_step_size = 5
             cents = (next_note.intervals.first.pitch - note.intervals.first.pitch).total_cent
             subnote_count = cents.abs / cent_step_size
-            #binding.pry
           end
           
           subnote_duration = duration / subnote_count
@@ -117,10 +115,8 @@ class Sequencer
           current_offset = offset
           
           (subnote_count - 1).times do
-            #binding.pry
             current_pitch += pitch_incr
             current_offset += subnote_duration
-            #binding.pry
             
             if (relationship == Link::RELATIONSHIP_PORTAMENTO)
               instructions.push Instructions::Adjust.new current_offset, current_pitch

@@ -45,7 +45,6 @@ class InstrumentPlugin
         instrument.params[name].set_value val
       end
     end
-  
     return instrument
   end
   

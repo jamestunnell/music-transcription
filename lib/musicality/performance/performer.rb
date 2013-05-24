@@ -89,7 +89,7 @@ class Performer
           @instrument.keys[key_id].adjust instruction.pitch
         elsif instruction.class == Instructions::Restart
           key_id = @key_assignments[seq_id]
-          @instrument.keys[key_id].restart instruction.attack, instruction.sustain
+          @instrument.keys[key_id].restart instruction.attack, instruction.sustain, instruction.pitch
         elsif instruction.class == Instructions::Release
           key_id = @key_assignments[seq_id]
           @instrument.keys[key_id].release instruction.damping

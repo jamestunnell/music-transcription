@@ -36,4 +36,5 @@ DESCRIPTION
   gem.add_development_dependency 'yard', '~> 0.8'
   gem.add_development_dependency 'micro-optparse'
   gem.add_development_dependency 'pry'
+  gem.add_development_dependency 'pry-nav'
 end

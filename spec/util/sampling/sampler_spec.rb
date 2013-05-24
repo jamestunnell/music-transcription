@@ -4,7 +4,9 @@ describe Musicality::Sampler do
 
   describe '.new' do
     it 'should assign the given output_dir' do
-      Dir.mkdir("mydir")
+      unless Dir.exist?("mydir")
+        Dir.mkdir("mydir")
+      end
       
       s = Sampler.new(:output_dir => "mydir")
       s.output_dir.should eq("mydir")
@@ -55,6 +57,8 @@ describe Musicality::Sampler do
   end
   
   after :all do
+    File.delete('mydir/abc.wav') if File.exist?('mydir/abc.wav')
     Dir.rmdir('mydir') if Dir.exist?('mydir')
+    Dir.rmdir('newdir') if Dir.exist?('newdir')
   end
 end

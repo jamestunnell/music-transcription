@@ -5,6 +5,8 @@ module Musicality
 # A simple instrument to use for rendering. Can select different
 # ADSR envelope and oscillator voice settings.
 class SynthInstrument < Musicality::Instrument
+  START_PITCH = C4
+
   # Helper class to create part of a harmonic structure.
   class SynthHarmonic
     include Hashmake::HashMakeable
@@ -50,34 +52,73 @@ class SynthInstrument < Musicality::Instrument
     end
   end
   
-  # Helper class, use to make SynthKey objects.
+  # Does all the synth action during a performance
   class SynthHandler
-    attr_reader :harmonics
     
-    def initialize harmonics
-      @harmonics = harmonics
+    TWO_LN_2 = 2 * Math.log(2)
+    
+    attr_reader :harmonics, :envelope_settings
+    
+    def initialize sample_rate, harmonic_settings, envelope_settings
+      
+      @harmonics = []
+      harmonic_settings.each do |harmonic_setting|
+        @harmonics.push SynthHarmonic.new(
+          :sample_rate => sample_rate,
+          :fundamental => START_PITCH.freq,
+          :partial => harmonic_setting[:partial],
+          :wave_type => harmonic_setting[:wave_type],
+          :amplitude => harmonic_setting[:amplitude]
+        )
+      end
+      
+      @envelope_settings = envelope_settings.clone
+      @envelope = ADSREnvelope.new(
+        :sample_rate => sample_rate,
+        :attack_rate => @envelope_settings[:attack_rate],
+        :decay_rate => @envelope_settings[:decay_rate],
+        :sustain_level => @envelope_settings[:sustain_level],
+        :damping_rate => @envelope_settings[:damping_rate]
+      )
     end
     
     # Prepare to start rendering a note.
     def on attack, sustain, pitch
-      # TODO setup envelope
+      attack_rate = @envelope_settings[:attack_rate]
+      decay_rate = @envelope_settings[:decay_rate]
+      sustain_level = @envelope_settings[:sustain_level]
+      
+      @envelope.reset
+      @envelope.attack_rate = (attack_rate / 2.0) * Math.exp(attack * TWO_LN_2)
+      @envelope.decay_rate = decay_rate
+      @envelope.sustain_level = (sustain_level / 2.0) * Math.exp(sustain * TWO_LN_2)
+      @envelope.attack 0.0
       
       adjust pitch
     end
     
     # Finish rendering a note.
     def off
-      # TODO set envelope to 0
+      @envelope.reset
     end
     
     # Start damping a note (so it dies out).
     def release damping
-      # TODO setup envelope
+      damping_rate = @envelope_settings[:damping_rate]
+      @envelope.damping_rate = (damping_rate / 2.0) * Math.exp(damping * TWO_LN_2)
+      @envelope.release
     end
     
     # Continute the current note, possibly with new attack, sustain, and pitch.
     def restart attack, sustain, pitch
-      # TODO setup envelope
+      attack_rate = @envelope_settings[:attack_rate]
+      decay_rate = @envelope_settings[:decay_rate]
+      sustain_level = @envelope_settings[:sustain_level]
+      
+      @envelope.attack_rate = (attack_rate / 2.0) * Math.exp(attack * TWO_LN_2)
+      @envelope.decay_rate = decay_rate
+      @envelope.sustain_level = (sustain_level / 2.0) * Math.exp(sustain * TWO_LN_2)
+      @envelope.attack @envelope.envelope
       
       adjust pitch
     end
@@ -98,44 +139,20 @@ class SynthInstrument < Musicality::Instrument
         @harmonics.each do |osc|
           sample += osc.sample
         end
-        samples << sample
+        
+        env = @envelope.render_sample
+        samples.push(sample * env)
       end
-      
-      # TODO multiply by envelope
       
       return samples
     end
   end
   
-  # Helper class to create a synth instrument key. Creates SynthHarmonic
-  # objects, that it uses to make a SynthHandler object, which then performs
-  # the actual work of starting/stopping/rendering notes.
-  class SynthKey < Key
-    def initialize harmonic_count, sample_rate
-      start_pitch = C4
-      
-      harmonics = []
-      harmonic_count.times do
-        harmonics << SynthHarmonic.new(
-          :sample_rate => sample_rate,
-          :fundamental => start_pitch.freq
-        )
-      end
-      
-      #envelope = # TODO
-      handler = SynthHandler.new(harmonics)
-
-      super(
-        :sample_rate => sample_rate,
-        :inactivity_timeout_sec => 0.01,
-        :pitch_range => (PITCHES.first..PITCHES.last),
-        :start_pitch => start_pitch,
-        :handler => handler
-      )
-    end
-  end
-
   include Hashmake::HashMakeable
+  
+  RATE_MIN = 1.0
+  RATE_MAX = 256.0
+  DEFAULT_RATE = SPCore::Scale.exponential(RATE_MIN..RATE_MAX, 3)[1]
   
   # define how hashed args may be used to initialize a new instance.
   ARG_SPECS = {
@@ -146,8 +163,9 @@ class SynthInstrument < Musicality::Instrument
   def initialize args
     hash_make SynthInstrument::ARG_SPECS, args
     @harmonic_settings = []
-    
+    @envelope_settings = {}
     params = {}
+    
     @harmonics.times do |n|
       @harmonic_settings.push(:partial => 0, :wave_type => SPCore::Oscillator::WAVES.first, :amplitude => 0.0)
       
@@ -178,16 +196,64 @@ class SynthInstrument < Musicality::Instrument
       )
     end
     
+    @envelope_settings[:attack_rate] = DEFAULT_RATE
+    @envelope_settings[:decay_rate] = DEFAULT_RATE
+    @envelope_settings[:sustain_level] = 0.5
+    @envelope_settings[:damping_rate] = DEFAULT_RATE
+    
+    params["attack_rate"] = SPNet::ParamInPort.new(
+      :get_value_handler => ->(){ @envelope_settings[:attack_rate] },
+      :set_value_handler => lambda do |attack_rate|
+        @envelope_settings[:attack_rate] = attack_rate
+        @keys.each do |id,key|
+          key.handler.envelope_settings[:attack_rate] = attack_rate
+        end
+      end,
+      :limiter => SPNet::RangeLimiter.new(RATE_MIN, true, RATE_MAX, true)
+    )
+    
+    params["decay_rate"] = SPNet::ParamInPort.new(
+      :get_value_handler => ->(){ @envelope_settings[:decay_rate] },
+      :set_value_handler => lambda do |decay_val|
+        @envelope_settings[:decay_rate] = decay_val
+        @keys.each do |id,key|
+          key.handler.envelope_settings[:decay_rate] = decay_val
+        end
+      end,
+      :limiter => SPNet::RangeLimiter.new(RATE_MIN, true, RATE_MAX, true)
+    )
+    
+    params["sustain_level"] = SPNet::ParamInPort.new(
+      :get_value_handler => ->(){ @envelope_settings[:sustain_level] },
+      :set_value_handler => lambda do |sustain_level|
+        @envelope_settings[:sustain_level] = sustain_level
+        @keys.each {|id,key| key.handler.envelope_settings[:sustain_level] = sustain_level }
+      end,
+      :limiter => SPNet::RangeLimiter.new(0.0, true, 1.0, true)
+    )
+    
+    params["damping_rate"] = SPNet::ParamInPort.new(
+      :get_value_handler => ->(){ @envelope_settings[:damping_rate] },
+      :set_value_handler => lambda do |damping_rate|
+        @envelope_settings[:damping_rate] = damping_rate
+        @keys.each {|id,key| key.handler.envelope_settings[:damping_rate] = damping_rate }
+      end,
+      :limiter => SPNet::RangeLimiter.new(RATE_MIN, true, RATE_MAX, true)
+    )
+    
     super(
       :sample_rate => @sample_rate,
       :params => params,
       :key_maker => lambda do
-        key = SynthKey.new(@harmonics, @sample_rate)
-        @harmonic_settings.count.times do |n|
-          key.handler.harmonics[n].partial = @harmonic_settings[n][:partial]
-          key.handler.harmonics[n].oscillator.wave_type = @harmonic_settings[n][:wave_type]
-          key.handler.harmonics[n].oscillator.amplitude = @harmonic_settings[n][:amplitude]
-        end
+        
+        key = Key.new(
+          :sample_rate => sample_rate,
+          :inactivity_timeout_sec => 0.01,
+          :pitch_range => (PITCHES.first..PITCHES.last),
+          :start_pitch => START_PITCH,
+          :handler => SynthHandler.new(@sample_rate, @harmonic_settings, @envelope_settings)
+        )
+        
         return key
       end
     )
@@ -196,12 +262,47 @@ class SynthInstrument < Musicality::Instrument
   end
 
   def self.make_and_register_plugin harmonics, presets = {}
+    
+    envelope_presets = {
+    }
+    
+    scale = SPCore::Scale.exponential(SynthInstrument::RATE_MIN..SynthInstrument::RATE_MAX, 5)
+    
+    possibilities = {
+      "very short" => scale[4],
+      "short" => scale[3],
+      "med" => scale[2],
+      "long" => scale[1],
+      "very long" => scale[0],
+    }
+    
+    # set attack only (default will be used for damping and decay)
+    possibilities.each do |attack_len, attack_val|
+      envelope_presets["#{attack_len} attack"] = {
+        "attack_rate" => attack_val
+      }
+    end
+    
+    # set decay only (default will be used for attack and damping)
+    possibilities.each do |decay_len, decay_val|
+      envelope_presets["#{decay_len} decay"] = {
+        "decay_rate" => decay_val
+      }
+    end
+
+    # set damping only (default will be used for attack and decay)
+    possibilities.each do |damping_len, damping_val|
+      envelope_presets["#{damping_len} damping"] = {
+        "damping_rate" => damping_val
+      }
+    end
+    
     INSTRUMENTS.register InstrumentPlugin.new(
       :name => "synth_instr_#{harmonics}",
-      :version => "1.0.0",
+      :version => "1.0.1",
       :author => "James Tunnell",
       :description => "A synthesizer with #{harmonics} harmonic(s) per note.",
-      :presets => presets,
+      :presets => presets.merge(envelope_presets),
       :maker_proc => lambda do |sample_rate|
         SynthInstrument.new(:harmonics => harmonics, :sample_rate => sample_rate)
       end

@@ -22,7 +22,17 @@ end
 #
 # @author James Tunnell
 class ADSREnvelope
-  attr_reader :attack_rate_minmax, :decay_rate_minmax, :sustain_level_minmax, :damping_rate_minmax,
+  include Hashmake::HashMakeable
+  
+  ARG_SPECS = {
+    :sample_rate => arg_spec(:reqd => true, :type => Fixnum, :validator => ->(a){ a > 0 }),
+    :attack_rate => arg_spec(:reqd => true, :type => Numeric),
+    :decay_rate => arg_spec(:reqd => true, :type => Numeric),
+    :sustain_level => arg_spec(:reqd => true, :type => Numeric, :validator => ->(a){ a <= 1.0 }),
+    :damping_rate => arg_spec(:reqd => true, :type => Numeric),
+  }
+  
+  attr_reader :attack_rate, :decay_rate, :sustain_level, :damping_rate,
     :mode, :mode_elapsed, :envelope,
     :attack_time, :attack_per_sample,
     :decay_time, :decay_per_sample,
@@ -41,28 +51,35 @@ class ADSREnvelope
   
   # A new instance of ADSREnvelope.
   #
-  # @param [Hash] settings Hashed arguments. Required keys are :sample_rate,
-  #                        :attack_rate_min, :attack_rate_max, :decay_rate_min,
-  #                        :decay_rate_max, :sustain_level_min, :sustain_level_max,
-  #                        :damping_rate_min, and :damping_rate_max.
-  def initialize settings
-    raise ArgumentError, "settings does not have :sample_rate key" unless settings.has_key?(:sample_rate)
-    @sample_rate = settings[:sample_rate]
+  # @param [Hash] args Hashed arguments. Required keys are :sample_rate,
+  #                    :attack_rate_range, :decay_rate_range,
+  #                    :sustain_level_range, and :damping_rate_range
+  def initialize args
+    hash_make ADSREnvelope::ARG_SPECS, args
     @sample_period = 1.0 / @sample_rate
-    
-    raise ArgumentError, "settings does not have :attack_rate_min key" unless settings.has_key?(:attack_rate_min)
-    raise ArgumentError, "settings does not have :attack_rate_max key" unless settings.has_key?(:attack_rate_max)
-    raise ArgumentError, "settings does not have :decay_rate_min key" unless settings.has_key?(:decay_rate_min)
-    raise ArgumentError, "settings does not have :decay_rate_max key" unless settings.has_key?(:decay_rate_max)
-    raise ArgumentError, "settings does not have :sustain_level_min key" unless settings.has_key?(:sustain_level_min)
-    raise ArgumentError, "settings does not have :sustain_level_max key" unless settings.has_key?(:sustain_level_max)
-    raise ArgumentError, "settings does not have :damping_rate_min key" unless settings.has_key?(:damping_rate_min)
-    raise ArgumentError, "settings does not have :damping_rate_max key" unless settings.has_key?(:damping_rate_max)
-    @attack_rate_minmax = MinMax.new settings[:attack_rate_min].start_value, settings[:attack_rate_max].start_value
-    @decay_rate_minmax = MinMax.new settings[:decay_rate_min].start_value, settings[:decay_rate_max].start_value
-    @sustain_level_minmax = MinMax.new settings[:sustain_level_min].start_value, settings[:sustain_level_max].start_value
-    @damping_rate_minmax = MinMax.new settings[:damping_rate_min].start_value, settings[:damping_rate_max].start_value
+  end
+  
+  def attack_rate= attack_rate
+    validate_arg ARG_SPECS[:attack_rate], attack_rate
+    @attack_rate = attack_rate
+  end
 
+  def decay_rate= decay_rate
+    validate_arg ARG_SPECS[:decay_rate], decay_rate
+    @decay_rate = decay_rate
+  end
+
+  def sustain_level= sustain_level
+    validate_arg ARG_SPECS[:sustain_level], sustain_level
+    @sustain_level = sustain_level
+  end
+  
+  def damping_rate= damping_rate
+    validate_arg ARG_SPECS[:damping_rate], damping_rate
+    @damping_rate = damping_rate
+  end
+  
+  def reset
     @mode = ENV_MODE_INACTIVE
     @mode_elapsed = 0.0
     @envelope = 0.0
@@ -75,39 +92,31 @@ class ADSREnvelope
   end
 
   # Start the envelope at the given level.
-  def attack attack, sustain, envelope_start = 0.0
-    raise ArgumentError, "attack is not between 0.0 and 1.0" unless attack.between?(0.0, 1.0)
-    raise ArgumentError, "sustain is not between 0.0 and 1.0" unless sustain.between?(0.0, 1.0)
-    raise ArgumentError, "envelope_start is not between 0.0 and 1.0" unless envelope_start.between?(0.0, 1.0)
+  def attack start_level = 0.0
    
     @mode = ENV_MODE_ATTACK
     @mode_elapsed = 0.0
     
-    @envelope = envelope_start
+    @envelope = start_level
     
     # compute attack time and rate
-    attack_height = 1.0 - envelope_start
-    attack_rate = @attack_rate_minmax.by_percent(attack)
-    @attack_time = attack_height / attack_rate
-    @attack_per_sample = attack_rate / @sample_rate
+    attack_height = 1.0 - start_level
+    @attack_time = attack_height / @attack_rate
+    @attack_per_sample = @attack_rate.to_f / @sample_rate
     
     # compute deacy time and rate
-    decay_height = 1.0 - @sustain_level_minmax.by_percent(sustain)
-    decay_rate = @decay_rate_minmax.by_percent(1.0 - sustain)
-    @decay_time = decay_height / decay_rate
-    @decay_per_sample = decay_rate / @sample_rate
+    decay_height = 1.0 - @sustain_level
+    @decay_time = decay_height / @decay_rate
+    @decay_per_sample = @decay_rate.to_f / @sample_rate
   end
   
   # Release the envelope, dampening as given.
-  def release damping
-    raise ArgumentError, "damping is not between 0.0 and 1.0" unless damping.between?(0.0, 1.0)
-
+  def release
     @mode = ENV_MODE_RELEASE
     @mode_elapsed = 0.0
     
     # puts into decay mode forever to release the envelope
-    damping_rate = @damping_rate_minmax.by_percent(damping)
-    @damping_per_sample = damping_rate / @sample_rate
+    @damping_per_sample = @damping_rate.to_f / @sample_rate
   end
   
   # Render a sample of the envelope.
@@ -153,19 +162,5 @@ class ADSREnvelope
     return sample
   end
 end
-
-## Register the plugin with Musicality::PLUGINS registry
-#PLUGINS.register :adsr_envelope do
-#  self.author = "James Tunnell"
-#  self.version = "1.0.0"
-#  self.extends  = [:envelope]
-#  #requires []
-#  self.extension_points = []
-#  self.params = { :description => 'Makes a ADSR  envelope, where attack and decay time depend on attack and sustain settings.' }
-#
-#  def make_envelope settings
-#    Musicality::ADSREnvelope.new settings
-#  end
-#end
 
 end
