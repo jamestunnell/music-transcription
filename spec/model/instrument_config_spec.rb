@@ -16,6 +16,18 @@ describe InstrumentConfig do
     cfg.initial_settings.should eq(settings)
   end
 
+  it "should allow a String to be given as initial settings" do
+    settings = "preset A"
+    cfg = InstrumentConfig.new :plugin_name => "MyPluginName", :initial_settings => settings
+    cfg.initial_settings.should eq(settings)
+  end
+  
+  it "should allow an Array to be given as initial settings" do
+    settings = ["preset A","preset B"]
+    cfg = InstrumentConfig.new :plugin_name => "MyPluginName", :initial_settings => settings
+    cfg.initial_settings.should eq(settings)
+  end
+  
   it "should assign each of the given setting changes" do
     setting_changes = {
       1.0 => {

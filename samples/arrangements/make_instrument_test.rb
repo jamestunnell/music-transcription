@@ -1,4 +1,6 @@
 require 'musicality'
+require 'yaml'
+
 include Musicality
 
 hash = {
@@ -21,7 +23,7 @@ hash = {
   :instrument_configs => {
     1 => {
       :plugin_name => 'synth_instr_3',
-      :initial_settings => "blend"
+      :initial_settings => ["blend", "short attack", "long decay"]
     },
   }
 }

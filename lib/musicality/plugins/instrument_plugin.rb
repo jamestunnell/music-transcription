@@ -38,6 +38,16 @@ class InstrumentPlugin
       else
         raise "@presets does not have key #{preset_name}"
       end
+    elsif initial_settings.is_a?(Array)
+      new_settings = {}
+      initial_settings.each do |name|
+        if @presets.has_key?(name)
+          new_settings.merge!(@presets[name])
+        else
+          raise "@presets does not have key #{name}"
+        end 
+      end
+      initial_settings = new_settings
     end
     
     initial_settings.each do |name, val|
