@@ -51,3 +51,6 @@ require 'musicality/util/optimization/particle_swarm'
 require 'musicality/util/sampling/sample_file'
 require 'musicality/util/sampling/sampler'
 require 'musicality/util/pitch_constants'
+
+# some instrument classes that can be used for instrument plugins
+require 'musicality/instruments/synth_instrument'

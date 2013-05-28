@@ -8,7 +8,7 @@ class SynthInstrument < Musicality::Instrument
   START_PITCH = C4
 
   # Helper class to create part of a harmonic structure.
-  class SynthHarmonic
+  class Harmonic
     include Hashmake::HashMakeable
     
     # define how hashed args may be used to initialize a new instance.
@@ -23,7 +23,7 @@ class SynthInstrument < Musicality::Instrument
     attr_reader :partial, :oscillator, :fundamental
     
     def initialize args
-      hash_make SynthHarmonic::ARG_SPECS, args
+      hash_make Harmonic::ARG_SPECS, args
       @oscillator = SPCore::Oscillator.new(
         :sample_rate => @sample_rate,
         :amplitude => @amplitude,
@@ -34,14 +34,14 @@ class SynthInstrument < Musicality::Instrument
     
     # Setup the harmonic partial. Can be >= 0.
     def partial= partial
-      validate_arg SynthHarmonic::ARG_SPECS[:partial], partial
+      validate_arg Harmonic::ARG_SPECS[:partial], partial
       @partial = partial
       @oscillator.frequency = @fundamental * (1 + @partial)
     end
     
     # Set up the harmonic fundamental so the oscillator frequency can be set. The formula is: freq = fundamental * (1 + partial).
     def fundamental= fundamental
-      validate_arg SynthHarmonic::ARG_SPECS[:fundamental], fundamental
+      validate_arg Harmonic::ARG_SPECS[:fundamental], fundamental
       @fundamental = fundamental
       @oscillator.frequency = @fundamental * (1 + @partial)
     end
@@ -53,7 +53,7 @@ class SynthInstrument < Musicality::Instrument
   end
   
   # Does all the synth action during a performance
-  class SynthHandler
+  class Handler
     
     TWO_LN_2 = 2 * Math.log(2)
     
@@ -63,7 +63,7 @@ class SynthInstrument < Musicality::Instrument
       
       @harmonics = []
       harmonic_settings.each do |harmonic_setting|
-        @harmonics.push SynthHarmonic.new(
+        @harmonics.push Harmonic.new(
           :sample_rate => sample_rate,
           :fundamental => START_PITCH.freq,
           :partial => harmonic_setting[:partial],
@@ -136,16 +136,56 @@ class SynthInstrument < Musicality::Instrument
       samples = []
       count.times do
         sample = 0.0
+        
         @harmonics.each do |osc|
           sample += osc.sample
         end
         
         env = @envelope.render_sample
+        
         samples.push(sample * env)
       end
       
       return samples
     end
+  end
+
+  def self.assemble_envelope_presets(rate_min, rate_max)
+    envelope_presets = {
+    }
+    
+    scale = SPCore::Scale.exponential(rate_min..rate_max, 5)
+    
+    possibilities = {
+      "very short" => scale[4],
+      "short" => scale[3],
+      "med" => scale[2],
+      "long" => scale[1],
+      "very long" => scale[0],
+    }
+    
+    # set attack only (default will be used for damping and decay)
+    possibilities.each do |attack_len, attack_val|
+      envelope_presets["#{attack_len} attack"] = {
+        "attack_rate" => attack_val
+      }
+    end
+    
+    # set decay only (default will be used for attack and damping)
+    possibilities.each do |decay_len, decay_val|
+      envelope_presets["#{decay_len} decay"] = {
+        "decay_rate" => decay_val
+      }
+    end
+
+    # set damping only (default will be used for attack and decay)
+    possibilities.each do |damping_len, damping_val|
+      envelope_presets["#{damping_len} damping"] = {
+        "damping_rate" => damping_val
+      }
+    end
+    
+    return envelope_presets
   end
   
   include Hashmake::HashMakeable
@@ -153,6 +193,7 @@ class SynthInstrument < Musicality::Instrument
   RATE_MIN = 1.0
   RATE_MAX = 256.0
   DEFAULT_RATE = SPCore::Scale.exponential(RATE_MIN..RATE_MAX, 3)[1]
+  ENVELOPE_PRESETS = self.assemble_envelope_presets(RATE_MIN, RATE_MAX)
   
   # define how hashed args may be used to initialize a new instance.
   ARG_SPECS = {
@@ -251,7 +292,7 @@ class SynthInstrument < Musicality::Instrument
           :inactivity_timeout_sec => 0.01,
           :pitch_range => (PITCHES.first..PITCHES.last),
           :start_pitch => START_PITCH,
-          :handler => SynthHandler.new(@sample_rate, @harmonic_settings, @envelope_settings)
+          :handler => Handler.new(@sample_rate, @harmonic_settings, @envelope_settings)
         )
         
         return key
@@ -262,90 +303,17 @@ class SynthInstrument < Musicality::Instrument
   end
 
   def self.make_and_register_plugin harmonics, presets = {}
-    
-    envelope_presets = {
-    }
-    
-    scale = SPCore::Scale.exponential(SynthInstrument::RATE_MIN..SynthInstrument::RATE_MAX, 5)
-    
-    possibilities = {
-      "very short" => scale[4],
-      "short" => scale[3],
-      "med" => scale[2],
-      "long" => scale[1],
-      "very long" => scale[0],
-    }
-    
-    # set attack only (default will be used for damping and decay)
-    possibilities.each do |attack_len, attack_val|
-      envelope_presets["#{attack_len} attack"] = {
-        "attack_rate" => attack_val
-      }
-    end
-    
-    # set decay only (default will be used for attack and damping)
-    possibilities.each do |decay_len, decay_val|
-      envelope_presets["#{decay_len} decay"] = {
-        "decay_rate" => decay_val
-      }
-    end
-
-    # set damping only (default will be used for attack and decay)
-    possibilities.each do |damping_len, damping_val|
-      envelope_presets["#{damping_len} damping"] = {
-        "damping_rate" => damping_val
-      }
-    end
-    
     INSTRUMENTS.register InstrumentPlugin.new(
       :name => "synth_instr_#{harmonics}",
       :version => "1.0.1",
       :author => "James Tunnell",
       :description => "A synthesizer with #{harmonics} harmonic(s) per note.",
-      :presets => presets.merge(envelope_presets),
+      :presets => presets.merge(SynthInstrument::ENVELOPE_PRESETS),
       :maker_proc => lambda do |sample_rate|
         SynthInstrument.new(:harmonics => harmonics, :sample_rate => sample_rate)
       end
     )
   end
 end
-
-SynthInstrument.make_and_register_plugin 1,
-  "sine" => {
-    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
-  },
-  "square" => {
-    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SINE,
-  },
-  "triangle" => {
-    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SINE,
-  },
-  "sawtooth" => {
-    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SAWTOOTH,
-  }
-
-SynthInstrument.make_and_register_plugin 3,
-  "blend" => {
-    "harmonic_0_partial" => 0,
-    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SQUARE,
-    "harmonic_0_amplitude" => 0.2,
-    "harmonic_1_partial" => 1,
-    "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SINE,
-    "harmonic_1_amplitude" => 0.1,
-    "harmonic_2_partial" => 2,
-    "harmonic_2_wave_type" => SPCore::Oscillator::WAVE_SAWTOOTH,
-    "harmonic_2_amplitude" => 0.05,
-  },
-  "sines" => {
-    "harmonic_0_partial" => 0,
-    "harmonic_0_wave_type" => SPCore::Oscillator::WAVE_SINE,
-    "harmonic_0_amplitude" => 0.5,
-    "harmonic_1_partial" => 1,
-    "harmonic_1_wave_type" => SPCore::Oscillator::WAVE_SINE,
-    "harmonic_1_amplitude" => 0.3,
-    "harmonic_2_partial" => 2,
-    "harmonic_2_wave_type" => SPCore::Oscillator::WAVE_SINE,
-    "harmonic_2_amplitude" => 0.2,
-  }
 
 end
