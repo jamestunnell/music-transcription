@@ -46,6 +46,8 @@ require 'musicality/performance/conductor'
 
 # misc utility classes
 require 'musicality/util/envelopes/adsr_envelope'
+require 'musicality/util/functions/one_variable_function'
+require 'musicality/util/functions/two_variable_function'
 require 'musicality/util/optimization/vector'
 require 'musicality/util/optimization/particle_swarm'
 require 'musicality/util/sampling/sample_file'
