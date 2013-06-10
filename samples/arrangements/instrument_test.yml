@@ -33,4 +33,8 @@
             :semitone: 4
 :instrument_configs:
   1:
-    :plugin_name: mimic_piano
+    :plugin_name: synth_instr_3
+    :initial_settings:
+    - blend
+    - very short attack
+    - med decay
