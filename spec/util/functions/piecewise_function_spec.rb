@@ -5,10 +5,11 @@ describe Musicality::PiecewiseFunction do
   before :each do
     @pwf = Musicality::PiecewiseFunction.new
   end
+  
   it "should have no pieces by default" do
     @pwf.pieces.should be_empty
   end
-
+  
   it "should be able to add a piece" do
     @pwf.add_piece 0...2, lambda {|x| x }
     @pwf.pieces.count.should be 1
@@ -18,22 +19,22 @@ describe Musicality::PiecewiseFunction do
   
   it "should be able to evaluate a piece" do
     @pwf.add_piece 0...2, lambda {|x| x }
-    @pwf.evaluate_at(1.5).should eq(1.5)
+    @pwf.eval(1.5).should eq(1.5)
   end
   
-  it "should not be able to evaluate where there is no piece" do
+  it "should raise ArgumentError when trying to evaluate where there is no piece" do
     @pwf.add_piece 0...2, lambda {|x| x }
-    @pwf.evaluate_at(-0.1).should be_nil
-    @pwf.evaluate_at(2).should be_nil
+    lambda { @pwf.eval(-0.1) }.should raise_error(ArgumentError)
+    lambda { @pwf.eval(2) }.should raise_error(ArgumentError)
   end
   
   it "should be able to add non-overlapping pieces and evaluate them seperately" do
     @pwf.add_piece 0...2, lambda {|x| x }
     @pwf.add_piece 2...4, lambda {|x| 2 * x }
-    @pwf.evaluate_at(1).should eq(1)
-    @pwf.evaluate_at(3).should eq(6)
+    @pwf.eval(1).should eq(1)
+    @pwf.eval(3).should eq(6)
   end
-
+  
   it "should be able to add overlapping pieces and evaluate them seperately" do
     @pwf.add_piece 0...10, lambda {|x| x * 2 }
     @pwf.add_piece 20...80, lambda {|x| x * 3 }
@@ -59,8 +60,17 @@ describe Musicality::PiecewiseFunction do
       99 => 396, #95...100 should be x * 4
       
     }.each do |x,y|
-      @pwf.evaluate_at(x).should eq(y)
+      @pwf.eval(x).should eq(y)
     end
+  end
+  
+  it 'should add linear pieces for any points given during initialization' do
+    pwf = PiecewiseFunction.new [[0.0,2.0],[2.0,4.0],[4.0,2.0]]
+    pwf.eval(0).should eq(2)
+    pwf.eval(1).should eq(3)
+    pwf.eval(2).should eq(4)
+    pwf.eval(3).should eq(3)
+    pwf.eval(4).should eq(2)
   end
 
 end

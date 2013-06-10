@@ -35,7 +35,7 @@ class ValueComputer
   # Compute the value at the given offset.
   # @param [Numeric] offset The given offset to compute value at.
   def value_at offset
-    @piecewise_function.evaluate_at offset
+    @piecewise_function.eval offset
   end
   
   # finds the minimum domain value
@@ -62,7 +62,7 @@ class ValueComputer
 
   def set_default_value value
     func = lambda {|x| value }
-    @piecewise_function.add_piece( domain_min...(domain_max + 1), func )
+    @piecewise_function.add_piece( domain_min..domain_max, func )
   end
 
   # Add a function piece to the piecewise function, which will to compute value
@@ -74,8 +74,7 @@ class ValueComputer
   def add_immediate_change value_change, offset
     func = nil
     value = value_change.value
-    duration = value_change.transition.duration
-    domain = offset...(domain_max + 1)
+    domain = offset..domain_max
     func = lambda {|x| value }
     
     @piecewise_function.add_piece domain, func
@@ -92,12 +91,12 @@ class ValueComputer
     func = nil
     value = value_change.value
     duration = value_change.transition.duration
-    domain = offset...(domain_max + 1)
+    domain = offset..domain_max
     
     if duration == 0
       func = lambda {|x| value }
     else
-      b = @piecewise_function.evaluate_at domain.first
+      b = @piecewise_function.eval domain.first
       m = (value - b) / duration
       
       func = lambda do |x|
@@ -125,14 +124,14 @@ class ValueComputer
     func = nil
     value = value_change.value
     duration = value_change.transition.duration
-    domain = offset...(domain_max + 1)
+    domain = offset..domain_max
     
     if duration == 0
       func = lambda {|x| value }
     else
       # TODO - replace with sigmoid-like function
       
-      #b = @piecewise_function.evaluate_at domain.first
+      #b = @piecewise_function.eval domain.first
       #m = (value - b) / duration
       #
       #func = lambda do |x|

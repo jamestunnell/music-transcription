@@ -28,7 +28,6 @@ require 'musicality/practice/envelope_dissection'
 require 'musicality/practice/measurement/adsr_measurement'
 
 # performance utility classes
-require 'musicality/performance/util/piecewise_function'
 require 'musicality/performance/util/value_computer'
 require 'musicality/performance/util/value_updater'
 require 'musicality/performance/util/note_time_converter'
@@ -47,6 +46,7 @@ require 'musicality/performance/conductor'
 # misc utility classes
 require 'musicality/util/envelopes/adsr_envelope'
 require 'musicality/util/functions/one_variable_function'
+require 'musicality/util/functions/piecewise_function'
 require 'musicality/util/functions/two_variable_function'
 require 'musicality/util/optimization/vector'
 require 'musicality/util/optimization/particle_swarm'

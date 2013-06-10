@@ -17,9 +17,9 @@ describe Musicality::TempoComputer do
     end
   end
 
-  it "should return nil if offset is past max" do
+  it "should return raise ArgumentError if offset is past max" do
     tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
-    tc.beats_per_minute_at(ValueComputer.domain_max + 1).should be_nil
+    lambda { tc.beats_per_minute_at(ValueComputer.domain_max + 1) }.should raise_error(ArgumentError)
   end
 
   context "two tempos, no transition" do
