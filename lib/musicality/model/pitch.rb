@@ -76,7 +76,7 @@ class Pitch
   def initialize args={}
     @cents_per_octave = CENTS_PER_SEMITONE * SEMITONES_PER_OCTAVE
     hash_make ARG_SPECS, args
-    normalize
+    normalize!
   end
 
   # Set @base_freq, which is used with the pitch ratio to produce the
@@ -137,7 +137,7 @@ class Pitch
   def total_cent= cent
     raise ArgumentError, "cent is not a Fixnum" if !cent.is_a?(Fixnum)
     @octave, @semitone, @cent = 0, 0, cent
-    normalize
+    normalize!
   end
 
   # Calculate the pitch ratio. Raises 2 to the power of the total cent 
@@ -158,12 +158,12 @@ class Pitch
   end
 
   # Round to the nearest semitone.
-  def round_to_nearest_semitone
+  def round!
     if @cent >= (CENTS_PER_SEMITONE / 2)
       @semitone += 1
     end
     @cent = 0
-    normalize
+    normalize!
   end
   
   # Calculates the number of semitones which would represent the pitch's
@@ -206,7 +206,7 @@ class Pitch
   end
   
   # Balance out the octave, semitone, and cent count. 
-  def normalize
+  def normalize!
     centTotal = (@octave * @cents_per_octave) + (@semitone * CENTS_PER_SEMITONE) + @cent
     
     @octave = centTotal / @cents_per_octave
