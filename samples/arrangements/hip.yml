@@ -267,6 +267,7 @@
             :target_pitch:
               :octave: 4
               :semitone: 0
+              :cent: 50
             :relationship: :portamento
       - :duration: !ruby/object:Rational
           denominator: 8
@@ -275,6 +276,7 @@
         - :pitch:
             :octave: 4
             :semitone: 0
+            :cent: 50
             
       # 2.0
       - :duration: !ruby/object:Rational
@@ -394,6 +396,7 @@
             :target_pitch:
               :octave: 4
               :semitone: 2
+              :cent: 50
             :relationship: :portamento
       - :duration: !ruby/object:Rational
           denominator: 8
@@ -402,6 +405,7 @@
         - :pitch:
             :octave: 4
             :semitone: 2
+            :cent: 50
 
 :instrument_configs:
   bass:
