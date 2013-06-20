@@ -1,0 +1,416 @@
+---
+:score:
+  :beats_per_minute_profile:
+    :start_value: 114.0
+  :program:
+    :segments:
+    - !ruby/range
+      begin: 0
+      end: 2.0
+      excl: true
+    - !ruby/range
+      begin: 0
+      end: 2.0
+      excl: true
+    - !ruby/range
+      begin: 2.0
+      end: 4.0
+      excl: true
+    - !ruby/range
+      begin: 0
+      end: 2.0
+      excl: true
+  :parts:
+    bass:
+      :loudness_profile:
+        :start_value: 0.125
+      :notes:
+      
+      # 0.0
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+      - :duration: !ruby/object:Rational
+          denominator: 3
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 8
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 5
+      - :duration: !ruby/object:Rational
+          denominator: 12
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 8
+            
+      # 1.0
+      
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+      - :duration: !ruby/object:Rational
+          denominator: 3
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 8
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 8
+
+      # 2.0
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 0
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+      - :duration: !ruby/object:Rational
+          denominator: 3
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 7
+      - :duration: !ruby/object:Rational
+          denominator: 12
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+            
+      # 3.0
+      
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 0
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+      - :duration: !ruby/object:Rational
+          denominator: 3
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 2
+            :semitone: 10
+
+    lead:
+      :notes:
+      
+      # 0.0
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 10
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+      - :duration: !ruby/object:Rational
+          denominator: 12
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 1
+          :link:
+            :target_pitch:
+              :octave: 4
+              :semitone: 1
+            :relationship: :tie
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 1
+          :link:
+            :target_pitch:
+              :octave: 4
+              :semitone: 1
+            :relationship: :tie
+      - :duration: !ruby/object:Rational
+          denominator: 36
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 1
+      - :duration: !ruby/object:Rational
+          denominator: 36
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 3
+      - :duration: !ruby/object:Rational
+          denominator: 36
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 1
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 8
+      - :duration: !ruby/object:Rational
+          denominator: 12
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 1
+            
+      # 1.0
+      
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 10
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+      - :duration: !ruby/object:Rational
+          denominator: 12
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 1
+          :link:
+            :target_pitch:
+              :octave: 4
+              :semitone: 1
+            :relationship: :tie
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 1
+          :link:
+            :target_pitch:
+              :octave: 4
+              :semitone: 1
+            :relationship: :tie
+      - :duration: !ruby/object:Rational
+          denominator: 8
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 1
+          :link:
+            :target_pitch:
+              :octave: 4
+              :semitone: 0
+            :relationship: :portamento
+      - :duration: !ruby/object:Rational
+          denominator: 8
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 0
+            
+      # 2.0
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 0
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+      - :duration: !ruby/object:Rational
+          denominator: 12
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 3
+          :link:
+            :target_pitch:
+              :octave: 4
+              :semitone: 3
+            :relationship: :tie
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 3
+          :link:
+            :target_pitch:
+              :octave: 4
+              :semitone: 3
+            :relationship: :tie
+      - :duration: !ruby/object:Rational
+          denominator: 36
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 3
+      - :duration: !ruby/object:Rational
+          denominator: 36
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 5
+      - :duration: !ruby/object:Rational
+          denominator: 36
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 3
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 3
+            :semitone: 10
+      - :duration: !ruby/object:Rational
+          denominator: 12
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 3
+            
+      # 3.0
+      
+      - :duration: !ruby/object:Rational
+          denominator: 6
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 0
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+      - :duration: !ruby/object:Rational
+          denominator: 12
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 3
+          :link:
+            :target_pitch:
+              :octave: 4
+              :semitone: 3
+            :relationship: :tie
+      - :duration: !ruby/object:Rational
+          denominator: 4
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 3
+          :link:
+            :target_pitch:
+              :octave: 4
+              :semitone: 3
+            :relationship: :tie
+      - :duration: !ruby/object:Rational
+          denominator: 8
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 3
+          :link:
+            :target_pitch:
+              :octave: 4
+              :semitone: 2
+            :relationship: :portamento
+      - :duration: !ruby/object:Rational
+          denominator: 8
+          numerator: 1
+        :intervals:
+        - :pitch:
+            :octave: 4
+            :semitone: 2
+
+:instrument_configs:
+  bass:
+    :plugin_name: synth_instr_1
+    :initial_settings:
+    - sawtooth
+  lead:
+    :plugin_name: synth_instr_3
+    :initial_settings:
+    - blend
+    - very short attack
+    - med decay
