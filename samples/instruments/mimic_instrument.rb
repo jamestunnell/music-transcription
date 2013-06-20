@@ -5,13 +5,10 @@ require 'musicality'
 require 'find'
 require 'pry'
 
-include Musicality
-include SPCore
-
 # Attempt to reproduce (mimic) the harmonic amplitudes of an audio sample file.
 #
 # @author James Tunnell
-class MimicInstrument < Instrument
+class MimicInstrument < Musicality::Instrument
   include Hashmake::HashMakeable
   
   # Does all the synth action during a performance
@@ -22,16 +19,16 @@ class MimicInstrument < Instrument
       
       @harmonics = []
       partial_functions.each do |partial, func|
-        @harmonics.push SynthInstrument::Harmonic.new(
+        @harmonics.push Musicality::SynthInstrument::Harmonic.new(
           :sample_rate => sample_rate,
-          :fundamental => SynthInstrument::START_PITCH.freq,
+          :fundamental => Musicality::SynthInstrument::START_PITCH.freq,
           :partial => partial,
         )
       end
       @partial_functions = partial_functions
       
       @envelope_settings = envelope_settings.clone
-      @envelope = ADSREnvelope.new(
+      @envelope = Musicality::ADSREnvelope.new(
         :sample_rate => sample_rate,
         :attack_rate => @envelope_settings[:attack_rate],
         :decay_rate => @envelope_settings[:decay_rate],
@@ -162,25 +159,25 @@ class MimicInstrument < Instrument
       points.unshift [0.0, points.first[1]]
       points.push [@sample_rate, points.last[1]]
       
-      @partial_functions[partial] = PiecewiseFunction.new(points)
+      @partial_functions[partial] = Musicality::PiecewiseFunction.new(points)
     end
     
     @envelope_settings = {
-      :attack_rate => SynthInstrument::RATE_MAX,
-      :decay_rate => SynthInstrument::RATE_MAX,
+      :attack_rate => Musicality::SynthInstrument::RATE_MAX,
+      :decay_rate => Musicality::SynthInstrument::RATE_MAX,
       :sustain_level => 0.25,
-      :damping_rate => SynthInstrument::RATE_MAX
+      :damping_rate => Musicality::SynthInstrument::RATE_MAX
     }
     
     super(
       :sample_rate => @sample_rate,
       :key_maker => lambda do
         
-        key = Key.new(
+        key = Musicality::Key.new(
           :sample_rate => @sample_rate,
           :inactivity_timeout_sec => 0.01,
-          :pitch_range => (PITCHES.first..PITCHES.last),
-          :start_pitch => SynthInstrument::START_PITCH,
+          :pitch_range => (Musicality::PITCHES.first..Musicality::PITCHES.last),
+          :start_pitch => Musicality::SynthInstrument::START_PITCH,
           :handler => Handler.new(@sample_rate, @partial_functions, @envelope_settings)
         )
         
@@ -190,12 +187,12 @@ class MimicInstrument < Instrument
   end
   
   def self.make_and_register_plugin instr_name, file_paths, max_harmonics
-    INSTRUMENTS.register InstrumentPlugin.new(
+    Musicality::INSTRUMENTS.register Musicality::InstrumentPlugin.new(
       :name => "mimic_#{instr_name}",
       :version => "1.0.1",
       :author => "James Tunnell",
       :description => "A synthesizer set up to mimic a #{instr_name}",
-      :presets => SynthInstrument::ENVELOPE_PRESETS,
+      :presets => Musicality::SynthInstrument::ENVELOPE_PRESETS,
       :maker_proc => lambda do |sample_rate|
         MimicInstrument.new(
           :max_harmonics => max_harmonics,

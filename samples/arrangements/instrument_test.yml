@@ -33,8 +33,7 @@
             :semitone: 4
 :instrument_configs:
   1:
-    :plugin_name: synth_instr_3
+    :plugin_name: mimic_trumpet
     :initial_settings:
-    - blend
     - very short attack
     - med decay
