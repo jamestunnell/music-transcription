@@ -56,3 +56,6 @@ require 'musicality/util/pitch_constants'
 
 # some instrument classes that can be used for instrument plugins
 require 'musicality/instruments/synth_instrument'
+
+# some instrument classes that can be used for instrument plugins
+require 'musicality/composition/rhythmic_pattern'
