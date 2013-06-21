@@ -13,7 +13,7 @@ describe Musicality::Scale do
     end
   end
   
-  describe '#apply_intervals' do
+  describe '#to_pitches' do
     before :all do
       @base_pitches = [
         Pitch.new(:octave => 2, :semitone => 1),
@@ -32,7 +32,7 @@ describe Musicality::Scale do
     it 'should create the same number of pitches as there are scale intervals' do
       @scales.each do |scale|
         @base_pitches.each do |base_pitch|
-          pitches = scale.apply_intervals base_pitch
+          pitches = scale.to_pitches base_pitch
           pitches.count.should eq scale.intervals.count
         end
       end
@@ -41,7 +41,7 @@ describe Musicality::Scale do
     it 'should create pitches that are relative to the given base pitch' do
       @scales.each do |scale|
         @base_pitches.each do |base_pitch|
-          pitches = scale.apply_intervals base_pitch
+          pitches = scale.to_pitches base_pitch
           pitches.each_index do |i|
             diff = pitches[i] - base_pitch
             diff.total_semitone.should eq scale.intervals[i]

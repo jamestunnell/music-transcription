@@ -11,7 +11,7 @@ class Scale
     @intervals = intervals
   end
   
-  def apply_intervals base_pitch
+  def to_pitches base_pitch
     pitches = []
     @intervals.each do |interval|
       offset_pitch = Pitch.new(:semitone => interval)
