@@ -18,7 +18,7 @@ describe Musicality::Conductor do
           ]
         }
       },
-      :beats_per_minute_profile => { :start_value => 360 },
+      :tempo_profile => { :start_value => tempo(360) },
       :program => {
         :segments => [
           0.0...2.0,
@@ -48,7 +48,7 @@ describe Musicality::Conductor do
 
     it "should be able to perform the entire score" do
       #how long it should take time-wise
-      notes_per_sec = (@score.beats_per_minute_profile.start_value / 60.0) * @score.beat_duration_profile.start_value
+      notes_per_sec = @score.tempo_profile.start_value.notes_per_second
       score_length_notes = @score.program.length
       score_length_sec = score_length_notes / notes_per_sec
       score_length_samples = score_length_sec * @sample_rate

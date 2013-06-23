@@ -1,31 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Musicality::ScoreCollator do
-  before :all do
-    @simple_score_hash = {
-      :beats_per_minute_profile => {
-        :start_value => 120,
-        :value_changes => { 0.5 => Musicality::linear_change(60,1.0) }
-      },
-      :program => { :segments => [0.0...1.0, 0.0...2.0] },
-      :parts => {
-        "1" => {
-          :start_offset => 0.0,
-          :loudness_profile => {
-            :start_value => 0.5,
-            :value_changes => { 0.5 => Musicality::linear_change(1.0,1.0) }
-          },
-          :notes => [
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 1.00, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-          ]
-        }
-      },
-    }
-    
+  before :all do    
     @complex_score_hash = {
       :parts => {
         :part1 => {
@@ -43,7 +19,7 @@ describe Musicality::ScoreCollator do
           ]
         }
       },
-      :beats_per_minute_profile => { :start_value => 120 },
+      :tempo_profile => { :start_value => tempo(120) },
       :program => {
         :segments => [
           0.0...2.0,
@@ -56,7 +32,7 @@ describe Musicality::ScoreCollator do
     }
 
     @two_part_score_hash = {
-      :beats_per_minute_profile => { :start_value => 120 },
+      :tempo_profile => { :start_value => tempo(120) },
       :program => { :segments => [0.0...1.0, 0.0...2.0] },
       :parts => {
         :a => {
@@ -83,7 +59,31 @@ describe Musicality::ScoreCollator do
   end
     
   it "should collate a simple score/program into a single segment" do
-    score = Score.new @simple_score_hash
+    simple_score_hash = {
+      :tempo_profile => {
+        :start_value => tempo(120),
+        :value_changes => { 0.5 => Musicality::linear_change(tempo(60),1.0) }
+      },
+      :program => { :segments => [0.0...1.0, 0.0...2.0] },
+      :parts => {
+        "1" => {
+          :start_offset => 0.0,
+          :loudness_profile => {
+            :start_value => 0.5,
+            :value_changes => { 0.5 => Musicality::linear_change(1.0,1.0) }
+          },
+          :notes => [
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
+            { :duration => 1.00, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+          ]
+        }
+      },
+    }
+
+    score = Score.new simple_score_hash
     ScoreCollator.collate_score! score
   
     score.parts.count.should eq 1
@@ -104,15 +104,17 @@ describe Musicality::ScoreCollator do
     dyn_comp.value_at(2.0).should eq(0.75)
     dyn_comp.value_at(2.5).should eq(1.0)
     
-    tc = Musicality::TempoComputer.new(score.beats_per_minute_profile, score.beat_duration_profile)
-    tc.notes_per_second_at(0.0).should eq(0.5)
-    tc.notes_per_second_at(0.5).should eq(0.5)
-    tc.notes_per_second_at(0.75).should be_within(0.01).of(0.4375)
-    tc.notes_per_second_at(0.999).should be_within(0.01).of(0.375)
-    tc.notes_per_second_at(1.0).should be_within(0.01).of(0.5)
-    tc.notes_per_second_at(1.5).should be_within(0.01).of(0.5)
-    tc.notes_per_second_at(2.0).should be_within(0.01).of(0.375)
-    tc.notes_per_second_at(2.5).should be_within(0.01).of(0.25)
+    tc = Musicality::TempoComputer.new(score.tempo_profile)
+    tc.value_at(0.0).should eq(tempo(120))
+    tc.value_at(0.5).should eq(tempo(120))
+    tc.value_at(0.75).should eq(tempo(105))
+    tc.notes_per_second_at(0.99999).should be_within(0.1).of(0.375)
+    tc.value_at(1.0).should eq(tempo(120))
+    tc.value_at(1.5).should eq(tempo(120))
+    tc.value_at(1.75).should eq(tempo(105))
+    tc.value_at(2.0).should eq(tempo(90))
+    tc.value_at(2.25).should eq(tempo(75))
+    tc.value_at(2.5).should eq(tempo(60))
   end
 
   it "should handle a complex one-part score" do

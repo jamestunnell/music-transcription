@@ -1,33 +1,26 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Musicality::TempoComputer do
-
-  before :all do
-    @beat_duration_profile = Musicality::Profile.new :start_value => 0.25
-  end
-  
-  before :each do
-    @bpm_profile = Musicality::Profile.new :start_value => 120.0
-  end
-
   it "should always return starting tempo if only tempo given" do
-    tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
+    tempo_profile = Musicality::Profile.new :start_value => tempo(120)
+    tc = Musicality::TempoComputer.new tempo_profile
     [ValueComputer.domain_min, -1000, 0, 1, 5, 100, 10000, ValueComputer.domain_max].each do |offset|
       tc.notes_per_second_at(offset).should eq(0.5)
     end
   end
 
   it "should return raise ArgumentError if offset is past max" do
-    tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
-    lambda { tc.beats_per_minute_at(ValueComputer.domain_max + 1) }.should raise_error(ArgumentError)
+    tempo_profile = Musicality::Profile.new :start_value => tempo(120)
+    tc = Musicality::TempoComputer.new tempo_profile
+    lambda { tc.notes_per_second_at(ValueComputer.domain_max + 1) }.should raise_error(ArgumentError)
   end
 
   context "two tempos, no transition" do
     before :each do
-      @bpm_profile = Musicality::Profile.new :start_value => 120.0, :value_changes => {
-        1.0 => Musicality::immediate_change(60.0)
+      tempo_profile = Musicality::Profile.new :start_value => tempo(120), :value_changes => {
+        1.0 => Musicality::immediate_change(tempo(60))
       }
-      @tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
+      @tc = Musicality::TempoComputer.new tempo_profile
     end
 
     it "should be the first (starting) tempo just before the second tempo" do
@@ -49,10 +42,10 @@ describe Musicality::TempoComputer do
 
   context "two tempos, linear transition" do
     before :each do
-      @bpm_profile = Musicality::Profile.new :start_value => 120.0, :value_changes => {
-        1.0 => Musicality::linear_change(60.0, 1.0)
+      tempo_profile = Musicality::Profile.new :start_value => tempo(120), :value_changes => {
+        1.0 => Musicality::linear_change(tempo(60), 1.0)
       }
-      @tc = Musicality::TempoComputer.new @beat_duration_profile, @bpm_profile
+      @tc = Musicality::TempoComputer.new tempo_profile
     end
 
     it "should be the first (starting) tempo just before the second tempo" do

@@ -1,7 +1,11 @@
 ---
 :score:
-  :beats_per_minute_profile:
-    :start_value: 120.0
+  :tempo_profile:
+    :start_value: !ruby/object:Musicality::Tempo
+      beats_per_minute: 120
+      beat_duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
   :program:
     :segments:
     - !ruby/range
@@ -33,7 +37,8 @@
             :semitone: 4
 :instrument_configs:
   1:
-    :plugin_name: mimic_trumpet
+    :plugin_name: synth_instr_3
     :initial_settings:
-    - very short attack
-    - med decay
+    - blend
+    - short attack
+    - long decay

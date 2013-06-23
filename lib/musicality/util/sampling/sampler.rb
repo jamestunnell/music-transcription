@@ -36,11 +36,8 @@ class Sampler
   private
   
   def render instrument_config, sample_file
-    
-    tempo_bpm = 120.0
-    beat_duration = 0.25
-    notes_per_sec = (tempo_bpm / 60.0) * beat_duration
-    note_duration = sample_file.duration_sec * notes_per_sec 
+    tempo = tempo(120)
+    note_duration = sample_file.duration_sec * tempo.notes_per_second
     note = Musicality::Note.new(
       :duration => note_duration,
       :attack => sample_file.attack,
@@ -54,8 +51,7 @@ class Sampler
         :program => {
           :segments => [ 0..note_duration ],
         },
-        :beats_per_minute_profile => { :start_value => tempo_bpm },
-        :beat_duration_profile => { :start_value => beat_duration },
+        :tempo_profile => { :start_value => tempo },
         :parts => {
           1 => {
             :loudness_profile => { :start_value => 1.0 },

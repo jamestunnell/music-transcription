@@ -32,7 +32,11 @@ class ScoreCollator
     score.parts.each do |id, part|
       
       new_part = Musicality::Part.new(
-	:loudness_profile => clone_and_collate_profile(part.loudness_profile, score.program.segments),
+	:loudness_profile => clone_and_collate_profile(
+	  part.loudness_profile,
+	  ValueComputer,
+	  score.program.segments
+	),
       )
       
       score.program.segments.each do |seg|
@@ -73,8 +77,11 @@ class ScoreCollator
     end    
     
     score.parts = new_parts
-    score.beats_per_minute_profile = clone_and_collate_profile(score.beats_per_minute_profile, score.program.segments)
-    score.beat_duration_profile = clone_and_collate_profile(score.beats_per_minute_profile, score.program.segments)
+    score.tempo_profile = clone_and_collate_profile(
+      score.tempo_profile,
+      TempoComputer,
+      score.program.segments
+    )
     score.program.segments = [score.find_start...score.find_end]
     
     return score
@@ -82,25 +89,21 @@ class ScoreCollator
 
   private
   
-  def self.modify_change_for_segment change, offset, seg, computer
-    if(offset + change.transition.duration) > seg.last
-      change.transition.duration = seg.last - offset
-      change.value = computer.value_at seg.last
-    end
-  end
-
-  def self.clone_and_collate_profile profile, program_segments
+  def self.clone_and_collate_profile profile, computer_class, program_segments
     new_profile = Profile.new :start_value => profile.start_value
     
     segment_start_offset = 0.0
-    comp = ValueComputer.new profile
+    comp = computer_class.new(profile)
     
     program_segments.each do |seg|
       # figure which dynamics to keep/modify
       changes = Marshal.load(Marshal.dump(profile.value_changes))
       changes.keep_if {|offset,change| seg.include?(offset) }
       changes.each do |offset, change|
-	modify_change_for_segment change, offset, seg, comp
+	if(offset + change.transition.duration) > seg.last
+	  change.transition.duration = seg.last - offset
+	  change.value = comp.value_at seg.last
+	end
       end
       
       # find & add segment start dynamic first
@@ -112,7 +115,7 @@ class ScoreCollator
       changes.each do |offset2, change|
 	offset3 = (offset2 - seg.first) + segment_start_offset
 	new_profile.value_changes[offset3] = change
-      end	
+      end
       
       segment_start_offset += (seg.last - seg.first)
     end

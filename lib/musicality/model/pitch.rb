@@ -103,11 +103,6 @@ class Pitch
     validate_arg ARG_SPECS[:cent], cent
     @cent = cent
   end
-  
-  # Calculate the pitch frequency by multiplying the pitch ratio by @base_freq.
-  def freq
-    return self.ratio() * @base_freq
-  end
 
   # Return the pitch's frequency, which is determined by multiplying the base 
   # frequency and the pitch ratio. Base frequency defaults to DEFAULT_BASE_FREQ,
@@ -241,6 +236,12 @@ class Pitch
     end
     
     return semitone_str + @octave.to_s
+  end
+  
+  def self.make_from_freq(freq, base_freq = DEFAULT_BASE_FREQ)
+    pitch = Pitch.new()
+    pitch.ratio = freq / base_freq
+    return pitch
   end
 end
 end

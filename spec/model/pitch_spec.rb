@@ -121,4 +121,19 @@ describe Musicality::Pitch do
       end
     end
   end
+  
+  context '.make_from_freq' do
+    it 'should make a pitch whose freq is approximately the given freq' do
+      one_cent = Pitch.new(:cent => 1)
+      [1.0, 25.0, 200.0, 3500.0].each do |given_freq|
+	pitch = Pitch.make_from_freq given_freq
+	freq = pitch.freq
+	if freq > given_freq
+	  (freq / given_freq).should be < one_cent.ratio
+	elsif freq < given_freq
+	  (given_freq / freq).should be < one_cent.ratio
+	end
+      end
+    end
+  end
 end

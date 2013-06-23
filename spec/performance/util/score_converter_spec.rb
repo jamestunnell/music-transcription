@@ -4,9 +4,7 @@ describe Musicality::ScoreConverter do
   context '.make_time_based_parts_from_score' do
     it "should produce notes with duration appropriate to the tempo" do
       score_hash = {
-        :beats_per_minute_profile => {
-          :start_value => 120
-        },
+        :tempo_profile => { :start_value => tempo(120) },
         :program => { :segments => [1.0...2.0] },
         :parts => {
           1 => {
@@ -37,9 +35,9 @@ describe Musicality::ScoreConverter do
     
     it "should produce notes twice as long when tempo is half" do
       score_hash = {
-        :beats_per_minute_profile => {
-          :start_value => 120,
-          :value_changes => { 1.0 => Musicality::immediate_change(60) }
+        :tempo_profile => {
+          :start_value => tempo(120) ,
+          :value_changes => { 1.0 => Musicality::immediate_change(tempo(60)) }
         },
         :program => { :segments => [0.0...2.0] },
         :parts => {

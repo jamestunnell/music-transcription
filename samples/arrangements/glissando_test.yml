@@ -1,7 +1,9 @@
 ---
 :score:
-  :beats_per_minute_profile:
-    :start_value: 120.0
+  :tempo_profile:
+    :start_value: !ruby/object:Musicality::Tempo
+      beats_per_minute: 120
+      beat_duration: 0.25
   :program:
     :segments:
     - !ruby/range

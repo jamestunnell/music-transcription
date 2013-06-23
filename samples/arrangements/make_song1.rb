@@ -11,7 +11,7 @@ hash = {
         0...4.0
       ]
     },
-    :beats_per_minute_profile => { :start_value => 120.0 },
+    :tempo_profile => { :start_value => tempo(120) },
     :parts => {
       1 => {
         :notes => [

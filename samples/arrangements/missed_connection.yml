@@ -1,12 +1,16 @@
 ---
 :score:
-  :beats_per_minute_profile:
-    :start_value: 120.0
+  :tempo_profile:
+    :start_value: !ruby/object:Musicality::Tempo
+      beats_per_minute: 120
+      beat_duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
   :program:
     :segments:
     - !ruby/range
       begin: 0
-      end: 8.0
+      end: 1
       excl: true
   :parts:
     bass:
@@ -44,123 +48,6 @@
         - :pitch:
             :octave: 2
             :semitone: 8
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 3
-      - :duration: 0.25
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 10
-      - :duration: 0.25
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 3
-      - :duration: 0.125
-      - :duration: 0.125
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 11
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 10
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 8
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 10
-      - :duration: 0.125
-      - :duration: 0.125
-        :intervals:
-        - :pitch:
-            :octave: 3
-            :semitone: 5
-          :link:
-            :target_pitch:
-              :octave: 3
-              :semitone: 5
-            :relationship: :tie
-      - :duration: 0.5
-        :intervals:
-        - :pitch:
-            :octave: 3
-            :semitone: 5
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 10
-      - :duration: 0.125
-      - :duration: 0.125
-        :intervals:
-        - :pitch:
-            :octave: 3
-            :semitone: 5
-          :link:
-            :target_pitch:
-              :octave: 3
-              :semitone: 5
-            :relationship: :tie
-      - :duration: 0.5
-        :intervals:
-        - :pitch:
-            :octave: 3
-            :semitone: 5
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 11
-      - :duration: 0.125
-      - :duration: 0.125
-        :intervals:
-        - :pitch:
-            :octave: 3
-            :semitone: 6
-          :link:
-            :target_pitch:
-              :octave: 3
-              :semitone: 6
-            :relationship: :tie
-      - :duration: 0.5
-        :intervals:
-        - :pitch:
-            :octave: 3
-            :semitone: 6
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 11
-      - :duration: 0.125
-      - :duration: 0.125
-        :intervals:
-        - :pitch:
-            :octave: 3
-            :semitone: 6
-          :link:
-            :target_pitch:
-              :octave: 3
-              :semitone: 6
-            :relationship: :tie
-      - :duration: 0.5
-        :intervals:
-        - :pitch:
-            :octave: 3
-            :semitone: 6
 :instrument_configs:
   bass:
     :plugin_name: synth_instr_3

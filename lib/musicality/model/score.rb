@@ -20,14 +20,13 @@ module Musicality
 #
 class Score
   include Hashmake::HashMakeable
-  attr_reader :parts, :beat_duration_profile, :beats_per_minute_profile, :program
+  attr_reader :parts, :tempo_profile, :program
 
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
-    :beats_per_minute_profile => arg_spec(:reqd => true, :type => Profile, :validator => ->(a){ a.values_positive? }),
+    :tempo_profile => arg_spec(:reqd => true, :type => Profile, :validator => ->(a){ a.values_positive? }),
     :program => arg_spec(:reqd => true, :type => Program),
     :parts => arg_spec_hash(:reqd => false, :type => Part),
-    :beat_duration_profile => arg_spec(:reqd => false, :type => Profile, :validator => ->(a){ a.values_positive? }, :default => ->{ Profile.new :start_value => 0.25 })
   }
   
   # A new instance of Score.
@@ -39,8 +38,7 @@ class Score
   
   # Compare the equality of another Score object.
   def ==(other)
-    return (@beats_per_minute_profile == other.beats_per_minute_profile) &&
-    (@beat_duration_profile == other.beat_duration_profile) &&
+    return (@tempo_profile == other.tempo_profile) &&
     (@program == other.program) &&
     (@parts == other.parts)
   end
@@ -54,21 +52,14 @@ class Score
     @parts = parts
   end
 
-  # Set the score beat duration Profile.
-  # @param [Tempo] beat_duration_profile The Profile for beat duration.
-  # @raise [ArgumentError] if beat_duration_profile is not a Profile.
-  def beat_duration_profile= beat_duration_profile
-    validate_arg ARG_SPECS[:beat_duration_profile], beat_duration_profile
+  # Set the score tempo Profile.
+  # @param [Profile] tempo_profile The tempo profile for the score.
+  # @raise [ArgumentError] if tempo_profile is not a Profile.
+  def tempo_profile= tempo_profile
+    validate_arg ARG_SPECS[:tempo_profile], tempo_profile
+    @tempo_profile = tempo_profile
   end
   
-  # Set the score beats per minute Profile.
-  # @param [Tempo] beats_per_minute_profile The Profile for beats per minute.
-  # @raise [ArgumentError] if beats_per_minute_profile is not a Profile.
-  def beats_per_minute_profile= beats_per_minute_profile
-    validate_arg ARG_SPECS[:beats_per_minute_profile], beats_per_minute_profile
-    @beats_per_minute_profile = beats_per_minute_profile
-  end
-
   # Set the score program, which determines which defines sections and how they 
   # are played.
   # @param [Program] program The score program.

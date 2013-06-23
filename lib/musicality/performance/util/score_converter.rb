@@ -35,7 +35,7 @@ class ScoreConverter
     
     # convert note offsets to time offsets
     
-    tempo_computer = TempoComputer.new( score.beat_duration_profile, score.beats_per_minute_profile,  )
+    tempo_computer = TempoComputer.new(score.tempo_profile)
     note_time_converter = NoteTimeConverter.new tempo_computer, conversion_sample_rate
     note_time_map = note_time_converter.map_note_offsets_to_time_offsets note_offsets
 

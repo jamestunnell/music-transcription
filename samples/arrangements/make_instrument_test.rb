@@ -8,7 +8,7 @@ hash = {
     :program => {
       :segments => [0...1.0]
     },
-    :beats_per_minute_profile => { :start_value => 120.0 },
+    :tempo_profile => { :start_value => tempo(120) },
     :parts => {
       1 => {
         :notes => [
