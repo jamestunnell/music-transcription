@@ -24,9 +24,9 @@ class Score
 
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
-    :tempo_profile => arg_spec(:reqd => true, :type => Profile, :validator => ->(a){ a.values_positive? }),
-    :program => arg_spec(:reqd => true, :type => Program),
     :parts => arg_spec_hash(:reqd => false, :type => Part),
+    :program => arg_spec(:reqd => false, :type => Program, :allow_nil => true, :default => nil),
+    :tempo_profile => arg_spec(:reqd => false, :type => Profile, :allow_nil => true, :default => nil, :validator => ->(a){ a.values_positive? }),
   }
   
   # A new instance of Score.
@@ -34,6 +34,10 @@ class Score
   #               :programs. Optional keys are :parts.
   def initialize args={}
     hash_make ARG_SPECS, args
+  end
+  
+  def clone
+    Marshal.load(Marshal.dump(self))
   end
   
   # Compare the equality of another Score object.

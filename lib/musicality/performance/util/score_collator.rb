@@ -5,41 +5,36 @@ module Musicality
 # tempo/note/dynamic replication and truncation where necessary.
 #
 # @author James Tunnell
-class ScoreCollator
+class Score
 
   # Combine multiple program segments to one, using tempo/note/dynamic replication
-  # and truncation where necessary. Returns a modified clone of the given score.
+  # and truncation where necessary. Returns a modified clone of the current score.
   #
-  # @param [Score] score The score to be collated. Not modified by this method.
-  # 
-  def self.collate_score score
-    score = Marshal.load(Marshal.dump(score))
-    self.collate_score! score
-    return score
+  def collate
+    return self.clone.collate!
   end
   
   # Combine multiple program segments to one, using tempo/note/dynamic replication
-  # and truncation where necessary. Modifies given score.
+  # and truncation where necessary. Modifies current score.
   #
-  # @param [Score] score The score to be collated. Modified in place.
-  #
-  def self.collate_score! score
-    return score if score.program.segments.count <= 1
+  def collate!
+    return self if @program.nil?
+    return self if @program.segments.count <= 1
     
     new_parts = {}
     
     # figure parts (note sequences & dynamics)
-    score.parts.each do |id, part|
+    @parts.each do |id, part|
       
       new_part = Musicality::Part.new(
 	:loudness_profile => clone_and_collate_profile(
 	  part.loudness_profile,
 	  ValueComputer,
-	  score.program.segments
+	  @program.segments
 	),
       )
       
-      score.program.segments.each do |seg|
+      @program.segments.each do |seg|
 	cur_offset = part.start_offset	
 	cur_notes = []
 	
@@ -76,20 +71,22 @@ class ScoreCollator
       new_parts[id] = new_part
     end    
     
-    score.parts = new_parts
-    score.tempo_profile = clone_and_collate_profile(
-      score.tempo_profile,
-      TempoComputer,
-      score.program.segments
-    )
-    score.program.segments = [score.find_start...score.find_end]
+    @parts = new_parts
+    unless @tempo_profile.nil?
+      @tempo_profile = clone_and_collate_profile(
+	@tempo_profile,
+	TempoComputer,
+	@program.segments
+      )
+    end
+    @program.segments = [self.find_start...self.find_end]
     
-    return score
+    return self
   end
 
   private
   
-  def self.clone_and_collate_profile profile, computer_class, program_segments
+  def clone_and_collate_profile profile, computer_class, program_segments
     new_profile = Profile.new :start_value => profile.start_value
     
     segment_start_offset = 0.0

@@ -1,0 +1,171 @@
+#!/usr/bin/env ruby
+
+require 'micro-optparse'
+require 'pry'
+require 'spcore'
+require 'wavefile'
+require 'musicality'
+require 'yaml'
+
+include Musicality
+
+options = Parser.new do |p|
+  p.banner = <<-END
+Transcribe notes from an audio file.
+
+Usage:
+      transcribe [options] <audio_file>
+
+Notes:
+  Output directory must already exist.
+  FFT size must be a power of two.
+  Delta (sec) must be > 0.
+  Threshold must be >= 0.
+  
+Options:
+END
+  p.version = "0.1"
+  p.option :outdir, "set output directory", :default => "./", :value_satisfies => lambda { |path| Dir.exist? path }
+  p.option :fft_size, "set FFT size", :default => 4096, :value_satisfies => lambda { |fft_size| SPCore::FFT.power_of_two?(fft_size) }
+  p.option :delta_sec, "set delta (seconds) between FFT samples", :default => 0.01, :value_satisfies => lambda { |dt| dt > 0 }
+  p.option :threshold, "set theshold (minimum signal energy to run FFT)", :default => 0.5, :value_satisfies => lambda { |t| t >= 0 }
+  p.option :verbose, "is verbose?", :default => false
+end.process!
+
+outdir = File.expand_path(options[:outdir])
+fft_size = options[:fft_size]
+delta_sec = options[:delta_sec]
+threshold = options[:threshold]
+verbose = options[:verbose]
+
+FFT_SIZE = fft_size
+CHUNK_DURATION_SEC = delta_sec
+THRESHOLD = threshold
+
+#module SPCore
+#class Signal
+#  def data_2d
+#    data_vs_time = {}
+#    
+#    sp = 1.0 / @sample_rate
+#    @data.each_index do |i|
+#      data_vs_time[i * sp] = @data[i]
+#    end
+#    
+#    return data_vs_time
+#  end
+#end
+#end
+
+ARGV.each do |filename|
+
+  if !File.exist?(filename)
+    puts "Could not find file #{filename}, skipping."
+    next
+  end
+
+  if verbose
+    puts
+  end
+
+  outfile = File.basename(filename, ".*") + ".yml"
+  outpath = outdir + outfile
+
+  part = Part.new()
+  fundamentals = {}
+  #signal = nil
+  
+  WaveFile::Reader.new(filename) do |reader|
+    if reader.format.channels == 1
+      samples = reader.read(reader.total_sample_frames).samples
+    else
+      puts "Multi-channel audo files not supported yet. Skipping."
+      # TODO handl multi-channel audio
+      break
+    end
+    signal = SPCore::Signal.new(:data => samples, :sample_rate => reader.format.sample_rate)  
+    
+    chunk_size = (CHUNK_DURATION_SEC * signal.sample_rate).to_i
+    dt = (1 / signal.sample_rate.to_f) + CHUNK_DURATION_SEC / 2.0
+    i = 0
+    
+    while(i < signal.size)
+      size = chunk_size
+      if (size + i) >= signal.size
+        size = signal.size - i
+      end
+      t = (i / signal.sample_rate.to_f) + CHUNK_DURATION_SEC / 2.0
+      puts t
+      
+      chunk = signal.subset i...(i + size)
+      
+      if chunk.energy > THRESHOLD
+        
+        remaining_before = (FFT_SIZE - chunk.size) / 2
+        if remaining_before < i
+          chunk.prepend! signal.subset((i - remaining_before)...i)
+          remaining_before = 0
+        else
+          if i > 0
+            chunk.prepend! signal.subset 0...i
+          end
+          remaining_before -= i
+          chunk.prepend! Array.new(remaining_before, 0)
+        end
+        
+        remaining_after = FFT_SIZE - chunk.size
+        trailing_count = signal.size - i + size
+        if remaining_after < trailing_count
+          chunk.append! signal.subset((i + size)...(i + size + remaining_after))
+          remaining_after = 0
+        else
+          if (i + size) < signal.size
+            chunk.append! signal.subset((i + size)...signal.size)
+          end
+          remaining_after -= trailing_count
+          chunk.append! Array.new(remaining_after, 0)
+        end
+        
+        window = SPCore::BlackmanWindow.new(chunk.size)
+        chunk.multiply! window.data
+        
+        if chunk.harmonic_series.nil?
+          binding.pry
+        end
+        
+        intervals = []
+        if chunk.harmonic_series.any?
+          fundamentals[t] = fundamental = chunk.fundamental
+          pitch = Pitch.make_from_freq fundamental
+          intervals.push Interval.new(:pitch => pitch)
+        end
+        part.notes.push Note.new(:duration => dt, :intervals => intervals)
+      else
+        part.notes.push Note.new(:duration => dt, :intervals => [])
+      end
+      
+      i += chunk_size
+    end
+  end
+  
+  # simplify the part
+  part.notes.each_index do |i|
+    if i > 0
+      prev_note = part.notes[i-1]
+      note = part.notes[i]
+      
+      if prev_note.intervals.any? and note.intervals.any?
+        if prev_note.intervals == note.intervals
+          prev_note.intervals.first.link = tie(note.intervals.first.pitch)
+        else
+          prev_note.intervals.first.link = slur(note.intervals.first.pitch)
+        end
+      end
+    end
+  end
+  
+  yaml = part.to_yaml
+  File.open(outpath, 'w') do |output|
+    output.write yaml
+  end
+end

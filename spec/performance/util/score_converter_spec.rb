@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe Musicality::ScoreConverter do
+describe Musicality::Score do
   context '.make_time_based_parts_from_score' do
     it "should produce notes with duration appropriate to the tempo" do
       score_hash = {
@@ -23,8 +23,8 @@ describe Musicality::ScoreConverter do
       }
       
       score = Score.new score_hash
-      parts = ScoreConverter.make_time_based_parts_from_score score, 1000.0
-      part = parts.values.first
+      score.convert_to_time_base! 1000.0
+      part = score.parts.values.first
       
       part.start_offset.should be_within(0.01).of(2.0)
       part.notes[0].duration.should be_within(0.01).of(0.2)
@@ -62,8 +62,8 @@ describe Musicality::ScoreConverter do
       }
     
       score = Score.new score_hash
-      parts = ScoreConverter.make_time_based_parts_from_score score, 1000.0
-      part = parts.values.first
+      score.convert_to_time_base! 1000.0
+      part = score.parts.values.first
       
       part.start_offset.should be_within(0.01).of(0.0)
       
@@ -76,6 +76,27 @@ describe Musicality::ScoreConverter do
       part.notes[5].duration.should be_within(0.01).of(1.6)
       part.notes[6].duration.should be_within(0.01).of(1.2)
       part.notes[7].duration.should be_within(0.01).of(0.4)      
+    end
+    
+    it 'should not alter note durations when tempo_profile is nil' do
+      score_hash = {
+        :tempo_profile => nil,
+        :program => { :segments => [0...1] },
+        :parts => {
+          1 => {
+            :notes => [
+              { :duration => 0.2, :intervals => [ {:pitch => { :octave => 9 }} ] },
+              { :duration => 0.4, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+              { :duration => 0.3, :intervals => [ {:pitch => { :octave => 9 }} ] },
+              { :duration => 0.1, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            ]
+          }
+        }
+      }
+      
+      score = Score.new score_hash
+      new_score = score.convert_to_time_base 1000.0
+      new_score.parts[1].notes.should eq score.parts[1].notes
     end
     
   end

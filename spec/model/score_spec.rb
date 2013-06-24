@@ -33,19 +33,40 @@ describe Musicality::Score do
     @program = Musicality::Program.new :segments => [0...0.75, 0...0.75]
   end
   
-  it "should assign reqd args given during construction" do
-    score = Musicality::Score.new :tempo_profile => @tempo_profile, :program => @program
-    score.tempo_profile.should eq(@tempo_profile)
-    score.program.should eq(@program)
-  end
+  describe '.new' do
+    context "no args given" do
+      let(:score) { Score.new }
+      subject { score }
+      its(:program) { should be_nil }
+      its(:tempo_profile) { should be_nil }
+      its(:parts) { should be_empty }
+    end
+    
+    context 'args given' do
+      it "should assign parts given during construction" do
+        score = Musicality::Score.new :program => @program, :parts => @parts
+        score.parts.should eq(@parts)
+      end
+      
+      it "should assign program given during construction" do
+        score = Musicality::Score.new :program => @program
+        score.program.should eq(@program)
+      end
+      
+      it 'should allow program to be nil' do
+        score = Musicality::Score.new :program => nil
+        score.program.should be_nil
+      end
 
-  it "should  default parts to empty" do
-    score = Musicality::Score.new :tempo_profile => @tempo_profile, :program => @program
-    score.parts.should be_empty
-  end
-
-  it "should assign parts given during construction" do
-    score = Musicality::Score.new :tempo_profile => @tempo_profile, :program => @program, :parts => @parts
-    score.parts.should eq(@parts)
+      it "should assign tempo profile given during construction" do
+        score = Musicality::Score.new :tempo_profile => @tempo_profile, :program => @program
+        score.tempo_profile.should eq(@tempo_profile)
+      end
+      
+      it 'should allow tempo_profile to be nil' do
+        score = Musicality::Score.new :tempo_profile => nil, :program => @program
+        score.tempo_profile.should be_nil
+      end
+    end
   end
 end

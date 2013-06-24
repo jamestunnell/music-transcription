@@ -3,24 +3,32 @@ require 'set'
 module Musicality
 
 # Utility class to perform conversions on a score. 
-class ScoreConverter
+class Score
 
   # Convert note-based offsets & durations to time-based. This eliminates
-  # the use of tempo during performance.
-  # @param [Score] score The score to process. It will be collated if
-  #                      it is not already.
+  # the use of tempo during performance. Modifies a clone of the current object.
   # @param [Numeric] conversion_sample_rate The sample rate to use in
   #                                         converting from note-base to
   #                                         time-base.
-  def self.make_time_based_parts_from_score score, conversion_sample_rate
-    if score.program.segments.count > 1
-      self.collate_score!(score)
+  def convert_to_time_base conversion_sample_rate
+    self.clone.convert_to_time_base! conversion_sample_rate
+  end
+  
+  # Convert note-based offsets & durations to time-based. This eliminates
+  # the use of tempo during performance. Modifies current object.
+  #
+  # @param [Numeric] conversion_sample_rate The sample rate to use in
+  #                                         converting from note-base to
+  #                                         time-base.
+  def convert_to_time_base! conversion_sample_rate
+    if @tempo_profile.nil?
+      return self
     end
     
     #gather all the note offets to be converted to time offsets
     note_offsets = Set.new [0.0]
     
-    score.parts.each do |id, part|
+    @parts.each do |id, part|
       offset = part.start_offset
       note_offsets << offset
       part.notes.each do |note|
@@ -33,14 +41,20 @@ class ScoreConverter
       end
     end
     
+    unless @program.nil?
+      @program.segments.each do |segment|
+        note_offsets << segment.first
+        note_offsets << segment.last
+      end
+    end
+    
     # convert note offsets to time offsets
     
-    tempo_computer = TempoComputer.new(score.tempo_profile)
+    tempo_computer = TempoComputer.new(@tempo_profile)
     note_time_converter = NoteTimeConverter.new tempo_computer, conversion_sample_rate
     note_time_map = note_time_converter.map_note_offsets_to_time_offsets note_offsets
 
-    new_parts = {}
-    score.parts.each do |id, part|
+    @parts.each do |id, part|
       note_start_offset = part.start_offset
       raise "Note-time map does not have sequence start note offset key #{note_start_offset}" unless note_time_map.has_key?(note_start_offset)
       
@@ -77,10 +91,10 @@ class ScoreConverter
         new_part.loudness_profile.value_changes[start_time] = new_change
       end
       
-      new_parts[id] = new_part
+      @parts[id] = new_part
     end
     
-    return new_parts
+    return self
   end
 
 end

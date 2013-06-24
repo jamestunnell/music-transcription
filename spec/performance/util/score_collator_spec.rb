@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
-describe Musicality::ScoreCollator do
+describe Musicality::Score do
   before :all do    
     @complex_score_hash = {
       :parts => {
@@ -84,7 +84,7 @@ describe Musicality::ScoreCollator do
     }
 
     score = Score.new simple_score_hash
-    ScoreCollator.collate_score! score
+    score.collate!
   
     score.parts.count.should eq 1
     part = score.parts.values.first
@@ -119,7 +119,7 @@ describe Musicality::ScoreCollator do
 
   it "should handle a complex one-part score" do
     score = Score.new @complex_score_hash
-    ScoreCollator.collate_score! score
+    score.collate!
 
     score.find_start.should be_within(0.01).of(0.0)
     score.find_end.should be_within(0.01).of(6.75)
@@ -137,7 +137,7 @@ describe Musicality::ScoreCollator do
 
   it "should handle a simple two-part score" do
     score = Score.new @two_part_score_hash
-    ScoreCollator.collate_score! score
+    score.collate!
 
     score.find_start.should be_within(0.01).of(0.0)
     score.find_end.should be_within(0.01).of(3.0)

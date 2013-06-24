@@ -56,6 +56,9 @@ describe Musicality::Conductor do
       @conductor.time_counter.should be_within(0.01).of(score_length_sec)
       @conductor.sample_counter.should be_within(10).of(score_length_samples)
     end
+    
+    context 'score with no tempo_profile' do
+    end
   end
 
 end

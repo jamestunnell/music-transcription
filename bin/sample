@@ -12,12 +12,16 @@ options = Parser.new do |p|
 Sample a Musicality instrument.
 
 Usage:
-      ruby sample.rb [options] <instrument_name> <preset_name>
+      sample [options] <instrument_name> <preset_name>
+
+Example:
+      sample -s 44100 -d 1 "synth_instr_3" "blend"
 
 Notes:
   Sample rate must be > 1000. 
-  Output directory must already exist.
-
+  Root sample directory must already exist.
+  Sample file duration must be > 0.
+  
 Options:
 END
   p.version = "0.1"

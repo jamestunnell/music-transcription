@@ -37,8 +37,8 @@ class Conductor
   def initialize args
     hash_make Conductor::ARG_SPECS, args
     
-    score = ScoreCollator.collate_score!(@arrangement.score)
-    parts = ScoreConverter.make_time_based_parts_from_score score, @time_conversion_sample_rate
+    @arrangement.score.collate!.convert_to_time_base! @time_conversion_sample_rate
+    parts = @arrangement.score.parts
     
     @start_of_score = parts.values.inject(parts.values.first.start_offset) {|so_far, part| now = part.start_offset; (now < so_far) ? now : so_far }
     @end_of_score = parts.values.inject(parts.values.first.end_offset) {|so_far, part| now = part.end_offset; (now > so_far) ? now : so_far }
