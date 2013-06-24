@@ -1,4 +1,5 @@
 require 'hashmake'
+require 'yaml'
 
 module Musicality
 
@@ -21,6 +22,7 @@ class Part
     :start_offset => arg_spec(:reqd => false, :type => Numeric, :default => 0),
     :loudness_profile => arg_spec(:reqd => false, :type => Profile, :validator => ->(a){ a.values_between?(0.0,1.0) }, :default => ->(){ Profile.new(:start_value => 0.5) }),
     :notes => arg_spec_array(:reqd => false, :type => Note),
+    :file_path => arg_spec(:reqd => false, :type => String, :validator => ->(a){ File.exist? a }, :default => nil, :allow_nil => true)
   }
   
   # A new instance of Part.
@@ -28,6 +30,18 @@ class Part
   #                    :notes, and :start_offset.
   def initialize args = {}
     hash_make ARG_SPECS, args
+    
+    unless @file_path.nil?
+      obj = YAML.load_file @file_path
+      
+      if obj.is_a?(Part)
+        obj = obj.make_hash
+      elsif !obj.is_a?(Hash)
+        raise ArgumentError, "Expected a Hash or Part object"
+      end
+      
+      hash_make ARG_SPECS, obj
+    end
   end
 
   # Compare the equality of another Part object.
