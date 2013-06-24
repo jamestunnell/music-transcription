@@ -69,7 +69,7 @@ ARGV.each do |filename|
   end
 
   outfile = File.basename(filename, ".*") + ".yml"
-  outpath = outdir + outfile
+  outpath = File.join(outdir, outfile)
 
   part = Part.new()
   fundamentals = {}
@@ -86,7 +86,6 @@ ARGV.each do |filename|
     signal = SPCore::Signal.new(:data => samples, :sample_rate => reader.format.sample_rate)  
     
     chunk_size = (CHUNK_DURATION_SEC * signal.sample_rate).to_i
-    dt = (1 / signal.sample_rate.to_f) + CHUNK_DURATION_SEC / 2.0
     i = 0
     
     while(i < signal.size)
@@ -98,6 +97,7 @@ ARGV.each do |filename|
       puts t
       
       chunk = signal.subset i...(i + size)
+      chunk_duration_sec = size / signal.sample_rate.to_f
       
       if chunk.energy > THRESHOLD
         
@@ -139,9 +139,9 @@ ARGV.each do |filename|
           pitch = Pitch.make_from_freq fundamental
           intervals.push Interval.new(:pitch => pitch)
         end
-        part.notes.push Note.new(:duration => dt, :intervals => intervals)
+        part.notes.push Note.new(:duration => chunk_duration_sec, :intervals => intervals)
       else
-        part.notes.push Note.new(:duration => dt, :intervals => [])
+        part.notes.push Note.new(:duration => chunk_duration_sec, :intervals => [])
       end
       
       i += chunk_size
@@ -164,8 +164,8 @@ ARGV.each do |filename|
     end
   end
   
-  yaml = part.to_yaml
-  File.open(outpath, 'w') do |output|
-    output.write yaml
+  yaml = part.make_hash.to_yaml
+  File.open(outpath, 'w') do |file|
+    file.write yaml
   end
 end
