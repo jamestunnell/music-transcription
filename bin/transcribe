@@ -18,7 +18,7 @@ Usage:
 
 Notes:
   Output directory must already exist.
-  FFT size must be a power of two.
+  FFT actual_size must be a power of two.
   Delta (sec) must be > 0.
   Threshold must be >= 0.
   
@@ -26,36 +26,29 @@ Options:
 END
   p.version = "0.1"
   p.option :outdir, "set output directory", :default => "./", :value_satisfies => lambda { |path| Dir.exist? path }
-  p.option :fft_size, "set FFT size", :default => 4096, :value_satisfies => lambda { |fft_size| SPCore::FFT.power_of_two?(fft_size) }
-  p.option :delta_sec, "set delta (seconds) between FFT samples", :default => 0.01, :value_satisfies => lambda { |dt| dt > 0 }
+  p.option :freq_res, "set min frequency (Hz) resolution in Hz", :default => 1.0, :value_satisfies => lambda { |mfr| mfr > 0 }
+  p.option :time_res, "set time (sec) between FFT samples", :default => 0.01, :value_satisfies => lambda { |dt| dt > 0 }
   p.option :threshold, "set theshold (minimum signal energy to run FFT)", :default => 0.5, :value_satisfies => lambda { |t| t >= 0 }
   p.option :verbose, "is verbose?", :default => false
 end.process!
 
 outdir = File.expand_path(options[:outdir])
-fft_size = options[:fft_size]
-delta_sec = options[:delta_sec]
+freq_res = options[:freq_res]
+time_res = options[:time_res]
 threshold = options[:threshold]
 verbose = options[:verbose]
 
-FFT_SIZE = fft_size
-CHUNK_DURATION_SEC = delta_sec
+TIME_RESOLUTION = time_res
 THRESHOLD = threshold
+FREQ_RESOLUTION = freq_res
 
-#module SPCore
-#class Signal
-#  def data_2d
-#    data_vs_time = {}
-#    
-#    sp = 1.0 / @sample_rate
-#    @data.each_index do |i|
-#      data_vs_time[i * sp] = @data[i]
-#    end
-#    
-#    return data_vs_time
-#  end
-#end
-#end
+def force_power_of_two size
+  power_of_two = Math::log2(size)
+  if power_of_two.floor != power_of_two # input size is not an even power of two
+    size = 2**(power_of_two.to_i() + 1)
+  end
+  return size
+end
 
 ARGV.each do |filename|
 
@@ -71,11 +64,12 @@ ARGV.each do |filename|
   outfile = File.basename(filename, ".*") + ".yml"
   outpath = File.join(outdir, outfile)
 
-  part = Part.new()
+  notes = []
   fundamentals = {}
-  #signal = nil
   
   WaveFile::Reader.new(filename) do |reader|
+    print "Transcribing #{File.basename(filename)} -> #{outfile}   0.0%"
+    
     if reader.format.channels == 1
       samples = reader.read(reader.total_sample_frames).samples
     else
@@ -85,50 +79,48 @@ ARGV.each do |filename|
     end
     signal = SPCore::Signal.new(:data => samples, :sample_rate => reader.format.sample_rate)  
     
-    chunk_size = (CHUNK_DURATION_SEC * signal.sample_rate).to_i
-    i = 0
+    ideal_size = (TIME_RESOLUTION * signal.sample_rate).to_i
+    fft_size = reader.format.sample_rate / FREQ_RESOLUTION
+    fft_size = force_power_of_two fft_size
     
+    # more samples are in the chunk than needed by the FFT. Make the FFT size
+    # greater or equal to chunk size.
+    if ideal_size > fft_size
+      fft_size = force_power_of_two ideal_size
+    end
+    
+    i = 0      
     while(i < signal.size)
-      size = chunk_size
-      if (size + i) >= signal.size
-        size = signal.size - i
-      end
-      t = (i / signal.sample_rate.to_f) + CHUNK_DURATION_SEC / 2.0
-      puts t
+      print "\b" * 6
+      print "%5.1f%%" % (100 * i / signal.size)
       
-      chunk = signal.subset i...(i + size)
-      chunk_duration_sec = size / signal.sample_rate.to_f
+      actual_size = ideal_size
+      if (actual_size + i) > signal.size
+        actual_size = signal.size - i
+      end
+      t = i / signal.sample_rate.to_f
+      puts t if verbose
+      
+      chunk = signal.subset i...(i + actual_size)
+      duration_sec = actual_size / signal.sample_rate.to_f
       
       if chunk.energy > THRESHOLD
         
-        remaining_before = (FFT_SIZE - chunk.size) / 2
-        if remaining_before < i
-          chunk.prepend! signal.subset((i - remaining_before)...i)
-          remaining_before = 0
-        else
-          if i > 0
-            chunk.prepend! signal.subset 0...i
-          end
-          remaining_before -= i
-          chunk.prepend! Array.new(remaining_before, 0)
-        end
-        
-        remaining_after = FFT_SIZE - chunk.size
-        trailing_count = signal.size - i + size
-        if remaining_after < trailing_count
-          chunk.append! signal.subset((i + size)...(i + size + remaining_after))
-          remaining_after = 0
-        else
-          if (i + size) < signal.size
-            chunk.append! signal.subset((i + size)...signal.size)
-          end
-          remaining_after -= trailing_count
-          chunk.append! Array.new(remaining_after, 0)
-        end
         
         window = SPCore::BlackmanWindow.new(chunk.size)
         chunk.multiply! window.data
+
+        remaining_before = (fft_size - chunk.size) / 2
+        remaining_after = fft_size - chunk.size - remaining_before
         
+        if remaining_before > 0
+          chunk.prepend! Array.new(remaining_before, 0)
+        end
+        
+        if remaining_after > 0
+          chunk.append! Array.new(remaining_after, 0)
+        end
+
         if chunk.harmonic_series.nil?
           binding.pry
         end
@@ -139,33 +131,47 @@ ARGV.each do |filename|
           pitch = Pitch.make_from_freq fundamental
           intervals.push Interval.new(:pitch => pitch)
         end
-        part.notes.push Note.new(:duration => chunk_duration_sec, :intervals => intervals)
+        notes.push Note.new(:duration => duration_sec, :intervals => intervals)
       else
-        part.notes.push Note.new(:duration => chunk_duration_sec, :intervals => [])
+        notes.push Note.new(:duration => duration_sec, :intervals => [])
       end
       
-      i += chunk_size
+      i += ideal_size
     end
   end
   
+  new_notes = []
+  
   # simplify the part
-  part.notes.each_index do |i|
-    if i > 0
-      prev_note = part.notes[i-1]
-      note = part.notes[i]
+  notes.each_index do |i|
+    note = notes[i]
+    
+    if new_notes.any?
+      prev_note = new_notes.last
       
       if prev_note.intervals.any? and note.intervals.any?
         if prev_note.intervals == note.intervals
-          prev_note.intervals.first.link = tie(note.intervals.first.pitch)
+          prev_note.duration += note.duration
         else
           prev_note.intervals.first.link = slur(note.intervals.first.pitch)
+          new_notes.push note
         end
+      elsif prev_note.intervals.empty? and note.intervals.empty?
+        prev_note.duration += note.duration
+      else
+        new_notes.push note
       end
+    else
+      new_notes.push note
     end
   end
   
+  part = Part.new(:notes => new_notes)
   yaml = part.make_hash.to_yaml
+  
   File.open(outpath, 'w') do |file|
     file.write yaml
   end
+  
+  puts
 end
