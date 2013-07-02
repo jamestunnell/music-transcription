@@ -29,6 +29,7 @@ END
   p.option :freq_res, "set min frequency (Hz) resolution in Hz", :default => 1.0, :value_satisfies => lambda { |mfr| mfr > 0 }
   p.option :time_res, "set time (sec) between FFT samples", :default => 0.01, :value_satisfies => lambda { |dt| dt > 0 }
   p.option :threshold, "set theshold (minimum signal energy to run FFT)", :default => 0.5, :value_satisfies => lambda { |t| t >= 0 }
+  p.option :min_freq, "set minimum frequency to consider during harmonic series analysis.", :default => PITCHES.first.freq, :value_satisfies => lambda { |f| f > 0 }
   p.option :verbose, "is verbose?", :default => false
 end.process!
 
@@ -37,6 +38,7 @@ freq_res = options[:freq_res]
 time_res = options[:time_res]
 threshold = options[:threshold]
 verbose = options[:verbose]
+min_freq = options[:min_freq]
 
 TIME_RESOLUTION = time_res
 THRESHOLD = threshold
@@ -65,7 +67,6 @@ ARGV.each do |filename|
   outpath = File.join(outdir, outfile)
 
   notes = []
-  fundamentals = {}
   
   WaveFile::Reader.new(filename) do |reader|
     print "Transcribing #{File.basename(filename)} -> #{outfile}   0.0%"
@@ -121,13 +122,11 @@ ARGV.each do |filename|
           chunk.append! Array.new(remaining_after, 0)
         end
 
-        if chunk.harmonic_series.nil?
-          binding.pry
-        end
-        
+        series = chunk.harmonic_series(:min_freq => min_freq)
         intervals = []
-        if chunk.harmonic_series.any?
-          fundamentals[t] = fundamental = chunk.fundamental
+        if series.nil?
+        if series.any?
+          fundamental = series.min
           pitch = Pitch.make_from_freq fundamental
           intervals.push Interval.new(:pitch => pitch)
         end
