@@ -10,7 +10,7 @@ class OneVariableFunction
   attr_reader :x_domain, :proc
   
   def initialize args
-    hash_make OneVariableFunction::ARG_SPECS, args
+    hash_make args, OneVariableFunction::ARG_SPECS
   end
   
   def eval x

@@ -1,89 +1,23 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe Musicality::Score do
-  before :all do    
-    @complex_score_hash = {
-      :parts => {
-        :part1 => {
-          :start_offset => 0.0,
-          :loudness_profile => { :start_value => 0.5 },
-          :notes => [
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 1.00, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.50, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.50, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.75, :intervals => [ {:pitch => { :octave => 9 }} ] },
-          ]
-        }
-      },
-      :tempo_profile => { :start_value => tempo(120) },
-      :program => {
-        :segments => [
-          0.0...2.0,
-          1.0...2.0,
-          1.0...2.0,
-          0.0...1.0,
-          2.0...3.75
-        ]
-      }
-    }
-
-    @two_part_score_hash = {
-      :tempo_profile => { :start_value => tempo(120) },
-      :program => { :segments => [0.0...1.0, 0.0...2.0] },
-      :parts => {
-        :a => {
-          :loudness_profile => { :start_value => 0.5 },
-          :notes => [
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 1.00, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-          ]
-        },
-        :b => {
-          :loudness_profile => { :start_value => 0.5 },
-          :notes => [
-            { :duration => 0.50, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.50, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
-          ]
-        }
-      }
-    }
-  end
-    
   it "should collate a simple score/program into a single segment" do
-    simple_score_hash = {
-      :tempo_profile => {
-        :start_value => tempo(120),
-        :value_changes => { 0.5 => Musicality::linear_change(tempo(60),1.0) }
-      },
-      :program => { :segments => [0.0...1.0, 0.0...2.0] },
+    score = TempoScore.new(
+      :tempo_profile => profile(tempo(120), 0.5 => Musicality::linear_change(tempo(60),1.0)),
+      :program => Program.new( :segments => [0.0...1.0, 0.0...2.0] ),
       :parts => {
-        "1" => {
-          :start_offset => 0.0,
-          :loudness_profile => {
-            :start_value => 0.5,
-            :value_changes => { 0.5 => Musicality::linear_change(1.0,1.0) }
-          },
+        "1" => Part.new(
+          :loudness_profile => profile(0.5, 0.5 => Musicality::linear_change(1.0,1.0)),
           :notes => [
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.25, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 1.00, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "E9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+            Note.new( :duration => 1.00, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
           ]
-        }
+        )
       },
-    }
-
-    score = Score.new simple_score_hash
+    )
     score.collate!
   
     score.parts.count.should eq 1
@@ -118,11 +52,37 @@ describe Musicality::Score do
   end
 
   it "should handle a complex one-part score" do
-    score = Score.new @complex_score_hash
+    score = TempoScore.new(
+      :parts => {
+        :part1 => Part.new(
+          :loudness_profile => profile(0.5),
+          :notes => [
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "E9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+            Note.new( :duration => 1.00, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+            Note.new( :duration => 0.5, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+            Note.new( :duration => 0.5, :intervals => [ Interval.new( :pitch => "E9".to_pitch ) ] ),
+            Note.new( :duration => 0.75, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+          ]
+        )
+      },
+      :tempo_profile => profile(tempo(120)),
+      :program => Program.new(
+        :segments => [
+          0.0...2.0,
+          1.0...2.0,
+          1.0...2.0,
+          0.0...1.0,
+          2.0...3.75
+        ]
+      )
+    )
     score.collate!
 
-    score.find_start.should be_within(0.01).of(0.0)
-    score.find_end.should be_within(0.01).of(6.75)
+    score.start.should be_within(0.01).of(0.0)
+    score.end.should be_within(0.01).of(6.75)
 
     parts = score.parts.values
     parts.count.should eq 1
@@ -136,11 +96,35 @@ describe Musicality::Score do
   end
 
   it "should handle a simple two-part score" do
-    score = Score.new @two_part_score_hash
+    score = TempoScore.new(
+      :tempo_profile => profile(tempo(120)),
+      :program => Program.new( :segments => [0.0...1.0, 0.0...2.0] ),
+      :parts => {
+        :a => Part.new(
+          :loudness_profile => profile(0.5),
+          :notes => [
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "E9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+            Note.new( :duration => 1.00, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+          ]
+        ),
+        :b => Part.new(
+          :loudness_profile => profile(0.5),
+          :notes => [
+            Note.new( :duration => 0.5, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+            Note.new( :duration => 0.5, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "E9".to_pitch ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+          ]
+        )
+      }
+    )
     score.collate!
 
-    score.find_start.should be_within(0.01).of(0.0)
-    score.find_end.should be_within(0.01).of(3.0)
+    score.start.should be_within(0.01).of(0.0)
+    score.end.should be_within(0.01).of(3.0)
 
     parts = score.parts.values
     parts.count.should eq 2

@@ -12,7 +12,7 @@ class Tempo
   }
   
   def initialize args
-    hash_make Tempo::ARG_SPECS, args
+    hash_make args
   end
   
   def notes_per_second

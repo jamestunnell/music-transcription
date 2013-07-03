@@ -75,32 +75,32 @@ class Pitch
   #                        not a Fixnum.
   def initialize args={}
     @cents_per_octave = CENTS_PER_SEMITONE * SEMITONES_PER_OCTAVE
-    hash_make ARG_SPECS, args
+    hash_make args
     normalize!
   end
 
   # Set @base_freq, which is used with the pitch ratio to produce the
   # pitch frequency.
   def base_freq= base_freq
-    validate_arg ARG_SPECS[:base_freq], base_freq
+    ARG_SPECS[:base_freq].validate_value base_freq
     @base_freq = base_freq
   end
   
   # Set @octave.
   def octave= octave
-    validate_arg ARG_SPECS[:octave], octave
+    ARG_SPECS[:octave].validate_value octave
     @octave = octave
   end
   
   # Set semitone.
   def semitone= semitone
-    validate_arg ARG_SPECS[:semitone], semitone
+    ARG_SPECS[:semitone].validate_value semitone
     @semitone = semitone
   end
   
   # Set @cent.
   def cent= cent
-    validate_arg ARG_SPECS[:cent], cent
+    ARG_SPECS[:cent].validate_value cent
     @cent = cent
   end
 
@@ -197,7 +197,7 @@ class Pitch
   
   # Produce an identical Pitch object.
   def clone
-    Pitch.new(:octave => @octave, :semitone => @semitone, :cent => @cent, :base_freq => @base_freq)
+    Marshal.load(Marshal.dump(self))
   end
   
   # Balance out the octave, semitone, and cent count. 
@@ -211,9 +211,9 @@ class Pitch
     centTotal -= @semitone * CENTS_PER_SEMITONE
     
     @cent = centTotal
-    return true
+    return self
   end
-
+  
   # Produce a string representation of a pitch (e.g. "C2")
   def to_s
     if @cents_per_octave != 1200

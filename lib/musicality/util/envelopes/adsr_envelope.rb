@@ -55,27 +55,27 @@ class ADSREnvelope
   #                    :attack_rate_range, :decay_rate_range,
   #                    :sustain_level_range, and :damping_rate_range
   def initialize args
-    hash_make ADSREnvelope::ARG_SPECS, args
+    hash_make args, ADSREnvelope::ARG_SPECS
     @sample_period = 1.0 / @sample_rate
   end
   
   def attack_rate= attack_rate
-    validate_arg ARG_SPECS[:attack_rate], attack_rate
+    ARG_SPECS[:attack_rate].validate_value attack_rate
     @attack_rate = attack_rate
   end
 
   def decay_rate= decay_rate
-    validate_arg ARG_SPECS[:decay_rate], decay_rate
+    ARG_SPECS[:decay_rate].validate_value decay_rate
     @decay_rate = decay_rate
   end
 
   def sustain_level= sustain_level
-    validate_arg ARG_SPECS[:sustain_level], sustain_level
+    ARG_SPECS[:sustain_level].validate_value sustain_level
     @sustain_level = sustain_level
   end
   
   def damping_rate= damping_rate
-    validate_arg ARG_SPECS[:damping_rate], damping_rate
+    ARG_SPECS[:damping_rate].validate_value damping_rate
     @damping_rate = damping_rate
   end
   

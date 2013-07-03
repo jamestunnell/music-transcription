@@ -18,7 +18,7 @@ class InstrumentPlugin
   
   attr_reader :name, :version, :author, :description, :presets
   def initialize args
-    hash_make InstrumentPlugin::ARG_SPECS, args
+    hash_make args, InstrumentPlugin::ARG_SPECS
     
     @presets.each do |key,val|
       unless key.is_a?(String)

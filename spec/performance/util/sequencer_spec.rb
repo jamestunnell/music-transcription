@@ -6,9 +6,9 @@ describe Musicality::Sequencer do
       before :all do
         non_linked_part = Part.new(
           :notes => [
-            { :duration => 0.25, :intervals => [ { :pitch => C2 }, { :pitch => E2 } ] },
-            { :duration => 0.25, :intervals => [ { :pitch => D2 }, { :pitch => F2 } ] },
-            { :duration => 0.25, :intervals => [ { :pitch => E2 }, { :pitch => G2 } ] },
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => C2 ), Interval.new( :pitch => E2 ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => D2 ), Interval.new( :pitch => F2 ) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => E2 ), Interval.new( :pitch => G2 ) ] ),
           ]
         )
         @sequences = Sequencer.extract_note_sequences non_linked_part
@@ -35,11 +35,11 @@ describe Musicality::Sequencer do
     context 'part with notes that have no intervals (rest)' do
       before :all do
         non_linked_part = Part.new(
-          :start_offset => 0.0,
+          :offset => 0.0,
           :notes => [
-            { :duration => 0.25, :intervals => [ { :pitch => C2 } ] },
-            { :duration => 0.25 },
-            { :duration => 0.25, :intervals => [ { :pitch => E2 } ] },
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => C2 ) ] ),
+            Note.new( :duration => 0.25 ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => E2 ) ] ),
           ]
         )
         @sequences = Sequencer.extract_note_sequences non_linked_part
@@ -57,9 +57,9 @@ describe Musicality::Sequencer do
       before :all do
         semi_linked_part = Part.new(
           :notes => [
-            { :duration => 0.25, :intervals => [ { :pitch => C2, :link => { :target_pitch => D2, :relationship => Link::RELATIONSHIP_SLUR }} ] },
-            { :duration => 0.25, :intervals => [ { :pitch => D2, :link => { :target_pitch => E2, :relationship => Link::RELATIONSHIP_SLUR }} ] },
-            { :duration => 0.25, :intervals => [ { :pitch => E2 }, { :pitch => G2 } ] },
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => C2, :link => slur(D2)) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => D2, :link => slur(E2)) ] ),
+            Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => E2 ), Interval.new( :pitch => G2 ) ] ),
           ]
         )
         @sequences = Sequencer.extract_note_sequences semi_linked_part
@@ -82,41 +82,41 @@ describe Musicality::Sequencer do
       before :all do      
         complex_part = Part.new(
           :notes => [
-            { :duration => 0.25,
+            Note.new( :duration => 0.25,
               :intervals => [
-                { :pitch => C2, :link => { :target_pitch => D2, :relationship => Link::RELATIONSHIP_SLUR }},
+                Interval.new( :pitch => C2, :link => slur(D2)),
               ]
-            },
-            { :duration => 0.5,
+            ),
+            Note.new( :duration => 0.5,
               :intervals => [
-                { :pitch => D2 },
-                { :pitch => F2 },
+                Interval.new( :pitch => D2 ),
+                Interval.new( :pitch => F2 ),
               ]
-            },
-            { :duration => 0.25 },
-            { :duration => 0.25,
+            ),
+            Note.new( :duration => 0.25 ),
+            Note.new( :duration => 0.25,
               :intervals => [
-                { :pitch => D2 },
-                { :pitch => F2, :link => { :target_pitch => F2, :relationship => Link::RELATIONSHIP_TIE } },
+                Interval.new( :pitch => D2 ),
+                Interval.new( :pitch => F2, :link => tie(F2)),
               ]
-            },
-            { :duration => 0.25,
+            ),
+            Note.new( :duration => 0.25,
               :intervals => [
-                { :pitch => F2, :link => { :target_pitch => F2, :relationship => Link::RELATIONSHIP_TIE } },
+                Interval.new( :pitch => F2, :link => tie(F2)),
               ]
-            },
-            { :duration => 0.25,
+            ),
+            Note.new( :duration => 0.25,
               :intervals => [
-                { :pitch => D2, :link => { :target_pitch => D2, :relationship => Link::RELATIONSHIP_TIE } },
-                { :pitch => F2, :link => { :target_pitch => E2, :relationship => Link::RELATIONSHIP_SLUR } },
+                Interval.new( :pitch => D2, :link => tie(D2)),
+                Interval.new( :pitch => F2, :link => slur(E2)),
               ]
-            },
-            { :duration => 0.25,
+            ),
+            Note.new( :duration => 0.25,
               :intervals => [
-                { :pitch => D2 },
-                { :pitch => E2 },
+                Interval.new( :pitch => D2 ),
+                Interval.new( :pitch => E2 ),
               ]
-            },
+            ),
           ]
         )
         @sequences = Sequencer.extract_note_sequences complex_part
@@ -152,7 +152,7 @@ describe Musicality::Sequencer do
       before :all do
         note_seq = NoteSequence.new(
           :offset => 0.0,
-          :notes => [ Note.new(:duration => 0.25, :intervals => [:pitch => C3]) ]
+          :notes => [ Note.new(:duration => 0.25, :intervals => [ Interval.new(:pitch => C3) ]) ]
         )
         @instructions= Sequencer.make_instructions note_seq
       end
@@ -177,8 +177,8 @@ describe Musicality::Sequencer do
         @note_seq = NoteSequence.new(
           :offset => 0.0,
           :notes => [
-            Note.new(:duration => 0.25, :intervals => [:pitch => C3, :link => legato(D3)]),
-            Note.new(:duration => 0.25, :intervals => [:pitch => D3], :attack => 0.2, :sustain => 0.7),
+            Note.new(:duration => 0.25, :intervals => [ Interval.new(:pitch => C3, :link => legato(D3)) ]),
+            Note.new(:duration => 0.25, :intervals => [ Interval.new(:pitch => D3) ], :attack => 0.2, :sustain => 0.7),
           ]
         )
         @instructions = Sequencer.make_instructions @note_seq 
@@ -211,8 +211,8 @@ describe Musicality::Sequencer do
         @note_seq = NoteSequence.new(
           :offset => 0.0,
           :notes => [
-            Note.new(:duration => 0.25, :intervals => [:pitch => C3, :link => slur(D3)]),
-            Note.new(:duration => 0.25, :intervals => [:pitch => D3], :attack => 0.2, :sustain => 0.7),
+            Note.new(:duration => 0.25, :intervals => [ Interval.new(:pitch => C3, :link => slur(D3)) ]),
+            Note.new(:duration => 0.25, :intervals => [ Interval.new(:pitch => D3) ], :attack => 0.2, :sustain => 0.7),
           ]
         )
         @instructions = Sequencer.make_instructions @note_seq 
@@ -243,8 +243,8 @@ describe Musicality::Sequencer do
         @note_seq = NoteSequence.new(
           :offset => 0.0,
           :notes => [
-            Note.new(:duration => 0.25, :intervals => [:pitch => C3, :link => glissando(D3)]),
-            Note.new(:duration => 0.25, :intervals => [:pitch => D3], :attack => 0.2, :sustain => 0.7),
+            Note.new(:duration => 0.25, :intervals => [ Interval.new(:pitch => C3, :link => glissando(D3)) ]),
+            Note.new(:duration => 0.25, :intervals => [ Interval.new(:pitch => D3) ], :attack => 0.2, :sustain => 0.7),
           ]
         )
         @instructions = Sequencer.make_instructions @note_seq

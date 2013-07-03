@@ -4,15 +4,15 @@ describe Performer do
 
   before :all do
     @notes = [
-      { :duration => 0.25, :intervals => [ { :pitch => C7 } ]},
-      { :duration => 0.25, :intervals => [ { :pitch => D7 } ]},
-      { :duration => 0.25, :intervals => [ { :pitch => E7 } ]},
-      { :duration => 0.25, :intervals => [ { :pitch => C7 } ]},
-      { :duration => 0.25, :intervals => [ { :pitch => D7 } ]},
-      { :duration => 0.75, :intervals => [ { :pitch => E7 } ]},
+      Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => C7 ) ]),
+      Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => D7 ) ]),
+      Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => E7 ) ]),
+      Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => C7 ) ]),
+      Note.new( :duration => 0.25, :intervals => [ Interval.new( :pitch => D7 ) ]),
+      Note.new( :duration => 0.75, :intervals => [ Interval.new( :pitch => E7 ) ]),
     ]
     loudness = Profile.new :start_value => 0.5
-    part = Part.new(:start_offset => 0.0, :notes => @notes, :loudness => loudness)
+    part = Part.new(:notes => @notes, :loudness => loudness)
     
     sample_rate = 5000
     max_attack_time = 0.15

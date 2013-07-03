@@ -47,7 +47,7 @@ class Note
   # A new instance of Note.
   # @param [Hash] args Hashed arguments. See Note::ARG_SPECS for details.
   def initialize args={}
-    hash_make ARG_SPECS, args
+    hash_make args
   end
   
   # Compare the equality of another Note object.
@@ -63,7 +63,7 @@ class Note
   # @param [Numeric] duration The duration to use.
   # @raise [ArgumentError] if duration is not greater than 0.
   def duration= duration
-    validate_arg ARG_SPECS[:duration], duration
+    ARG_SPECS[:duration].validate_value duration
     @duration = duration
   end  
   
@@ -72,7 +72,7 @@ class Note
   # @raise [ArgumentError] if sustain is not a Numeric.
   # @raise [RangeError] if sustain is outside the range 0.0..1.0.
   def sustain= sustain
-    validate_arg ARG_SPECS[:sustain], sustain
+    ARG_SPECS[:sustain].validate_value sustain
     @sustain = sustain
   end
 
@@ -81,7 +81,7 @@ class Note
   # @raise [ArgumentError] if attack is not a Numeric.
   # @raise [RangeError] if attack is outside the range 0.0..1.0.
   def attack= attack
-    validate_arg ARG_SPECS[:attack], attack
+    ARG_SPECS[:attack].validate_value attack
     @attack = attack
   end
 
@@ -90,15 +90,15 @@ class Note
   # @raise [ArgumentError] if separation is not a Numeric.
   # @raise [RangeError] if separation is outside the range 0.0..1.0.
   def separation= separation
-    validate_arg ARG_SPECS[:separation], separation
+    ARG_SPECS[:separation].validate_value separation
     @separation = separation
   end
   
   # Produce an identical Note object.
   def clone
-    Note.new(:duration => @duration, :intervals => @intervals.clone, :sustain => @sustain, :attack => @attack, :separation => @separation)
+    Marshal.load(Marshal.dump(self))
   end
-  
+ 
   # Remove any duplicate intervals (occuring on the same pitch), removing
   # all but the last occurance. Remove any duplicate links (links to the
   # same interval), removing all but the last occurance.
@@ -128,6 +128,12 @@ class Note
     end
   end
 
+end
+
+def note duration, intervals = [], other_args = {}
+  Note.new(
+    { :duration => duration, :intervals => intervals }.merge other_args
+  )
 end
 
 end

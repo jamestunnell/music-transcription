@@ -20,8 +20,7 @@ class Conductor
     :sample_chunk_size => arg_spec(:reqd => false, :type => Fixnum, :default => 100, :validator => ->(a){ a > 0 })
   }
   
-  attr_reader :sample_rate, :start_of_score, :end_of_score,
-               :performers, :time_counter, :sample_counter
+  attr_reader :sample_rate, :score, :performers, :time_counter, :sample_counter
   
   # A new instance of Conductor.
   # @param [Arrangement] arrangement Used to prepare a performance. Contains the
@@ -35,14 +34,8 @@ class Conductor
   #                             are :max_attack_time, :default_instrument_config,
   #                             and :plugin_dirs.
   def initialize args
-    hash_make Conductor::ARG_SPECS, args
-    
-    @arrangement.score.collate!.convert_to_time_base! @time_conversion_sample_rate
-    parts = @arrangement.score.parts
-    
-    @start_of_score = parts.values.inject(parts.values.first.start_offset) {|so_far, part| now = part.start_offset; (now < so_far) ? now : so_far }
-    @end_of_score = parts.values.inject(parts.values.first.end_offset) {|so_far, part| now = part.end_offset; (now > so_far) ? now : so_far }
-    
+    hash_make args, Conductor::ARG_SPECS
+        
     @instrument_plugin_dirs.each do |dir|
       puts "loading instrument plugins from #{dir}"
       INSTRUMENTS.load_plugins dir
@@ -53,8 +46,10 @@ class Conductor
     
     instruments = @arrangement.make_instruments @sample_rate
     
+    @score = prepare_score
     @performers = []
-    parts.each do |part_id, part|
+
+    @score.parts.each do |part_id, part|
       raise ArgumentError, "instruments does not have key for part id #{part_id}" unless instruments.has_key?(part_id)
       @performers << Performer.new(part, instruments[part_id], @max_attack_time)
     end
@@ -63,11 +58,24 @@ class Conductor
     @sample_counter = 0
   end
   
+  def prepare_score
+    score = @arrangement.score
+    if score.program.segments.empty?
+      score.program.segments.push(score.start...score.end)
+    end
+    score.collate!
+    if score.is_a? TempoScore
+      score = score.convert_to_time_base @time_conversion_sample_rate
+    end
+    @arrangement.score = score
+    return score
+  end
+  
   # Prepare to perform the score (at start of score). Gives the conductor a
   # chance to set up counters, and for performers to figure which notes will be
   # played. Must be called before any calls to perform_xxx.
   def prepare_performance
-    prepare_performance_at @start_of_score
+    prepare_performance_at @arrangement.score.start
   end
   
   # Prepare to perform the score (at given start time). Gives the conductor a
@@ -93,7 +101,7 @@ class Conductor
     end
     
     samples = []
-    to_perform = (@end_of_score + lead_out_time - @time_counter) / @sample_period
+    to_perform = (@arrangement.score.end + lead_out_time - @time_counter) / @sample_period
     while to_perform >= @sample_chunk_size
       samples += perform_chunk
       to_perform -= @sample_chunk_size

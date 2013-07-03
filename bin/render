@@ -37,8 +37,14 @@ Musicality::INSTRUMENTS.load_plugins instrument_plugins_dir
 puts "Output dir set to #{outdir}"
 puts "Sample rate set to #{samplerate}"
 
-ARGV.each do |filename|
- 
+filenames = Set.new(
+  ARGV.inject([]) {|filename_list, new_filename| filename_list + Dir.glob(new_filename) }
+)
+
+filenames.each do |filename|
+  
+  # check if filename is actually a glob
+  
   if !File.exist?(filename)
     puts "Could not find arrangement file #{filename}, skipping."
     next
@@ -52,8 +58,7 @@ ARGV.each do |filename|
   outpath = outdir + outfile
 
   File.open(filename, "r") do |file|
-    hash = YAML.load file.read
-    arrangement = Musicality::Arrangement.new hash
+    arrangement = YAML.load file.read
 
     format = WaveFile::Format.new(:mono, :float_32, samplerate.to_i)
     writer = WaveFile::Writer.new(outfile, format)
@@ -76,7 +81,7 @@ ARGV.each do |filename|
       :sample_chunk_size => chunk_size
     )
     
-    while conductor.time_counter < conductor.end_of_score
+    while conductor.time_counter < conductor.score.end
       conductor.perform_samples(chunk_size) do |new_samples|
         buffer = WaveFile::Buffer.new(new_samples, format)
         writer.write(buffer)
@@ -91,7 +96,7 @@ ARGV.each do |filename|
           puts keys
         else
           print "\b" * 6
-          print "%5.1f%%" % (100 * conductor.time_counter / conductor.end_of_score)
+          print "%5.1f%%" % (100 * conductor.time_counter / conductor.score.end)
         end
       end
     end

@@ -20,7 +20,7 @@ class InstrumentConfig
   # @param [Hash] args Hashed arguments. Required key is :plugin_name (String).
   #                    Optional key is :initial_settings and setting_changes.
   def initialize args={}
-    hash_make InstrumentConfig::ARG_SPECS, args
+    hash_make args, InstrumentConfig::ARG_SPECS
     
     ##  replace plain values with immediate value changes
     #@initial_settings.each do |key,val|

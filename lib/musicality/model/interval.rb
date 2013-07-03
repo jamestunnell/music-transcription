@@ -20,7 +20,7 @@ class Interval
   }
   
   def initialize args
-    hash_make ARG_SPECS, args
+    hash_make args
   end
   
   # Return true if the @link relationship is not NONE.
@@ -37,14 +37,14 @@ class Interval
   # @param [Pitch] pitch The pitch to use.
   # @raise [ArgumentError] if pitch is not a Pitch.
   def pitch= pitch
-    validate_arg ARG_SPECS[:pitch], pitch
+    ARG_SPECS[:pitch].validate_value pitch
     @pitch = pitch
   end
 
   # Setup the relationship to a following note.
   # @param [Link] link The Link object to assign.
   def link= link
-    validate_arg ARG_SPECS[:link], link
+    ARG_SPECS[:link].validate_value link
     @link = link
   end
 
@@ -53,4 +53,9 @@ class Interval
     Interval.new(:pitch => @pitch, :link => @link.clone)
   end
 end
+
+def interval pitch, link = Link.new
+  Interval.new(:pitch => pitch, :link => link)
+end
+
 end

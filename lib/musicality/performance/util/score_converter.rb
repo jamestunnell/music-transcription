@@ -3,63 +3,24 @@ require 'set'
 module Musicality
 
 # Utility class to perform conversions on a score. 
-class Score
+class TempoScore
 
   # Convert note-based offsets & durations to time-based. This eliminates
-  # the use of tempo during performance. Modifies a clone of the current object.
-  # @param [Numeric] conversion_sample_rate The sample rate to use in
-  #                                         converting from note-base to
-  #                                         time-base.
-  def convert_to_time_base conversion_sample_rate
-    self.clone.convert_to_time_base! conversion_sample_rate
-  end
-  
-  # Convert note-based offsets & durations to time-based. This eliminates
-  # the use of tempo during performance. Modifies current object.
+  # the use of tempo during performance. Produces a Score object.
   #
   # @param [Numeric] conversion_sample_rate The sample rate to use in
   #                                         converting from note-base to
   #                                         time-base.
-  def convert_to_time_base! conversion_sample_rate
-    if @tempo_profile.nil?
-      return self
-    end
+  def convert_to_time_base conversion_sample_rate    
+    note_time_map = make_note_time_map(gather_all_offsets, conversion_sample_rate)
     
-    #gather all the note offets to be converted to time offsets
-    note_offsets = Set.new [0.0]
-    
+    new_parts = {}
     @parts.each do |id, part|
-      offset = part.start_offset
-      note_offsets << offset
-      part.notes.each do |note|
-        offset += note.duration
-        note_offsets << offset
-      end
-      
-      part.loudness_profile.value_changes.each do |change_offset, change|
-        note_offsets << change_offset
-      end
-    end
-    
-    unless @program.nil?
-      @program.segments.each do |segment|
-        note_offsets << segment.first
-        note_offsets << segment.last
-      end
-    end
-    
-    # convert note offsets to time offsets
-    
-    tempo_computer = TempoComputer.new(@tempo_profile)
-    note_time_converter = NoteTimeConverter.new tempo_computer, conversion_sample_rate
-    note_time_map = note_time_converter.map_note_offsets_to_time_offsets note_offsets
-
-    @parts.each do |id, part|
-      note_start_offset = part.start_offset
+      note_start_offset = part.offset
       raise "Note-time map does not have sequence start note offset key #{note_start_offset}" unless note_time_map.has_key?(note_start_offset)
       
       new_part = Musicality::Part.new(
-        :start_offset => note_time_map[note_start_offset],
+        :offset => note_time_map[note_start_offset],
         :loudness_profile => Profile.new(:start_value => part.loudness_profile.start_value),
       )
       
@@ -91,12 +52,54 @@ class Score
         new_part.loudness_profile.value_changes[start_time] = new_change
       end
       
-      @parts[id] = new_part
+      new_parts[id] = new_part
     end
     
-    return self
+    new_segments = []
+    @program.segments.each do |segment|
+      first = note_time_map[segment.first]
+      last = note_time_map[segment.last]
+      new_segments.push(first...last)
+    end
+    
+    return Score.new(
+      :parts => new_parts,
+      :program => Program.new(:segments => new_segments)
+    )
   end
+  
+  private
 
+  def gather_all_offsets
+    note_offsets = Set.new [0]
+    
+    @parts.each do |id, part|
+      offset = part.offset
+      note_offsets << offset
+      part.notes.each do |note|
+        offset += note.duration
+        note_offsets << offset
+      end
+      
+      part.loudness_profile.value_changes.each do |change_offset, change|
+        note_offsets << change_offset
+      end
+    end
+    
+    @program.segments.each do |segment|
+      note_offsets << segment.first
+      note_offsets << segment.last
+    end
+    
+    return note_offsets
+  end
+  
+  def make_note_time_map note_offsets, conversion_sample_rate
+    tempo_computer = TempoComputer.new(@tempo_profile)
+    note_time_converter = NoteTimeConverter.new tempo_computer, conversion_sample_rate
+    note_time_map = note_time_converter.map_note_offsets_to_time_offsets note_offsets
+    return note_time_map
+  end
 end
 
 end

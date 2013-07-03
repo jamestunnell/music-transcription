@@ -119,7 +119,7 @@ class SampledInstrument < Musicality::Instrument
   }
   
   def initialize args
-    hash_make SampledInstrument::ARG_SPECS, args
+    hash_make args, SampledInstrument::ARG_SPECS
     @sample_files = Marshal.load(Marshal.dump(@sample_files))
     @sample_files.keep_if {|sf| sf.sample_rate == @sample_rate }
     

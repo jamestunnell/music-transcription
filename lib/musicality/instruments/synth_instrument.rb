@@ -23,7 +23,7 @@ class SynthInstrument < Musicality::Instrument
     attr_reader :partial, :oscillator, :fundamental
     
     def initialize args
-      hash_make Harmonic::ARG_SPECS, args
+      hash_make args
       @oscillator = SPCore::Oscillator.new(
         :sample_rate => @sample_rate,
         :amplitude => @amplitude,
@@ -34,14 +34,14 @@ class SynthInstrument < Musicality::Instrument
     
     # Setup the harmonic partial. Can be >= 0.
     def partial= partial
-      validate_arg Harmonic::ARG_SPECS[:partial], partial
+      Harmonic::ARG_SPECS[:partial].validate_value partial
       @partial = partial
       @oscillator.frequency = @fundamental * (1 + @partial)
     end
     
     # Set up the harmonic fundamental so the oscillator frequency can be set. The formula is: freq = fundamental * (1 + partial).
     def fundamental= fundamental
-      validate_arg Harmonic::ARG_SPECS[:fundamental], fundamental
+      Harmonic::ARG_SPECS[:fundamental].validate_value fundamental
       @fundamental = fundamental
       @oscillator.frequency = @fundamental * (1 + @partial)
     end
@@ -202,7 +202,7 @@ class SynthInstrument < Musicality::Instrument
   }
   
   def initialize args
-    hash_make SynthInstrument::ARG_SPECS, args
+    hash_make args
     @harmonic_settings = []
     @envelope_settings = {}
     params = {}

@@ -18,7 +18,7 @@ class SampleFile
   attr_accessor :file_name
   
   def initialize args
-    hash_make SampleFile::ARG_SPECS, args
+    hash_make args, SampleFile::ARG_SPECS
   end  
 end
 end

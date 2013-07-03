@@ -3,84 +3,82 @@ require 'yaml'
 
 include Musicality
 
-hash = {
-  :score => {
-    :program => {
+arrangement = Arrangement.new(
+  :score => TempoScore.new(
+    :program => Program.new(
       :segments => [
         0...4.0,
         0...4.0
       ]
-    },
-    :tempo_profile => { :start_value => tempo(120) },
+    ),
+    :tempo_profile => profile(tempo(120)),
     :parts => {
-      1 => {
+      1 => Part.new(
         :notes => [
-          { :duration => 0.375, :intervals => [{ :pitch => C2 } ]},
-          { :duration => 0.25, :intervals => [{ :pitch => Eb2 } ]},
-          { :duration => 0.3125, :intervals => [{ :pitch => F2 } ]},
-          { :duration => 0.0625, :intervals => [{ :pitch => Eb2 } ]},
+          note(0.375, [interval(C2) ]),
+          note(0.25, [interval(Eb2) ]),
+          note(0.3125, [interval(F2) ]),
+          note(0.0625, [interval(Eb2) ]),
           # 1.0
-          { :duration => 0.125 },
-          { :duration => 0.25, :intervals => [{ :pitch => C2 } ]},
-          { :duration => 0.25, :intervals => [{ :pitch => Eb2 } ]},
-          { :duration => 0.375 },
+          note(0.125),
+          note(0.25, [interval(C2) ]),
+          note(0.25, [interval(Eb2) ]),
+          note(0.375),
           # 2.0
-          { :duration => 0.375, :intervals => [{ :pitch => C2 } ]},
-          { :duration => 0.25, :intervals => [{ :pitch => Eb2 } ]},
-          { :duration => 0.3125, :intervals => [{ :pitch => F2 } ]},
-          { :duration => 0.0625, :intervals => [{ :pitch => Eb2 } ]},
+          note(0.375, [interval(C2) ]),
+          note(0.25, [interval(Eb2) ]),
+          note(0.3125, [interval(F2) ]),
+          note(0.0625, [interval(Eb2) ]),
           # 3.0
-          { :duration => 0.125 },
-          { :duration => 0.25, :intervals => [{ :pitch => C2 } ]},
-          { :duration => 0.25, :intervals => [{ :pitch => Eb2 } ]},
+          note(0.125),
+          note(0.25, [interval(C2) ]),
+          note(0.25, [interval(Eb2) ]),
         ]
-      }, 
-      2 => {
+      ), 
+      2 => Part.new(
         :notes => [
           # 0.0
-          { :duration => 0.125 },
-          { :duration => 0.125, :intervals => [{ :pitch => Bb3 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => Bb3 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => Bb3 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => Bb3 } ]},
-          { :duration => 0.25, :intervals => [{ :pitch => C4 } ]},
-          { :duration => 0.25, :intervals => [{ :pitch => A3 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => G3 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => F3 } ]},
-          { :duration => 0.3125, :intervals => [{ :pitch => G3, :link => slur(F3) } ]},
-          { :duration => 0.0625, :intervals => [{ :pitch => F3, :link => slur(E3) } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => E3 } ]},
-          { :duration => 0.125 },
+          note(0.125),
+          note(0.125, [interval(Bb3) ]),
+          note(0.125, [interval(Bb3) ]),
+          note(0.125, [interval(Bb3) ]),
+          note(0.125, [interval(Bb3) ]),
+          note(0.25, [interval(C4) ]),
+          note(0.25, [interval(A3) ]),
+          note(0.125, [interval(G3) ]),
+          note(0.125, [interval(F3) ]),
+          note(0.3125, [interval(G3, slur(F3)) ]),
+          note(0.0625, [interval(F3, slur(E3)) ]),
+          note(0.125, [interval(E3) ]),
+          note(0.125),
           # 2.0
-          { :duration => 0.125 },
-          { :duration => 0.125, :intervals => [{ :pitch => Bb3 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => Bb3 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => Bb3 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => Bb3 } ]},
-          { :duration => 0.25, :intervals => [{ :pitch => C4 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => A3 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => E4 } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => E4, :link => slur(D4) } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => D4, :link => slur(C4) } ]},
-          { :duration => 0.125, :intervals => [{ :pitch => C4 } ]},
+          note(0.125),
+          note(0.125, [interval(Bb3) ]),
+          note(0.125, [interval(Bb3) ]),
+          note(0.125, [interval(Bb3) ]),
+          note(0.125, [interval(Bb3) ]),
+          note(0.25, [interval(C4) ]),
+          note(0.125, [interval(A3) ]),
+          note(0.125, [interval(E4) ]),
+          note(0.125, [interval(E4, slur(D4)) ]),
+          note(0.125, [interval(D4, slur(C4)) ]),
+          note(0.125, [interval(C4) ]),
         ]
-      }
+      )
     }
-  },
+  ),
   :instrument_configs => {
-    1 => {
+    1 => InstrumentConfig.new(
       :plugin_name => 'synth_instr_3',
       :initial_settings => "blend"
-    },
-    2 => {
+    ),
+    2 => InstrumentConfig.new(
       :plugin_name => 'synth_instr_3',
       :initial_settings => "blend"
-    },
+    ),
   }
-}
-
-arrangement = Arrangement.new hash
+)
 
 File.open("song1.yml", "w") do |file|
-  file.write arrangement.make_hash.to_yaml
+  file.write arrangement.to_yaml
 end

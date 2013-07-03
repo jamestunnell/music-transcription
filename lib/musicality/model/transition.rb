@@ -17,7 +17,7 @@ class Transition
   attr_reader :type, :duration
   
   def initialize args = {}
-    hash_make Transition::ARG_SPECS, args
+    hash_make args, Transition::ARG_SPECS
   end
 
   # Compare the equality of another Transition object.
@@ -28,13 +28,13 @@ class Transition
   
   # Change the transition duration.
   def duration= duration
-    validate_arg Transition::ARG_SPECS[:duration], duration
+    Transition::ARG_SPECS[:duration].validate_value duration
     @duration = duration
   end
   
   # Change the transition type.
   def type= type
-    validate_arg Transition::ARG_SPECS[:type], type
+    Transition::ARG_SPECS[:type].validate_value type
     @type = type
   end
 end

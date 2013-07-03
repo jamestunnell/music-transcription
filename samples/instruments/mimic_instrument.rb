@@ -118,7 +118,7 @@ class MimicInstrument < Musicality::Instrument
   MAX_FFT_SIZE = 8192
   
   def initialize args
-    hash_make MimicInstrument::ARG_SPECS, args
+    hash_make args, MimicInstrument::ARG_SPECS
     
     partial_settings = {}
     @file_paths.each do |file_path|

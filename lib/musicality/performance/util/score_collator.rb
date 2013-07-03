@@ -14,11 +14,10 @@ class Score
     return self.clone.collate!
   end
   
-  # Combine multiple program segments to one, using tempo/note/dynamic replication
+  # Combine multiple program segments to one, using note/dynamic replication
   # and truncation where necessary. Modifies current score.
   #
   def collate!
-    return self if @program.nil?
     return self if @program.segments.count <= 1
     
     new_parts = {}
@@ -27,15 +26,11 @@ class Score
     @parts.each do |id, part|
       
       new_part = Musicality::Part.new(
-	:loudness_profile => clone_and_collate_profile(
-	  part.loudness_profile,
-	  ValueComputer,
-	  @program.segments
-	),
+	:loudness_profile => part.loudness_profile.clone_and_collate(ValueComputer, @program.segments)
       )
       
       @program.segments.each do |seg|
-	cur_offset = part.start_offset	
+	cur_offset = part.offset	
 	cur_notes = []
 	
 	part.notes.each do |note|
@@ -72,53 +67,26 @@ class Score
     end    
     
     @parts = new_parts
-    unless @tempo_profile.nil?
-      @tempo_profile = clone_and_collate_profile(
-	@tempo_profile,
-	TempoComputer,
-	@program.segments
-      )
-    end
-    @program.segments = [self.find_start...self.find_end]
+    @program.segments = [self.start...self.end]
     
     return self
   end
-
-  private
-  
-  def clone_and_collate_profile profile, computer_class, program_segments
-    new_profile = Profile.new :start_value => profile.start_value
-    
-    segment_start_offset = 0.0
-    comp = computer_class.new(profile)
-    
-    program_segments.each do |seg|
-      # figure which dynamics to keep/modify
-      changes = Marshal.load(Marshal.dump(profile.value_changes))
-      changes.keep_if {|offset,change| seg.include?(offset) }
-      changes.each do |offset, change|
-	if(offset + change.transition.duration) > seg.last
-	  change.transition.duration = seg.last - offset
-	  change.value = comp.value_at seg.last
-	end
-      end
-      
-      # find & add segment start dynamic first
-      value = comp.value_at seg.first
-      offset = segment_start_offset
-      new_profile.value_changes[offset] = Musicality::value_change(value)
-      
-      # add dynamics to part, adjusting for segment start offset
-      changes.each do |offset2, change|
-	offset3 = (offset2 - seg.first) + segment_start_offset
-	new_profile.value_changes[offset3] = change
-      end
-      
-      segment_start_offset += (seg.last - seg.first)
-    end
-    
-    return new_profile
-  end
-
 end
+
+class TempoScore
+  
+  alias old_collate collate
+  alias old_collate! collate!
+  
+  def collate
+    self.clone.collate!
+  end
+  
+  def collate!
+    @tempo_profile = @tempo_profile.clone_and_collate(TempoComputer, @program.segments)
+    old_collate!
+    return self
+  end
+end
+
 end

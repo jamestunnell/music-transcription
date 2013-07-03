@@ -5,96 +5,95 @@ include Musicality
 
 bass_notes = [
   # 0.0
-  { :duration => Rational(1,6), :intervals => [{:pitch => "Bb2".to_pitch}]},
-  { :duration => Rational(1,4) },
-  { :duration => Rational(1,3), :intervals => [{:pitch => "Ab2".to_pitch}]},
-  { :duration => Rational(1,6), :intervals => [{:pitch => "F2".to_pitch}]},
-  { :duration => Rational(1,12), :intervals => [{:pitch => "Ab2".to_pitch}]},
+  note(Rational(1,6), [ interval(Bb2) ]),
+  note(Rational(1,4)),
+  note(Rational(1,3), [ interval(Ab2) ]),
+  note(Rational(1,6), [ interval(F2) ]),
+  note(Rational(1,12), [ interval(Ab2) ]),
   # 1.0
-  { :duration => Rational(1,6), :intervals => [{:pitch => "Bb2".to_pitch}]},
-  { :duration => Rational(1,4) },
-  { :duration => Rational(1,3), :intervals => [{:pitch => "Ab2".to_pitch}]},
-  { :duration => Rational(1,4), :intervals => [{:pitch => "Ab2".to_pitch}]},
+  note(Rational(1,6), [ interval(Bb2) ]),
+  note(Rational(1,4)),
+  note(Rational(1,3), [ interval(Ab2) ]),
+  note(Rational(1,4), [ interval(Ab2) ]),
   # 2.0
-  { :duration => Rational(1,6), :intervals => [{:pitch => "C3".to_pitch}]},
-  { :duration => Rational(1,4) },
-  { :duration => Rational(1,3), :intervals => [{:pitch => "Bb2".to_pitch}]},
-  { :duration => Rational(1,6), :intervals => [{:pitch => "G2".to_pitch}]},
-  { :duration => Rational(1,12), :intervals => [{:pitch => "Bb2".to_pitch}]},
+  note(Rational(1,6), [ interval(C3) ]),
+  note(Rational(1,4)),
+  note(Rational(1,3), [ interval(Bb2) ]),
+  note(Rational(1,6), [ interval(G2) ]),
+  note(Rational(1,12), [ interval(Bb2) ]),
   # 3.0
-  { :duration => Rational(1,6), :intervals => [{:pitch => "C3".to_pitch}]},
-  { :duration => Rational(1,4) },
-  { :duration => Rational(1,3), :intervals => [{:pitch => "Bb2".to_pitch}]},
-  { :duration => Rational(1,4), :intervals => [{:pitch => "Bb2".to_pitch}]},
+  note(Rational(1,6), [ interval(C3) ]),
+  note(Rational(1,4)),
+  note(Rational(1,3), [ interval(Bb2) ]),
+  note(Rational(1,4), [ interval(Bb2) ]),
 ]
 
 lead_notes = [
-  
   # 0.0
-  { :duration => Rational(1,6), :intervals => [{:pitch => "Bb3".to_pitch}]},
-  { :duration => Rational(1,4)},
-  { :duration => Rational(1,12), :intervals => [{:pitch => "Db4".to_pitch, :link => tie("Db4".to_pitch)}]},
-  { :duration => Rational(1,6), :intervals => [{:pitch => "Db4".to_pitch, :link => tie("Db4".to_pitch)}]},
-  { :duration => Rational(1,36), :intervals => [{:pitch => "Db4".to_pitch}]},
-  { :duration => Rational(1,36), :intervals => [{:pitch => "Eb4".to_pitch}]},
-  { :duration => Rational(1,36), :intervals => [{:pitch => "Db4".to_pitch}]},
-  { :duration => Rational(1,6), :intervals => [{:pitch => "Ab3".to_pitch}]},
-  { :duration => Rational(1,12), :intervals => [{:pitch => "Db4".to_pitch}]},
+  note(Rational(1,6), [ interval(Bb3) ]),
+  note(Rational(1,4)),
+  note(Rational(1,12), [ interval(Db4, tie(Db4))]),
+  note(Rational(1,6), [ interval(Db4, tie(Db4))]),
+  note(Rational(1,36), [ interval(Db4)]),
+  note(Rational(1,36), [ interval(Eb4)]),
+  note(Rational(1,36), [ interval(Db4)]),
+  note(Rational(1,6), [ interval(Ab3)]),
+  note(Rational(1,12), [ interval(Db4)]),
   # 1.0
-  { :duration => Rational(1,6), :intervals => [{:pitch => "Bb3".to_pitch}]},
-  { :duration => Rational(1,4)},
-  { :duration => Rational(1,12), :intervals => [{:pitch => "Db4".to_pitch, :link => tie("Db4".to_pitch)}]},
-  { :duration => Rational(1,4), :intervals => [{:pitch => "Db4".to_pitch, :link => tie("Db4".to_pitch)}]},
-  { :duration => Rational(1,8), :intervals => [{:pitch => "Db4".to_pitch, :link => portamento("C4".to_pitch)}]},
-  { :duration => Rational(1,8), :intervals => [{:pitch => "C4".to_pitch}]},
+  note(Rational(1,6), [ interval(Bb3) ]),
+  note(Rational(1,4)),
+  note(Rational(1,12), [ interval(Db4, tie(Db4))]),
+  note(Rational(1,4), [ interval(Db4, tie(Db4))]),
+  note(Rational(1,8), [ interval(Db4, portamento(C4))]),
+  note(Rational(1,8), [ interval(C4)]),
   # 2.0
-  { :duration => Rational(1,6), :intervals => [{:pitch => "C4".to_pitch}]},
-  { :duration => Rational(1,4)},
-  { :duration => Rational(1,12), :intervals => [{:pitch => "Eb4".to_pitch, :link => tie("Eb4".to_pitch)}]},
-  { :duration => Rational(1,6), :intervals => [{:pitch => "Eb4".to_pitch, :link => tie("Eb4".to_pitch)}]},
-  { :duration => Rational(1,36), :intervals => [{:pitch => "Eb4".to_pitch}]},
-  { :duration => Rational(1,36), :intervals => [{:pitch => "F4".to_pitch}]},
-  { :duration => Rational(1,36), :intervals => [{:pitch => "Eb4".to_pitch}]},
-  { :duration => Rational(1,6), :intervals => [{:pitch => "Bb3".to_pitch}]},
-  { :duration => Rational(1,12), :intervals => [{:pitch => "Eb4".to_pitch}]},
+  note(Rational(1,6), [ interval(C4) ]),
+  note(Rational(1,4)),
+  note(Rational(1,12), [ interval(Eb4, tie(Eb4))]),
+  note(Rational(1,6), [ interval(Eb4, tie(Eb4))]),
+  note(Rational(1,36), [ interval(Eb4)]),
+  note(Rational(1,36), [ interval(F4)]),
+  note(Rational(1,36), [ interval(Eb4)]),
+  note(Rational(1,6), [ interval(Bb3)]),
+  note(Rational(1,12), [ interval(Eb4)]),
   # 3.0
-  { :duration => Rational(1,6), :intervals => [{:pitch => "C4".to_pitch}]},
-  { :duration => Rational(1,4)},
-  { :duration => Rational(1,12), :intervals => [{:pitch => "Eb4".to_pitch, :link => tie("Eb4".to_pitch)}]},
-  { :duration => Rational(1,4), :intervals => [{:pitch => "Eb4".to_pitch, :link => tie("Eb4".to_pitch)}]},
-  { :duration => Rational(1,8), :intervals => [{:pitch => "Eb4".to_pitch, :link => portamento("D4".to_pitch)}]},
-  { :duration => Rational(1,8), :intervals => [{:pitch => "D4".to_pitch}]},
+  note(Rational(1,6), [ interval(C4) ]),
+  note(Rational(1,4)),
+  note(Rational(1,12), [ interval(Eb4, tie(Eb4))]),
+  note(Rational(1,4), [ interval(Eb4, tie(Eb4))]),
+  note(Rational(1,8), [ interval(Eb4, portamento(D4))]),
+  note(Rational(1,8), [ interval(D4)]),
 ]
 
-arrangement_hash = {
-  :score => {
-    :program => {
+arrangement = Arrangement.new(
+  :score => TempoScore.new(
+    :program => Program.new(
       :segments => [0...2, 0...2,2...4,0...2]
-    },
-    :tempo_profile => { :start_value => tempo(120) },
+    ),
+    :tempo_profile => profile(tempo(120)),
     :parts => {
-      "lead" => {
+      "lead" => Part.new(
         :notes => lead_notes,
-        :loudness_profile => { :start_value => 0.5 }
-      },
-      "bass" => {
+        :loudness_profile => profile(0.5)
+      ),
+      "bass" => Part.new(
         :notes => bass_notes,
-        :loudness_profile => { :start_value => 0.125 }
-      }
+        :loudness_profile => profile(0.125)
+      )
     }
-  },
+  ),
   :instrument_configs => {
-    'bass' => {
+    'bass' => InstrumentConfig.new(
       :plugin_name => "synth_instr_1",
       :initial_settings => ["sawtooth"]
-    },
-    'lead' => {
+    ),
+    'lead' => InstrumentConfig.new(
       :plugin_name => "synth_instr_3",
       :initial_settings => ["blend", "very short attack", "med decay"]
-    },
+    ),
   }
-}
+)
 
 File.open('hip.yml','w') do |file|
-  file.write arrangement_hash.to_yaml
+  file.write arrangement.to_yaml
 end

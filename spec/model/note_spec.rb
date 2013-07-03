@@ -62,20 +62,4 @@ describe Musicality::Note do
       note.separation.should eq 0.123
     end
   end
-  
-  it "should be hash-makeable" do
-    Hashmake::hash_makeable?(Note).should be_true
-  
-    hash = {
-      :duration => 2,
-      :attack => 0.2,
-      :separation => 0.6,
-      :intervals => [
-        { :pitch => @pitch, :link => tie(Eb2) }
-      ]
-    }
-    note = Note.new hash
-    note2 = Note.new note.make_hash
-    note.should eq(note2)
-  end
 end

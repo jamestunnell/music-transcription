@@ -11,7 +11,7 @@ class TwoVariableFunction
   attr_reader :x_domain, :y_domain, :proc
   
   def initialize args
-    hash_make TwoVariableFunction::ARG_SPECS, args
+    hash_make args, TwoVariableFunction::ARG_SPECS
   end
   
   def eval x, y

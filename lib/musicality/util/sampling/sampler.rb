@@ -12,7 +12,7 @@ class Sampler
   attr_reader :output_dir
   
   def initialize args
-    hash_make Sampler::ARG_SPECS, args
+    hash_make args, Sampler::ARG_SPECS
     unless Dir.exist?(@output_dir)
       FileUtils.mkdir_p(@output_dir)
     end
@@ -36,34 +36,28 @@ class Sampler
   private
   
   def render instrument_config, sample_file
-    tempo = tempo(120)
-    note_duration = sample_file.duration_sec * tempo.notes_per_second
     note = Musicality::Note.new(
-      :duration => note_duration,
+      :duration => sample_file.duration_sec,
       :attack => sample_file.attack,
       :sustain => sample_file.sustain,
       :separation => sample_file.separation,
-      :intervals => [ {:pitch => sample_file.pitch} ]
+      :intervals => [ Interval.new(:pitch => sample_file.pitch) ]
     )
     
     arrangement = Musicality::Arrangement.new(
-      :score => {
-        :program => {
-          :segments => [ 0..note_duration ],
-        },
-        :tempo_profile => { :start_value => tempo },
+      :score => Score.new(
         :parts => {
-          1 => {
-            :loudness_profile => { :start_value => 1.0 },
+          1 => Part.new(
+            :loudness_profile => Profile.new( :start_value => 1.0 ),
             :notes => [note]
-          }
+          )
         }
-      },
+      ),
       :instrument_configs => {
         1 => instrument_config
       }
     )
-        
+    
     time_conversion_sample_rate = (250.0 / sample_file.duration_sec).to_i
     conductor = Musicality::Conductor.new(
       :arrangement => arrangement,

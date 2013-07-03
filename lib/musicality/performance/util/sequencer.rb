@@ -12,7 +12,7 @@ class NoteSequence
   }
   
   def initialize args
-    hash_make ARG_SPECS, args
+    hash_make args
   end
 end
 
@@ -30,7 +30,7 @@ class Sequencer
       note.remove_duplicates
     end
 
-    offset = part.start_offset
+    offset = part.offset
     sequences = []
     
     part.notes.each_index do |i|

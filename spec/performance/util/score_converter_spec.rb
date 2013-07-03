@@ -3,30 +3,26 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 describe Musicality::Score do
   context '.make_time_based_parts_from_score' do
     it "should produce notes with duration appropriate to the tempo" do
-      score_hash = {
-        :tempo_profile => { :start_value => tempo(120) },
-        :program => { :segments => [1.0...2.0] },
+      score = TempoScore.new(
+        :tempo_profile => profile(tempo(120)),
+        :program => Program.new(:segments => [1.0...2.0]),
         :parts => {
-          1 => {
-            :start_offset => 1.0,
-            :loudness_profile => {
-              :start_value => 0.5
-            },
+          1 => Part.new(
+            :offset => 1.0,
+            :loudness_profile => profile(0.5),
             :notes => [
-              { :duration => 0.1, :intervals => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.2, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-              { :duration => 0.3, :intervals => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.4, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+              Note.new( :duration => 0.1, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+              Note.new( :duration => 0.2, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+              Note.new( :duration => 0.3, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+              Note.new( :duration => 0.4 , :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
             ]
-          }
+          )
         },
-      }
-      
-      score = Score.new score_hash
-      score.convert_to_time_base! 1000.0
+      )
+      score = score.convert_to_time_base 1000.0
       part = score.parts.values.first
       
-      part.start_offset.should be_within(0.01).of(2.0)
+      part.offset.should be_within(0.01).of(2.0)
       part.notes[0].duration.should be_within(0.01).of(0.2)
       part.notes[1].duration.should be_within(0.01).of(0.4)
       part.notes[2].duration.should be_within(0.01).of(0.6)
@@ -34,38 +30,31 @@ describe Musicality::Score do
     end
     
     it "should produce notes twice as long when tempo is half" do
-      score_hash = {
-        :tempo_profile => {
-          :start_value => tempo(120) ,
-          :value_changes => { 1.0 => Musicality::immediate_change(tempo(60)) }
-        },
-        :program => { :segments => [0.0...2.0] },
+      score = TempoScore.new(
+        :tempo_profile => profile(tempo(120), 1.0 => Musicality::immediate_change(tempo(60)) ),
+        :program => Program.new( :segments => [0.0...2.0] ),
         :parts => {
-          1 => {
-            :start_offset => 0.0,
-            :loudness_profile => {
-              :start_value => 0.5
-            },
+          1 => Part.new(
+            :offset => 0.0,
+            :loudness_profile => profile(0.5),
             :notes => [
-              { :duration => 0.2, :intervals => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.4, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-              { :duration => 0.3, :intervals => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.1, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-
-              { :duration => 0.2, :intervals => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.4, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-              { :duration => 0.3, :intervals => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.1, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
+              Note.new( :duration => 0.2, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+              Note.new( :duration => 0.4, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+              Note.new( :duration => 0.3, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+              Note.new( :duration => 0.1 , :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+              
+              Note.new( :duration => 0.2, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+              Note.new( :duration => 0.4, :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
+              Note.new( :duration => 0.3, :intervals => [ Interval.new( :pitch => "C9".to_pitch ) ] ),
+              Note.new( :duration => 0.1 , :intervals => [ Interval.new( :pitch => "D9".to_pitch ) ] ),
             ]
-          }
+          )
         },
-      }
-    
-      score = Score.new score_hash
-      score.convert_to_time_base! 1000.0
+      )
+      score = score.convert_to_time_base 1000.0
       part = score.parts.values.first
       
-      part.start_offset.should be_within(0.01).of(0.0)
+      part.offset.should be_within(0.01).of(0.0)
       
       part.notes[0].duration.should be_within(0.01).of(0.4)
       part.notes[1].duration.should be_within(0.01).of(0.8)
@@ -77,27 +66,5 @@ describe Musicality::Score do
       part.notes[6].duration.should be_within(0.01).of(1.2)
       part.notes[7].duration.should be_within(0.01).of(0.4)      
     end
-    
-    it 'should not alter note durations when tempo_profile is nil' do
-      score_hash = {
-        :tempo_profile => nil,
-        :program => { :segments => [0...1] },
-        :parts => {
-          1 => {
-            :notes => [
-              { :duration => 0.2, :intervals => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.4, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-              { :duration => 0.3, :intervals => [ {:pitch => { :octave => 9 }} ] },
-              { :duration => 0.1, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            ]
-          }
-        }
-      }
-      
-      score = Score.new score_hash
-      new_score = score.convert_to_time_base 1000.0
-      new_score.parts[1].notes.should eq score.parts[1].notes
-    end
-    
   end
 end

@@ -3,33 +3,32 @@ require 'yaml'
 
 include Musicality
 
-hash = {
-  :score => {
-    :program => {
+arrangement = Arrangement.new(
+  :score => TempoScore.new(
+    :program => Program.new(
       :segments => [0...1.0]
-    },
-    :tempo_profile => { :start_value => tempo(120) },
+    ),
+    :tempo_profile => profile(tempo(120)),
     :parts => {
-      1 => {
+      1 => Part.new(
+        :loudness_profile => profile(0.5),
         :notes => [
-          { :duration => 0.125, :intervals => [ { :pitch => C3 } ] },
-          { :duration => 0.125, :intervals => [ { :pitch => D3 } ] },
-          { :duration => 0.25, :intervals => [ { :pitch => C3 } ] },
-          { :duration => 0.50, :intervals => [ { :pitch => C3 }, { :pitch => E3 } ] },
+          note(0.125, [ interval(C3) ] ),
+          note(0.125, [ interval(D3) ] ),
+          note(0.25, [ interval(C3) ] ),
+          note(0.50, [ interval(C3), interval(E3) ] ),
         ]
-      }
+      )
     }
-  },
+  ),
   :instrument_configs => {
-    1 => {
+    1 => InstrumentConfig.new(
       :plugin_name => 'synth_instr_3',
       :initial_settings => ["blend", "short attack", "long decay"]
-    },
+    ),
   }
-}
-
-arrangement = Arrangement.new hash
+)
 
 File.open("instrument_test.yml", "w") do |file|
-  file.write arrangement.make_hash.to_yaml
+  file.write arrangement.to_yaml
 end

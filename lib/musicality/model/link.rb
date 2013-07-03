@@ -49,7 +49,7 @@ class Link
   # A new instance of Link.
   # @param [Hash] args Hashed arguments. See ARG_SPECS for details about valid keys.
   def initialize args={}
-    hash_make ARG_SPECS, args
+    hash_make args
   end
   
   # Produce an identical Link object.
@@ -66,7 +66,7 @@ class Link
   # @param [Pitch] target_pitch The pitch of the note being connected to.
   # @raise [ArgumentError] if target_pitch is not a Pitch.
   def target_pitch= target_pitch
-    validate_arg ARG_SPECS[:target_pitch], target_pitch
+    ARG_SPECS[:target_pitch].validate_value target_pitch
     @target_pitch = target_pitch
   end
 
@@ -76,7 +76,7 @@ class Link
   #                  RELATIONSHIPS constant.
   # @raise [ArgumentError] if relationship is not a valid relationship.
   def relationship= relationship
-    validate_arg ARG_SPECS[:relationship], relationship
+    ARG_SPECS[:relationship].validate_value relationship
     @relationship = relationship
   end
   

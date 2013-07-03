@@ -1,54 +1,481 @@
----
-:score:
-  :tempo_profile:
-    :start_value: !ruby/object:Musicality::Tempo
+--- !ruby/object:Musicality::Arrangement
+score: !ruby/object:Musicality::TempoScore
+  tempo_profile: !ruby/object:Musicality::Profile
+    start_value: !ruby/object:Musicality::Tempo
       beats_per_minute: 120
       beat_duration: !ruby/object:Rational
         denominator: 4
         numerator: 1
-  :program:
-    :segments:
+    value_changes: {}
+  parts:
+    bass: !ruby/object:Musicality::Part
+      offset: 0
+      loudness_profile: !ruby/object:Musicality::Profile
+        start_value: 0.5
+        value_changes: {}
+      notes:
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: &25653300 !ruby/object:Musicality::Pitch
+            cents_per_octave: 1200
+            octave: 2
+            semitone: 3
+            cent: 0
+            base_freq: 16.351597831287414
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals: []
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: &25671740 !ruby/object:Musicality::Pitch
+            cents_per_octave: 1200
+            octave: 2
+            semitone: 10
+            cent: 0
+            base_freq: 16.351597831287414
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals: []
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25653300
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals: []
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: &25671340 !ruby/object:Musicality::Pitch
+            cents_per_octave: 1200
+            octave: 2
+            semitone: 11
+            cent: 0
+            base_freq: 16.351597831287414
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25671740
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: &25651300 !ruby/object:Musicality::Pitch
+            cents_per_octave: 1200
+            octave: 2
+            semitone: 8
+            cent: 0
+            base_freq: 16.351597831287414
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25653300
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals: []
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25671740
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals: []
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25653300
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals: []
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25671340
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25671740
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25651300
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25671740
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals: []
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: &25668940 !ruby/object:Musicality::Pitch
+            cents_per_octave: 1200
+            octave: 3
+            semitone: 5
+            cent: 0
+            base_freq: 16.351597831287414
+          link: !ruby/object:Musicality::Link
+            target_pitch: *25668940
+            relationship: :tie
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.5
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25668940
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25671740
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals: []
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25668940
+          link: !ruby/object:Musicality::Link
+            target_pitch: *25668940
+            relationship: :tie
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.5
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25668940
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25671340
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals: []
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: &25668540 !ruby/object:Musicality::Pitch
+            cents_per_octave: 1200
+            octave: 3
+            semitone: 6
+            cent: 0
+            base_freq: 16.351597831287414
+          link: !ruby/object:Musicality::Link
+            target_pitch: *25668540
+            relationship: :tie
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.5
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25668540
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.25
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25671340
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals: []
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.125
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25668540
+          link: !ruby/object:Musicality::Link
+            target_pitch: *25668540
+            relationship: :tie
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+      - !ruby/object:Musicality::Note
+        duration: 0.5
+        intervals:
+        - !ruby/object:Musicality::Interval
+          pitch: *25668540
+          link: !ruby/object:Musicality::Link
+            target_pitch: !ruby/object:Musicality::Pitch
+              cents_per_octave: 1200
+              octave: 0
+              semitone: 0
+              cent: 0
+              base_freq: 16.351597831287414
+            relationship: :none
+        sustain: 0.5
+        attack: 0.5
+        separation: 0.5
+  program: !ruby/object:Musicality::Program
+    segments:
     - !ruby/range
       begin: 0
-      end: 1
+      end: 8.0
       excl: true
-  :parts:
-    bass:
-      :notes:
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 3
-      - :duration: 0.25
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 10
-      - :duration: 0.25
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 3
-      - :duration: 0.125
-      - :duration: 0.125
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 11
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 10
-      - :duration: 0.25
-        :intervals:
-        - :pitch:
-            :octave: 2
-            :semitone: 8
-:instrument_configs:
-  bass:
-    :plugin_name: synth_instr_3
-    :initial_settings: blend
+instrument_configs:
+  bass: !ruby/object:Musicality::InstrumentConfig
+    plugin_name: synth_instr_3
+    initial_settings: blend
+    setting_changes: {}

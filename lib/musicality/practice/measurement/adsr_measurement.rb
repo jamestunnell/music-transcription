@@ -12,7 +12,7 @@ class ADSRMeasurement
   attr_reader :signal, :envelope, :attack_time, :attack_height, :decay_time, :sustain_time, :sustain_height, :release_time
 
   def initialize args
-    hash_make ADSRMeasurement::ARG_SPECS, args
+    hash_make args
     @envelope = @signal.envelope
     
     # 1. Find the most prominent part of the envelope (highest peak-like

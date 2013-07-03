@@ -12,14 +12,13 @@ class Program
 
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
-    :segments => arg_spec_array(:reqd => true, :type => Range)
+    :segments => arg_spec_array(:reqd => false, :type => Range)
   }
 
   # A new instance of Program.
   # @param [Hash] args Hashed arguments. Required key is :segments.
   def initialize args={}
-    hash_make ARG_SPECS, args
-    raise ArgumentError, "segments is empty" if @segments.empty?
+    hash_make args
   end
 
   # Assign program segments. Each segment is a Range to specify which range of 
@@ -31,8 +30,7 @@ class Program
   # @raise [ArgumentError] if segments contains a non-Range
   #
   def segments= segments
-    validate_arg ARG_SPECS[:segments], segments
-    raise ArgumentError, "segments is empty" if segments.empty?
+    ARG_SPECS[:segments].validate_value segments
     @segments = segments
   end
 

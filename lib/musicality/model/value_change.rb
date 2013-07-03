@@ -24,7 +24,7 @@ class ValueChange
   # New instance of ValueChange.
   # @param [Hash] args Hashed arguments for initialization.
   def initialize args
-    hash_make ValueChange::ARG_SPECS, args
+    hash_make args, ValueChange::ARG_SPECS
   end
   
   # Compare the equality of another ValueChange object.
@@ -40,13 +40,13 @@ class ValueChange
 
   # Set the event value. Can be any object.
   def value= value
-    validate_arg ValueChange::ARG_SPECS[:value], value
+    ValueChange::ARG_SPECS[:value].validate_value value
     @value = value
   end
 
   # Set the transition.
   def transition= transition
-    validate_arg ValueChange::ARG_SPECS[:transition], transition
+    ValueChange::ARG_SPECS[:transition].validate_value transition
     @transition = transition
   end
 end

@@ -2,34 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::Score do
   before :each do
-    notes = [
-      {
-        :duration => 0.25,
-        :intervals => [
-          { :pitch => C1 },
-          { :pitch => D1 },
-        ]
-      }
-    ]
-    
-    loudness_profile = Musicality::Profile.new(
-      :start_value => 0.5,
-      :value_changes => {
-        1.0 => Musicality::linear_change(1.0, 2.0)
-      }
-    )
-
-    @parts = 
-    {
-      "piano (LH)" => Musicality::Part.new( :loudness_profile => loudness_profile, :notes => notes),
-    }
-
-    @tempo_profile = Musicality::Profile.new(
-      :start_value => tempo(120),
-      :value_changes => {
-        0.5 => Musicality::linear_change(tempo(60), 0.25)
-      }
-    )
+    @parts = { "piano (LH)" => Samples::SAMPLE_PART }
     @program = Musicality::Program.new :segments => [0...0.75, 0...0.75]
   end
   
@@ -37,8 +10,7 @@ describe Musicality::Score do
     context "no args given" do
       let(:score) { Score.new }
       subject { score }
-      its(:program) { should be_nil }
-      its(:tempo_profile) { should be_nil }
+      its(:program) { should eq(Program.new) }
       its(:parts) { should be_empty }
     end
     
@@ -51,22 +23,33 @@ describe Musicality::Score do
       it "should assign program given during construction" do
         score = Musicality::Score.new :program => @program
         score.program.should eq(@program)
-      end
-      
-      it 'should allow program to be nil' do
-        score = Musicality::Score.new :program => nil
-        score.program.should be_nil
-      end
+      end      
+    end
+  end
+end
 
-      it "should assign tempo profile given during construction" do
-        score = Musicality::Score.new :tempo_profile => @tempo_profile, :program => @program
-        score.tempo_profile.should eq(@tempo_profile)
-      end
-      
-      it 'should allow tempo_profile to be nil' do
-        score = Musicality::Score.new :tempo_profile => nil, :program => @program
-        score.tempo_profile.should be_nil
-      end
+describe Musicality::TempoScore do
+  before :each do
+    @parts = { "piano (LH)" => Samples::SAMPLE_PART }
+    @program = Musicality::Program.new :segments => [0...0.75, 0...0.75]
+    @tempo_profile = Musicality::Profile.new(
+      :start_value => tempo(120),
+      :value_changes => {
+        0.5 => Musicality::linear_change(tempo(60), 0.25)
+      }
+    )
+  end
+  
+  describe '.new' do
+    it "should assign tempo profile given during construction" do
+      score = Musicality::TempoScore.new :tempo_profile => @tempo_profile
+      score.tempo_profile.should eq(@tempo_profile)
+    end
+    
+    it "should assign part and program given during construction" do
+      score = Musicality::TempoScore.new :tempo_profile => @tempo_profile, :parts => @parts, :program => @program
+      score.parts.should eq(@parts)
+      score.program.should eq(@program)
     end
   end
 end

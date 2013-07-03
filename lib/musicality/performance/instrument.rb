@@ -17,7 +17,7 @@ class Instrument
   attr_reader :keys, :sample_rate, :params
   
   def initialize args
-    hash_make Instrument::ARG_SPECS, args
+    hash_make args, Instrument::ARG_SPECS
     @keys = {}
   end
   

@@ -3,72 +3,70 @@ require 'yaml'
 
 include Musicality
 
-hash = {
-  :score => {
-    :program => {
+arrangement = Arrangement.new(
+  :score => TempoScore.new(
+    :program => Program.new(
       :segments => [0...8.0]
-    },
-    :tempo_profile => { :start_value => tempo(120) },
+    ),
+    :tempo_profile => profile(tempo(120)),
     :parts => {
-      "bass" => {
+      "bass" => Part.new(
         :notes => [
           # 0.0
-          { :duration => 0.25, :intervals => [ { :pitch => Eb2 } ] },
-          { :duration => 0.25 },
-          { :duration => 0.25, :intervals => [ { :pitch => Bb2 } ] },
-          { :duration => 0.25 },
-          { :duration => 0.25, :intervals => [ { :pitch => Eb2 } ] },
-          { :duration => 0.125 },
-          { :duration => 0.125, :intervals => [ { :pitch => B2 } ] },
-          { :duration => 0.25, :intervals => [ { :pitch => Bb2 } ] },
-          { :duration => 0.25, :intervals => [ { :pitch => Ab2 } ] },
+          note(0.25, [ interval(Eb2) ]),
+          note(0.25),
+          note(0.25, [ interval(Bb2) ]),
+          note(0.25),
+          note(0.25, [ interval(Eb2) ]),
+          note(0.125),
+          note(0.125, [ interval(B2) ]),
+          note(0.25, [ interval(Bb2) ]),
+          note(0.25, [ interval(Ab2) ]),
           
           # 2.0
-          { :duration => 0.25, :intervals => [ { :pitch => Eb2 } ] },
-          { :duration => 0.25 },
-          { :duration => 0.25, :intervals => [ { :pitch => Bb2 } ] },
-          { :duration => 0.25 },
-          { :duration => 0.25, :intervals => [ { :pitch => Eb2 } ] },
-          { :duration => 0.125 },
-          { :duration => 0.125, :intervals => [ { :pitch => B2 } ] },
-          { :duration => 0.25, :intervals => [ { :pitch => Bb2 } ] },
-          { :duration => 0.25, :intervals => [ { :pitch => Ab2 } ] },
-  
+          note(0.25, [ interval(Eb2) ]),
+          note(0.25),
+          note(0.25, [ interval(Bb2) ]),
+          note(0.25),
+          note(0.25, [ interval(Eb2) ]),
+          note(0.125),
+          note(0.125, [ interval(B2) ]),
+          note(0.25, [ interval(Bb2) ]),
+          note(0.25, [ interval(Ab2) ]),
+          
           # 4.0
-          { :duration => 0.25, :intervals => [ { :pitch => Bb2 } ] },
-          { :duration => 0.125 },
-          { :duration => 0.125, :intervals => [ { :pitch => F3, :link => tie(F3) } ] },
-          { :duration => 0.5, :intervals => [ { :pitch => F3 } ] },
-          { :duration => 0.25, :intervals => [ { :pitch => Bb2 } ] },
-          { :duration => 0.125 },
-          { :duration => 0.125, :intervals => [ { :pitch => F3, :link => tie(F3) } ] },
-          { :duration => 0.5, :intervals => [ { :pitch => F3 } ] },
+          note(0.25, [ interval(Bb2) ]),
+          note(0.125),
+          note(0.125, [ interval(F3, tie(F3)) ]),
+          note(0.5, [ interval(F3) ]),
+          note(0.25, [ interval(Bb2) ]),
+          note(0.125),
+          note(0.125, [ interval(F3, tie(F3)) ]),
+          note(0.5, [ interval(F3) ]),
   
           # 6.0
-          { :duration => 0.25, :intervals => [ { :pitch => B2 } ] },
-          { :duration => 0.125 },
-          { :duration => 0.125, :intervals => [ { :pitch => Gb3, :link => tie(Gb3) } ] },
-          { :duration => 0.5, :intervals => [ { :pitch => Gb3 } ] },
-          { :duration => 0.25, :intervals => [ { :pitch => B2 } ] },
-          { :duration => 0.125 },
-          { :duration => 0.125, :intervals => [ { :pitch => Gb3, :link => tie(Gb3) } ] },
-          { :duration => 0.5, :intervals => [ { :pitch => Gb3 } ] },
+          note(0.25, [ interval(B2) ]),
+          note(0.125),
+          note(0.125, [ interval(Gb3, tie(Gb3)) ]),
+          note(0.5, [ interval(Gb3) ]),
+          note(0.25, [ interval(B2) ]),
+          note(0.125),
+          note(0.125, [ interval(Gb3, tie(Gb3)) ]),
+          note(0.5, [ interval(Gb3) ]),
           
           #8.0
         ]
-      }
+      )
     }
-  },
+  ),
   :instrument_configs => {
-    "bass" => {
+    "bass" => InstrumentConfig.new(
       :plugin_name => 'synth_instr_3',
       :initial_settings => "blend"
-    },
+    ),
   }
-}
-
-arrangement = Arrangement.new hash
+)
 
 File.open("missed_connection.yml", "w") do |file|
-  file.write arrangement.make_hash.to_yaml
+  file.write arrangement.to_yaml
 end

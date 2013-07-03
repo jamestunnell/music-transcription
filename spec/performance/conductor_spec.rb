@@ -3,23 +3,22 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Musicality::Conductor do
 
   before :all do
-    hash = {
+    @score = TempoScore.new(
       :parts => {
-        1 => {
-          :start_offset => 0,
+        1 => Part.new(
           :loudness => { :start_value => 0.5 },
           :notes => [
-            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
-            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9 }} ] },
-            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9, :semitone => 2 }} ] },
-            { :duration => 0.05, :intervals => [ {:pitch => { :octave => 9, :semitone => 4 }} ] },
+            Note.new( :duration => 0.05, :intervals => [ Interval.new(:pitch => "C9".to_pitch) ] ),
+            Note.new( :duration => 0.05, :intervals => [ Interval.new(:pitch => "D9".to_pitch) ] ),
+            Note.new( :duration => 0.05, :intervals => [ Interval.new(:pitch => "E9".to_pitch) ] ),
+            Note.new( :duration => 0.05, :intervals => [ Interval.new(:pitch => "C9".to_pitch) ] ),
+            Note.new( :duration => 0.05, :intervals => [ Interval.new(:pitch => "D9".to_pitch) ] ),
+            Note.new( :duration => 0.05, :intervals => [ Interval.new(:pitch => "E9".to_pitch) ] ),
           ]
-        }
+        )
       },
-      :tempo_profile => { :start_value => tempo(360) },
-      :program => {
+      :tempo_profile => Profile.new( :start_value => tempo(360) ),
+      :program => Program.new(
         :segments => [
           0.0...2.0,
           1.0...2.0,
@@ -27,10 +26,9 @@ describe Musicality::Conductor do
           0.0...1.0,
           2.0...3.75
         ]
-      }
-    }
+      )
+    )
     
-    @score = Score.new hash
     @arrangement = Arrangement.new(:score => @score)
     @sample_rate = 250
   end

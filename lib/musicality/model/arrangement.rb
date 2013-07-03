@@ -36,7 +36,15 @@ class Arrangement
   attr_reader :score, :instrument_configs
   
   def initialize args
-    hash_make Arrangement::ARG_SPECS, args
+    hash_make args, Arrangement::ARG_SPECS
+  end
+  
+  # Assign a new score.
+  # @param [Score] score The new score.
+  # @raise [ArgumentError] if score is not a Score.
+  def score= score
+    Arrangement::ARG_SPECS[:score].validate_value score
+    @score = score
   end
   
   # Builds instruments for each part. If no configuration is given for a part,

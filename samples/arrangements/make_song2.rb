@@ -3,72 +3,67 @@ require 'yaml'
 
 include Musicality
 
-hash = {
-  :score => {
-    :program => {
-      :segments => [
-        0...4.0,
-        0...4.0  
-      ]
-    },
-    :tempo_profile => { :start_value => tempo(120) },
+arrangement = Arrangement.new(
+  :score => TempoScore.new(
+    :program => Program.new(
+      :segments => [0...4.0, 0...4.0 ]
+    ),
+    :tempo_profile => profile(tempo(120)),
     :parts => {
-      1 => {
+      1 => Part.new(
         :notes => [
-          { :duration => 1.0, :intervals => [ {:pitch => C4} ]},
-          { :duration => 1.0, :intervals => [ {:pitch => Bb3} ]},
-          { :duration => 1.0, :intervals => [ {:pitch => Ab3} ]},
-          { :duration => 0.5, :intervals => [ {:pitch => G3} ]},
-          { :duration => 0.5, :intervals => [ {:pitch => Bb3} ]},
+          note(1.0, [ interval(C4) ]),
+          note(1.0, [ interval(Bb3) ]),
+          note(1.0, [ interval(Ab3) ]),
+          note(0.5, [ interval(G3) ]),
+          note(0.5, [ interval(Bb3) ]),
         ]
-      }, 
-      2 => { 
+      ), 
+      2 => Part.new(
         :notes => [
-          { :duration => 0.375, :intervals => [ {:pitch => E5 } ]},
-          { :duration => 1.0, :intervals => [ {:pitch => D5 }]},
-          { :duration => 1.0, :intervals => [ {:pitch => C5 }]},
-          { :duration => 0.625, :intervals => [ {:pitch => C5 }]},
-          { :duration => 0.5, :intervals => [ {:pitch => C5 }]},
-          { :duration => 0.5, :intervals => [ {:pitch => D5 }]}
+          note(0.375, [ interval(E5) ]),
+          note(1.0, [ interval(D5)]),
+          note(1.0, [ interval(C5)]),
+          note(0.625, [ interval(C5)]),
+          note(0.5, [ interval(C5)]),
+          note(0.5, [ interval(D5)])
         ]
-      },
-      3 => {
+      ),
+      3 => Part.new(
         :notes => [
-          { :duration => 0.125 },
-          { :duration => 0.25, :intervals => [{:pitch => G5 }]},
-          { :duration => 0.5, :intervals => [{:pitch => F5 }]},
-          { :duration => 0.25 },
-          { :duration => 0.25, :intervals => [{:pitch => F5 }]},
-          { :duration => 0.5, :intervals => [{:pitch => Eb5 }]},
-          { :duration => 0.25 },
-          { :duration => 0.25, :intervals => [{:pitch => Eb5 }]},
-          { :duration => 0.5, :intervals => [{:pitch => Eb5 }]},
-          { :duration => 0.125 },
-          { :duration => 0.5, :intervals => [{:pitch => Eb5 }]},
-          { :duration => 0.5, :intervals => [{:pitch => F5 }]},
+          note(0.125),
+          note(0.25, [interval(G5)] ),
+          note(0.5, [interval(F5)] ),
+          note(0.25),
+          note(0.25, [interval(F5)] ),
+          note(0.5, [interval(Eb5)] ),
+          note(0.25),
+          note(0.25, [interval(Eb5)] ),
+          note(0.5, [interval(Eb5)] ),
+          note(0.125),
+          note(0.5, [interval(Eb5)] ),
+          note(0.5, [interval(F5)] ),
         ]
-      }
+      )
     }
-  },
+  ),
   :instrument_configs => {
-    1 => {
+    1 => InstrumentConfig.new(
       :plugin_name => 'synth_instr_3',
       :initial_settings => "blend"
-    },
-    2 => {
+    ),
+    2 => InstrumentConfig.new(
       :plugin_name => 'synth_instr_3',
       :initial_settings => "blend"
-    },
-    3 => {
+    ),
+    3 => InstrumentConfig.new(
       :plugin_name => 'synth_instr_3',
       :initial_settings => "blend"
-    }
+    )
   }
-}
-
-arrangement = Arrangement.new hash
+)
 
 File.open("song2.yml", "w") do |file|
-  file.write arrangement.make_hash.to_yaml
+  file.write arrangement.to_yaml
 end
 
