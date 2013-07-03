@@ -128,6 +128,17 @@ class Note
     end
   end
 
+  def transpose pitch_diff
+    self.clone.transpose! pitch_diff
+  end
+
+  def transpose! pitch_diff
+    @intervals.each do |interval|
+      interval.pitch += pitch_diff
+      interval.link.target_pitch += pitch_diff
+    end
+    return self
+  end 
 end
 
 def note duration, intervals = [], other_args = {}

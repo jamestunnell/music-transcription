@@ -77,6 +77,17 @@ class Part
   def end
     return @offset + duration
   end
+  
+  def transpose pitch_diff
+    self.clone.transpose! pitch_diff
+  end
+
+  def transpose! pitch_diff
+    @notes.each do |note|
+      note.transpose! pitch_diff
+    end
+    return self
+  end 
 end
 
 class PartFile < Part

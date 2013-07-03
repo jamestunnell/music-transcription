@@ -213,7 +213,7 @@ class Pitch
     @cent = centTotal
     return self
   end
-  
+
   # Produce a string representation of a pitch (e.g. "C2")
   def to_s
     if @cents_per_octave != 1200

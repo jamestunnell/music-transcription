@@ -3,7 +3,7 @@ require 'yaml'
 
 include Musicality
 
-bass_notes = [
+bass_riff = [
   # 0.0
   note(Rational(1,6), [ interval(Bb2) ]),
   note(Rational(1,4)),
@@ -15,20 +15,9 @@ bass_notes = [
   note(Rational(1,4)),
   note(Rational(1,3), [ interval(Ab2) ]),
   note(Rational(1,4), [ interval(Ab2) ]),
-  # 2.0
-  note(Rational(1,6), [ interval(C3) ]),
-  note(Rational(1,4)),
-  note(Rational(1,3), [ interval(Bb2) ]),
-  note(Rational(1,6), [ interval(G2) ]),
-  note(Rational(1,12), [ interval(Bb2) ]),
-  # 3.0
-  note(Rational(1,6), [ interval(C3) ]),
-  note(Rational(1,4)),
-  note(Rational(1,3), [ interval(Bb2) ]),
-  note(Rational(1,4), [ interval(Bb2) ]),
 ]
 
-lead_notes = [
+lead_riff = [
   # 0.0
   note(Rational(1,6), [ interval(Bb3) ]),
   note(Rational(1,4)),
@@ -46,24 +35,11 @@ lead_notes = [
   note(Rational(1,4), [ interval(Db4, tie(Db4))]),
   note(Rational(1,8), [ interval(Db4, portamento(C4))]),
   note(Rational(1,8), [ interval(C4)]),
-  # 2.0
-  note(Rational(1,6), [ interval(C4) ]),
-  note(Rational(1,4)),
-  note(Rational(1,12), [ interval(Eb4, tie(Eb4))]),
-  note(Rational(1,6), [ interval(Eb4, tie(Eb4))]),
-  note(Rational(1,36), [ interval(Eb4)]),
-  note(Rational(1,36), [ interval(F4)]),
-  note(Rational(1,36), [ interval(Eb4)]),
-  note(Rational(1,6), [ interval(Bb3)]),
-  note(Rational(1,12), [ interval(Eb4)]),
-  # 3.0
-  note(Rational(1,6), [ interval(C4) ]),
-  note(Rational(1,4)),
-  note(Rational(1,12), [ interval(Eb4, tie(Eb4))]),
-  note(Rational(1,4), [ interval(Eb4, tie(Eb4))]),
-  note(Rational(1,8), [ interval(Eb4, portamento(D4))]),
-  note(Rational(1,8), [ interval(D4)]),
 ]
+
+whole_step = Pitch.new(:semitone => 2)
+bass_notes = bass_riff + bass_riff.map {|note| note.transpose(whole_step) }
+lead_notes = lead_riff + lead_riff.map {|note| note.transpose(whole_step) }
 
 arrangement = Arrangement.new(
   :score => TempoScore.new(
