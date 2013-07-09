@@ -61,4 +61,6 @@ require 'musicality/instruments/synth_instrument'
 # some instrument classes that can be used for instrument plugins
 require 'musicality/composition/rhythmic_pattern'
 require 'musicality/composition/pitch_class_set'
-require 'musicality/composition/scale'
+require 'musicality/composition/pitch_class_arpeggiator'
+require 'musicality/composition/interval_vector'
+require 'musicality/composition/interval_vector_arpeggiator'

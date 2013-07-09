@@ -153,12 +153,18 @@ class Pitch
   end
 
   # Round to the nearest semitone.
+  def round
+    self.clone.round!
+  end
+
+  # Round to the nearest semitone.
   def round!
     if @cent >= (CENTS_PER_SEMITONE / 2)
       @semitone += 1
     end
     @cent = 0
     normalize!
+    return self
   end
   
   # Calculates the number of semitones which would represent the pitch's

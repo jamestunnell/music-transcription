@@ -138,7 +138,11 @@ class Note
       interval.link.target_pitch += pitch_diff
     end
     return self
-  end 
+  end
+  
+  def to_s
+    "#{duration}:#{intervals.map{|i| i.pitch}.inspect}"
+  end
 end
 
 def note duration, intervals = [], other_args = {}
