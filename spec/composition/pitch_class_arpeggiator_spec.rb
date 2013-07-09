@@ -25,15 +25,19 @@ describe Musicality::PitchClassArpeggiator do
     ]
       
     @rising_pitch_ranges = [
-      F4..F5,
-      C2...C4,
-      E3..G7,
+      PitchRange::Closed.new(F4,F5),
+      PitchRange::OpenRight.new(C2,C4),
+      PitchRange::OpenLeft.new(C2,C4),
+      PitchRange::Closed.new(E3,G7),
+      PitchRange::Open.new(E3,G7),
     ]
     
     @falling_pitch_ranges = [
-      F5..F4,
-      C4...C2,
-      G7..E3,
+      PitchRange::Closed.new(F5,F4),
+      PitchRange::OpenRight.new(C4,C2),
+      PitchRange::OpenLeft.new(C4,C2),
+      PitchRange::Closed.new(G7,E3),
+      PitchRange::Open.new(G7,E3),
     ]
     
     @arpeggiators = [
@@ -72,26 +76,30 @@ describe Musicality::PitchClassArpeggiator do
       end
     end
 
-    it 'should begin with the first pitch in the given range' do
+    it 'should end with range.left, unless range excludes left' do
       @arpeggiators.each do |arpeggiator|
         @rising_pitch_ranges.each do |pitch_range|
           @rhythms.each do |rhythm|
             arpeggio = arpeggiator.rising_arpeggio_over_range pitch_range, rhythm
-            arpeggio.first.intervals.first.pitch.should eq pitch_range.first
+            if pitch_range.include_left?
+              arpeggio.first.intervals.first.pitch.should eq pitch_range.left
+            else
+              arpeggio.first.intervals.first.pitch.should_not eq pitch_range.left
+            end
           end
         end
       end
     end
     
-    it 'should end with the last pitch in the given range, unless end is excluded' do
+    it 'should end with range.right, unless range excludes right' do
       @arpeggiators.each do |arpeggiator|
         @rising_pitch_ranges.each do |pitch_range|
           @rhythms.each do |rhythm|
             arpeggio = arpeggiator.rising_arpeggio_over_range pitch_range, rhythm
-            if pitch_range.exclude_end?
-              arpeggio.last.intervals.first.pitch.should_not eq pitch_range.last
+            if pitch_range.include_right?
+              arpeggio.last.intervals.first.pitch.should eq pitch_range.right
             else
-              arpeggio.last.intervals.first.pitch.should eq pitch_range.last
+              arpeggio.last.intervals.first.pitch.should_not eq pitch_range.right
             end
           end
         end
@@ -128,26 +136,30 @@ describe Musicality::PitchClassArpeggiator do
       end
     end
 
-    it 'should begin with the first pitch in the given range' do
+    it 'should end with range.left, unless range excludes left' do
       @arpeggiators.each do |arpeggiator|
         @falling_pitch_ranges.each do |pitch_range|
           @rhythms.each do |rhythm|
             arpeggio = arpeggiator.falling_arpeggio_over_range pitch_range, rhythm
-            arpeggio.first.intervals.first.pitch.should eq pitch_range.first
+            if pitch_range.include_left?
+              arpeggio.first.intervals.first.pitch.should eq pitch_range.left
+            else
+              arpeggio.first.intervals.first.pitch.should_not eq pitch_range.left
+            end
           end
         end
       end
     end
     
-    it 'should end with the last pitch in the given range, unless end is excluded' do
+    it 'should end with range.right, unless range excludes right' do
       @arpeggiators.each do |arpeggiator|
         @falling_pitch_ranges.each do |pitch_range|
           @rhythms.each do |rhythm|
             arpeggio = arpeggiator.falling_arpeggio_over_range pitch_range, rhythm
-            if pitch_range.exclude_end?
-              arpeggio.last.intervals.first.pitch.should_not eq pitch_range.last
+            if pitch_range.include_right?
+              arpeggio.last.intervals.first.pitch.should eq pitch_range.right
             else
-              arpeggio.last.intervals.first.pitch.should eq pitch_range.last
+              arpeggio.last.intervals.first.pitch.should_not eq pitch_range.right
             end
           end
         end

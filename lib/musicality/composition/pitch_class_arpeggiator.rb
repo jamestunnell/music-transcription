@@ -12,46 +12,53 @@ class PitchClassArpeggiator
   end
   
   def rising_arpeggio_over_range pitch_range, rhythm
-    if pitch_range.last <= pitch_range.first
-      raise ArgumentError, "pitch_range.last must be > pitch_range.first"
-    end
-    notes = []
-    pitch = pitch_range.first
+    raise ArgumentError, "pitch_range must be increasing" unless pitch_range.increasing?
     
+    notes = []
+    pitch = pitch_range.left
     i = 0
-    while pitch < pitch_range.last
+    
+    if pitch_range.exclude_left?
+      pitch = make_next_pitch_up(pitch)
+    end
+    
+    while pitch < pitch_range.right
       duration = rhythm[i % rhythm.count]
       notes.push make_note duration, pitch
       pitch = make_next_pitch_up(pitch)
       i += 1
     end
     
-    unless pitch_range.exclude_end?
+    if pitch_range.include_right?
       duration = rhythm[i % rhythm.count]
-      notes.push make_note duration, pitch_range.last
+      notes.push make_note duration, pitch_range.right
     end
     return notes
   end
 
   def falling_arpeggio_over_range pitch_range, rhythm
-    if pitch_range.last >= pitch_range.first
-      raise ArgumentError, "pitch_range.last must be < pitch_range.first"
-    end
-    notes = []
-    pitch = pitch_range.first
+    raise ArgumentError, "pitch_range must be decreasing" unless pitch_range.decreasing?
     
+    notes = []
+    pitch = pitch_range.left
     i = 0
-    while pitch > pitch_range.last
+    
+    if pitch_range.exclude_left?
+      pitch = make_next_pitch_down(pitch)
+    end
+    
+    while pitch > pitch_range.right
       duration = rhythm[i % rhythm.count]
       notes.push make_note duration, pitch
       pitch = make_next_pitch_down(pitch)
       i += 1
     end
     
-    unless pitch_range.exclude_end?
+    if pitch_range.include_right?
       duration = rhythm[i % rhythm.count]
-      notes.push make_note duration, pitch_range.last
+      notes.push make_note duration, pitch_range.right
     end
+    
     return notes
   end
   

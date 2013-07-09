@@ -15,61 +15,68 @@ class IntervalVectorArpeggiator
   end
   
   def rising_arpeggio_over_range pitch_range, rhythm
-    if pitch_range.last <= pitch_range.first
-      raise ArgumentError, "pitch_range.last must be > pitch_range.first"
-    end
+    raise ArgumentError, "pitch_range must be increasing" unless pitch_range.increasing?
+    
     notes = []
-    pitch = pitch_range.first
+    pitch = pitch_range.left
     pitches = []
     
     i = 0
-    while pitch < pitch_range.last
+    if pitch_range.exclude_left?
+      pitch = next_pitch pitch, pitches, @interval_vector
+    end
+    
+    while pitch < pitch_range.right
       duration = rhythm[i % rhythm.count]
       notes.push make_note duration, pitch
       
-      if pitches.empty?
-        pitches += @interval_vector.to_pitches(pitch)
-      end
-      pitch = pitches.shift
+      pitch = next_pitch pitch, pitches, @interval_vector
       i += 1
     end
-
-    unless pitch_range.exclude_end?
+    
+    if pitch_range.include_right?
       duration = rhythm[i % rhythm.count]
-      notes.push make_note duration, pitch_range.last
+      notes.push make_note duration, pitch_range.right
     end
     return notes
   end
 
   def falling_arpeggio_over_range pitch_range, rhythm
-    if pitch_range.last >= pitch_range.first
-      raise ArgumentError, "pitch_range.last must be < pitch_range.first"
-    end
+    raise ArgumentError, "pitch_range must be decreasing" unless pitch_range.decreasing?
+    
     notes = []
-    pitch = pitch_range.first
+    pitch = pitch_range.left
     pitches = []
     inverse_iv = @interval_vector.inverse
     
     i = 0
-    while pitch > pitch_range.last
+    if pitch_range.exclude_left?
+      pitch = next_pitch pitch, pitches, inverse_iv
+    end
+    
+    while pitch > pitch_range.right
       duration = rhythm[i % rhythm.count]
       notes.push make_note duration, pitch
       
-      if pitches.empty?
-        pitches += inverse_iv.to_pitches(pitch)
-      end
-      pitch = pitches.shift
+      pitch = next_pitch pitch, pitches, inverse_iv
       i += 1
     end
-
-    unless pitch_range.exclude_end?
+    
+    if pitch_range.include_right?
       duration = rhythm[i % rhythm.count]
-      notes.push make_note duration, pitch_range.last
+      notes.push make_note duration, pitch_range.right
     end
     return notes
   end
   
   private
+  
+  def next_pitch cur_pitch, pitches_left, interval_vector
+    if pitches_left.empty?
+      pitches_left.concat interval_vector.to_pitches(cur_pitch)
+    end
+    pitches_left.shift
+  end
   
   def make_note duration, pitch
     if duration > 0
