@@ -48,24 +48,23 @@ class IntervalVectorArpeggiator
     notes = []
     pitch = pitch_range.first
     pitches = []
+    inverse_iv = @interval_vector.inverse
     
     i = 0
     while pitch > pitch_range.last
-      if pitches.empty?
-        if notes.empty?
-          pitches += @interval_vector.to_pitches(pitch_range.first)
-        else
-          pitches += @interval_vector.to_pitches(notes.last.intervals.first.pitch)
-        end
-      end
-      duration = rhythm[i % rhythm.count]
-      notes.push make_note duration, pitches.shift
-      i += 1
-    end
-    
-    unless pitch_range.exclude_end?
       duration = rhythm[i % rhythm.count]
       notes.push make_note duration, pitch
+      
+      if pitches.empty?
+        pitches += inverse_iv.to_pitches(pitch)
+      end
+      pitch = pitches.shift
+      i += 1
+    end
+
+    unless pitch_range.exclude_end?
+      duration = rhythm[i % rhythm.count]
+      notes.push make_note duration, pitch_range.last
     end
     return notes
   end

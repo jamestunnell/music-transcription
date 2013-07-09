@@ -20,7 +20,7 @@ class AbsoluteIntervalVector
   end
   
   def clone
-    Marshal.load(Marshal.dump)
+    return Marshal.load(Marshal.dump(self))
   end
   
   def inverse
@@ -29,6 +29,7 @@ class AbsoluteIntervalVector
   
   def invert!
     @intervals.map! {|interval| -interval }
+    return self
   end
 end
 
@@ -54,7 +55,7 @@ class RelativeIntervalVector
   end
   
   def clone
-    Marshal.load(Marshal.dump)
+    return Marshal.load(Marshal.dump(self))
   end
   
   def inverse
@@ -63,6 +64,7 @@ class RelativeIntervalVector
   
   def invert!
     @intervals.map! {|interval| -interval }
+    return self
   end
 end
 
