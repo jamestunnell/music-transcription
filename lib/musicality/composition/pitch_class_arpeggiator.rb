@@ -8,7 +8,6 @@ class PitchClassArpeggiator
   def initialize pitch_class_set
     raise ArgumentError, "pitch_class_set is empty" if pitch_class_set.empty?
     @pitch_class_set = pitch_class_set
-    @pcs = pitch_class_set.sort
   end
   
   def rising_arpeggio_over_range pitch_range, rhythm
@@ -77,7 +76,7 @@ class PitchClassArpeggiator
   def make_next_pitch_up current_pitch
     current_pitch = current_pitch.round
     cur_pc = current_pitch.semitone
-    next_pc = find_next_higher_pc(cur_pc)
+    next_pc = @pitch_class_set.next_pitch_class(cur_pc)
 
     octave = current_pitch.octave
     if next_pc <= cur_pc
@@ -89,33 +88,13 @@ class PitchClassArpeggiator
   def make_next_pitch_down current_pitch
     current_pitch = current_pitch.round
     cur_pc = current_pitch.semitone
-    next_pc = find_next_lower_pc(cur_pc)
+    prev_pc = @pitch_class_set.prev_pitch_class(cur_pc)
 
     octave = current_pitch.octave
-    if next_pc >= cur_pc
+    if prev_pc >= cur_pc
       octave -= 1
     end
-    return Pitch.new(:octave => octave, :semitone => next_pc)
-  end
-  
-  def find_next_higher_pc cur_pc
-    greater_than_cur = @pcs.select {|pc| pc > cur_pc }
-    if greater_than_cur.any?
-      return greater_than_cur.first
-    else
-      less_or_equal = @pcs.select {|pc| pc <= cur_pc }
-      return less_or_equal.first
-    end
-  end
-
-  def find_next_lower_pc cur_pc
-    less_than_cur = @pcs.select {|pc| pc < cur_pc }
-    if less_than_cur.any?
-      return less_than_cur.last
-    else
-      greater_or_equal = @pcs.select {|pc| pc >= cur_pc }
-      return greater_or_equal.last
-    end
+    return Pitch.new(:octave => octave, :semitone => prev_pc)
   end
 end
 

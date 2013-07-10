@@ -2,21 +2,11 @@ require 'set'
 
 module Musicality
 
-# Each interval is the distance from the same pitch
-class AbsoluteIntervalVector
+class IntervalVector
   attr_reader :intervals
   def initialize intervals
     raise ArgumentError, "intervals is empty" if intervals.empty?
     @intervals = intervals
-  end
-  
-  def to_pitches base_pitch
-    pitches = []
-    @intervals.each do |interval|
-      offset_pitch = Pitch.new(:semitone => interval)
-      pitches.push(base_pitch + offset_pitch)
-    end
-    return pitches
   end
   
   def clone
@@ -31,16 +21,7 @@ class AbsoluteIntervalVector
     @intervals.map! {|interval| -interval }
     return self
   end
-end
 
-# Each interval is the distance from the previous pitch
-class RelativeIntervalVector
-  attr_reader :intervals
-  def initialize intervals
-    raise ArgumentError, "intervals is empty" if intervals.empty?
-    @intervals = intervals
-  end
-  
   def to_pitches base_pitch
     pitches = []
     @intervals.each do |interval|
@@ -54,18 +35,10 @@ class RelativeIntervalVector
     return pitches
   end
   
-  def clone
-    return Marshal.load(Marshal.dump(self))
+  def to_pitch_class_set base_pitch
+    PitchClassSet.new to_pitches(base_pitch)
   end
-  
-  def inverse
-    self.clone.invert!
-  end
-  
-  def invert!
-    @intervals.map! {|interval| -interval }
-    return self
-  end
+
 end
 
 end

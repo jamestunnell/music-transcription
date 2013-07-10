@@ -127,5 +127,9 @@ class Program
   
 end
 
+def program segments
+  Program.new(:segments => segments)
+end
+
 end
 
