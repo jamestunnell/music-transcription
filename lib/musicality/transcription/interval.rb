@@ -54,6 +54,8 @@ class Interval
   end
 end
 
+module_function
+
 def interval pitch, link = Link.new
   Interval.new(:pitch => pitch, :link => link)
 end

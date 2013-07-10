@@ -32,6 +32,8 @@ class Tempo
   end
 end
 
+module_function
+
 def tempo beats_per_minute, beat_duration = Tempo::ARG_SPECS[:beat_duration].default
   Tempo.new(:beats_per_minute => beats_per_minute, :beat_duration => beat_duration)
 end

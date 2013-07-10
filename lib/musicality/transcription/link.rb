@@ -82,6 +82,8 @@ class Link
   
 end
 
+module_function
+
 # helper method to create a Link object with GLISSANDO relationship.
 def glissando pitch
   Link.new(:target_pitch => pitch, :relationship => Link::RELATIONSHIP_GLISSANDO)

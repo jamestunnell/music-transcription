@@ -51,30 +51,32 @@ class ValueChange
   end
 end
 
+module_function
+
 # Creates a ValueChange object
 # @param [Object] value
 # @param [Transition] transition
-def self.value_change(value, transition = immediate())
+def value_change(value, transition = immediate())
   return ValueChange.new(:value => value, :transition => transition)
 end
 
 # Creates a ValueChange object using an immediate transition.
 # @param [Object] value
-def self.immediate_change(value)
+def immediate_change(value)
   return ValueChange.new(:value => value, :transition => immediate())
 end
 
 # Creates a ValueChange object using a linear transition.
 # @param [Object] value
 # @param [Transition] transition_duration Length of the transition
-def self.linear_change(value, transition_duration = 0.0)
+def linear_change(value, transition_duration = 0.0)
   return ValueChange.new(:value => value, :transition => linear(transition_duration))
 end
 
 # Creates a ValueChange object using a sigmoid transition.
 # @param [Object] value
 # @param [Transition] transition_duration Length of the transition
-def self.sigmoid_change(value, transition_duration = 0.0)
+def sigmoid_change(value, transition_duration = 0.0)
   return ValueChange.new(:value => value, :transition => sigmoid(transition_duration))
 end
 

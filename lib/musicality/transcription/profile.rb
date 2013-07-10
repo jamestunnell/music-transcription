@@ -93,6 +93,8 @@ class Profile
   end
 end
 
+module_function
+
 # Create a Profile object
 def profile start_value, value_changes = {}
   return Profile.new(:start_value => start_value, :value_changes => value_changes)

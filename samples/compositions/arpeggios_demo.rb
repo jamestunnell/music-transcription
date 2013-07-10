@@ -20,16 +20,8 @@ octave = 3
   notes.push NoteMaker.monophonic_note(Rational(1,2), pitches.first)
 end
 
-
 arrangement = Arrangement.new(
-  :score => TempoScore.new(
-    :tempo_profile => profile(tempo(120)),
-    :parts => {
-      1 => Part.new(
-        :notes => notes
-      )
-    }
-  )
+  :score => TempoScore.new(:tempo_profile => profile(tempo(120)), :parts => { 1 => Part.new(:notes => notes) }  )
 )
 
 File.open('arpeggios_demo.yml', 'w') do |file|

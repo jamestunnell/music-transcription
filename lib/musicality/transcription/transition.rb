@@ -39,18 +39,22 @@ class Transition
   end
 end
 
+module_function
+
 # Create a Transition object with 0 duration and of IMMEDIATE type.
-def self.immediate
+def immediate
   Transition.new(:duration => 0.0, :type => Transition::IMMEDIATE)
 end
 
+
 # Create a Transition object of IMMEDIATE type, with the given duration.
-def self.linear duration
+def linear duration
   Transition.new(:duration => duration, :type => Transition::LINEAR)
 end
 
+
 # Create a Transition object of SIGMOID type, with the given duration.
-def self.sigmoid duration
+def sigmoid duration
   Transition.new(:duration => duration, :type => Transition::LINEAR)
 end
 

@@ -145,6 +145,8 @@ class Note
   end
 end
 
+module_function
+
 def note duration, intervals = [], other_args = {}
   Note.new(
     { :duration => duration, :intervals => intervals }.merge other_args

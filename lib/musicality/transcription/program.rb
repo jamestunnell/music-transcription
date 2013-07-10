@@ -127,6 +127,8 @@ class Program
   
 end
 
+module_function
+
 def program segments
   Program.new(:segments => segments)
 end

@@ -20,7 +20,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: &8518180 !ruby/object:Musicality::Pitch
+          pitch: &29781940 !ruby/object:Musicality::Pitch
             cents_per_octave: 1200
             octave: 3
             semitone: 10
@@ -51,14 +51,14 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: &8528660 !ruby/object:Musicality::Pitch
+          pitch: &29780740 !ruby/object:Musicality::Pitch
             cents_per_octave: 1200
             octave: 4
             semitone: 1
             cent: 0
             base_freq: 16.351597831287414
           link: !ruby/object:Musicality::Link
-            target_pitch: *8528660
+            target_pitch: *29780740
             relationship: :tie
         sustain: 0.5
         attack: 0.5
@@ -69,9 +69,9 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8528660
+          pitch: *29780740
           link: !ruby/object:Musicality::Link
-            target_pitch: *8528660
+            target_pitch: *29780740
             relationship: :tie
         sustain: 0.5
         attack: 0.5
@@ -82,7 +82,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8528660
+          pitch: *29780740
           link: !ruby/object:Musicality::Link
             target_pitch: !ruby/object:Musicality::Pitch
               cents_per_octave: 1200
@@ -123,7 +123,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8528660
+          pitch: *29780740
           link: !ruby/object:Musicality::Link
             target_pitch: !ruby/object:Musicality::Pitch
               cents_per_octave: 1200
@@ -164,7 +164,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8528660
+          pitch: *29780740
           link: !ruby/object:Musicality::Link
             target_pitch: !ruby/object:Musicality::Pitch
               cents_per_octave: 1200
@@ -182,7 +182,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8518180
+          pitch: *29781940
           link: !ruby/object:Musicality::Link
             target_pitch: !ruby/object:Musicality::Pitch
               cents_per_octave: 1200
@@ -208,9 +208,9 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8528660
+          pitch: *29780740
           link: !ruby/object:Musicality::Link
-            target_pitch: *8528660
+            target_pitch: *29780740
             relationship: :tie
         sustain: 0.5
         attack: 0.5
@@ -221,9 +221,9 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8528660
+          pitch: *29780740
           link: !ruby/object:Musicality::Link
-            target_pitch: *8528660
+            target_pitch: *29780740
             relationship: :tie
         sustain: 0.5
         attack: 0.5
@@ -234,9 +234,9 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8528660
+          pitch: *29780740
           link: !ruby/object:Musicality::Link
-            target_pitch: &8531720 !ruby/object:Musicality::Pitch
+            target_pitch: &29781140 !ruby/object:Musicality::Pitch
               cents_per_octave: 1200
               octave: 4
               semitone: 0
@@ -252,7 +252,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8531720
+          pitch: *29781140
           link: !ruby/object:Musicality::Link
             target_pitch: !ruby/object:Musicality::Pitch
               cents_per_octave: 1200
@@ -591,7 +591,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: &8410720 !ruby/object:Musicality::Pitch
+          pitch: &29786740 !ruby/object:Musicality::Pitch
             cents_per_octave: 1200
             octave: 2
             semitone: 10
@@ -622,7 +622,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: &8328800 !ruby/object:Musicality::Pitch
+          pitch: &29771160 !ruby/object:Musicality::Pitch
             cents_per_octave: 1200
             octave: 2
             semitone: 8
@@ -668,7 +668,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8328800
+          pitch: *29771160
           link: !ruby/object:Musicality::Link
             target_pitch: !ruby/object:Musicality::Pitch
               cents_per_octave: 1200
@@ -686,7 +686,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8410720
+          pitch: *29786740
           link: !ruby/object:Musicality::Link
             target_pitch: !ruby/object:Musicality::Pitch
               cents_per_octave: 1200
@@ -712,7 +712,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8328800
+          pitch: *29771160
           link: !ruby/object:Musicality::Link
             target_pitch: !ruby/object:Musicality::Pitch
               cents_per_octave: 1200
@@ -730,7 +730,7 @@ score: !ruby/object:Musicality::TempoScore
           numerator: 1
         intervals:
         - !ruby/object:Musicality::Interval
-          pitch: *8328800
+          pitch: *29771160
           link: !ruby/object:Musicality::Link
             target_pitch: !ruby/object:Musicality::Pitch
               cents_per_octave: 1200
