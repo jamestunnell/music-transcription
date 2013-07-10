@@ -62,8 +62,7 @@ octave = 3
 ].each do |scale|
   #scale_indices = [0,2,4,2,7,4,2,4]
   scale_indices = (0...7).to_a + (1..7).to_a.reverse
-  
-  pitches = scale_indices.map { |scale_idx| scale.pitch_at(scale_idx, octave) }
+  pitches = scale.pitches_at(scale_indices, octave)
   notes += make_notes_from_pitches_and_rhythm(pitches, [Rational(1,8)])
   notes.push note(Rational(1,2), [interval(pitches.first)])
 end
