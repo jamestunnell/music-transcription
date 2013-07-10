@@ -35,17 +35,37 @@ include Musicality
 
 #arpeggios.push note(Rational(1,4), [interval(pitches.last)])
 
+def make_notes_from_pitches_and_rhythm pitches, rhythm
+  notes = []
+  i = 0
+  pitches.each do |pitch|
+    duration = rhythm[i % rhythm.count]
+    intervals = []
+    if duration > 0
+      intervals.push interval(pitch)
+    end
+    notes.push note(duration, intervals)
+    i += 1
+  end
+  
+  return notes
+end
+
 notes = []
 octave = 3
 
 [ MajorScale.new(C),
   MajorScale.new(D),
-  MinorScale.new(E),
+  Scale.new(E, NATURAL_MINOR),
+  Scale.new(E, HARMONIC_MINOR),
+  Scale.new(E, MELODIC_MINOR)
 ].each do |scale|
-  [0,2,4,2,7,4,2,4].each do |scale_idx|
-    pitch = scale.pitch_at(scale_idx, octave)
-    notes.push note(Rational(1,8), [interval(pitch)])
-  end
+  #scale_indices = [0,2,4,2,7,4,2,4]
+  scale_indices = (0...7).to_a + (1..7).to_a.reverse
+  
+  pitches = scale_indices.map { |scale_idx| scale.pitch_at(scale_idx, octave) }
+  notes += make_notes_from_pitches_and_rhythm(pitches, [Rational(1,8)])
+  notes.push note(Rational(1,2), [interval(pitches.first)])
 end
 
 arrangement = Arrangement.new(
