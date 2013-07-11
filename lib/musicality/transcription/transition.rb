@@ -55,7 +55,7 @@ end
 
 # Create a Transition object of SIGMOID type, with the given duration.
 def sigmoid duration
-  Transition.new(:duration => duration, :type => Transition::LINEAR)
+  Transition.new(:duration => duration, :type => Transition::SIGMOID)
 end
 
 end

@@ -21,7 +21,10 @@ octave = 3
 end
 
 arrangement = Arrangement.new(
-  :score => TempoScore.new(:tempo_profile => profile(tempo(120)), :parts => { 1 => Part.new(:notes => notes) }  )
+  :score => TempoScore.new(
+    :tempo_profile => profile(tempo(120)),
+    :parts => { 1 => Part.new(:notes => notes) }
+  )
 )
 
 File.open('arpeggios_demo.yml', 'w') do |file|

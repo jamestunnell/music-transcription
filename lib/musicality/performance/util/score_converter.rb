@@ -41,6 +41,7 @@ class TempoScore
       part.loudness_profile.value_changes.each do |offset, change|
         note_start_offset = offset
         note_end_offset = note_start_offset + change.transition.duration
+
         raise "Note-time map does not have note start offset key #{note_start_offset}" unless note_time_map.has_key?(note_start_offset)
         raise "Note-time map does not have note end offset key #{note_end_offset}" unless note_time_map.has_key?(note_end_offset)
         
@@ -83,6 +84,7 @@ class TempoScore
       
       part.loudness_profile.value_changes.each do |change_offset, change|
         note_offsets << change_offset
+        note_offsets << (change_offset + change.transition.duration)
       end
     end
     
@@ -90,7 +92,7 @@ class TempoScore
       note_offsets << segment.first
       note_offsets << segment.last
     end
-    
+
     return note_offsets
   end
   
