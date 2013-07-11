@@ -76,10 +76,10 @@ describe Musicality::ValueComputer do
     context "one change, sigmoid transition" do
       before :all do
         @cases = [
-          { :start_value => 0, :end_value => 1, :offset => 0, :duration => 1.0 },
-          { :start_value => 0.25, :end_value => 0.75, :offset => 1.0, :duration => 2.0 },
-          { :start_value => -1.0, :end_value => 5.5, :offset => 2.4, :duration => 20 },
-          { :start_value => 10, :end_value => 100, :offset => 20, :duration => 4 },
+          { :start_value => 0, :end_value => 1, :offset => 0, :duration => 1.0, :abruptness => 0.75 },
+          { :start_value => 0.25, :end_value => 0.75, :offset => 1.0, :duration => 2.0, :abruptness => 0.75 },
+          { :start_value => -1.0, :end_value => 5.5, :offset => 2.4, :duration => 20, :abruptness => 0.75 },
+          { :start_value => 10, :end_value => 100, :offset => 20, :duration => 4, :abruptness => 0.75 },
         ]
 
         @computers = {}
@@ -88,13 +88,14 @@ describe Musicality::ValueComputer do
           offset = case_hash[:offset]
           end_value = case_hash[:end_value]
           duration = case_hash[:duration]
+          abruptness = case_hash[:abruptness]
 
-          profile = profile(start_value, { offset => sigmoid_change(end_value, duration) })
+          profile = profile(start_value, { offset => sigmoid_change(end_value, duration, abruptness) })
           @computers[case_hash] = Musicality::ValueComputer.new profile
           # @computers[case_hash].plot_range(offset..(offset + duration), 0.01)
         end
       end
-      
+
       it "should be the first (starting) value just before the value change offset" do
         @computers.each do |case_hash, comp|
           comp.value_at(case_hash[:offset] - 0.0001).should eq(case_hash[:start_value])

@@ -76,8 +76,8 @@ end
 # Creates a ValueChange object using a sigmoid transition.
 # @param [Object] value
 # @param [Transition] transition_duration Length of the transition
-def sigmoid_change(value, transition_duration = 0.0)
-  return ValueChange.new(:value => value, :transition => sigmoid(transition_duration))
+def sigmoid_change(value, transition_duration = 0.0, abruptness = Transition::ARG_SPECS[:abruptness].default)
+  return ValueChange.new(:value => value, :transition => sigmoid(transition_duration, abruptness))
 end
 
 end

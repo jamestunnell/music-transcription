@@ -137,11 +137,18 @@ class ValueComputer
     value_diff = end_value - start_value
     duration = value_change.transition.duration
     domain = offset.to_f..domain_max
-    
+    abruptness = value_change.transition.abruptness.to_f
+
     if duration == 0
       func = lambda {|x| end_value }
     else
-      tanh_domain = -5..5
+      raise ArgumentError, "abruptness is not between 0 and 1" unless abruptness.between?(0,1)
+      
+      min_magn = 2
+      max_magn = 6
+      tanh_domain_magn = abruptness * (max_magn - min_magn) + min_magn
+      tanh_domain = -tanh_domain_magn..tanh_domain_magn
+
       tanh_range = Math::tanh(tanh_domain.first)..Math::tanh(tanh_domain.last)
       tanh_span = tanh_range.last - tanh_range.first
 
@@ -165,6 +172,11 @@ class ValueComputer
   def transform_domains start_domain, end_domain, x
     perc = (x - start_domain.first) / (start_domain.last - start_domain.first).to_f
     x2 = perc * (end_domain.last - end_domain.first) + end_domain.first
+  end
+
+  # 0 to 1
+  def logistic x
+    1.0 / (1 + Math::exp(-x))
   end
 end
 

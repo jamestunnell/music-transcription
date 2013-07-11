@@ -11,10 +11,11 @@ class Transition
   # hashed-arg specs (for hash-makeable idiom)
   ARG_SPECS = {
     :duration => arg_spec(:reqd => false, :type => Numeric, :default => 0.0, :validator => ->(a){ a >= 0.0 } ),
-    :type => arg_spec(:reqd => false, :type => Symbol, :default => IMMEDIATE, :validator => ->(a) { Transition::TYPES.include?(a)})
+    :type => arg_spec(:reqd => false, :type => Symbol, :default => IMMEDIATE, :validator => ->(a) { Transition::TYPES.include?(a)}),
+    :abruptness => arg_spec(:reqd => false, :type => Numeric, :default => 0.5, :validator => ->(a){ a.between?(0,1) })
   }
   
-  attr_reader :type, :duration
+  attr_reader :type, :duration, :abruptness
   
   def initialize args = {}
     hash_make args, Transition::ARG_SPECS
@@ -23,7 +24,8 @@ class Transition
   # Compare the equality of another Transition object.
   def == other
     return (@type == other.type) &&
-    (@duration == other.duration)
+    (@duration == other.duration) && 
+    (@abruptness) == other.abruptness
   end
   
   # Change the transition duration.
@@ -36,6 +38,11 @@ class Transition
   def type= type
     Transition::ARG_SPECS[:type].validate_value type
     @type = type
+  end
+
+  def abruptness= abruptness
+    Transition::ARG_SPECS[:abruptness].validate_value abruptness
+    @abruptness = abruptness
   end
 end
 
@@ -54,8 +61,8 @@ end
 
 
 # Create a Transition object of SIGMOID type, with the given duration.
-def sigmoid duration
-  Transition.new(:duration => duration, :type => Transition::SIGMOID)
+def sigmoid duration, abruptness = Transition::ARG_SPECS[:abruptness].default
+  Transition.new(:duration => duration, :type => Transition::SIGMOID, :abruptness => abruptness)
 end
 
 end
