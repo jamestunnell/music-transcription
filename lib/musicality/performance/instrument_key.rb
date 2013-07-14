@@ -3,7 +3,7 @@ require 'spcore'
 module Musicality
 
 # The fundamental unit for performing notes.
-class Key
+class InstrumentKey
   include Hashmake::HashMakeable
 
   # defines how hashed args should be formed for initialization
@@ -34,7 +34,7 @@ class Key
   attr_reader :inactivity_threshold, :inactivity_timeout_sec, :sample_rate, :pitch_range, :start_pitch, :current_pitch, :handler
   
   def initialize args
-    hash_make args, Key::ARG_SPECS
+    hash_make args, InstrumentKey::ARG_SPECS
     check_pitch @start_pitch
     
     @max_inactivity_samples = @inactivity_timeout_sec * @sample_rate

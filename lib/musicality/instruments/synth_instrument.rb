@@ -287,7 +287,7 @@ class SynthInstrument < Musicality::Instrument
       :params => params,
       :key_maker => lambda do
         
-        key = Key.new(
+        key = InstrumentKey.new(
           :sample_rate => sample_rate,
           :inactivity_timeout_sec => 0.01,
           :pitch_range => (PITCHES.first..PITCHES.last),

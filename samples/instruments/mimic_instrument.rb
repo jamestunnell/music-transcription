@@ -173,7 +173,7 @@ class MimicInstrument < Musicality::Instrument
       :sample_rate => @sample_rate,
       :key_maker => lambda do
         
-        key = Musicality::Key.new(
+        key = Musicality::InstrumentKey.new(
           :sample_rate => @sample_rate,
           :inactivity_timeout_sec => 0.01,
           :pitch_range => (Musicality::PITCHES.first..Musicality::PITCHES.last),

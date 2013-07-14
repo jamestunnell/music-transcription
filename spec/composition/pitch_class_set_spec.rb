@@ -70,14 +70,6 @@ describe PitchClassSet do
       pcs.add 7
       pcs.include?(7).should be_true
     end
-    
-    it 'should raise ArgumentError for non-Pitch or non-Fixnum objects' do
-      pcs = PitchClassSet.new
-      cases = [ "okay", 6.54, [456] ]
-      cases.each do |item|
-        lambda { pcs.add item }.should raise_error(ArgumentError)
-      end
-    end
   end
   
   describe '#pitch_class_at' do

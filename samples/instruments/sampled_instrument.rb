@@ -92,7 +92,7 @@ class SampledInstrument < Musicality::Instrument
   # Helper class to create a synth instrument key. Creates SynthHarmonic
   # objects, that it uses to make a SynthHandler object, which then performs
   # the actual work of starting/stopping/rendering notes.
-  class SampledKey < Musicality::Key
+  class SampledKey < Musicality::InstrumentKey
     def initialize sample_files, sample_rate
       start_pitch = sample_files.first.pitch
       
