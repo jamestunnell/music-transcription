@@ -36,4 +36,30 @@ describe Musicality::PitchClass do
       G5.to_pc.should eq(7)
     end
   end
+
+  describe '.invert' do
+    before :all do
+      @cases = {
+        C => C,
+        Db => B,
+        D => Bb,
+        Eb => A,
+        E => Ab,
+        F => G,
+        Gb => Gb
+      }
+    end
+
+    it 'should produce a pitch class' do
+      @cases.each do |input_pc, output_pc|
+        PitchClass.invert(input_pc).should eq(output_pc)
+      end
+    end
+
+    it 'should produce a pitch class that when inverted again produces the original pitch class' do
+      @cases.each do |input_pc, output_pc|
+        PitchClass.invert(output_pc).should eq(input_pc)
+      end
+    end
+  end
 end

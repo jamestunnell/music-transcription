@@ -9,6 +9,10 @@ class IntervalVector
     @intervals = intervals
   end
   
+  def ==(other)
+    @intervals == other.intervals
+  end
+
   def clone
     return Marshal.load(Marshal.dump(self))
   end
@@ -23,22 +27,27 @@ class IntervalVector
   end
 
   def to_pitches base_pitch
-    pitches = []
-    @intervals.each do |interval|
-      offset_pitch = Pitch.new(:semitone => interval)
-      if pitches.empty?
-        pitches.push(base_pitch + offset_pitch)
-      else
-        pitches.push(pitches.last + offset_pitch)
-      end
+    pitches = [base_pitch + Pitch.new(:semitone => intervals.first)]
+    @intervals[1..-1].each do |interval|
+      pitches.push pitches.last + Pitch.new(:semitone => interval)
     end
-    return pitches
+    pitches
   end
   
-  def to_pitch_class_set base_pitch
-    PitchClassSet.new to_pitches(base_pitch)
+  def to_pcs base_pc
+    pcs = [base_pc + intervals.first]
+    @intervals[1..-1].each do |interval|
+      pcs.push pcs.last + offset_pitch
+    end
+    pcs.to_pcs
   end
 
 end
 
+end
+
+class Array
+  def to_iv
+    Musicality::IntervalVector.new(self)
+  end
 end

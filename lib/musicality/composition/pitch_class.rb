@@ -3,7 +3,8 @@ module Musicality
 class PitchClass
   MOD = Pitch::SEMITONES_PER_OCTAVE
 
-  def self.from_i int
+  def self.invert val
+    (MOD - val.to_pc).to_pc
   end
 end
 
@@ -25,6 +26,12 @@ end
 
 class Fixnum
   def to_pc
-    self % PitchClass::MOD
+    self % Musicality::PitchClass::MOD
+  end
+end
+
+class Array
+  def to_pcs
+    map {|value| value.to_pc}
   end
 end
