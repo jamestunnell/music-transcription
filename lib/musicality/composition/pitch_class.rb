@@ -35,3 +35,9 @@ class Array
     map {|value| value.to_pc}
   end
 end
+
+class Set
+  def to_pcs
+    map {|value| value.to_pc}
+  end
+end

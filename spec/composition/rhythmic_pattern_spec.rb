@@ -2,6 +2,18 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'spcore'
 
 describe RhythmicPattern do
+  before :all do
+    @cases = {}
+    [
+      [1,1],
+      [1],
+      [2,1],
+      [2,1,1]
+    ].each do |parts|
+      @cases[parts] = RhythmicPattern.new parts
+    end
+  end
+
   context '.new' do
     it 'should raise ArgumentError if no parts are given' do
       lambda { RhythmicPattern.new([]) }.should raise_error(ArgumentError)
@@ -13,13 +25,35 @@ describe RhythmicPattern do
     end
   end
   
-  context '#to_durations' do
+  describe '#total' do
+    it 'should sum the parts' do
+      @cases.each do |parts, rhythmic_pattern|
+        expected_sum = parts.inject(0){|sum,part| sum + part} 
+        rhythmic_pattern.total.should eq(expected_sum)
+      end
+    end
+  end
+
+  describe '#to_fractions' do
+    it 'should produce a fraction for each part' do
+      @cases.each do |parts, rhythmic_pattern|
+        rhythmic_pattern.to_fractions.count.should eq(parts.count)
+      end
+    end
+
+    it 'should produce fractions that have each part in the numerator and total in denominator' do
+      @cases.each do |parts, rhythmic_pattern|
+        fractions = rhythmic_pattern.to_fractions
+        fractions.each_index do |i|
+          fraction = fractions[i].should eq(Rational(parts[i], rhythmic_pattern.total))
+        end
+      end
+    end
+  end
+
+  describe '#to_durations' do
     before :all do
       @parts_cases = [
-        [1,1],
-        [1],
-        [2,1],
-        [2,1,1]
       ]
       
       @total_duration_cases = [
