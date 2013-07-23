@@ -2,8 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Musicality::IntervalVector do
   describe '.new' do
-    it 'should raise ArgumentError if no intervals are given' do
-      lambda { IntervalVector.new([]) }.should raise_error(ArgumentError)
+    it 'should raise error if no intervals are given' do
+      lambda { IntervalVector.new([]) }.should raise_error
     end
     
     it 'should assign given intervals' do

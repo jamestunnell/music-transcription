@@ -21,5 +21,13 @@ module OrderedPitchClasses
       yield pc
     end
   end
+
+  def == other
+    pitch_classes == other.pitch_classes
+  end
+
+  def <=> other
+    pitch_classes <=> other.pitch_classes
+  end
 end
 end

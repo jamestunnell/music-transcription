@@ -9,10 +9,10 @@ describe Musicality::TempoComputer do
     end
   end
 
-  it "should return raise ArgumentError if offset is past max" do
+  it "should return raise error if offset is past max" do
     tempo_profile = Musicality::Profile.new :start_value => tempo(120)
     tc = Musicality::TempoComputer.new tempo_profile
-    lambda { tc.notes_per_second_at(ValueComputer.domain_max + 1) }.should raise_error(ArgumentError)
+    lambda { tc.notes_per_second_at(ValueComputer.domain_max + 1) }.should raise_error
   end
 
   context "two tempos, no transition" do

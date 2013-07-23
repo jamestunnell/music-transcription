@@ -56,26 +56,26 @@ describe Musicality::TwoVariableFunction do
     end
     
     context 'input is not in x domain' do
-      it 'should throw ArgumentError' do
+      it 'should raise error' do
         @eval_cases.each do |eval_case|
           fn = eval_case[:function]
           y = fn.y_domain.min
           
           eval_case[:bad_x_inputs].each do |x|
-            lambda { fn.eval(x,y) }.should raise_error(ArgumentError)
+            lambda { fn.eval(x,y) }.should raise_error
           end
         end
       end
     end
     
     context 'input is not in y domain' do
-      it 'should throw ArgumentError' do
+      it 'should raise error' do
         @eval_cases.each do |eval_case|
           fn = eval_case[:function]
           x = fn.x_domain.min
           
           eval_case[:bad_y_inputs].each do |y|
-            lambda { fn.eval(x,y) }.should raise_error(ArgumentError)
+            lambda { fn.eval(x,y) }.should raise_error
           end
         end
       end

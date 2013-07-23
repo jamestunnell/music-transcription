@@ -47,9 +47,9 @@ describe Musicality::Program do
       @program.note_elapsed_at(5.5).should eq(9.5)
     end
 
-    it "should raise ArgumentError if offset is not included" do
-      lambda { @program.note_elapsed_at(-0.000001) }.should raise_error(ArgumentError)
-      lambda { @program.note_elapsed_at(10.000001) }.should raise_error(ArgumentError)
+    it "should raise error if offset is not included" do
+      lambda { @program.note_elapsed_at(-0.000001) }.should raise_error
+      lambda { @program.note_elapsed_at(10.000001) }.should raise_error
     end
   end
 end

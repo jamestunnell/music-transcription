@@ -8,7 +8,7 @@ describe Musicality::PitchClassArpeggiator do
     end
     
     it 'should raise an ArgumentError if empty pitch class set is given' do
-      ->(){ PitchClassArpeggiator.new(@bad_pcs) }.should raise_error(ArgumentError)
+      ->(){ PitchClassArpeggiator.new(@bad_pcs) }.should raise_error
     end
 
     it 'should not raise an ArgumentError otherwise' do

@@ -22,10 +22,10 @@ describe Musicality::PiecewiseFunction do
     @pwf.eval(1.5).should eq(1.5)
   end
   
-  it "should raise ArgumentError when trying to evaluate where there is no piece" do
+  it "should raise error when trying to evaluate where there is no piece" do
     @pwf.add_piece 0...2, lambda {|x| x }
-    lambda { @pwf.eval(-0.1) }.should raise_error(ArgumentError)
-    lambda { @pwf.eval(2) }.should raise_error(ArgumentError)
+    lambda { @pwf.eval(-0.1) }.should raise_error
+    lambda { @pwf.eval(2) }.should raise_error
   end
   
   it "should be able to add non-overlapping pieces and evaluate them seperately" do

@@ -53,7 +53,10 @@ require 'musicality/util/optimization/vector'
 require 'musicality/util/optimization/particle_swarm'
 require 'musicality/util/sampling/sample_file'
 require 'musicality/util/sampling/sampler'
+require 'musicality/util/probability/probability_mass'
+require 'musicality/util/probability/probability_density'
 require 'musicality/util/pitch_constants'
+require 'musicality/util/range_intersection'
 
 # some instrument classes that can be used for instrument plugins
 require 'musicality/instruments/synth_instrument'

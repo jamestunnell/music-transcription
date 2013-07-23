@@ -19,8 +19,8 @@ describe Musicality::Pitch do
     ]
   end
   
-  it "should be constructible with no parameters (no ArgumentError raised)" do
-	  lambda { Musicality::Pitch.new }.should_not raise_error ArgumentError
+  it "should be constructible with no parameters (no error raised)" do
+	  lambda { Musicality::Pitch.new }.should_not raise_error
   end
   
   it "should be hash-makeable" do

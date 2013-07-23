@@ -11,7 +11,7 @@ class Key
   def initialize tonic_pc, related_pcs = []
     @tonic_pc = tonic_pc
     pcs = ([tonic_pc] + related_pcs).to_pcs
-    @pitch_classes = Set.new(pcs)
+    @pitch_classes = pcs.uniq
   end
 
   def nearest_pc pitch_class
@@ -22,13 +22,12 @@ class Key
     interval_classes.min_by {|pc,inverval_class| inverval_class}
  end
 
-  def to_prime_form
-    PrimeForm.new(@pitch_classes)
+  def to_normal_form
+    NormalForm.new(@pitch_classes)
   end
 
-  def ==(other)
-    return @tonic_pc == other.tonic_pc && 
-           @pitch_classes == other.pitch_classes
+  def to_prime_form
+    PrimeForm.new(@pitch_classes)
   end
 end
 

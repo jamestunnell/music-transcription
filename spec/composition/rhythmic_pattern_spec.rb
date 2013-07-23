@@ -15,8 +15,8 @@ describe RhythmicPattern do
   end
 
   context '.new' do
-    it 'should raise ArgumentError if no parts are given' do
-      lambda { RhythmicPattern.new([]) }.should raise_error(ArgumentError)
+    it 'should raise error if no parts are given' do
+      lambda { RhythmicPattern.new([]) }.should raise_error
     end
     
     it 'should assign given parts' do
@@ -61,12 +61,12 @@ describe RhythmicPattern do
       ]
     end
     
-    it 'should raise ArgumentError if total duration given is negative' do
-      lambda { RhythmicPattern.new([1,2]).to_durations(-1.0) }.should raise_error(ArgumentError)
+    it 'should raise error if total duration given is negative' do
+      lambda { RhythmicPattern.new([1,2]).to_durations(-1.0) }.should raise_error
     end
 
-    it 'should raise ArgumentError if total duration given is zero' do
-      lambda { RhythmicPattern.new([1,2]).to_durations(0) }.should raise_error(ArgumentError)
+    it 'should raise error if total duration given is zero' do
+      lambda { RhythmicPattern.new([1,2]).to_durations(0) }.should raise_error
     end
     
     it 'should create durations that add up to the total duration given' do

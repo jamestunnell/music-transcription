@@ -50,11 +50,11 @@ describe Musicality::OneVariableFunction do
     end
     
     context 'input is not in x domain' do
-      it 'should throw ArgumentError' do
+      it 'should raise error' do
         @eval_cases.each do |eval_case|
           fn = eval_case[:function]
           eval_case[:bad_inputs].each do |x|
-            lambda { fn.eval(x) }.should raise_error(ArgumentError)
+            lambda { fn.eval(x) }.should raise_error
           end
         end
       end
