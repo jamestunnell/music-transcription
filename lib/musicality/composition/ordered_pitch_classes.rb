@@ -1,7 +1,7 @@
 module Musicality
 # Requires the pitch_classes method be defined.
 module OrderedPitchClasses
-  include Enumerable
+  include PitchClasses
 
   # Calculates the interval classes between pitch classes.
   # @return [Array]
@@ -14,20 +14,6 @@ module OrderedPitchClasses
       interval_classes.push(IntervalClass.from_two_pitch_classes(pc_l, pc_r))
     end
     interval_classes
-  end
-
-  def each
-    pitch_classes.each do |pc|
-      yield pc
-    end
-  end
-
-  def == other
-    pitch_classes == other.pitch_classes
-  end
-
-  def <=> other
-    pitch_classes <=> other.pitch_classes
   end
 end
 end

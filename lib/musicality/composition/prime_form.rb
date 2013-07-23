@@ -37,9 +37,5 @@ class PrimeForm
 
     @pitch_classes = pitch_classes_start.map {|pc| (pc - pitch_classes_start.first).to_pc }
   end
-
-  def ==(other)
-    return @pitch_classes == other.pitch_classes
-  end
 end
 end
