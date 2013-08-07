@@ -3,6 +3,14 @@ module Musicality
 module PitchClasses
   include Enumerable
 
+  def [](idx)
+    pitch_classes[idx]
+  end
+
+  def &(other)
+    pitch_classes & other.pitch_classes
+  end
+
   def each
     pitch_classes.each do |pc|
       yield pc

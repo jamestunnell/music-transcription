@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Scale do
   describe '#pitch_at' do
     it 'should produce a pitch for any Fixnum' do
-      scale = Scale.new(C, IONIAN)
+      scale = Scale.new(C, IntervalVectors::Heptatonic::Prima::IONIAN)
       [0,1,2,10,13,-10,48,-36].each do |scale_index|
         scale.pitch_at(scale_index).should be_a(Pitch)
       end
@@ -11,7 +11,7 @@ describe Scale do
     
     it 'should produce pitches that are along the scale' do
       cases = {
-        Scale.new(C, IONIAN) => {
+        Scale.new(C, IntervalVectors::Heptatonic::Prima::IONIAN) => {
           :octave => 2,
           :io_pairs => { 0 => C2, 1 => D2, 2 => E2, 7 => C3 }
         },

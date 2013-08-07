@@ -10,6 +10,13 @@ describe PitchClasses do
       a.nearest_pc(8).should eq(7)
       a.nearest_pc(9).should eq(10)
       a.nearest_pc(0).should eq(10)
+
+      b = Key.new(0, [4,7])
+      b.nearest_pc(0).should eq(0)
+      b.nearest_pc(10).should eq(0)
+      b.nearest_pc(11).should eq(0)
+      b.nearest_pc(1).should eq(0)
+      b.nearest_pc(2).should eq(0)
     end
   end
 

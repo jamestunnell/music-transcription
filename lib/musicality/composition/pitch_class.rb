@@ -6,6 +6,25 @@ class PitchClass
   def self.invert val
     (MOD - val.to_pc).to_pc
   end
+
+  def self.to_s pc
+    case pc
+    when 0 then "C"
+    when 1 then "C#"
+    when 2 then "D"
+    when 3 then "D#"
+    when 4 then "E"
+    when 5 then "F"
+    when 6 then "F#"
+    when 7 then "G"
+    when 8 then "G#"
+    when 9 then "A"
+    when 10 then "A#"
+    when 11 then "B"
+    else
+      "?"
+    end
+  end
 end
 
 class Pitch
@@ -30,14 +49,8 @@ class Fixnum
   end
 end
 
-class Array
-  def to_pcs
-    map {|value| value.to_pc}
-  end
-end
-
-class Set
-  def to_pcs
-    map {|value| value.to_pc}
+module Enumerable
+  def to_pc_ary
+    map {|value| value.to_pc }
   end
 end

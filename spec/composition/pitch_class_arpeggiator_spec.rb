@@ -18,10 +18,10 @@ describe Musicality::PitchClassArpeggiator do
 
   before :all do
     @param_hashes = [
-      { :pcs => [0,4,7].to_pcs, :rhythm => [0.25, 0.125, 0.5, 0.125], :octave => 4 },
-      { :pcs => [1,3,1,6].to_pcs, :rhythm => [Rational(1,6), Rational(1,6), Rational(1,6)], :octave => 2 },
-      { :pcs => [4,7,11,2].to_pcs, :rhythm => [Rational(1,4)], :octave => 1 },
-      { :pcs => [12,6,2,0,4].to_pcs, :rhythm => [Rational(1,4), Rational(1,2)], :octave => 5 },
+      { :pcs => [0,4,7], :rhythm => [0.25, 0.125, 0.5, 0.125], :octave => 4 },
+      { :pcs => [1,3,1,6], :rhythm => [Rational(1,6), Rational(1,6), Rational(1,6)], :octave => 2 },
+      { :pcs => [4,7,11,2], :rhythm => [Rational(1,4)], :octave => 1 },
+      { :pcs => [0,6,2,0,4], :rhythm => [Rational(1,4), Rational(1,2)], :octave => 5 },
     ]
 
     @results = {}

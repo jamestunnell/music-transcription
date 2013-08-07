@@ -2,6 +2,7 @@ module Musicality
 
 class Scale
   
+  attr_reader :base_pitch_class, :interval_vector
   def initialize base_pitch_class, interval_vector
     @base_pitch_class = base_pitch_class
     @interval_vector = interval_vector
@@ -36,13 +37,13 @@ end
 
 class MajorScale < Scale
   def initialize base_pitch_class
-    super(base_pitch_class, Scale::MAJOR)
+    super(base_pitch_class, IntervalVectors::Heptatonic::Prima::MAJOR)
   end
 end
 
 class MinorScale < Scale
   def initialize base_pitch_class
-    super(base_pitch_class, Scale::MINOR)
+    super(base_pitch_class, IntervalVectors::Heptatonic::Prima::MINOR)
   end
 end
 end
