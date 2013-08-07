@@ -1,7 +1,7 @@
-require 'musicality'
+require 'music-transcription'
 require 'yaml'
 
-include Musicality
+include Music::Transcription
 
 bass_riff = [
   # 0.0

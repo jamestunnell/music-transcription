@@ -1,4 +1,4 @@
-=== 0.1.0 / 2012-08-16
+=== 0.3.0 / 2013-08-07
 
-* Initial release:
+* Tear off music transcription-related code from musicality gem, into a separate gem called music-transcription.
 
