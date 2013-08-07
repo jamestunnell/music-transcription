@@ -16,5 +16,9 @@ class NormalForm
       @pitch_classes.rotate!
     end
   end
+
+  def to_key
+    Key.new(first, self[1..-1])
+  end
 end
 end
