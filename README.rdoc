@@ -1,25 +1,25 @@
-= musicality
+= music-transcription
 
-* {Homepage}[https://github.com/jamestunnell/musicality]
-* {Issues}[https://github.com/jamestunnell/musicality/issues]
-* {Documentation}[http://rubydoc.info/gems/musicality/frames]
+* {Homepage}[https://github.com/jamestunnell/music-transcription]
+* {Issues}[https://github.com/jamestunnell/music-transcription/issues]
+* {Documentation}[http://rubydoc.info/gems/music-transcription/frames]
 * {Email}[mailto:jamestunnell@lavabit.com]
 
 == Description
 
-TODO: Description
+Classes for representing music features, like pitch, note, dynamic, tempo, etc.
 
 == Features
 
 == Examples
 
-  require 'musicality'
+  require 'music-transcription'
 
 == Requirements
 
 == Install
 
-  $ gem install musicality
+  $ gem install music-transcription
 
 == Copyright
 

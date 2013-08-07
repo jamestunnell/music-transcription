@@ -4,10 +4,10 @@ require 'micro-optparse'
 require 'pry'
 require 'spcore'
 require 'wavefile'
-require 'musicality'
+require 'music-transcription'
 require 'yaml'
 
-include Musicality
+include Music::Transcription
 
 options = Parser.new do |p|
   p.banner = <<-END

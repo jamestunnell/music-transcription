@@ -1,10 +1,7 @@
 require 'rspec'
-require 'musicality'
+require 'music-transcription'
 
-include Musicality
-
-# load sample (built-in) instruments to help with testing
-INSTRUMENTS.load_plugins './samples/instruments/'
+include Music::Transcription
 
 class Samples
   SAMPLE_PART = Part.new(
@@ -17,10 +14,9 @@ class Samples
         ]
       )
     ],
-    :loudness_profile => Musicality::Profile.new(
-      :start_value => 0.5,
-      :value_changes => {
-        1.0 => Musicality::linear_change(1.0, 2.0)
+    :loudness_profile => profile(
+      0.5, {
+        1.0 => linear_change(1.0, 2.0)
       }
     )
   )
