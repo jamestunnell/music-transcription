@@ -6,41 +6,12 @@ module Transcription
 # @author James Tunnell
 #
 class Program
-  include Hashmake::HashMakeable
-  attr_reader :segments
-
-  # hashed-arg specs (for hash-makeable idiom)
-  ARG_SPECS = {
-    :segments => arg_spec_array(:reqd => false, :type => Range)
-  }
+  attr_accessor :segments
 
   # A new instance of Program.
   # @param [Hash] args Hashed arguments. Required key is :segments.
-  def initialize args={}
-    hash_make args
-  end
-
-  # Assign program segments. Each segment is a Range to specify which range of 
-  # notes from a score should be played.
-  #
-  # @param [Array] segments An array of program segements. Each segment is a 
-  #                         Range to specify which range of 
-  # @raise [ArgumentError] if segments is not an Array.
-  # @raise [ArgumentError] if segments contains a non-Range
-  #
-  def segments= segments
-    ARG_SPECS[:segments].validate_value segments
+  def initialize segments = []
     @segments = segments
-  end
-
-  # @return [Float] the starting note offset for the program
-  def start
-    @segments.first.first
-  end
-
-  # @return [Float] the ending note offset for the program
-  def stop
-    @segments.last.last
   end
 
   # @return [Float] the sum of all program segment lengths

@@ -4,17 +4,11 @@ module Transcription
 # Represent the musical tempo, with beats ber minute and beat duration.
 class Tempo
   include Comparable
-  include Hashmake::HashMakeable
-  
   attr_reader :beats_per_minute, :beat_duration
   
-  ARG_SPECS = {
-    :beats_per_minute => arg_spec(:reqd => true, :type => Numeric, :validator => ->(a){a > 0} ),
-    :beat_duration => arg_spec(:reqd => false, :type => Numeric, :validator => ->(a){a > 0}, :default =>  Rational(1,4))
-  }
-  
-  def initialize args
-    hash_make args
+  def initialize beats_per_minute, beat_duration: Rational(1,4)
+    @beats_per_minute = beats_per_minute
+    @beat_duration = beat_duration
   end
   
   def notes_per_second
@@ -32,12 +26,6 @@ class Tempo
       notes_per_second <=> other
     end
   end
-end
-
-module_function
-
-def tempo beats_per_minute, beat_duration = Tempo::ARG_SPECS[:beat_duration].default
-  Tempo.new(:beats_per_minute => beats_per_minute, :beat_duration => beat_duration)
 end
 
 end

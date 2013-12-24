@@ -46,7 +46,6 @@ module Transcription
 #
 class Pitch
   include Comparable
-  include Hashmake::HashMakeable
   attr_reader :cents_per_octave, :base_freq, :octave, :semitone, :cent
 
   #The default number of semitones per octave is 12, corresponding to 
@@ -60,48 +59,39 @@ class Pitch
   # The default base ferquency is C0
   DEFAULT_BASE_FREQ = 16.351597831287414
 
-  # hashed-arg specs (for hash-makeable idiom)
-  ARG_SPECS = {
-    :octave => arg_spec(:reqd => false, :type => Fixnum, :default => 0),
-    :semitone => arg_spec(:reqd => false, :type => Fixnum, :default => 0), 
-    :cent => arg_spec(:reqd => false, :type => Fixnum, :default => 0), 
-    :base_freq => arg_spec(:reqd => false, :type => Numeric, :validator => ->(a){ a > 0.0 }, :default => DEFAULT_BASE_FREQ)
-  }
-  
   # A new instance of Pitch.
-  # @param [Hash] args Hashed args. See ARG_SPECS for details.
-  # @raise [ArgumentError] if any of :octave, :semitone, or :cent is
-  #                        not a Fixnum.
-  def initialize args={}
+  # @raise [NonPositiveFrequencyError] if base_freq is not > 0.
+  def initialize octave:0, semitone:0, cent:0, base_freq:DEFAULT_BASE_FREQ
     @cents_per_octave = CENTS_PER_SEMITONE * SEMITONES_PER_OCTAVE
-    hash_make args
+    @octave = octave
+    @semitone = semitone
+    @cent = cent
+    raise ValueNonPositiveError if base_freq <= 0
+    @base_freq = base_freq
     normalize!
   end
 
-  # Set @base_freq, which is used with the pitch ratio to produce the
-  # pitch frequency.
-  def base_freq= base_freq
-    ARG_SPECS[:base_freq].validate_value base_freq
-    @base_freq = base_freq
-  end
-  
-  # Set @octave.
-  def octave= octave
-    ARG_SPECS[:octave].validate_value octave
-    @octave = octave
-  end
-  
-  # Set semitone.
-  def semitone= semitone
-    ARG_SPECS[:semitone].validate_value semitone
-    @semitone = semitone
-  end
-  
-  # Set @cent.
-  def cent= cent
-    ARG_SPECS[:cent].validate_value cent
-    @cent = cent
-  end
+  ## Set @base_freq, which is used with the pitch ratio to produce the
+  ## pitch frequency.
+  #def base_freq= base_freq
+  #  raise NonPositiveFrequencyError if base_freq <= 0
+  #  @base_freq = base_freq
+  #end
+  #
+  ## Set @octave.
+  #def octave= octave
+  #  @octave = octave
+  #end
+  #
+  ## Set semitone.
+  #def semitone= semitone
+  #  @semitone = semitone
+  #end
+  #
+  ## Set @cent.
+  #def cent= cent
+  #  @cent = cent
+  #end
 
   # Return the pitch's frequency, which is determined by multiplying the base 
   # frequency and the pitch ratio. Base frequency defaults to DEFAULT_BASE_FREQ,
@@ -191,18 +181,26 @@ class Pitch
   # Add pitches by adding the total cent count of each.
   # @param [Pitch] other The pitch object to add. 
   def + (other)
-    self.class.new :octave => (@octave + other.octave), :semitone => (@semitone + other.semitone), :cent => (@cent + other.cent)
+    self.class.new(
+      octave: (@octave + other.octave),
+      semitone: (@semitone + other.semitone),
+      cent: (@cent + other.cent)
+    )
   end
 
   # Add pitches by subtracting the total cent count.
   # @param [Pitch] other The pitch object to subtract.
   def - (other)
-    self.class.new :octave => (@octave - other.octave), :semitone => (@semitone - other.semitone), :cent => (@cent - other.cent)
+    self.class.new(
+      octave: (@octave - other.octave),
+      semitone: (@semitone - other.semitone),
+      cent: (@cent - other.cent)
+    )
   end
   
   # Produce an identical Pitch object.
   def clone
-    Marshal.load(Marshal.dump(self))
+    Marshal.load(Marshal.dump(self))  # is this cheating?
   end
   
   # Balance out the octave, semitone, and cent count. 

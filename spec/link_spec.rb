@@ -2,21 +2,25 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe Link do
   context '.new' do
-    its(:relationship) { should eq(Link::RELATIONSHIP_NONE) }
-    its(:target_pitch) { should eq(Pitch.new) }
+    it 'should assign the given pitch to :target_pitch' do
+      Link.new(C2).target_pitch.should eq(C2)
+    end
   end
     
-  it 'should assign the given relationship' do
-    Link::RELATIONSHIPS.each do |relationship|
-      link = Link.new(:relationship => relationship)
-      link.relationship.should eq(relationship)
+  describe '==' do
+    it 'should return true if two links have the same target pitch' do
+      Link.new(C2).should eq(Link.new(C2))
+    end
+    
+    it 'should return false if two links do not have the same target pitch' do
+      Link.new(C2).should_not eq(Link.new(F5))
     end
   end
   
-  it 'should assign the given target pitch' do
-    [A0, B0].each do |pitch|
-      link = Link.new(:target_pitch => pitch)
-      link.target_pitch.should eq(pitch)
+  describe 'clone' do
+    it 'should return a link with the same target pitch' do
+      l = Link.new(C4)
+      l.clone.should eq(l)
     end
   end
 end

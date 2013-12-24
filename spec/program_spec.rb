@@ -4,14 +4,14 @@ describe Program do
   
   it "should assign the segments given during initialization" do
     segments = [ 0.0...5.0, 0.0...4.0, 5.0...10.0 ]
-    program = Program.new :segments => segments
+    program = Program.new segments
     program.segments.should eq(segments.clone)
   end
   
   describe "#include?" do
     it "should return true for any offset which would be encountered" do
       segments = [ 0.0...5.0, 0.0...4.0, 5.0...10.0 ]
-      program = Program.new :segments => segments
+      program = Program.new segments
       
       [0.0, 4.0, 5.0, 9.999].each do |offset|
         program.include?(offset).should be_true
@@ -20,7 +20,7 @@ describe Program do
 
     it "should return false for any offset which would not be encountered" do
       segments = [ 0.0...5.0, 0.0...4.0, 5.0...10.0 ]
-      program = Program.new :segments => segments
+      program = Program.new segments
       
       [-0.000001, 10.000001].each do |offset|
         program.include?(offset).should be_false
@@ -31,15 +31,15 @@ describe Program do
   describe "#note_elapsed_at" do
     before :each do
       segments = [ 0.0...5.0, 0.0...4.0, 5.0..10.0 ]
-      @program = Program.new :segments => segments
+      @program = Program.new segments
     end
 
     it "should return 0.0 at program start" do
-      @program.note_elapsed_at(@program.start).should eq(0.0)
+      @program.note_elapsed_at(@program.segments.first.first).should eq(0.0)
     end
 
     it "should return program length at program stop" do
-      @program.note_elapsed_at(@program.stop).should eq(@program.length)
+      @program.note_elapsed_at(@program.segments.last.last).should eq(@program.length)
     end
 
     it "should return correct note elapsed for any included offset" do

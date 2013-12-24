@@ -1,6 +1,8 @@
 module Music
 module Transcription
 
+require 'set'
+
 # Abstraction of a musical note. The note can contain multiple intervals
 # (at different pitches). Each interval can also contain a link to an interval
 # in a following note. Contains values for attack, sustain, and separation,
@@ -11,7 +13,7 @@ module Transcription
 # @!attribute [rw] duration
 #   @return [Numeric] The duration (in, say note length or time), greater than 0.0.
 #
-# @!attribute [rw] intervals
+# @!attribute [r] intervals
 #   @return [Numeric] The intervals that define which pitches are part of the
 #                     note and can link to intervals in a following note.
 # 
@@ -31,28 +33,27 @@ module Transcription
 #                   1.0 (towards beginning of the note).
 #
 class Note
-  include Hashmake::HashMakeable
-  attr_reader :duration, :intervals, :sustain, :attack, :separation
+  attr_reader :duration, :sustain, :attack, :separation
 
-  # hashed-arg specs (for hash-makeable idiom)
-  ARG_SPECS = {
-    :duration => arg_spec(:type => Numeric, :reqd => true, :validator => ->(a){ a > 0 } ),
-    :intervals => arg_spec_array(:type => Interval, :reqd => false),
-    :sustain => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
-    :attack => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
-    :separation => arg_spec(:type => Numeric, :reqd => false, :validator => ->(a){ a.between?(0.0,1.0)}, :default => 0.5),
-  }
-  
   # A new instance of Note.
-  # @param [Hash] args Hashed arguments. See Note::ARG_SPECS for details.
-  def initialize args={}
-    hash_make args
+  def initialize duration, pitches = [], links: {}, sustain: 0.5, attack: 0.5, separation: 0.5
+    self.duration = duration
+    @links = links
+    @pitches = Set.new(pitches)
+    self.sustain = sustain
+    self.attack = attack
+    self.separation = separation
+  end
+  
+  def pitches
+    return @pitches.entries
   end
   
   # Compare the equality of another Note object.
   def == other
     return (@duration == other.duration) &&
-    (@intervals == other.intervals) &&
+    (self.pitches == other.pitches) &&
+    (@links == other.links) &&
     (@sustain == other.sustain) &&
     (@attack == other.attack) &&
     (@separation == other.separation)
@@ -62,7 +63,7 @@ class Note
   # @param [Numeric] duration The duration to use.
   # @raise [ArgumentError] if duration is not greater than 0.
   def duration= duration
-    ARG_SPECS[:duration].validate_value duration
+    raise ValueNotPositiveError if duration <= 0
     @duration = duration
   end  
   
@@ -71,7 +72,7 @@ class Note
   # @raise [ArgumentError] if sustain is not a Numeric.
   # @raise [RangeError] if sustain is outside the range 0.0..1.0.
   def sustain= sustain
-    ARG_SPECS[:sustain].validate_value sustain
+    raise ValueOutOfRangeError unless sustain.between?(0.0,1.0)
     @sustain = sustain
   end
 
@@ -80,7 +81,7 @@ class Note
   # @raise [ArgumentError] if attack is not a Numeric.
   # @raise [RangeError] if attack is outside the range 0.0..1.0.
   def attack= attack
-    ARG_SPECS[:attack].validate_value attack
+    raise ValueOutOfRangeError unless attack.between?(0.0,1.0)
     @attack = attack
   end
 
@@ -89,7 +90,7 @@ class Note
   # @raise [ArgumentError] if separation is not a Numeric.
   # @raise [RangeError] if separation is outside the range 0.0..1.0.
   def separation= separation
-    ARG_SPECS[:separation].validate_value separation
+    raise ValueOutOfRangeError unless separation.between?(0.0,1.0)
     @separation = separation
   end
   
@@ -98,58 +99,85 @@ class Note
     Marshal.load(Marshal.dump(self))
   end
  
-  # Remove any duplicate intervals (occuring on the same pitch), removing
-  # all but the last occurance. Remove any duplicate links (links to the
-  # same interval), removing all but the last occurance.
-  def remove_duplicates
-    # in case of duplicate notes
-    intervals_to_remove = Set.new
-    for i in (0...@intervals.count).entries.reverse
-      @intervals.each_index do |j|
-        if j < i
-          if @intervals[i].pitch == @intervals[j].pitch
-            intervals_to_remove.add @intervals[j]
-          end
-        end
-      end
-    end
-    @intervals.delete_if { |interval| intervals_to_remove.include? interval}
-    
-    # in case of duplicate links
-    for i in (0...@intervals.count).entries.reverse
-      @intervals.each_index do |j|
-        if j < i
-          if @intervals[i].linked? && @intervals[j].linked? && @intervals[i].link.target_pitch == @intervals[j].link.target_pitch
-            @intervals[j].link = Link.new
-          end
-        end
-      end
-    end
+  ## Remove any duplicate pitches (occuring on the same pitch), removing
+  ## all but the last occurance. Remove any duplicate links (links to the
+  ## same interval), removing all but the last occurance.
+  #def remove_duplicates
+  #  # in case of duplicate notes
+  #  intervals_to_remove = Set.new
+  #  for i in (0...@intervals.count).entries.reverse
+  #    @intervals.each_index do |j|
+  #      if j < i
+  #        if @intervals[i].pitch == @intervals[j].pitch
+  #          intervals_to_remove.add @intervals[j]
+  #        end
+  #      end
+  #    end
+  #  end
+  #  @intervals.delete_if { |interval| intervals_to_remove.include? interval}
+  #  
+  #  # in case of duplicate links
+  #  for i in (0...@intervals.count).entries.reverse
+  #    @intervals.each_index do |j|
+  #      if j < i
+  #        if @intervals[i].linked? && @intervals[j].linked? && @intervals[i].link.target_pitch == @intervals[j].link.target_pitch
+  #          @intervals[j].link = Link.new
+  #        end
+  #      end
+  #    end
+  #  end
+  #end
+
+  def transpose_pitches_only pitch_diff
+    self.clone.transpose_pitches! pitch_diff, transpose_link
   end
 
-  def transpose pitch_diff
-    self.clone.transpose! pitch_diff
+  def transpose_pitches_only! pitch_diff
+    @pitches = @pitches.map {|pitch| pitch + pitch_diff}
+    new_links = {}
+    @links.each_pair do |k,v|
+      new_links[k + pitch_diff] = v
+    end
+    @links = new_links
+    return self
+  end
+  
+  def transpose_pitches_and_links pitch_diff
+    self.clone.transpose_pitches_and_links! pitch_diff
   end
 
-  def transpose! pitch_diff
-    @intervals.each do |interval|
-      interval.pitch += pitch_diff
-      interval.link.target_pitch += pitch_diff
+  def transpose_pitches_and_links! pitch_diff
+    @pitches = @pitches.map {|pitch| pitch + pitch_diff}
+    new_links = {}
+    @links.each_pair do |k,v|
+      v.target_pitch += pitch_diff
+      new_links[k + pitch_diff] = v
     end
+    @links = new_links
     return self
   end
   
   def to_s
-    "#{duration}:#{intervals.map{|i| i.pitch}.inspect}"
+    output = @duration.to_s
+    if @pitches.any?
+      output += "@"
+      @pitches[0...-1].each do |pitch|
+        output += pitch.to_s
+        if @links.has_key? pitch
+          output += @links[pitch].to_s
+        end
+        output += ","
+      end
+      
+      last_pitch = @pitches[-1]
+      output += last_pitch.to_s
+      if @links.has_key? last_pitch
+        output += @links[last_pitch].to_s
+      end
+    end
+    
+    return output
   end
-end
-
-module_function
-
-def note duration, intervals = [], other_args = {}
-  Note.new(
-    { :duration => duration, :intervals => intervals }.merge other_args
-  )
 end
 
 end
