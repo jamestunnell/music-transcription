@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'micro-optparse'
-require 'pry'
 require 'spcore'
 require 'wavefile'
 require 'music-transcription'

@@ -11,11 +11,9 @@ describe Note do
       note.duration.should eq(2)
     end
     
-    it "should assign :sustain, :attack, and :separation parameters if given during construction" do
-      note = Note.new 2, sustain: 0.1, attack: 0.2, separation: 0.3
-      note.sustain.should eq(0.1)
-      note.attack.should eq(0.2)
-      note.separation.should eq(0.3)
+    it "should assign :accent parameter if given during construction" do
+      note = Note.new 2, accent: Accent::Stacatto.new
+      note.accent.class.should eq(Accent::Stacatto)
     end
     
     it 'should have no pitches if not given' do
@@ -24,7 +22,9 @@ describe Note do
     
     it 'should assign pitches when given' do
       pitches = [ C2, D2 ]
-      Note.new(2, pitches).pitches.should eq(pitches)
+      n = Note.new(2, pitches)
+      n.pitches.should include(pitches[0])
+      n.pitches.should include(pitches[1])
     end
   end
   
@@ -34,29 +34,5 @@ describe Note do
       note.duration = 3
       note.duration.should eq 3
     end
-  end
-  
-  context '#sustain=' do
-    it "should assign sustain" do
-      note = Note.new 2, [@pitch]
-      note.sustain = 0.123
-      note.sustain.should eq 0.123
-    end
-  end
-
-  context '#attack=' do
-    it "should assign attack" do
-      note = Note.new 2, [@pitch]
-      note.attack = 0.123
-      note.attack.should eq 0.123
-    end
-  end
-  
-  context '#separation=' do
-    it "should assign separation" do
-      note = Note.new 2, [@pitch]
-      note.separation = 0.123
-      note.separation.should eq 0.123
-    end
-  end
+  end  
 end
