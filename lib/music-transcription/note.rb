@@ -38,8 +38,8 @@ class Note
   # Compare the equality of another Note object.
   def == other
     return (@duration == other.duration) &&
-    (self.pitches.entries == other.pitches) &&
-    (@links == other.links) &&
+    (self.pitches == other.pitches) &&
+    (@links.to_a.sort == other.links.to_a.sort) &&
     (@accent == other.accent)
   end
 
