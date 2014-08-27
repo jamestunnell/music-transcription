@@ -30,7 +30,7 @@ class Note
   # A new instance of Note.
   def initialize duration, pitches = [], links: {}, accent: nil
     self.duration = duration
-    @pitches = Set.new(pitches)
+    @pitches = Set.new(pitches).sort
     @links = links
     self.accent = accent
   end
@@ -38,7 +38,7 @@ class Note
   # Compare the equality of another Note object.
   def == other
     return (@duration == other.duration) &&
-    (self.pitches == other.pitches) &&
+    (self.pitches.entries == other.pitches) &&
     (@links == other.links) &&
     (@accent == other.accent)
   end
