@@ -25,6 +25,12 @@ class Accent
       return "'"
     end
   end
+  
+  class Marcato < Accent
+    def to_s
+      return ">"
+    end
+  end
 
   class Martellato < Accent
     def to_s
