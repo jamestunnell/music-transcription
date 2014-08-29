@@ -106,6 +106,60 @@ class Note
     
     return output
   end
+  
+  class Sixteenth < Note
+    def initialize pitches = [], links: {}, accent: nil
+      super(Rational(1,16),pitches, links: links, accent: accent)
+    end
+  end
+
+  class DottedSixteenth < Note
+    def initialize pitches = [], links: {}, accent: nil
+      super(Rational(3,32),pitches, links: links, accent: accent)
+    end
+  end
+  
+  class Eighth < Note
+    def initialize pitches = [], links: {}, accent: nil
+      super(Rational(1,8),pitches, links: links, accent: accent)
+    end
+  end
+
+  class DottedEighth < Note
+    def initialize pitches = [], links: {}, accent: nil
+      super(Rational(3,16),pitches, links: links, accent: accent)
+    end
+  end
+  
+  class Quarter < Note
+    def initialize pitches = [], links: {}, accent: nil
+      super(Rational(1,4),pitches, links: links, accent: accent)
+    end
+  end
+  
+  class DottedQuarter < Note
+    def initialize pitches = [], links: {}, accent: nil
+      super(Rational(3,8),pitches, links: links, accent: accent)
+    end
+  end
+
+  class Half < Note
+    def initialize pitches = [], links: {}, accent: nil
+      super(Rational(1,2),pitches, links: links, accent: accent)
+    end
+  end
+
+  class Half < Note
+    def initialize pitches = [], links: {}, accent: nil
+      super(Rational(3,4),pitches, links: links, accent: accent)
+    end
+  end
+  
+  class Whole < Note
+    def initialize pitches = [], links: {}, accent: nil
+      super(Rational(1,1),pitches, links: links, accent: accent)
+    end
+  end
 end
 
 end

@@ -6,17 +6,31 @@ module Transcription
 # @author James Tunnell
 #
 # @!attribute [rw] parts
-#   @return [Array] Score parts.
+#   @return [Hash] Score parts, mapped to part names
 # 
 # @!attribute [rw] program
-#   @return [Array] Score program.
+#   @return [Program] Score program (which segments are played when)
+#
+# @!attribute [rw] tempo_profile
+#   @return [Profile] Tempo values profile
 #
 class Score
-  attr_reader :parts, :program
+  attr_reader :parts, :program, :tempo_profile
   
-  def initialize parts: {}, program: Program.new
+  def initialize parts: {}, program: Program.new, tempo_profile: Profile.new(Tempo.new(120))
     @parts = parts
     @program = program
+    @tempo_profile = tempo_profile
+  end
+
+  def clone
+    Marshal.load(Marshal.dump(self))
+  end
+  
+  def ==(other)
+    return (@tempo_profile == other.tempo_profile) &&
+    (@program == other.program) &&
+    (@parts == other.parts)
   end
     
   # Find the start of a score. The start will be at then start of whichever part begins
@@ -43,41 +57,6 @@ class Score
     end
     
     return eos
-  end
-end
-
-# Score where time is based on absolute time in seconds
-class TimeScore < Score
-  attr_reader :program, :parts
-
-  def clone
-    TimeScore.new @parts, @programs
-  end
-  
-  def ==(other)
-    return (@program == other.program) &&
-    (@parts == other.parts)
-  end
-end
-
-# Score where time is based on notes and tempo.
-class TempoScore < Score
-  attr_reader :tempo_profile, :program, :parts
-
-  def initialize tempo_profile, parts: {}, program: Program.new
-    @tempo_profile = tempo_profile
-    raise ValueNotPositiveError unless @tempo_profile.values_positive?
-    super(parts: parts, program: program)
-  end
-  
-  def clone
-    TempoScore.new @tempo_profile.clone, @parts.clone, @program.clone
-  end
-  
-  def ==(other)
-    return (@tempo_profile == other.tempo_profile) &&
-    (@program == other.program) &&
-    (@parts == other.parts)
   end
 end
 

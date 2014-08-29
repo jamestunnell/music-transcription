@@ -5,7 +5,7 @@ include Music::Transcription
 
 class Samples
   SAMPLE_PART = Part.new(
-    :notes => [ Note.new(0.25, [ C1, D1 ]) ],
-    :loudness_profile => Profile.new(0.5, 1.0 => linear_change(1.0, 2.0))
+    notes: [ Note::Quarter.new([ C1, D1 ]), Note::Quarter.new([ C2, D2 ]), Note::Whole.new([ C3, D3 ]) ],
+    dynamic_profile: Profile.new(Dynamic::P, {1.0 => Change::Immediate.new(Dynamic::MP)})
   )
 end

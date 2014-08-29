@@ -8,9 +8,6 @@ module Transcription
 class Profile
   attr_accessor :start_value, :value_changes
 
-  # A new instance of Profile.
-  #
-  # @param [Hash] args Hashed args. Required key is :start_value. Optional key is :value_changes.
   def initialize start_value, value_changes = {}
     @start_value = start_value
     @value_changes = value_changes

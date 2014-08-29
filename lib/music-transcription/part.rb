@@ -10,15 +10,15 @@ module Transcription
 # @!attribute [r] notes
 #   @return [Array] The notes to be played.
 #
-# @!attribute [r] loudness_profile
-#   @return [Profile] The parts loudness_profile profile.
+# @!attribute [r] dynamic_profile
+#   @return [Profile] Dynamic values profile
 #
 class Part
-  attr_reader :loudness_profile, :notes
+  attr_reader :notes, :dynamic_profile
   
-  def initialize notes: [], loudness_profile: Profile.new(0.5)
+  def initialize notes: [], dynamic_profile: Profile.new(Dynamic::MF)
     @notes = notes
-    @loudness_profile = loudness_profile
+    @dynamic_profile = dynamic_profile
   end
   
   # Produce an exact copy of the current object
@@ -29,7 +29,7 @@ class Part
   # Compare the equality of another Part object.
   def ==(other)
     return (@notes == other.notes) &&
-    (@loudness_profile == other.loudness_profile)    
+    (@dynamic_profile == other.dynamic_profile)
   end
 
   # Duration of part notes.

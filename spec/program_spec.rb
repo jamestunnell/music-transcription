@@ -14,7 +14,7 @@ describe Program do
       program = Program.new segments
       
       [0.0, 4.0, 5.0, 9.999].each do |offset|
-        program.include?(offset).should be_true
+        program.include?(offset).should be true
       end
     end
 
@@ -23,7 +23,7 @@ describe Program do
       program = Program.new segments
       
       [-0.000001, 10.000001].each do |offset|
-        program.include?(offset).should be_false
+        program.include?(offset).should be false
       end
     end
   end
