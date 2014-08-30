@@ -23,48 +23,21 @@ class Link
     self.class.new @target_pitch.clone
   end
   
-  def to_s
-    return @target_pitch
-  end
-  
-  class Slur < Link
-    def initialize target_pitch
-      super(target_pitch)
+  { :Slur => "=",
+    :Legato => "-",
+    :Glissando => "~",
+    :Portamento => "/",
+  }.each do |name,print_str|
+    klass = Class.new(Link) do
+      def initialize target_pitch
+        super(target_pitch)
+      end
+      
+      def to_s
+        print_str + @target_pitch
+      end
     end
-    
-    def to_s
-      return "=" + super()
-    end
-  end
-  
-  class Legato < Link
-    def initialize target_pitch
-      super(target_pitch)
-    end  
-  
-    def to_s
-      return "-" + super()
-    end
-  end
-  
-  class Glissando < Link
-    def initialize target_pitch
-      super(target_pitch)
-    end
-    
-    def to_s
-      return "~" + super()
-    end
-  end
-  
-  class Portamento < Link
-    def initialize target_pitch
-      super(target_pitch)
-    end
-    
-    def to_s
-      return "/" + super()
-    end
+    Link.const_set(name.to_sym, klass)
   end
 end
 

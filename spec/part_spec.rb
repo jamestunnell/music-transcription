@@ -7,7 +7,7 @@ describe Part do
     end
 
     it "should assign dynamic profile given during construction" do
-      profile = Profile.new(Dynamic::FFF, { 1.0 => Change::Immediate.new(Dynamic::PP) })
+      profile = Profile.new(Dynamics::FFF, { 1.0 => Change::Immediate.new(Dynamics::PP) })
       part = Part.new dynamic_profile: profile
       part.dynamic_profile.should eq(profile)
     end  

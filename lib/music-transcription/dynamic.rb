@@ -14,52 +14,21 @@ class Dynamic
     self.class.new
   end
   
-  class Piano < Dynamic
-    def to_s
-      return "p"
+  { :Piano => "p",
+    :Pianissimo => "pp",
+    :Pianississimo => "ppp",
+    :MezzoPiano => "mp",
+    :MezzoForte => "mf",
+    :Forte => "f",
+    :Fortissimo => "ff",
+    :Fortississimo => "fff"
+  }.each do |name,print_str|
+    klass = Class.new(Dynamic) do
+      def to_s
+        print_str
+      end
     end
-  end
-  
-  class Pianissimo < Dynamic
-    def to_s
-      return "pp"
-    end
-  end
-  
-  class Pianississimo < Dynamic
-    def to_s
-      return "ppp"
-    end
-  end
-
-  class MezzoPiano < Dynamic
-    def to_s
-      return "mp"
-    end
-  end
-
-  class MezzoForte < Dynamic
-    def to_s
-      return "mf"
-    end
-  end
-
-  class Forte < Dynamic
-    def to_s
-      return "f"
-    end
-  end
-  
-  class Fortissimo < Dynamic
-    def to_s
-      return "ff"
-    end
-  end
-  
-  class Fortississimo < Dynamic
-    def to_s
-      return "fff"
-    end
+    Dynamic.const_set(name.to_sym, klass)
   end
 end
 

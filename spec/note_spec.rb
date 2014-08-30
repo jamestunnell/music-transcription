@@ -12,8 +12,8 @@ describe Note do
     end
     
     it "should assign :accent parameter if given during construction" do
-      note = Note.new 2, accent: Accent::Stacatto.new
-      note.accent.class.should eq(Accent::Stacatto)
+      note = Note.new 2, accent: Accent::Staccato.new
+      note.accent.class.should eq(Accent::Staccato)
     end
     
     it 'should have no pitches if not given' do

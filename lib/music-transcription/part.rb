@@ -16,7 +16,7 @@ module Transcription
 class Part
   attr_reader :notes, :dynamic_profile
   
-  def initialize notes: [], dynamic_profile: Profile.new(Dynamic::MF)
+  def initialize notes: [], dynamic_profile: Profile.new(Dynamics::MF)
     @notes = notes
     @dynamic_profile = dynamic_profile
   end
