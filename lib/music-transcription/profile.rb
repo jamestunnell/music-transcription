@@ -25,12 +25,11 @@ class Profile
   end
   
   def last_value
-    last = @start_value
-    last_change_pair = @value_changes.max_by {|k,v| k}
-    unless last_change_pair.nil?
-      last = last_change_pair[1].value
+    if @value_changes.empty?
+      return @start_value
+    else
+      return @value_changes[@value_changes.keys.max].value
     end
-    return last
   end
   
   def changes_before? offset
@@ -52,12 +51,28 @@ class Profile
     return self
   end
   
-  def merge_changes changes
-    self.clone.merge_changes! changes
+  def append profile, offset
+    self.clone.append! profile
   end
 
-  def merge_changes! changes
-    @value_changes.merge! changes
+  def append! profile, start_offset
+    if @value_changes.any? && start_offset < @value_changes.keys.max
+      raise ArgumentError, "appending profile overlaps"
+    end
+    
+    lv = self.last_value
+    unless lv == profile.start_value
+      @value_changes[start_offset] = Change::Immediate.new(profile.start_value)
+      lv = profile.start_value
+    end
+    
+    shifted = profile.shift(start_offset)
+    shifted.value_changes.sort.each do |offset,value_change|
+      unless value_change.value == lv
+	@value_changes[offset] = value_change
+	lv = value_change.value
+      end
+    end
     return self
   end
   

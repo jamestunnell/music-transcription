@@ -69,10 +69,7 @@ class Part
   # Part object. The offsets of value changes in the dynamic profile,
   # for the other part, will be considered relative from end of current part.
   def append! other
-    d = self.duration
-    @dynamic_profile.merge_changes!(d => Change::Immediate.new(other.dynamic_profile.start_value))
-    @dynamic_profile.merge_changes!(other.dynamic_profile.shift(d).value_changes)
-    
+    @dynamic_profile.append!(other.dynamic_profile,self.duration)
     @notes += other.notes.map {|x| x.clone}
     return self
   end

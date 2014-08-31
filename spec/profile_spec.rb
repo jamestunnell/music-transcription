@@ -100,13 +100,49 @@ describe Profile do
     end
   end
   
-  describe '#merge_changes!' do
-    it 'should merge given value changes with existing' do
-      p = Profile.new(0.0, 5.0 => Change::Immediate.new(0.1), 7.5 => Change::Immediate.new(0.2))
-      p.value_changes[7.5].value.should eq(0.2)
-      p.value_changes[10.0].should be nil
-      p.merge_changes!(10.0 => Change::Immediate.new(0.3))
-      p.value_changes[10.0].value.should eq(0.3)
+  describe '#append!' do
+    before :each do
+      @p1 = Profile.new(0.0, 5.0 => Change::Immediate.new(0.1), 7.5 => Change::Immediate.new(0.2))
+      @p2 = Profile.new(0.2, 1.0 => Change::Immediate.new(0.0), 2.0 => Change::Gradual.new(100.0))
+      @p3 = Profile.new(0.1, 1.0 => Change::Immediate.new(0.0))
+    end
+    
+    context 'offset less than last value change offset' do
+      it' should raise ArgumentError' do
+        expect { @p1.append!(@p2,7.0) }.to raise_error(ArgumentError)
+      end
+    end
+    
+    context 'offset equal to last value change offset' do
+      it' should not raise ArgumentError' do
+        expect { @p1.append!(@p2,7.5) }.not_to raise_error
+      end
+    end
+    
+    context 'offset greater than last value change offset' do
+      it' should not raise ArgumentError' do
+        expect { @p1.append!(@p2, 7.6) }.not_to raise_error
+      end
+      
+      it 'should add on shifted value changes from second profile' do
+        @p1.append!(@p2,10.0)
+        @p1.value_changes[11.0].value.should eq 0.0
+        @p1.value_changes[12.0].value.should eq 100.0
+      end
+    end
+    
+    context 'second profile start value equal to first profile last value' do
+      it 'should not add value change at offset' do
+        @p1.append!(@p2, 10.0)
+        @p1.value_changes[10.0].should be nil
+      end
+    end
+
+    context 'second profile start value not equal to first profile last value' do
+      it 'should add value change at offset' do
+        @p1.append!(@p3, 10.0)
+        @p1.value_changes[10.0].should_not be nil
+      end
     end
   end
 end
