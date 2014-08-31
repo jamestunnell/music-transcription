@@ -19,6 +19,15 @@ class Part
   def initialize notes: [], dynamic_profile: Profile.new(Dynamics::MF)
     @notes = notes
     @dynamic_profile = dynamic_profile
+    
+    if dynamic_profile.changes_before?(0)
+      raise ArgumentError, "dynamic profile has changes with offset less than 0"
+    end
+    
+    d = self.duration
+    if dynamic_profile.changes_after?(d)
+      raise ArgumentError, "dynamic profile has changes with offset greater than part duration #{d}"
+    end
   end
   
   # Produce an exact copy of the current object
@@ -47,7 +56,26 @@ class Part
     end
     @notes[-1].transpose_pitches_only! pitch_diff
     return self
-  end  
+  end
+  
+  # Add on notes and dynamic_profile from another part, producing a new
+  # Part object. The offsets of value changes in the dynamic profile,
+  # for the other part, will be considered relative from end of current part.
+  def append other
+    self.clone.append! other
+  end
+  
+  # Add on notes and dynamic_profile from another part, producing a new
+  # Part object. The offsets of value changes in the dynamic profile,
+  # for the other part, will be considered relative from end of current part.
+  def append! other
+    d = self.duration
+    @dynamic_profile.merge_changes!(d => Change::Immediate.new(other.dynamic_profile.start_value))
+    @dynamic_profile.merge_changes!(other.dynamic_profile.shift(d).value_changes)
+    
+    @notes += other.notes.map {|x| x.clone}
+    return self
+  end
 end
 
 end

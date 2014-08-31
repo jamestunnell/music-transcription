@@ -21,7 +21,44 @@ class Profile
   
   # Produce an identical Profile object.
   def clone
-    Profile.new(@start_value, @value_changes.clone)
+    Marshal.load(Marshal.dump(self))
+  end
+  
+  def last_value
+    last = @start_value
+    last_change_pair = @value_changes.max_by {|k,v| k}
+    unless last_change_pair.nil?
+      last = last_change_pair[1].value
+    end
+    return last
+  end
+  
+  def changes_before? offset
+    @value_changes.count {|k,v| k < offset } > 0
+  end
+
+  def changes_after? offset
+    @value_changes.count {|k,v| k > offset } > 0
+  end
+
+  # move changes forward or back by some offset
+  def shift amt
+    self.clone.shift! amt
+  end
+  
+  # move changes forward or back by some offset
+  def shift! amt
+    @value_changes = Hash[@value_changes.map {|k,v| [k+amt,v]}]
+    return self
+  end
+  
+  def merge_changes changes
+    self.clone.merge_changes! changes
+  end
+
+  def merge_changes! changes
+    @value_changes.merge! changes
+    return self
   end
   
   # Returns true if start value and value changes all are between given A and B.
