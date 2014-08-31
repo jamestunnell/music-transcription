@@ -149,7 +149,7 @@ class Note
     end
   end
 
-  class Half < Note
+  class DottedHalf < Note
     def initialize pitches = [], links: {}, accent: nil
       super(Rational(3,4),pitches, links: links, accent: accent)
     end
