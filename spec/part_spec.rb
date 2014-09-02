@@ -19,7 +19,40 @@ describe Part do
     end
   end
   
-  context '#append!' do
+  describe '#stretch' do
+    before :all do
+      p = Part.new(
+        notes: [ Note::Quarter.new, Note::Whole.new, Note::Eighth.new ],
+        dynamic_profile: Profile.new(
+          Dynamics::PP,
+          "1/2".to_r => Change::Immediate.new(Dynamics::MP),
+          "3/4".to_r => Change::Immediate.new(Dynamics::FF)
+        )
+      )
+      @p1 = p.stretch(1)
+      @p2 = p.stretch("5/3".to_r)
+      @p3 = p.stretch("3/5".to_r)
+    end
+    
+    it 'should multiply durations by ratio' do
+      @p1.notes.map {|n| n.duration }.should eq(["1/4".to_r, "1/1".to_r, "1/8".to_r])
+      @p2.notes.map {|n| n.duration }.should eq(["5/12".to_r, "5/3".to_r, "5/24".to_r])
+      @p3.notes.map {|n| n.duration }.should eq(["3/20".to_r, "3/5".to_r, "3/40".to_r])
+    end
+    
+    it 'should multiply dynamic profile changes by ratio' do
+      @p1.dynamic_profile.value_changes.should have_key("1/2".to_r)
+      @p1.dynamic_profile.value_changes.should have_key("3/4".to_r)
+
+      @p2.dynamic_profile.value_changes.should have_key("5/6".to_r)
+      @p2.dynamic_profile.value_changes.should have_key("15/12".to_r)
+      
+      @p3.dynamic_profile.value_changes.should have_key("3/10".to_r)
+      @p3.dynamic_profile.value_changes.should have_key("9/20".to_r)
+    end
+  end
+  
+  describe '#append!' do
     it 'should add other notes to current array' do
       p1 = Part.new(notes: [Note::Eighth.new([C4])])
       p2 = Part.new(notes: [Note::Eighth.new([E4])])

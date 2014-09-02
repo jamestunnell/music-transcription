@@ -51,6 +51,15 @@ class Profile
     return self
   end
   
+  def stretch ratio
+    self.clone.stretch! ratio
+  end
+
+  def stretch! ratio
+    @value_changes = Hash[ @value_changes.map {|k,v| [k*ratio,v] }]
+    return self
+  end
+  
   def append profile, offset
     self.clone.append! profile
   end

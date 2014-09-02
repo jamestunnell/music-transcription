@@ -73,6 +73,20 @@ class Part
     @notes += other.notes.map {|x| x.clone}
     return self
   end
+  
+  def stretch ratio
+    self.clone.stretch! ratio
+  end
+  
+  def stretch! ratio
+    @notes.each_index do |i|
+      n1 = @notes[i]
+      @notes[i] = Note.new(n1.duration * ratio, n1.pitches, links: n1.links, accent: n1.accent)
+    end
+    
+    @dynamic_profile.stretch! ratio
+    return self
+  end
 end
 
 end

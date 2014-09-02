@@ -99,6 +99,21 @@ describe Profile do
       p.value_changes[7.5].value.should eq(0.2)
     end
   end
+
+  describe '#stretch!' do
+    it 'should multiply change offsets by ratio' do
+      p = Profile.new(0.0, 5.0 => Change::Immediate.new(0.1), 7.5 => Change::Immediate.new(0.2))
+      p.stretch!(1)
+      p.value_changes[5.0].value.should eq(0.1)
+      p.value_changes[7.5].value.should eq(0.2)
+      p.stretch!("3/2".to_r)
+      p.value_changes[7.5].value.should eq(0.1)
+      p.value_changes[11.25].value.should eq(0.2)
+      p.stretch!("2/3".to_r)
+      p.value_changes[5.0].value.should eq(0.1)
+      p.value_changes[7.5].value.should eq(0.2)
+    end
+  end
   
   describe '#append!' do
     before :each do
