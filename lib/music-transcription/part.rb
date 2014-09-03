@@ -46,15 +46,15 @@ class Part
     return @notes.inject(0) { |sum, note| sum + note.duration }
   end
   
-  def transpose pitch_diff
-    self.clone.transpose! pitch_diff
+  def transpose diff
+    self.clone.transpose! diff
   end
 
-  def transpose! pitch_diff
+  def transpose! diff
     @notes[0...-1].each do |note|
-      note.transpose_pitches_and_links! pitch_diff
+      note.transpose_pitches_and_links! diff
     end
-    @notes[-1].transpose_pitches_only! pitch_diff
+    @notes[-1].transpose_pitches_only! diff
     return self
   end
   

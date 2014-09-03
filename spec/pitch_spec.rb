@@ -5,17 +5,15 @@ describe Pitch do
   before :each do
     @cases = 
     [
-      { octave: 1, semitone: 0, cent: 0, :ratio => 2.0, :total_cent => 1200 },
-      { octave: 2, semitone: 0, cent: 0, :ratio => 4.0, :total_cent => 2400 },
-      { octave: 1, semitone: 6, cent: 0, :ratio => 2.8284, :total_cent => 1800 },
-      { octave: 2, semitone: 6, cent: 0, :ratio => 5.6569, :total_cent => 3000 },
-      { octave: 1, semitone: 6, cent: 20, :ratio => 2.8613, :total_cent => 1820 },
-      { octave: 2, semitone: 6, cent: 20, :ratio => 5.7226, :total_cent => 3020 },
-      { octave: 3, semitone: 7, cent: 77, :ratio => 12.5316, :total_cent => 4377 },
-      { octave: -1, semitone: 0, cent: 0, :ratio => 0.5, :total_cent => -1200 },
-      { octave: -2, semitone: 0, cent: 0, :ratio => 0.25, :total_cent => -2400 },
-      { octave: -2, semitone: 7, cent: 55, :ratio => 0.3867, :total_cent => -1645 },
-      { octave: -1, semitone: 9, cent: 23, :ratio => 0.8521, :total_cent => -277 },
+      { octave: 1, semitone: 0, :ratio => 2.0, :total_semitone => 12 },
+      { octave: 2, semitone: 0, :ratio => 4.0, :total_semitone => 24 },
+      { octave: 1, semitone: 6, :ratio => 2.828, :total_semitone => 18 },
+      { octave: 2, semitone: 6, :ratio => 5.657, :total_semitone => 30 },
+      { octave: 3, semitone: 7, :ratio => 11.986, :total_semitone => 43 },
+      { octave: -1, semitone: 0, :ratio => 0.5, :total_semitone => -12 },
+      { octave: -2, semitone: 0, :ratio => 0.25, :total_semitone => -24 },
+      { octave: -2, semitone: 7, :ratio => 0.375, :total_semitone => -17 },
+      { octave: -1, semitone: 9, :ratio => 0.841, :total_semitone => -3 },
     ]
   end
   
@@ -27,20 +25,19 @@ describe Pitch do
     obj = Pitch.new octave: 4, semitone: 3
     obj.octave.should eq(4)
     obj.semitone.should eq(3)
-    obj.cent.should eq(0)
   end
   
-  it "should use default octave, semitone, and cent in none is given" do
+  it "should use default octave and semitone if none is given" do
     p = Pitch.new
     p.ratio.should be_within(0.01).of(1.0)
-    p.total_cent.should eq(0)
+    p.total_semitone.should eq(0)
   end
   
-  it "should use the octave, semitone, and cent given during construction" do
+  it "should use the octave and semitone given during construction" do
     @cases.each do |case_data|
-      p = Pitch.new octave: case_data[:octave], semitone: case_data[:semitone], cent: case_data[:cent]
+      p = Pitch.new octave: case_data[:octave], semitone: case_data[:semitone]
       p.ratio.should be_within(0.01).of case_data[:ratio]
-      p.total_cent.should be case_data[:total_cent]
+      p.total_semitone.should be case_data[:total_semitone]
     end
   end
 
@@ -51,20 +48,18 @@ describe Pitch do
             
       p.octave.should eq case_data[:octave]
       p.semitone.should eq case_data[:semitone]
-      p.cent.should eq case_data[:cent]
-      p.total_cent.should eq case_data[:total_cent]
+      p.total_semitone.should eq case_data[:total_semitone]
     end
   end
 
-  it "should setting by total_cent" do    
+  it "should setting by total_semitone" do    
     @cases.each do |case_data|
       p = Pitch.new
-      p.total_cent = case_data[:total_cent] 
+      p.total_semitone = case_data[:total_semitone] 
       
       p.octave.should eq case_data[:octave]
       p.semitone.should eq case_data[:semitone]
-      p.cent.should eq case_data[:cent]
-      p.total_cent.should eq case_data[:total_cent]
+      p.total_semitone.should eq case_data[:total_semitone]
     end
   end
   
@@ -106,7 +101,7 @@ describe Pitch do
     a4.freq.should be_within(0.01).of(440.0)
   end
   
-  context 'String#to_pitch' do
+  describe 'String#to_pitch' do
     it 'should create a Pitch object that matches the musical note' do
       {
 	"Ab2" => Pitch.new(octave: 2, semitone: 8),
@@ -122,17 +117,21 @@ describe Pitch do
     end
   end
   
-  context '.make_from_freq' do
+  describe '.make_from_freq' do
     it 'should make a pitch whose freq is approximately the given freq' do
-      one_cent = Pitch.new(cent: 1)
-      [1.0, 25.0, 200.0, 3500.0].each do |given_freq|
+      [16.35, 440.0, 987.77].each do |given_freq|
 	pitch = Pitch.make_from_freq given_freq
-	freq = pitch.freq
-	if freq > given_freq
-	  (freq / given_freq).should be < one_cent.ratio
-	elsif freq < given_freq
-	  (given_freq / freq).should be < one_cent.ratio
-	end
+	pitch.freq.should be_within(0.01).of(given_freq)
+      end
+    end
+  end
+  
+  describe '.make_from_semitone' do
+    context 'given an integer less than 12' do
+      before(:all) { @pitch = Pitch.make_from_semitone(11) }
+      
+      it 'semitone should equal given integer' do
+	@pitch.semitone.should eq 11
       end
     end
   end

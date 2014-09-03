@@ -1,134 +1,77 @@
 module Music
 module Transcription
 
-# Abstraction of a musical pitch. Contains values for octave, semitone, 
-# and cent. These values are useful because they allow simple mapping to
-# both the abstract (musical scales) and concrete (audio data).
+# Abstraction of a musical pitch. Contains values for octave and semitone.
 #
-# Fundamentally, pitch can be considered a ratio to some base number. 
-# For music, this is a base frequency. The pitch frequency can be 
-# determined by multiplying the base frequency by the pitch ratio. For 
-# the standard musical scale, the base frequency of C0 is 16.35 Hz.
-# 
 # Octaves represent the largest means of differing two pitches. Each 
 # octave added will double the ratio. At zero octaves, the ratio is 
-# 1.0. At one octave, the ratio will be 2.0. Each semitone and cent 
-# is an increment of less-than-power-of-two.
+# 1.0. At one octave, the ratio will be 2.0. Each semitone is an increment
+# of less-than-power-of-two.
 #
-# Semitones are the primary steps between octaves. By default, the 
-# number of semitones per octave is 12, corresponding to the twelve-tone equal 
-# temperment tuning system. The number of semitones per octave can be 
-# modified at runtime by overriding the Pitch::SEMITONES_PER_OCTAVE 
-# constant.
-#
-# Cents are the smallest means of differing two pitches. By default, the 
-# number of cents per semitone is 100 (hence the name cent, as in per-
-# cent). This number can be modified at runtime by overriding the 
-# Pitch::CENTS_PER_SEMITONE constant.
-#
+# Semitones are the primary steps between octaves. The number of
+# semitones per octave is 12.
+
 # @author James Tunnell
 # 
 # @!attribute [r] octave
 #   @return [Fixnum] The pitch octave.
 # @!attribute [r] semitone
 #   @return [Fixnum] The pitch semitone.
-# @!attribute [r] cent
-#   @return [Fixnum] The pitch cent.
-# @!attribute [r] cents_per_octave
-#   @return [Fixnum] The number of cents per octave. Default is 1200 
-#    				 (12 x 100). If a different scale is required, 
-#                    modify CENTS_PER_SEMITONE (default 12) and/or 
-#                    SEMITONES_PER_OCTAVE (default 100).
-# @!attribute [r] base_freq
-#   @return [Numeric] Multiplied with pitch ratio to determine the final frequency
-#                   of the pitch. Defaults to DEFAULT_BASE_FREQ, but can be set 
-#                   during initialization to something else using the :base_freq key.
 #
 class Pitch
   include Comparable
-  attr_reader :cents_per_octave, :base_freq, :octave, :semitone, :cent
+  attr_reader :octave, :semitone
 
   #The default number of semitones per octave is 12, corresponding to 
   # the twelve-tone equal temperment tuning system.
   SEMITONES_PER_OCTAVE = 12
 
-  #The default number of cents per semitone is 100 (hence the name cent,
-  # as in percent).
-  CENTS_PER_SEMITONE = 100
-  
-  # The default base ferquency is C0
-  DEFAULT_BASE_FREQ = 16.351597831287414
+  # The base ferquency is C0
+  BASE_FREQ = 16.351597831287414
 
   # A new instance of Pitch.
   # @raise [NonPositiveFrequencyError] if base_freq is not > 0.
-  def initialize octave:0, semitone:0, cent:0, base_freq:DEFAULT_BASE_FREQ
-    @cents_per_octave = CENTS_PER_SEMITONE * SEMITONES_PER_OCTAVE
+  def initialize octave:0, semitone:0
     @octave = octave
     @semitone = semitone
-    @cent = cent
-    raise ValueNonPositiveError if base_freq <= 0
-    @base_freq = base_freq
     normalize!
   end
-
-  ## Set @base_freq, which is used with the pitch ratio to produce the
-  ## pitch frequency.
-  #def base_freq= base_freq
-  #  raise NonPositiveFrequencyError if base_freq <= 0
-  #  @base_freq = base_freq
-  #end
-  #
-  ## Set @octave.
-  #def octave= octave
-  #  @octave = octave
-  #end
-  #
-  ## Set semitone.
-  #def semitone= semitone
-  #  @semitone = semitone
-  #end
-  #
-  ## Set @cent.
-  #def cent= cent
-  #  @cent = cent
-  #end
 
   # Return the pitch's frequency, which is determined by multiplying the base 
   # frequency and the pitch ratio. Base frequency defaults to DEFAULT_BASE_FREQ,
   # but can be set during initialization to something else by specifying the 
   # :base_freq key.
   def freq
-    return self.ratio() * @base_freq
+    return self.ratio() * BASE_FREQ
   end
   
   # Set the pitch according to the given frequency. Uses the current base_freq 
   # to determine what the pitch ratio should be, and sets it accordingly.
   def freq= freq
-    self.ratio = freq / @base_freq
+    self.ratio = freq / BASE_FREQ
   end
 
-  # Calculate the total cent count. Converts octave and semitone count
-  # to cent count before adding to existing cent count.
-  # @return [Fixnum] total cent count
-  def total_cent
-    return (@octave * @cents_per_octave) +
-            (@semitone * CENTS_PER_SEMITONE) + @cent
+  # Calculate the total semitone count. Converts octave to semitone count
+  # before adding to existing semitone count.
+  # @return [Fixnum] total semitone count
+  def total_semitone
+    return (@octave * SEMITONES_PER_OCTAVE) + @semitone
   end
   
-  # Set the Pitch ratio according to a total number of cents.
-  # @param [Fixnum] cent The total number of cents to use.
-  # @raise [ArgumentError] if cent is not a Fixnum
-  def total_cent= cent
-    raise ArgumentError, "cent is not a Fixnum" if !cent.is_a?(Fixnum)
-    @octave, @semitone, @cent = 0, 0, cent
+  # Set the Pitch ratio according to a total number of semitones.
+  # @param [Fixnum] semitone The total number of semitones to use.
+  # @raise [ArgumentError] if semitone is not an Integer
+  def total_semitone= semitone
+    raise ArgumentError, "semitone is not a Integer" if !semitone.is_a?(Integer)
+    @octave, @semitone = 0, semitone
     normalize!
   end
 
-  # Calculate the pitch ratio. Raises 2 to the power of the total cent 
-  # count divided by cents-per-octave.
+  # Calculate the pitch ratio. Raises 2 to the power of the total semitone
+  # count divided by semitones-per-octave.
   # @return [Float] ratio
   def ratio
-    2.0**(self.total_cent.to_f / @cents_per_octave)
+    2.0**(self.total_semitone.to_f / SEMITONES_PER_OCTAVE)
   end
 
   # Represent the Pitch ratio according to a ratio.
@@ -138,7 +81,7 @@ class Pitch
     raise RangeError, "ratio #{ratio} is less than or equal to 0.0" if ratio <= 0.0
     
     x = Math.log2 ratio
-    self.total_cent = (x * @cents_per_octave).round
+    self.total_semitone = (x * SEMITONES_PER_OCTAVE).round
   end
 
   # Round to the nearest semitone.
@@ -146,55 +89,47 @@ class Pitch
     self.clone.round!
   end
 
-  # Round to the nearest semitone.
-  def round!
-    if @cent >= (CENTS_PER_SEMITONE / 2)
-      @semitone += 1
-    end
-    @cent = 0
-    normalize!
-    return self
-  end
-  
   # Calculates the number of semitones which would represent the pitch's
-  # octave and semitone count. Excludes cents.
+  # octave and semitone count
   def total_semitone
     return (@octave * SEMITONES_PER_OCTAVE) + @semitone
   end
   
   # Override default hash method.
   def hash
-    return self.total_cent
+    return self.total_semitone
   end
   
-  # Compare pitch equality using total cent
+  # Compare pitch equality using total semitone
   def ==(other)
-    self.total_cent == other.total_cent
+    self.total_semitone == other.total_semitone
   end
   
-  # Compare pitches. A higher ratio or total cent is considered larger.
+  def eql?(other)
+    self == other
+  end
+  
+  # Compare pitches. A higher ratio or total semitone is considered larger.
   # @param [Pitch] other The pitch object to compare.
   def <=> (other)
-    self.total_cent <=> other.total_cent
+    self.total_semitone <=> other.total_semitone
   end
 
-  # Add pitches by adding the total cent count of each.
+  # Add pitches by adding the total semitone count of each.
   # @param [Pitch] other The pitch object to add. 
   def + (other)
     self.class.new(
       octave: (@octave + other.octave),
-      semitone: (@semitone + other.semitone),
-      cent: (@cent + other.cent)
+      semitone: (@semitone + other.semitone)
     )
   end
 
-  # Add pitches by subtracting the total cent count.
+  # Add pitches by subtracting the total semitone count.
   # @param [Pitch] other The pitch object to subtract.
   def - (other)
     self.class.new(
       octave: (@octave - other.octave),
       semitone: (@semitone - other.semitone),
-      cent: (@cent - other.cent)
     )
   end
   
@@ -203,26 +138,19 @@ class Pitch
     Marshal.load(Marshal.dump(self))  # is this cheating?
   end
   
-  # Balance out the octave, semitone, and cent count. 
+  # Balance out the octave and semitone count. 
   def normalize!
-    centTotal = (@octave * @cents_per_octave) + (@semitone * CENTS_PER_SEMITONE) + @cent
+    semitoneTotal = (@octave * SEMITONES_PER_OCTAVE) + @semitone
     
-    @octave = centTotal / @cents_per_octave
-    centTotal -= @octave * @cents_per_octave
+    @octave = semitoneTotal / SEMITONES_PER_OCTAVE
+    semitoneTotal -= @octave * SEMITONES_PER_OCTAVE
     
-    @semitone = centTotal / CENTS_PER_SEMITONE
-    centTotal -= @semitone * CENTS_PER_SEMITONE
-    
-    @cent = centTotal
+    @semitone = semitoneTotal
     return self
   end
 
   # Produce a string representation of a pitch (e.g. "C2")
   def to_s
-    if @cents_per_octave != 1200
-      raise "Don't know how to produce a string representation since cents_per_octave is not 1200."
-    end
-    
     semitone_str = case @semitone
     when 0 then "C"
     when 1 then "Db"
@@ -241,10 +169,18 @@ class Pitch
     return semitone_str + @octave.to_s
   end
   
-  def self.make_from_freq(freq, base_freq = DEFAULT_BASE_FREQ)
+  def self.make_from_freq(freq)
     pitch = Pitch.new()
-    pitch.ratio = freq / base_freq
+    pitch.ratio = freq / BASE_FREQ
     return pitch
+  end
+  
+  def self.make_from_semitone semitones
+    if semitones.is_a?(Integer)
+      return Pitch.new(semitone: semitones)
+    else
+      raise ArgumentError, "Cannot make Pitch from #{semitones}"
+    end
   end
 end
 

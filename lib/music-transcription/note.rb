@@ -56,30 +56,38 @@ class Note
     Marshal.load(Marshal.dump(self))
   end
 
-  def transpose_pitches_only pitch_diff
+  def transpose_pitches_only diff
     self.clone.transpose_pitches! pitch_diff, transpose_link
   end
 
-  def transpose_pitches_only! pitch_diff
-    @pitches = @pitches.map {|pitch| pitch + pitch_diff}
-    new_links = {}
-    @links.each_pair do |k,v|
-      new_links[k + pitch_diff] = v
-    end
-    @links = new_links
-    return self
+  def transpose_pitches_only! diff
+    self.transpose! diff, false
   end
   
-  def transpose_pitches_and_links pitch_diff
-    self.clone.transpose_pitches_and_links! pitch_diff
+  def transpose_pitches_and_links diff
+    self.clone.transpose_pitches_and_links! diff
   end
 
-  def transpose_pitches_and_links! pitch_diff
-    @pitches = @pitches.map {|pitch| pitch + pitch_diff}
+  def transpose_pitches_and_links! diff
+    self.transpose! diff, true
+  end
+  
+  def transpose diff, transpose_links
+    self.clone.transpose! diff, transpose_links
+  end
+  
+  def transpose! diff, transpose_link_targets
+    unless diff.is_a?(Pitch)
+      diff = Pitch.make_from_semitone(diff)
+    end
+    
+    @pitches = @pitches.map {|pitch| pitch + diff}
     new_links = {}
     @links.each_pair do |k,v|
-      v.target_pitch += pitch_diff
-      new_links[k + pitch_diff] = v
+      if transpose_link_targets
+        v.target_pitch += diff
+      end
+      new_links[k + diff] = v
     end
     @links = new_links
     return self
