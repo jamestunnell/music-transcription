@@ -6,7 +6,7 @@ class Tempo
   include Comparable
   attr_reader :beats_per_minute, :beat_duration
   
-  def initialize beats_per_minute, beat_duration: Rational(1,4)
+  def initialize beats_per_minute, beat_duration = Rational(1,4)
     @beats_per_minute = beats_per_minute
     @beat_duration = beat_duration
   end
