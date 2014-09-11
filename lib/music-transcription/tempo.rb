@@ -11,6 +11,11 @@ class Tempo
     @beat_duration = beat_duration
   end
   
+  def ==(other)
+    (other.beats_per_minute == @beats_per_minute) &&
+    (other.beat_duration == @beat_duration)
+  end
+  
   def notes_per_second
     (@beats_per_minute * @beat_duration) / 60.0
   end
