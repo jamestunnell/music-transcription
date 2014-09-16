@@ -3,7 +3,7 @@
 * {Homepage}[https://github.com/jamestunnell/music-transcription]
 * {Issues}[https://github.com/jamestunnell/music-transcription/issues]
 * {Documentation}[http://rubydoc.info/gems/music-transcription/frames]
-* {Email}[mailto:jamestunnell@lavabit.com]
+* {Email}[mailto:jamestunnell@gmail.com]
 
 == Description
 
