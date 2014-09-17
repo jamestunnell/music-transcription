@@ -118,7 +118,7 @@ describe Profile do
   describe '#append!' do
     before :each do
       @p1 = Profile.new(0.0, 5.0 => Change::Immediate.new(0.1), 7.5 => Change::Immediate.new(0.2))
-      @p2 = Profile.new(0.2, 1.0 => Change::Immediate.new(0.0), 2.0 => Change::Gradual.new(100.0))
+      @p2 = Profile.new(0.2, 1.0 => Change::Immediate.new(0.0), 2.0 => Change::Gradual.new(100.0,1.0))
       @p3 = Profile.new(0.1, 1.0 => Change::Immediate.new(0.0))
     end
     

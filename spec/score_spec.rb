@@ -14,7 +14,7 @@ describe Score do
     end
 
     it "should assign tempo profile given during construction" do
-      profile = Profile.new(Tempo.new(200), { 0.5 => Change::Gradual.new(120) })
+      profile = Profile.new(Tempo.new(200), 0.5 => Change::Gradual.new(Tempo.new(120),0.5) )
       score = Score.new tempo_profile: profile
       score.tempo_profile.should eq(profile)
     end    

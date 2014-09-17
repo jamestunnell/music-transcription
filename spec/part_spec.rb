@@ -77,15 +77,15 @@ describe Part do
         notes: [Note::Whole.new],
         dynamic_profile: Profile.new(
           Dynamics::PPP,
-          Rational(1,8) => Change::Gradual.new(Dynamics::PP),
-          Rational(2,8) => Change::Immediate.new(Dynamics::P)
+          Rational(1,8) => Change::Gradual.new(Dynamics::PP,Rational(1,8)),
+          Rational(3,8) => Change::Immediate.new(Dynamics::P)
         )
       )
       p1.append! p2
       p1.dynamic_profile.value_changes.size.should eq 3
       p1.dynamic_profile.value_changes[Rational(1,1)].value.should eq Dynamics::PPP
       p1.dynamic_profile.value_changes[Rational(9,8)].value.should eq Dynamics::PP
-      p1.dynamic_profile.value_changes[Rational(10,8)].value.should eq Dynamics::P
+      p1.dynamic_profile.value_changes[Rational(11,8)].value.should eq Dynamics::P
     end
   end
 end
