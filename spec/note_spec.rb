@@ -93,5 +93,10 @@ describe Note do
       note.stretch!(2)
       note.duration.should eq(Rational(1,2))
     end
+    
+    it 'should return self' do
+      note = Note::Quarter.new
+      note.stretch!(1).should be note
+    end
   end
 end

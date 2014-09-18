@@ -99,6 +99,7 @@ class Note
   
   def stretch! ratio
     @duration *= ratio
+    return self
   end
   
   def to_s
