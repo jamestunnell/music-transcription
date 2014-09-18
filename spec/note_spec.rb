@@ -62,13 +62,36 @@ describe Note do
         end
       end
     end
+      
+    context 'transpose_link_targets set true' do
+      it 'should also transpose link targets' do
+        note = Note::Quarter.new([C2,F2], links:{C2=>Link::Slur.new(D2)})
+        note.transpose!(2,true)
+        note.links[D2].target_pitch.should eq(E2)
+      end
+    end
+    
+    context 'transpose_link_targets not set' do
+      it 'should default to true' do
+        note = Note::Quarter.new([C2,F2], links: {C2=>Link::Slur.new(D2)})
+        note.transpose!(2)
+        note.links[D2].target_pitch.should eq E2
+      end
+    end
   end
   
-  context 'transpose_link_targets set true' do
-    it 'should also transpose link targets' do
-      note = Note::Quarter.new([C2,F2], links:{C2=>Link::Slur.new(D2)})
-      note.transpose!(2,true)
-      note.links[D2].target_pitch.should eq(E2)
+  describe '#stretch!' do
+    it 'should multiply note duration by ratio' do
+      note = Note::Quarter.new
+      note.stretch!(2)
+      note.duration.should eq(Rational(1,2))
+      
+      note = Note::Quarter.new
+      note.stretch!(Rational(1,2))
+      note.duration.should eq(Rational(1,8))
+      note = Note::Quarter.new
+      note.stretch!(2)
+      note.duration.should eq(Rational(1,2))
     end
   end
 end

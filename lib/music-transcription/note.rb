@@ -76,7 +76,7 @@ class Note
     self.clone.transpose! diff, transpose_links
   end
   
-  def transpose! diff, transpose_link_targets
+  def transpose! diff, transpose_link_targets = true
     unless diff.is_a?(Pitch)
       diff = Pitch.make_from_semitone(diff)
     end
@@ -91,6 +91,14 @@ class Note
     end
     @links = new_links
     return self
+  end
+  
+  def stretch ratio
+    self.clone.stretch! ratio
+  end
+  
+  def stretch! ratio
+    @duration *= ratio
   end
   
   def to_s
