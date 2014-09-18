@@ -72,7 +72,7 @@ class Note
     self.transpose! diff, true
   end
   
-  def transpose diff, transpose_links
+  def transpose diff, transpose_links = true
     self.clone.transpose! diff, transpose_links
   end
   
