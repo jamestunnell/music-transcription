@@ -1,0 +1,25 @@
+require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+
+describe Meter do
+  describe '#initialize' do
+    it 'should assign beats per measure and beat duration' do
+      [[4,"1/4".to_r],[3,"1/4".to_r],[6,"1/8".to_r]].each do |bpm,bd|
+        m = Meter.new(bpm,bd)
+        m.beats_per_measure.should eq bpm
+        m.beat_duration.should eq bd
+      end      
+    end
+    
+    it 'should derive measure duration' do
+      {
+        [4,"1/4".to_r] => "1/1".to_r,
+        [3,"1/4".to_r] => "3/4".to_r,
+        [6,"1/8".to_r] => "6/8".to_r,
+        [12,"1/8".to_r] => "12/8".to_r,
+      }.each do |bpm,bd|
+        m = Meter.new(bpm,bd)
+        m.measure_duration.should eq(bpm*bd)
+      end      
+    end
+  end
+end
