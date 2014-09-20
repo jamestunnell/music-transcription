@@ -23,18 +23,14 @@ class Link
     self.class.new @target_pitch.clone
   end
   
-  { :Slur => "=",
-    :Legato => "-",
-    :Glissando => "~",
-    :Portamento => "/",
-  }.each do |name,print_str|
+  [ :Slur,
+    :Legato,
+    :Glissando,
+    :Portamento,
+  ].each do |name|
     klass = Class.new(Link) do
       def initialize target_pitch
         super(target_pitch)
-      end
-      
-      def to_s
-        print_str + @target_pitch
       end
     end
     Link.const_set(name.to_sym, klass)

@@ -32,19 +32,19 @@ require 'yard'
 YARD::Rake::YardocTask.new  
 task :doc => :yard
 
-task :make_samples do
+task :make_examples do
   current_dir = Dir.getwd
-  samples_dir = File.join(File.dirname(__FILE__), 'samples')
-  Dir.chdir samples_dir
+  examples_dir = File.join(File.dirname(__FILE__), 'examples')
+  Dir.chdir examples_dir
   
-  samples = []
+  examples = []
   Dir.glob('**/make*.rb') do |file|
-    samples.push File.expand_path(file)
+    examples.push File.expand_path(file)
   end
   
-  samples.each do |sample|
-    dirname = File.dirname(sample)
-    filename = File.basename(sample)
+  examples.each do |example|
+    dirname = File.dirname(example)
+    filename = File.basename(example)
     
     Dir.chdir dirname
     ruby filename

@@ -86,4 +86,20 @@ describe Note do
       note.stretch!(1).should be note
     end
   end
+  
+  describe '#to_yaml' do
+    it 'should produce YAML that can be loaded' do
+      n = Note.new(1,[C2])
+      YAML.load(n.to_yaml).should eq n
+      
+      n = Note.new(1,[C2,E2])
+      YAML.load(n.to_yaml).should eq n
+      
+      n = Note.new(1,[C2], accent: Accents::STACCATO)
+      YAML.load(n.to_yaml).should eq n
+      
+      n = Note.new(1,[E2], links: {E2 => Link::Legato.new(F2)})
+      YAML.load(n.to_yaml).should eq n
+    end
+  end
 end

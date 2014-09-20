@@ -18,7 +18,7 @@ describe Pitch do
   end
   
   it "should be constructible with no parameters (no error raised)" do
-	  lambda { Pitch.new }.should_not raise_error
+    lambda { Pitch.new }.should_not raise_error
   end
   
   it "should be hash-makeable" do
@@ -101,19 +101,10 @@ describe Pitch do
     a4.freq.should be_within(0.01).of(440.0)
   end
   
-  describe 'String#to_pitch' do
-    it 'should create a Pitch object that matches the musical note' do
-      {
-	"Ab2" => Pitch.new(octave: 2, semitone: 8),
-	"C0" => Pitch.new(octave: 0, semitone: 0),
-	"db4" => Pitch.new(octave: 4, semitone: 1),
-	"F#12" => Pitch.new(octave: 12, semitone: 6),
-	"E#7" => Pitch.new(octave: 7, semitone: 5),
-	"G9" => Pitch.new(octave: 9, semitone: 7),
-	"Bb10" => Pitch.new(octave: 10, semitone: 10),
-      }.each do |str, expected_pitch|
-	str.to_pitch.should eq(expected_pitch)
-      end
+  describe '#to_yaml' do
+    it 'should produce YAML that can be loaded' do
+      p = Pitch.new(octave: 1, semitone: 2)
+      YAML.load(p.to_yaml).should eq p
     end
   end
   

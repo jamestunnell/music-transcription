@@ -19,7 +19,14 @@ describe Change::Immediate do
     it 'should return false if two immediate changes do not have the same value' do
       Change::Immediate.new(5).should_not eq(Change::Immediate.new(4))
     end
-  end  
+  end
+  
+  describe '#to_yaml' do
+    it 'should produce YAML that can be loaded' do
+      c = Change::Immediate.new(4)
+      YAML.load(c.to_yaml).should eq c
+    end
+  end
 end
 
 describe Change::Gradual do
@@ -45,5 +52,12 @@ describe Change::Gradual do
     it 'should return false if two gradual changes do not have the same duration' do
       Change::Gradual.new(5,2).should_not eq(Change::Gradual.new(5,1))
     end
-  end  
+  end
+  
+  describe '#to_yaml' do
+    it 'should produce YAML that can be loaded' do
+      c = Change::Gradual.new(4,2)
+      YAML.load(c.to_yaml).should eq c
+    end
+  end
 end

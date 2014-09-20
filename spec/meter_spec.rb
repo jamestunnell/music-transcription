@@ -22,4 +22,29 @@ describe Meter do
       end      
     end
   end
+  
+  describe '#==' do
+    context 'meters with same beat duration and beats per measure' do
+      it 'should return true' do
+        m1 = Meter.new(4,"1/4".to_r)
+        m2 = Meter.new(4,"1/4".to_r)
+        m1.should eq m2
+      end
+    end
+    
+    context 'meters with same meausre duration but different beat duration' do
+      it 'should return false' do
+        m1 = Meter.new(4,"1/4".to_r)
+        m2 = Meter.new(2,"1/2".to_r)
+        m1.should_not eq m2
+      end
+    end
+  end
+  
+  describe '#to_yaml' do
+    it 'should produce YAML that can be loaded' do
+      m = Meter.new(4,"1/4".to_r)
+      YAML.load(m.to_yaml).should eq m
+    end
+  end
 end
