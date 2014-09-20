@@ -3,67 +3,55 @@ require 'yaml'
 
 include Music::Transcription
 
-arrangement = Arrangement.new(
-  :score => TempoScore.new(
-    :program => Program.new(
-      :segments => [0...4.0, 0...4.0 ]
-    ),
-    :tempo_profile => profile(tempo(120)),
-    :parts => {
-      1 => Part.new(
-        :notes => [
-          note(1.0, [ interval(C4) ]),
-          note(1.0, [ interval(Bb3) ]),
-          note(1.0, [ interval(Ab3) ]),
-          note(0.5, [ interval(G3) ]),
-          note(0.5, [ interval(Bb3) ]),
-        ]
-      ), 
-      2 => Part.new(
-        :notes => [
-          note(0.375, [ interval(E5) ]),
-          note(1.0, [ interval(D5)]),
-          note(1.0, [ interval(C5)]),
-          note(0.625, [ interval(C5)]),
-          note(0.5, [ interval(C5)]),
-          note(0.5, [ interval(D5)])
-        ]
-      ),
-      3 => Part.new(
-        :notes => [
-          note(0.125),
-          note(0.25, [interval(G5)] ),
-          note(0.5, [interval(F5)] ),
-          note(0.25),
-          note(0.25, [interval(F5)] ),
-          note(0.5, [interval(Eb5)] ),
-          note(0.25),
-          note(0.25, [interval(Eb5)] ),
-          note(0.5, [interval(Eb5)] ),
-          note(0.125),
-          note(0.5, [interval(Eb5)] ),
-          note(0.5, [interval(F5)] ),
-        ]
-      )
-    }
+score = TempoScore.new(
+  Meter.new(4,"1/4".to_r),
+  120,
+  :program => Program.new(
+    :segments => [0...4.0, 0...4.0 ]
   ),
-  :instrument_configs => {
-    1 => InstrumentConfig.new(
-      :plugin_name => 'synth_instr_3',
-      :initial_settings => "blend"
+  :parts => {
+    1 => Part.new(
+      Dynamics::MF
+      notes: [
+        Note::Whole.new([C4]),
+        Note::Whole.new([Bb3]),
+        Note::Whole.new([Ab3]),
+        Note::Half.new([G3]),
+        Note::Half.new([Bb3]),
+      ]
+    ), 
+    2 => Part.new(
+      Dynamics::MF,
+      notes: [
+        Note::DottedQuarter.new([E5]),
+        Note::Whole.new([D5]),
+        Note::Whole.new([C5]),
+        Note::new("5/8".to_r, [C5]),
+        Note::Half.new([C5]),
+        Note::Half.new([D5]),
+      ]
     ),
-    2 => InstrumentConfig.new(
-      :plugin_name => 'synth_instr_3',
-      :initial_settings => "blend"
-    ),
-    3 => InstrumentConfig.new(
-      :plugin_name => 'synth_instr_3',
-      :initial_settings => "blend"
+    3 => Part.new(
+      Dynamics::MF,
+      notes: [
+        Note::Eighth.new,
+        Note::Quarter.new([G5]),
+        Note::Half.new([F5]),
+        Note::Quarter.new,
+        Note::Quarter.new([F5])
+        Note::Half.new([Eb5]),
+        Note::Quarter.new,
+        Note::Quarter.new([Eb5]),
+        Note::Half.new([Eb5]),
+        Note::Eighth.new,
+        Note::Half.new([Eb5]),
+        Note::Half.new([F5]),
+      ]
     )
   }
 )
 
 File.open("song2.yml", "w") do |file|
-  file.write arrangement.to_yaml
+  file.write score.to_yaml
 end
 

@@ -14,21 +14,10 @@ class Accent
     self.class.new
   end
   
-  { :Staccato => ".",
-    :Staccatissimo => "'",
-    :Marcato => ">",
-    :Martellato => "^",
-    :Tenuto => "_",
-    :Forte => "f",
-    :Fortissimo => "ff",
-    :Fortississimo => "fff"
-  }.each do |name,print_str|
-    klass = Class.new(Accent) do
-      def to_s
-        print_str
-      end
-    end
-    Accent.const_set(name.to_sym, klass)
+  [
+    :None, :Staccato, :Staccatissimo, :Marcato, :Martellato, :Tenuto
+  ].each do |name|
+    Accent.const_set(name, Class.new(Accent))
   end
 end
 

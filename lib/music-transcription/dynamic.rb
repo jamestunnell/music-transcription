@@ -14,21 +14,12 @@ class Dynamic
     self.class.new
   end
   
-  { :Piano => "p",
-    :Pianissimo => "pp",
-    :Pianississimo => "ppp",
-    :MezzoPiano => "mp",
-    :MezzoForte => "mf",
-    :Forte => "f",
-    :Fortissimo => "ff",
-    :Fortississimo => "fff"
-  }.each do |name,print_str|
-    klass = Class.new(Dynamic) do
-      def to_s
-        print_str
-      end
-    end
-    Dynamic.const_set(name.to_sym, klass)
+  [
+    :Piano, :Pianissimo, :Pianississimo,
+    :MezzoPiano, :MezzoForte,
+    :Forte, :Fortissimo, :Fortississimo
+  ].each do |name|
+    Dynamic.const_set(name, Class.new(Dynamic))
   end
 end
 

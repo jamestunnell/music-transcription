@@ -1,26 +1,16 @@
 module Music
 module Transcription
 
-# Score, containing parts and a program.
-#
-# @author James Tunnell
-#
-# @!attribute [rw] parts
-#   @return [Hash] Score parts, mapped to part names
-# 
-# @!attribute [rw] program
-#   @return [Program] Score program (which segments are played when)
-#
-# @!attribute [rw] tempo_profile
-#   @return [Profile] Tempo values profile
-#
 class Score
-  attr_reader :parts, :program, :tempo_profile
+  attr_reader :start_meter, :start_tempo, :parts, :program, :meter_changes, :tempo_changes
   
-  def initialize parts: {}, program: Program.new, tempo_profile: Profile.new(Tempo.new(120))
+  def initialize start_meter, start_tempo, meter_changes: {}, tempo_changes: {}, parts: {}, program: Program.new
+    @start_meter = start_meter
+    @start_tempo = start_tempo
+    @meter_changes = meter_changes
+    @tempo_changes = tempo_changes
     @parts = parts
     @program = program
-    @tempo_profile = tempo_profile
   end
 
   def clone
@@ -28,35 +18,16 @@ class Score
   end
   
   def ==(other)
-    return (@tempo_profile == other.tempo_profile) &&
-    (@program == other.program) &&
-    (@parts == other.parts)
+    return @start_meter == other.start_meter && 
+    @start_tempo == other.start_tempo &&
+    @meter_changes == other.meter_changes &&
+    @tempo_changes == other.tempo_changes &&
+    @parts == other.parts &&
+    @program == other.program
   end
     
-  # Find the start of a score. The start will be at then start of whichever part begins
-  # first, or 0 if no parts have been added.
-  def start
-    sos = 0.0
-    
-    @parts.each do |id,part|
-      sop = part.start
-      sos = sop if sop > sos
-    end
-    
-    return sos
-  end
-  
-  # Find the end of a score. The end will be at then end of whichever part ends 
-  # last, or 0 if no parts have been added.
-  def end
-    eos = 0.0
-    
-    @parts.each do |id,part|
-      eop = part.end
-      eos = eop if eop > eos
-    end
-    
-    return eos
+  def duration
+    @parts.map {|p| p.duration }.max
   end
 end
 

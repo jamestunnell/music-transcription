@@ -37,46 +37,33 @@ describe Note do
   end
   
   describe '#transpose!' do
-    context 'transpose_link_targets set false' do
-      context 'given pitch diff' do
-        before(:all) do
-          @note = Note::Quarter.new([C2,F2], links:{C2=>Link::Slur.new(D2)})
-          @diff = Pitch.new(semitone: 4)
-          @note.transpose! @diff, false
-        end
-        
-        it 'should modifiy pitches by adding pitch diff' do
-          @note.pitches[0].should eq E2
-          @note.pitches[1].should eq A2
-        end
-        
-        it 'should not affect link targets' do
-          @note.links.should have_key(E2)
-          @note.links[E2].target_pitch.should eq(D2)
-        end
+    context 'given pitch diff' do
+      before(:all) do
+        @note = Note::Quarter.new([C2,F2], links:{C2=>Link::Slur.new(D2)})
+        @diff = Pitch.new(semitone: 4)
+        @note.transpose! @diff
       end
-      
-      context 'given integer diff' do
-        it 'should transpose the given number of semitones' do
-          Note::Quarter.new([C2]).transpose!(4,false).pitches[0].should eq(E2)
-        end
+        
+      it 'should modifiy pitches by adding pitch diff' do
+        @note.pitches[0].should eq E2
+        @note.pitches[1].should eq A2
       end
-    end
-      
-    context 'transpose_link_targets set true' do
-      it 'should also transpose link targets' do
-        note = Note::Quarter.new([C2,F2], links:{C2=>Link::Slur.new(D2)})
-        note.transpose!(2,true)
-        note.links[D2].target_pitch.should eq(E2)
+        
+      it 'should also affect link targets' do
+        @note.links.should have_key(E2)
+        @note.links[E2].target_pitch.should eq(Gb2)
       end
     end
     
-    context 'transpose_link_targets not set' do
-      it 'should default to true' do
-        note = Note::Quarter.new([C2,F2], links: {C2=>Link::Slur.new(D2)})
-        note.transpose!(2)
-        note.links[D2].target_pitch.should eq E2
+    context 'given integer diff' do
+      it 'should transpose the given number of semitones' do
+        Note::Quarter.new([C2]).transpose!(4).pitches[0].should eq(E2)
       end
+    end
+    
+    it 'should return self' do
+      n = Note::Quarter.new
+      n.transpose!(0).should eq n
     end
   end
   

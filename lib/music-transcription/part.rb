@@ -3,89 +3,33 @@ require 'yaml'
 module Music
 module Transcription
 
-# Abstraction of a musical part. Contains notes and loudness_profile settings.
-#
-# @author James Tunnell
-#
-# @!attribute [r] notes
-#   @return [Array] The notes to be played.
-#
-# @!attribute [r] dynamic_profile
-#   @return [Profile] Dynamic values profile
-#
 class Part
-  attr_reader :notes, :dynamic_profile
+  attr_reader :start_dynamic, :dynamic_changes, :notes
   
-  def initialize notes: [], dynamic_profile: Profile.new(Dynamics::MF)
+  def initialize start_dynamic, notes: [], dynamic_changes: {}
     @notes = notes
-    @dynamic_profile = dynamic_profile
-    
-    if dynamic_profile.changes_before?(0)
-      raise ArgumentError, "dynamic profile has changes with offset less than 0"
-    end
+    @start_dynamic = start_dynamic
+    @dynamic_changes = dynamic_changes
     
     d = self.duration
-    if dynamic_profile.changes_after?(d)
-      raise ArgumentError, "dynamic profile has changes with offset greater than part duration #{d}"
+    badkeys = dynamic_changes.keys.select {|k| k < 0 || k > d }
+    if badkeys.any?
+      raise ArgumentError, "dynamic profile has changes outside 0..d"
     end
   end
   
-  # Produce an exact copy of the current object
   def clone
     Marshal.load(Marshal.dump(self))
   end
   
-  # Compare the equality of another Part object.
   def ==(other)
     return (@notes == other.notes) &&
-    (@dynamic_profile == other.dynamic_profile)
+    (@start_dynamic == other.start_dynamic) &&
+    (@dynamic_changes == other.dynamic_changes)
   end
 
-  # Duration of part notes.
   def duration
     return @notes.inject(0) { |sum, note| sum + note.duration }
-  end
-  
-  def transpose diff
-    self.clone.transpose! diff
-  end
-
-  def transpose! diff
-    @notes[0...-1].each do |note|
-      note.transpose_pitches_and_links! diff
-    end
-    @notes[-1].transpose_pitches_only! diff
-    return self
-  end
-  
-  # Add on notes and dynamic_profile from another part, producing a new
-  # Part object. The offsets of value changes in the dynamic profile,
-  # for the other part, will be considered relative from end of current part.
-  def append other
-    self.clone.append! other
-  end
-  
-  # Add on notes and dynamic_profile from another part, producing a new
-  # Part object. The offsets of value changes in the dynamic profile,
-  # for the other part, will be considered relative from end of current part.
-  def append! other
-    @dynamic_profile.append!(other.dynamic_profile,self.duration)
-    @notes += other.notes.map {|x| x.clone}
-    return self
-  end
-  
-  def stretch ratio
-    self.clone.stretch! ratio
-  end
-  
-  def stretch! ratio
-    @notes.each_index do |i|
-      n1 = @notes[i]
-      @notes[i] = Note.new(n1.duration * ratio, n1.pitches, links: n1.links, accent: n1.accent)
-    end
-    
-    @dynamic_profile.stretch! ratio
-    return self
   end
 end
 
