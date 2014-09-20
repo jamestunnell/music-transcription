@@ -2,8 +2,9 @@ require 'music-transcription'
 require 'yaml'
 
 include Music::Transcription
+include Pitches
 
-score = TempoScore.new(
+score = Score.new(
   Meter.new(4,"1/4".to_r),
   120,
   :program => Program.new(
@@ -11,7 +12,7 @@ score = TempoScore.new(
   ),
   :parts => {
     1 => Part.new(
-      Dynamics::MF
+      Dynamics::MF,
       notes: [
         Note::Whole.new([C4]),
         Note::Whole.new([Bb3]),
@@ -38,7 +39,7 @@ score = TempoScore.new(
         Note::Quarter.new([G5]),
         Note::Half.new([F5]),
         Note::Quarter.new,
-        Note::Quarter.new([F5])
+        Note::Quarter.new([F5]),
         Note::Half.new([Eb5]),
         Note::Quarter.new,
         Note::Quarter.new([Eb5]),

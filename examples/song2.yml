@@ -1,0 +1,236 @@
+--- !ruby/object:Music::Transcription::Score
+start_meter: !ruby/object:Music::Transcription::Meter
+  beats_per_measure: 4
+  beat_duration: !ruby/object:Rational
+    denominator: 4
+    numerator: 1
+  measure_duration: !ruby/object:Rational
+    denominator: 1
+    numerator: 1
+start_tempo: 120
+meter_changes: {}
+tempo_changes: {}
+parts:
+  1: !ruby/object:Music::Transcription::Part
+    notes:
+    - !ruby/object:Music::Transcription::Note::Whole
+      duration: !ruby/object:Rational
+        denominator: 1
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 4
+        semitone: 0
+      links: {}
+      accent: &1 !ruby/class 'Music::Transcription::Accent::None'
+    - !ruby/object:Music::Transcription::Note::Whole
+      duration: !ruby/object:Rational
+        denominator: 1
+        numerator: 1
+      pitches:
+      - &2 !ruby/object:Music::Transcription::Pitch
+        octave: 3
+        semitone: 10
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Whole
+      duration: !ruby/object:Rational
+        denominator: 1
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 3
+        semitone: 8
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Half
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 3
+        semitone: 7
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Half
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - *2
+      links: {}
+      accent: *1
+    start_dynamic: &5 !ruby/object:Music::Transcription::Dynamic::MezzoForte {}
+    dynamic_changes: {}
+  2: !ruby/object:Music::Transcription::Part
+    notes:
+    - !ruby/object:Music::Transcription::Note::DottedQuarter
+      duration: !ruby/object:Rational
+        denominator: 8
+        numerator: 3
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 4
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Whole
+      duration: !ruby/object:Rational
+        denominator: 1
+        numerator: 1
+      pitches:
+      - &4 !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 2
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Whole
+      duration: !ruby/object:Rational
+        denominator: 1
+        numerator: 1
+      pitches:
+      - &3 !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 0
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 8
+        numerator: 5
+      pitches:
+      - *3
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Half
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - *3
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Half
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - *4
+      links: {}
+      accent: *1
+    start_dynamic: *5
+    dynamic_changes: {}
+  3: !ruby/object:Music::Transcription::Part
+    notes:
+    - !ruby/object:Music::Transcription::Note::Eighth
+      duration: !ruby/object:Rational
+        denominator: 8
+        numerator: 1
+      pitches: []
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Quarter
+      duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 7
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Half
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - &6 !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 5
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Quarter
+      duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
+      pitches: []
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Quarter
+      duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
+      pitches:
+      - *6
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Half
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - &7 !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 3
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Quarter
+      duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
+      pitches: []
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Quarter
+      duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
+      pitches:
+      - *7
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Half
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - *7
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Eighth
+      duration: !ruby/object:Rational
+        denominator: 8
+        numerator: 1
+      pitches: []
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Half
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - *7
+      links: {}
+      accent: *1
+    - !ruby/object:Music::Transcription::Note::Half
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - *6
+      links: {}
+      accent: *1
+    start_dynamic: *5
+    dynamic_changes: {}
+program: !ruby/object:Music::Transcription::Program
+  segments:
+    :segments:
+    - !ruby/range
+      begin: 0
+      end: 4.0
+      excl: true
+    - !ruby/range
+      begin: 0
+      end: 4.0
+      excl: true
