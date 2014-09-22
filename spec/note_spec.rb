@@ -36,6 +36,14 @@ describe Note do
     end
   end
   
+  describe '#clear_links' do
+    it 'should remove all links' do
+      n = Note.new(2,[C2,E2],links: {C2 => Link::Slur.new(D2)})
+      n.clear_links
+      n.links.should be_empty
+    end
+  end
+  
   describe '#transpose!' do
     context 'given pitch diff' do
       before(:all) do
@@ -113,8 +121,6 @@ describe Note do
     context 'note with 0 duration' do
       it 'should return false' do
         Note.new(0,[C2]).should be_invalid
-        require 'pry'
-        binding.pry
       end
     end
     

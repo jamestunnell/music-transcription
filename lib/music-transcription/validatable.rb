@@ -5,6 +5,7 @@ module Validatable
   
   def validate
     @errors = []
+    
     @check_methods.each do |check_method|
       begin
         send(check_method)
@@ -12,12 +13,16 @@ module Validatable
         @errors.push e
       end
     end
-    if respond_to?(:validatables)
-      validatables.each do |v|
-        @errors += v.validate
-      end
+    
+    validatables.each do |v|
+      @errors += v.validate
     end
+    
     return @errors
+  end
+  
+  def validatables
+    []
   end
   
   def valid?

@@ -58,7 +58,7 @@ describe Meter do
     }.each do |context_str,args|
       context context_str do
         it 'should return true' do
-          Score.new(*args).should be_valid
+          Meter.new(*args).should be_valid
         end
       end
     end
@@ -71,7 +71,7 @@ describe Meter do
     }.each do |context_str,args|
       context context_str do
         it 'should return false' do
-          Score.new(*args).should be_invalid
+          Meter.new(*args).should be_invalid
         end
       end      
     end

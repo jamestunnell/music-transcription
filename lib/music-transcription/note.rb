@@ -20,7 +20,9 @@ class Note
   end
   
   def ensure_positive_duration
-    raise ValueNotPositiveError, "duration #{@duration} is not positive" if @duration <= 0
+    unless @duration > 0
+      raise ValueNotPositiveError, "duration #{@duration} is not positive"
+    end
   end
   
   def == other
@@ -32,6 +34,10 @@ class Note
   
   def clone
     Marshal.load(Marshal.dump(self))
+  end
+  
+  def clear_links
+    @links = {}
   end
 
   def transpose diff
@@ -60,10 +66,6 @@ class Note
   def stretch! ratio
     @duration *= ratio
     return self
-  end
-  
-  def valid?
-    @duration > 0
   end
   
   class Sixteenth < Note
