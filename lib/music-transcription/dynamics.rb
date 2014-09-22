@@ -1,14 +1,14 @@
 module Music
 module Transcription
 module Dynamics  
-  PPP = Dynamic::Pianississimo.new
-  PP = Dynamic::Pianissimo.new
-  P = Dynamic::Piano.new
-  MP = Dynamic::MezzoPiano.new
-  MF = Dynamic::MezzoForte.new
-  F = Dynamic::Forte.new
-  FF = Dynamic::Fortissimo.new
-  FFF = Dynamic::Fortississimo.new
+  PPP = 0.125
+  PP = 0.25
+  P = 0.375
+  MP = 0.5
+  MF = 0.625
+  F = 0.75
+  FF = 0.875
+  FFF = 1.0
 end
 end
 end

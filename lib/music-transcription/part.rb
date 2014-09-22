@@ -14,7 +14,7 @@ class Part
     d = self.duration
     badkeys = dynamic_changes.keys.select {|k| k < 0 || k > d }
     if badkeys.any?
-      raise ArgumentError, "dynamic profile has changes outside 0..d"
+      raise ArgumentError, "dynamic change outside 0..#{d}"
     end
   end
   
