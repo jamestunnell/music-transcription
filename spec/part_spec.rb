@@ -26,4 +26,47 @@ describe Part do
       YAML.load(p.to_yaml).should eq p
     end
   end
+  
+  describe '#valid?' do
+    { 'negative start dynamic' => [-0.01],
+      'start dynamic > 1' => [1.01],
+      #'dynamic change offsets outside 0..d' => [
+      #  0.5, :notes => [ Note::Whole.new ],
+      #  :dynamic_changes => { 1.2 => Change::Immediate.new(0.5) }],
+      #'dynamic change offsets outside 0..d' => [
+      #  0.5, :notes => [ Note::Whole.new ],
+      #  :dynamic_changes => { -0.2 => Change::Immediate.new(0.5) }],
+      'dynamic change values outside 0..1' => [
+        0.5, :notes => [ Note::Whole.new ],
+        :dynamic_changes => { 0.2 => Change::Immediate.new(-0.01), 0.3 => Change::Gradual.new(1.01,0.2) }],
+      'notes with 0 duration' => [ 0.5, :notes => [ Note.new(0) ]],
+      'notes with negative duration' => [ 0.5, :notes => [ Note.new(-1) ]],
+      'gradual change with negative duration' => [
+        0.5, :notes => [ Note.new(1) ],
+        :dynamic_changes => { 0.2 => Change::Gradual.new(0.6,-0.1) }]
+    }.each do |context_str, args|
+      context context_str do
+        it 'should return false' do
+          Part.new(*args).should be_invalid
+        end
+      end
+    end
+    
+    {
+      'valid notes' => [ Dynamics::PP,
+        :notes => [ Note::Whole.new, Note::Quarter.new([C5]) ]],
+      'valid dynamic values' => [ Dynamics::MF,
+        :notes => [ Note::Whole.new([C4]), Note::Quarter.new ],
+        :dynamic_changes => {
+          0.5 => Change::Immediate.new(Dynamics::MP),
+          1.2 => Change::Gradual.new(Dynamics::FF, 0.05) } ],
+    }.each do |context_str, args|
+      context context_str do
+        it 'should return true' do
+          part = Part.new(*args)
+          part.should be_valid
+        end
+      end
+    end
+  end
 end

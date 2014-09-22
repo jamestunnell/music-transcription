@@ -1,6 +1,6 @@
 module Music
 module Transcription
-module Dynamics  
+module Dynamics
   PPP = 0.125
   PP = 0.25
   P = 0.375

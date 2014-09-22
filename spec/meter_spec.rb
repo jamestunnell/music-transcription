@@ -47,4 +47,33 @@ describe Meter do
       YAML.load(m.to_yaml).should eq m
     end
   end
+  
+  describe '#valid?' do
+    {
+      '4/4 meter' => [4,'1/4'.to_r],
+      '2/4 meter' => [2,'1/4'.to_r],
+      '3/4 meter' => [2,'1/4'.to_r],
+      '6/8 meter' => [6,'1/8'.to_r],
+      '12/8 meter' => [12,'1/8'.to_r],
+    }.each do |context_str,args|
+      context context_str do
+        it 'should return true' do
+          Score.new(*args).should be_valid
+        end
+      end
+    end
+    
+    {
+      'non-integer positive beats per measure' => [4.0,"1/4".to_r],
+      'integer negative beats per measure' => [-1,"1/4".to_r],
+      'zero beat duration' => [4,0.to_r],
+      'negative beat duration' => [4,-1.to_r],
+    }.each do |context_str,args|
+      context context_str do
+        it 'should return false' do
+          Score.new(*args).should be_invalid
+        end
+      end      
+    end
+  end
 end

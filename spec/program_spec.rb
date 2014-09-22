@@ -28,28 +28,23 @@ describe Program do
     end
   end
   
-  describe "#note_elapsed_at" do
-    before :each do
-      segments = [ 0.0...5.0, 0.0...4.0, 5.0..10.0 ]
-      @program = Program.new segments
+  describe '#valid?' do
+    context 'increasing, positive segments' do
+      it 'should return true' do
+        Program.new([0..2,1..2,0..4]).should be_valid
+      end
+    end
+    
+    context 'decreasing, positive segments' do
+      it 'should return false' do
+        Program.new([2..0,2..1,04..0]).should be_invalid
+      end
     end
 
-    it "should return 0.0 at program start" do
-      @program.note_elapsed_at(@program.segments.first.first).should eq(0.0)
-    end
-
-    it "should return program length at program stop" do
-      @program.note_elapsed_at(@program.segments.last.last).should eq(@program.length)
-    end
-
-    it "should return correct note elapsed for any included offset" do
-      @program.note_elapsed_at(2.5).should eq(2.5)
-      @program.note_elapsed_at(5.5).should eq(9.5)
-    end
-
-    it "should raise error if offset is not included" do
-      lambda { @program.note_elapsed_at(-0.000001) }.should raise_error
-      lambda { @program.note_elapsed_at(10.000001) }.should raise_error
+    context 'increasing, negative segments' do
+      it 'should return false' do
+        Program.new([-1..2,-2..0,-2..2]).should be_invalid
+      end
     end
   end
 end

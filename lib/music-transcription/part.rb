@@ -4,6 +4,8 @@ module Music
 module Transcription
 
 class Part
+  include Validatable
+  
   attr_reader :start_dynamic, :dynamic_changes, :notes
   
   def initialize start_dynamic, notes: [], dynamic_changes: {}
@@ -11,11 +13,13 @@ class Part
     @start_dynamic = start_dynamic
     @dynamic_changes = dynamic_changes
     
-    d = self.duration
-    badkeys = dynamic_changes.keys.select {|k| k < 0 || k > d }
-    if badkeys.any?
-      raise ArgumentError, "dynamic change outside 0..#{d}"
-    end
+    @check_methods = [:ensure_start_dynamic, :ensure_dynamic_change_values_range 
+      #:ensure_dynamic_change_offsets
+    ]
+  end
+  
+  def validatables
+    @notes + @dynamic_changes.values
   end
   
   def clone
@@ -30,6 +34,27 @@ class Part
 
   def duration
     return @notes.inject(0) { |sum, note| sum + note.duration }
+  end
+  
+  def ensure_start_dynamic
+    unless @start_dynamic.between?(0,1)
+      raise RangeError, "start dynamic #{@start_dynamic} is not between 0 and 1"
+    end
+  end
+
+  #def ensure_dynamic_change_offsets
+  #  d = self.duration
+  #  outofrange = @dynamic_changes.keys.select {|k| !k.between?(0,d) }
+  #  if outofrange.any?
+  #    raise RangeError, "dynamic change offsets #{outofrange} are not between 0 and #{d}"
+  #  end
+  #end
+  
+  def ensure_dynamic_change_values_range
+    outofrange = @dynamic_changes.values.select {|v| !v.value.between?(0,1) }
+    if outofrange.any?
+      raise RangeError, "dynamic change values #{outofrange} are not between 0 and 1"
+    end
   end
 end
 

@@ -2,7 +2,8 @@ require 'rspec'
 require 'music-transcription'
 
 include Music::Transcription
-include Music::Transcription::Pitches
+include Pitches
+include Meters
 
 class Samples
   SAMPLE_PART = Part.new(
@@ -14,4 +15,16 @@ class Samples
     ],
     dynamic_changes: {1.0 => Change::Immediate.new(Dynamics::MP)}
   )
+end
+
+RSpec::Matchers.define :be_valid do
+  match do |obj|
+    obj.valid?
+  end
+end
+
+RSpec::Matchers.define :be_invalid do
+  match do |obj|
+    obj.invalid?
+  end
 end

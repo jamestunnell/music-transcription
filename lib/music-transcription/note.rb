@@ -4,14 +4,23 @@ module Transcription
 require 'set'
 
 class Note
-  attr_reader :duration, :pitches, :links
-  attr_accessor :accent
+  include Validatable
+  
+  attr_reader :pitches, :links
+  attr_accessor :accent, :duration
 
   def initialize duration, pitches = [], links: {}, accent: Accents::NONE
     self.duration = duration
     @pitches = Set.new(pitches).sort
     @links = links
-    self.accent = accent
+    @duration = duration
+    @accent = accent
+    
+    @check_methods = [ :ensure_positive_duration ]
+  end
+  
+  def ensure_positive_duration
+    raise ValueNotPositiveError, "duration #{@duration} is not positive" if @duration <= 0
   end
   
   def == other
@@ -19,14 +28,6 @@ class Note
     (self.pitches == other.pitches) &&
     (@links.to_a.sort == other.links.to_a.sort) &&
     (@accent == other.accent)
-  end
-
-  # Set the note duration.
-  # @param [Numeric] duration The duration to use.
-  # @raise [ArgumentError] if duration is not greater than 0.
-  def duration= duration
-    raise ValueNotPositiveError if duration <= 0
-    @duration = duration
   end
   
   def clone
@@ -59,6 +60,10 @@ class Note
   def stretch! ratio
     @duration *= ratio
     return self
+  end
+  
+  def valid?
+    @duration > 0
   end
   
   class Sixteenth < Note

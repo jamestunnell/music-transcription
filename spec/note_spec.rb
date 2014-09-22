@@ -102,4 +102,26 @@ describe Note do
       YAML.load(n.to_yaml).should eq n
     end
   end
+  
+  describe '#valid?' do
+    context 'note with positive duration' do
+      it 'should return true' do
+        Note.new(1,[C2]).should be_valid
+      end
+    end
+    
+    context 'note with 0 duration' do
+      it 'should return false' do
+        Note.new(0,[C2]).should be_invalid
+        require 'pry'
+        binding.pry
+      end
+    end
+    
+    context 'note with negative duration' do
+      it 'should be invalid' do
+        Note.new(-1,[C2]).should be_invalid
+      end
+    end
+  end
 end
