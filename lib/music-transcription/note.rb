@@ -7,21 +7,23 @@ class Note
   include Validatable
   
   attr_reader :pitches, :links
-  attr_accessor :accent, :duration
+  attr_accessor :articulation, :duration
 
-  def initialize duration, pitches = [], links: {}, accent: Accents::NONE
+  DEFAULT_ARTICULATION = Articulations::NORMAL
+  
+  def initialize duration, pitches = [], links: {}, articulation: DEFAULT_ARTICULATION
     self.duration = duration
     @pitches = Set.new(pitches).sort
     @links = links
     @duration = duration
-    @accent = accent
+    @articulation = articulation
     
     @check_methods = [ :ensure_positive_duration ]
   end
   
   def ensure_positive_duration
     unless @duration > 0
-      raise ValueNotPositiveError, "duration #{@duration} is not positive"
+      raise NonPositiveError, "duration #{@duration} is not positive"
     end
   end
   
@@ -29,15 +31,11 @@ class Note
     return (@duration == other.duration) &&
     (self.pitches == other.pitches) &&
     (@links.to_a.sort == other.links.to_a.sort) &&
-    (@accent == other.accent)
+    (@articulation == other.articulation)
   end
   
   def clone
     Marshal.load(Marshal.dump(self))
-  end
-  
-  def clear_links
-    @links = {}
   end
 
   def transpose diff
@@ -67,59 +65,25 @@ class Note
     @duration *= ratio
     return self
   end
-  
-  class Sixteenth < Note
-    def initialize pitches = [], links: {}, accent: Accents::NONE
-      super(Rational(1,16),pitches,links:links,accent:accent)
+
+  def self.add_note_method(name, dur)
+    self.class.send(:define_method,name.to_sym) do |pitches = [], articulation: DEFAULT_ARTICULATION, links: {}|
+      Note.new(dur, pitches, articulation: articulation, links: links)
     end
   end
   
-  class DottedSixteenth < Note
-    def initialize pitches = [], links: {}, accent: Accents::NONE
-      super(Rational(3,32),pitches,links:links,accent:accent)
-    end
-  end
-  
-  class Eighth < Note
-    def initialize pitches = [], links: {}, accent: Accents::NONE
-      super(Rational(1,8),pitches,links:links,accent:accent)
-    end
-  end
-  
-  class DottedEighth < Note
-    def initialize pitches = [], links: {}, accent: Accents::NONE
-      super(Rational(3,16),pitches,links:links,accent:accent)
-    end
-  end
-  
-  class Quarter < Note
-    def initialize pitches = [], links: {}, accent: Accents::NONE
-      super(Rational(1,4),pitches,links:links,accent:accent)
-    end
-  end
-  
-  class DottedQuarter < Note
-    def initialize pitches = [], links: {}, accent: Accents::NONE
-      super(Rational(3,8),pitches,links:links,accent:accent)
-    end
-  end
-  
-  class Half < Note
-    def initialize pitches = [], links: {}, accent: Accents::NONE
-      super(Rational(1,2),pitches,links:links,accent:accent)
-    end
-  end
-  
-  class DottedHalf < Note
-    def initialize pitches = [], links: {}, accent: Accents::NONE
-      super(Rational(3,4),pitches,links:links,accent:accent)
-    end
-  end
-    
-  class Whole < Note
-    def initialize pitches = [], links: {}, accent: Accents::NONE
-      super(Rational(1,1),pitches,links:links,accent:accent)
-    end
+  {
+    :sixteenth => Rational(1,16),
+    :dotted_SIXTEENTH => Rational(3,32),
+    :eighth => Rational(1,8),
+    :dotted_eighth => Rational(3,16),
+    :quarter => Rational(1,4),
+    :dotted_quarter => Rational(3,8),
+    :half => Rational(1,2),
+    :dotted_half => Rational(3,4),
+    :whole => Rational(1),
+  }.each do |meth_name, dur|
+    add_note_method meth_name, dur
   end
 end
 

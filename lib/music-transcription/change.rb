@@ -25,7 +25,7 @@ class Change
     
     def ensure_zero_duration
       unless @duration == 0
-        raise ValueNotZeroError, "immediate change duration #{self.duration} must be 0"
+        raise NonZeroError, "immediate change duration #{self.duration} must be 0"
       end
     end
   end
@@ -34,13 +34,13 @@ class Change
     include Validatable
     
     def initialize value, transition_duration
-      @check_methods = [ :ensure_positive_duration ]
+      @check_methods = [ :ensure_nonnegative_duration ]
       super(value, transition_duration)
     end
     
-    def ensure_positive_duration
+    def ensure_nonnegative_duration
       if @duration < 0
-        raise ValueNotPositiveError, "gradual change duration #{self.duration} must be >= 0"
+        raise NegativeError, "gradual change duration #{self.duration} must be non-negative"
       end
     end
   end

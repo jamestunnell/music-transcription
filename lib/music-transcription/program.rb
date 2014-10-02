@@ -39,14 +39,14 @@ class Program
   def ensure_increasing_segments
     non_increasing = @segments.select {|seg| seg.first >= seg.last }
     if non_increasing.any?
-      raise SegmentNotIncreasingError, "Non-increasing segments found #{non_increasing}"
+      raise NonIncreasingError, "Non-increasing segments found #{non_increasing}"
     end
   end
   
   def ensure_nonnegative_segments
     negative = @segments.select {|seg| seg.first < 0 || seg.last < 0 }
     if negative.any?
-      raise SegmentNegativeError, "Negative segments found #{negative}"
+      raise NegativeError, "Segments #{negative} have negative values"
     end
   end
 end

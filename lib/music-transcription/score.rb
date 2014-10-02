@@ -29,37 +29,21 @@ class Score
   
   def check_start_tempo
     unless @start_tempo > 0
-      raise ValueNotPositiveError, "start tempo #{@start_tempo} is not positive"
+      raise NonPositiveError, "start tempo #{@start_tempo} is not positive"
     end
   end
   
   def check_tempo_changes
-    negative = @tempo_changes.select {|k,v| v.value <= 0}
-    if negative.any?
-      raise ValueNotPositiveError, "tempo changes #{negative} are not positive"
+    not_positive = @tempo_changes.select {|k,v| v.value <= 0}
+    if not_positive.any?
+      raise NonPositiveError, "tempo changes #{not_positive} are not positive"
     end
   end
-  
-  #def check_tempo_change_offsets
-  #  d = self.duration
-  #  outofrange = @tempo_changes.keys.select {|k| !k.between?(0,d) }
-  #  if outofrange.any?
-  #    raise RangeError, "tempo change offsets #{outofrange} are not between 0 and #{d}"
-  #  end
-  #end
-  #
-  #def check_meter_change_offsets
-  #  d = self.duration
-  #  outofrange = @meter_changes.keys.select {|k| !k.between?(0,d) }
-  #  if outofrange.any?
-  #    raise RangeError, "meter change offsets #{outofrange} are not between 0 and #{d}"
-  #  end
-  #end
   
   def check_meter_changes
     nonzero_duration = @meter_changes.select {|k,v| v.duration != 0 }
     if nonzero_duration.any?
-      raise ValueNotZeroError, "meter changes #{nonzero_duration} have non-zero duration"
+      raise NonZeroError, "meter changes #{nonzero_duration} have non-zero duration"
     end
   end
 

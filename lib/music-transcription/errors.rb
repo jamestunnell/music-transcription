@@ -1,10 +1,10 @@
 module Music
 module Transcription
-  class ValueNotPositiveError < StandardError; end
-  class ValueOutOfRangeError < StandardError; end
-  class ValueNotZeroError < StandardError; end
-  class NotPositiveIntegerError < StandardError; end
-  class SegmentNotIncreasingError < StandardError; end
-  class SegmentNegativeError < StandardError; end
+  class NonZeroError < StandardError; end
+  class NegativeError < StandardError; end
+  class NonPositiveError < StandardError; end
+  class NonIntegerError < StandardError; end
+  class NonRationalError < StandardError; end
+  class NonIncreasingError < StandardError; end
 end
 end

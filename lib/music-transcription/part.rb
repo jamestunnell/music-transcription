@@ -41,14 +41,6 @@ class Part
       raise RangeError, "start dynamic #{@start_dynamic} is not between 0 and 1"
     end
   end
-
-  #def ensure_dynamic_change_offsets
-  #  d = self.duration
-  #  outofrange = @dynamic_changes.keys.select {|k| !k.between?(0,d) }
-  #  if outofrange.any?
-  #    raise RangeError, "dynamic change offsets #{outofrange} are not between 0 and #{d}"
-  #  end
-  #end
   
   def ensure_dynamic_change_values_range
     outofrange = @dynamic_changes.values.select {|v| !v.value.between?(0,1) }

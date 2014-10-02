@@ -1,9 +1,7 @@
 module Music
 module Transcription
 
-# Defines a relationship (tie, slur, legato, etc.) to a note with a certain pitch.
-#
-# @author James Tunnell
+# Connect one note pitch to the target pitch of the next note, via slur, legato, etc.
 #
 # @!attribute [rw] target_pitch
 #   @return [Pitch] The pitch of the note which is being connected to.

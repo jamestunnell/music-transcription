@@ -14,14 +14,22 @@ class Meter
   end
   
   def check_beats_per_measure
-    unless @beats_per_measure.is_a?(Integer) && @beats_per_measure > 0
-      raise NotPositiveIntegerError, "beats per measure #{@beats_per_measure} is not a positive integer"
+    unless @beats_per_measure > 0
+      raise NonPositiveError, "beats per measure #{@beats_per_measure} is not positive"
+    end
+    
+    unless @beats_per_measure.is_a?(Integer)
+      raise NonIntegerError, "beats per measure #{@beats_per_measure} is not an integer"
     end
   end
     
   def check_beat_duration
     unless @beat_duration > 0
-      raise ValueNotPositiveError, "beat duration #{@beat_duration} is not positive"
+      raise NonPositiveError, "beat duration #{@beat_duration} is not positive"
+    end
+    
+    unless @beat_duration > 0
+      raise NonRationalError, "beat duration #{@beat_duration} is a rational"
     end
   end
   

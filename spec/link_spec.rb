@@ -15,12 +15,21 @@ describe Link do
     it 'should return false if two links do not have the same target pitch' do
       Link.new(C2).should_not eq(Link.new(F5))
     end
+    
+    it 'should return false if the link type is different' do
+      Link::Slur.new(C2).should_not eq(Link::Legato.new(D2))
+    end
   end
   
   describe '#clone' do
     it 'should return a link with the same target pitch' do
       l = Link.new(C4)
-      l.clone.should eq(l)
+      l.clone.target_pitch.should eq(C4)
+    end
+    
+    it 'should return a link with the same class' do
+      l = Link::Slur.new(Eb2)
+      l.clone.class.should eq(Link::Slur)
     end
   end
   

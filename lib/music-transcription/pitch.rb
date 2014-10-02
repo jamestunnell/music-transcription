@@ -28,9 +28,7 @@ class Pitch
 
   # The base ferquency is C0
   BASE_FREQ = 16.351597831287414
-
-  # A new instance of Pitch.
-  # @raise [NonPositiveFrequencyError] if base_freq is not > 0.
+  
   def initialize octave:0, semitone:0
     @octave = octave
     @semitone = semitone
@@ -60,9 +58,11 @@ class Pitch
   
   # Set the Pitch ratio according to a total number of semitones.
   # @param [Fixnum] semitone The total number of semitones to use.
-  # @raise [ArgumentError] if semitone is not an Integer
+  # @raise [NonIntegerError] if semitone is not an Integer
   def total_semitone= semitone
-    raise ArgumentError, "semitone is not a Integer" if !semitone.is_a?(Integer)
+    unless semitone.is_a?(Integer)
+      raise NonIntegerError, "semitone #{semitone} is not a Integer"
+    end
     @octave, @semitone = 0, semitone
     normalize!
   end
@@ -76,9 +76,9 @@ class Pitch
 
   # Represent the Pitch ratio according to a ratio.
   # @param [Numeric] ratio The ratio to represent.
-  # @raise [RangeError] if ratio is less than or equal to 0.0
+  # @raise [NonPositiveError] unless ratio is > 0
   def ratio= ratio
-    raise RangeError, "ratio #{ratio} is less than or equal to 0.0" if ratio <= 0.0
+    raise NonPositiveError, "ratio #{ratio} is not > 0" unless ratio > 0
     
     x = Math.log2 ratio
     self.total_semitone = (x * SEMITONES_PER_OCTAVE).round
@@ -157,11 +157,9 @@ class Pitch
   end
   
   def self.make_from_semitone semitones
-    if semitones.is_a?(Integer)
-      return Pitch.new(semitone: semitones)
-    else
-      raise ArgumentError, "Cannot make Pitch from #{semitones}"
-    end
+    pitch = Pitch.new()
+    pitch.total_semitone = semitones
+    return pitch
   end
 end
 

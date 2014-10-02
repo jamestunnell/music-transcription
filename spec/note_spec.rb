@@ -11,9 +11,9 @@ describe Note do
       note.duration.should eq(2)
     end
     
-    it "should assign :accent parameter if given during construction" do
-      note = Note.new 2, accent: Accent::Staccato.new
-      note.accent.class.should eq(Accent::Staccato)
+    it "should assign :articulation parameter if given during construction" do
+      note = Note.new 2, articulation: STACCATO
+      note.articulation.should eq(STACCATO)
     end
     
     it 'should have no pitches if not given' do
@@ -36,18 +36,28 @@ describe Note do
     end
   end
   
-  describe '#clear_links' do
-    it 'should remove all links' do
-      n = Note.new(2,[C2,E2],links: {C2 => Link::Slur.new(D2)})
-      n.clear_links
-      n.links.should be_empty
+  {
+    :sixteenth => Rational(1,16),
+    :dotted_SIXTEENTH => Rational(3,32),
+    :eighth => Rational(1,8),
+    :dotted_eighth => Rational(3,16),
+    :quarter => Rational(1,4),
+    :dotted_quarter => Rational(3,8),
+    :half => Rational(1,2),
+    :dotted_half => Rational(3,4),
+    :whole => Rational(1)
+  }.each do |fn_name,tgt_dur|
+    describe ".#{fn_name}" do
+      it "should make a note with duration #{tgt_dur}" do
+        Note.send(fn_name).duration.should eq tgt_dur
+      end
     end
   end
   
   describe '#transpose!' do
     context 'given pitch diff' do
       before(:all) do
-        @note = Note::Quarter.new([C2,F2], links:{C2=>Link::Slur.new(D2)})
+        @note = Note::quarter([C2,F2], links:{C2=>Link::Slur.new(D2)})
         @diff = Pitch.new(semitone: 4)
         @note.transpose! @diff
       end
@@ -65,32 +75,32 @@ describe Note do
     
     context 'given integer diff' do
       it 'should transpose the given number of semitones' do
-        Note::Quarter.new([C2]).transpose!(4).pitches[0].should eq(E2)
+        Note::quarter([C2]).transpose!(4).pitches[0].should eq(E2)
       end
     end
     
     it 'should return self' do
-      n = Note::Quarter.new
+      n = Note::quarter
       n.transpose!(0).should eq n
     end
   end
   
   describe '#stretch!' do
     it 'should multiply note duration by ratio' do
-      note = Note::Quarter.new
+      note = Note::quarter
       note.stretch!(2)
       note.duration.should eq(Rational(1,2))
       
-      note = Note::Quarter.new
+      note = Note::quarter
       note.stretch!(Rational(1,2))
       note.duration.should eq(Rational(1,8))
-      note = Note::Quarter.new
+      note = Note::quarter
       note.stretch!(2)
       note.duration.should eq(Rational(1,2))
     end
     
     it 'should return self' do
-      note = Note::Quarter.new
+      note = Note::quarter
       note.stretch!(1).should be note
     end
   end
@@ -103,7 +113,7 @@ describe Note do
       n = Note.new(1,[C2,E2])
       YAML.load(n.to_yaml).should eq n
       
-      n = Note.new(1,[C2], accent: Accents::STACCATO)
+      n = Note.new(1,[C2], articulation: STACCATO)
       YAML.load(n.to_yaml).should eq n
       
       n = Note.new(1,[E2], links: {E2 => Link::Legato.new(F2)})

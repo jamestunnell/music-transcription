@@ -12,7 +12,7 @@ describe Part do
       p = Part.new(Dynamics::PPP)
       p.start_dynamic.should eq Dynamics::PPP
       
-      notes = [Note::Whole.new([A2]), Note::Half.new]
+      notes = [Note::whole([A2]), Note::half]
       dcs = { "1/2".to_r => Change::Immediate.new(Dynamics::P), 1 => Change::Gradual.new(Dynamics::MF,1) }
       p = Part.new(Dynamics::FF, notes: notes, dynamic_changes: dcs)
       p.notes.should eq notes
@@ -31,13 +31,13 @@ describe Part do
     { 'negative start dynamic' => [-0.01],
       'start dynamic > 1' => [1.01],
       #'dynamic change offsets outside 0..d' => [
-      #  0.5, :notes => [ Note::Whole.new ],
+      #  0.5, :notes => [ Note::whole ],
       #  :dynamic_changes => { 1.2 => Change::Immediate.new(0.5) }],
       #'dynamic change offsets outside 0..d' => [
-      #  0.5, :notes => [ Note::Whole.new ],
+      #  0.5, :notes => [ Note::whole ],
       #  :dynamic_changes => { -0.2 => Change::Immediate.new(0.5) }],
       'dynamic change values outside 0..1' => [
-        0.5, :notes => [ Note::Whole.new ],
+        0.5, :notes => [ Note::whole ],
         :dynamic_changes => { 0.2 => Change::Immediate.new(-0.01), 0.3 => Change::Gradual.new(1.01,0.2) }],
       'notes with 0 duration' => [ 0.5, :notes => [ Note.new(0) ]],
       'notes with negative duration' => [ 0.5, :notes => [ Note.new(-1) ]],
@@ -54,9 +54,9 @@ describe Part do
     
     {
       'valid notes' => [ Dynamics::PP,
-        :notes => [ Note::Whole.new, Note::Quarter.new([C5]) ]],
+        :notes => [ Note::whole, quarter([C5]) ]],
       'valid dynamic values' => [ Dynamics::MF,
-        :notes => [ Note::Whole.new([C4]), Note::Quarter.new ],
+        :notes => [ Note::whole([C4]), Note::quarter ],
         :dynamic_changes => {
           0.5 => Change::Immediate.new(Dynamics::MP),
           1.2 => Change::Gradual.new(Dynamics::FF, 0.05) } ],
