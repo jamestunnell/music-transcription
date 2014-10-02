@@ -7,7 +7,8 @@ module Articulations
   STACCATISSIMO = :staccatissimo
   TENUTO = :tenuto
   ACCENTED = :accented
-  HAMMERED = :hammered
+  ACCENTED_STACCATO = :accented_staccato
+  HAMMERED = ACCENTED_STACCATO
   ACCENTED_TENUTO = :accented_tenuto
   ACCENTED_STACCATISSIMO = :accented_staccatissimo
 end
