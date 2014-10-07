@@ -33,8 +33,8 @@ class Link
   
   class Glissando < TargetedLink; end
   class Portamento < TargetedLink; end
-  class SlurGuide < TargetedLink; end
-  class LegatoGuide < TargetedLink; end
+  class Slur < TargetedLink; end
+  class Legato < TargetedLink; end
 end
 
 end
