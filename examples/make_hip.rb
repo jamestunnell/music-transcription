@@ -3,6 +3,7 @@ require 'yaml'
 
 include Music::Transcription
 include Pitches
+include Articulations
 
 bass_riff = [
   # 0.0
@@ -13,17 +14,17 @@ bass_riff = [
   Note.new(Rational(1,12), [ Ab2 ]),
   # 1.0
   Note.new(Rational(1,6), [ Bb2 ]),
-  Note::Quarter.new,
+  Note::quarter,
   Note.new(Rational(1,3), [ Ab2 ]),
-  Note::Quarter.new([ Ab2 ]),
+  Note::quarter([ Ab2 ]),
 ]
 
 lead_riff = [
   # 0.0
   Note.new(Rational(1,6), [ Bb3 ]),
   Note.new(Rational(1,4)),
-  Note.new(Rational(1,12), [ Db4 ], links: {Db4 => Link::Slur.new(Db4)}),
-  Note.new(Rational(1,6), [ Db4 ], links: {Db4 => Link::Slur.new(Db4)}),
+  Note.new(Rational(1,12), [ Db4 ], articulation: SLUR),
+  Note.new(Rational(1,6), [ Db4 ], articulation: SLUR),
   Note.new(Rational(1,36), [ Db4 ]),
   Note.new(Rational(1,36), [ Eb4 ]),
   Note.new(Rational(1,36), [ Db4 ]),
@@ -32,10 +33,10 @@ lead_riff = [
   # 1.0
   Note.new(Rational(1,6), [ Bb3 ]),
   Note.new(Rational(1,4)),
-  Note.new(Rational(1,12), [ Db4 ], links: {Db4 => Link::Slur.new(Db4)}),
-  Note::Quarter.new([ Db4 ], links: {Db4 => Link::Slur.new(Db4)}),
-  Note::Eighth.new([ Db4 ], links: {Db4 => Link::Portamento.new(C4)}),
-  Note::Eighth.new([ C4 ]),
+  Note.new(Rational(1,12), [ Db4 ], articulation: SLUR),
+  Note::quarter([ Db4 ], articulation: SLUR),
+  Note::eighth([ Db4 ], articulation: SLUR),
+  Note::eighth([ C4 ]),
 ]
 
 whole_step = Pitch.new(:semitone => 2)

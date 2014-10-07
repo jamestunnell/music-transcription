@@ -7,13 +7,23 @@ describe Note do
   
   describe '.new' do
     it 'should assign :duration that is given during construction' do
-      note = Note.new 2
-      note.duration.should eq(2)
+      Note.new(2).duration.should eq(2)
+    end
+
+    it "should assign :articulation to Note::DEFAULT_ARTICULATION if not given" do
+      Note.new(2).articulation.should eq(Note::DEFAULT_ARTICULATION)
     end
     
     it "should assign :articulation parameter if given during construction" do
-      note = Note.new 2, articulation: STACCATO
-      note.articulation.should eq(STACCATO)
+      Note.new(2, articulation: STACCATO).articulation.should eq(STACCATO)
+    end
+    
+    it 'should assign :accented to false if not given' do
+      Note.new(2).accented.should be false
+    end
+    
+    it 'should assign :accented if given' do
+      Note.new(2, accented: true).accented.should be true
     end
     
     it 'should have no pitches if not given' do
@@ -57,7 +67,7 @@ describe Note do
   describe '#transpose!' do
     context 'given pitch diff' do
       before(:all) do
-        @note = Note::quarter([C2,F2], links:{C2=>Link::Slur.new(D2)})
+        @note = Note::quarter([C2,F2], links:{C2=>Link::Glissando.new(D2)})
         @diff = Pitch.new(semitone: 4)
         @note.transpose! @diff
       end
@@ -116,7 +126,7 @@ describe Note do
       n = Note.new(1,[C2], articulation: STACCATO)
       YAML.load(n.to_yaml).should eq n
       
-      n = Note.new(1,[E2], links: {E2 => Link::Legato.new(F2)})
+      n = Note.new(1,[E2], links: {E2 => Link::Portamento.new(F2)})
       YAML.load(n.to_yaml).should eq n
     end
   end

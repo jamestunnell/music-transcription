@@ -7,354 +7,412 @@ start_meter: !ruby/object:Music::Transcription::Meter
   measure_duration: !ruby/object:Rational
     denominator: 1
     numerator: 1
+  check_methods:
+  - :check_beats_per_measure
+  - :check_beat_duration
 start_tempo: 120
 meter_changes: {}
 tempo_changes: {}
 parts:
   1: !ruby/object:Music::Transcription::Part
     notes:
-    - !ruby/object:Music::Transcription::Note::DottedQuarter
-      duration: !ruby/object:Rational
+    - !ruby/object:Music::Transcription::Note
+      duration: &4 !ruby/object:Rational
         denominator: 8
         numerator: 3
       pitches:
       - &3 !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 0
+      articulation: :normal
+      accented: false
       links: {}
-      accent: &1 !ruby/class 'Music::Transcription::Accent::None'
-    - !ruby/object:Music::Transcription::Note::Quarter
-      duration: !ruby/object:Rational
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: &2 !ruby/object:Rational
         denominator: 4
         numerator: 1
       pitches:
-      - &2 !ruby/object:Music::Transcription::Pitch
+      - &1 !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 3
+      articulation: :normal
+      accented: false
       links: {}
-      accent: *1
+      check_methods:
+      - :ensure_positive_duration
     - !ruby/object:Music::Transcription::Note
       duration: !ruby/object:Rational
         denominator: 16
         numerator: 5
-      pitches:
-      - &4 !ruby/object:Music::Transcription::Pitch
-        octave: 2
-        semitone: 5
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note
-      duration: !ruby/object:Rational
-        denominator: 16
-        numerator: 1
-      pitches:
-      - *2
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches: []
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Quarter
-      duration: !ruby/object:Rational
-        denominator: 4
-        numerator: 1
-      pitches:
-      - *3
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Quarter
-      duration: !ruby/object:Rational
-        denominator: 4
-        numerator: 1
-      pitches:
-      - *2
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::DottedQuarter
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 3
-      pitches: []
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::DottedQuarter
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 3
-      pitches:
-      - *3
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Quarter
-      duration: !ruby/object:Rational
-        denominator: 4
-        numerator: 1
-      pitches:
-      - *2
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note
-      duration: !ruby/object:Rational
-        denominator: 16
-        numerator: 5
-      pitches:
-      - *4
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note
-      duration: !ruby/object:Rational
-        denominator: 16
-        numerator: 1
-      pitches:
-      - *2
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches: []
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Quarter
-      duration: !ruby/object:Rational
-        denominator: 4
-        numerator: 1
-      pitches:
-      - *3
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Quarter
-      duration: !ruby/object:Rational
-        denominator: 4
-        numerator: 1
-      pitches:
-      - *2
-      links: {}
-      accent: *1
-    start_dynamic: &13 !ruby/object:Music::Transcription::Dynamic::MezzoForte {}
-    dynamic_changes: {}
-  2: !ruby/object:Music::Transcription::Part
-    notes:
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches: []
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
       pitches:
       - &5 !ruby/object:Music::Transcription::Pitch
-        octave: 3
-        semitone: 10
+        octave: 2
+        semitone: 5
+      articulation: :normal
+      accented: false
       links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
       duration: !ruby/object:Rational
+        denominator: 16
+        numerator: 1
+      pitches:
+      - *1
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: &6 !ruby/object:Rational
         denominator: 8
         numerator: 1
+      pitches: []
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *2
+      pitches:
+      - *3
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *2
+      pitches:
+      - *1
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *4
+      pitches: []
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *4
+      pitches:
+      - *3
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *2
+      pitches:
+      - *1
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 16
+        numerator: 5
       pitches:
       - *5
+      articulation: :normal
+      accented: false
       links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
       duration: !ruby/object:Rational
-        denominator: 8
+        denominator: 16
         numerator: 1
       pitches:
-      - *5
+      - *1
+      articulation: :normal
+      accented: false
       links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches: []
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *2
       pitches:
-      - *5
+      - *3
+      articulation: :normal
+      accented: false
       links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Quarter
-      duration: !ruby/object:Rational
-        denominator: 4
-        numerator: 1
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *2
       pitches:
-      - &9 !ruby/object:Music::Transcription::Pitch
-        octave: 4
-        semitone: 0
+      - *1
+      articulation: :normal
+      accented: false
       links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Quarter
-      duration: !ruby/object:Rational
-        denominator: 4
-        numerator: 1
-      pitches:
-      - &10 !ruby/object:Music::Transcription::Pitch
-        octave: 3
-        semitone: 9
+      check_methods:
+      - :ensure_positive_duration
+    start_dynamic: 0.625
+    dynamic_changes: {}
+    check_methods:
+    - :ensure_start_dynamic
+    - :ensure_dynamic_change_values_range
+  2: !ruby/object:Music::Transcription::Part
+    notes:
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches: []
+      articulation: :normal
+      accented: false
       links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches:
-      - &6 !ruby/object:Music::Transcription::Pitch
-        octave: 3
-        semitone: 7
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
       pitches:
       - &7 !ruby/object:Music::Transcription::Pitch
         octave: 3
-        semitone: 5
+        semitone: 10
+      articulation: :normal
+      accented: false
       links: {}
-      accent: *1
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - *7
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - *7
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - *7
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *2
+      pitches:
+      - &10 !ruby/object:Music::Transcription::Pitch
+        octave: 4
+        semitone: 0
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *2
+      pitches:
+      - &11 !ruby/object:Music::Transcription::Pitch
+        octave: 3
+        semitone: 9
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - &8 !ruby/object:Music::Transcription::Pitch
+        octave: 3
+        semitone: 7
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - &9 !ruby/object:Music::Transcription::Pitch
+        octave: 3
+        semitone: 5
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
     - !ruby/object:Music::Transcription::Note
       duration: !ruby/object:Rational
         denominator: 16
         numerator: 5
       pitches:
-      - *6
-      links:
-        *6: !ruby/object:Music::Transcription::Link::Slur
-          target_pitch: *7
-      accent: *1
+      - *8
+      articulation: :slur
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
     - !ruby/object:Music::Transcription::Note
       duration: !ruby/object:Rational
         denominator: 16
         numerator: 1
       pitches:
-      - *7
-      links:
-        *7: !ruby/object:Music::Transcription::Link::Slur
-          target_pitch: &8 !ruby/object:Music::Transcription::Pitch
-            octave: 3
-            semitone: 4
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches:
-      - *8
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches: []
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches: []
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches:
-      - *5
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches:
-      - *5
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches:
-      - *5
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches:
-      - *5
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Quarter
-      duration: !ruby/object:Rational
-        denominator: 4
-        numerator: 1
-      pitches:
       - *9
+      articulation: :slur
+      accented: false
       links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 3
+        semitone: 4
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches: []
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches: []
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - *7
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - *7
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - *7
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - *7
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *2
       pitches:
       - *10
+      articulation: :normal
+      accented: false
       links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches:
-      - &11 !ruby/object:Music::Transcription::Pitch
-        octave: 4
-        semitone: 4
-      links: {}
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
       pitches:
       - *11
-      links:
-        *11: !ruby/object:Music::Transcription::Link::Slur
-          target_pitch: &12 !ruby/object:Music::Transcription::Pitch
-            octave: 4
-            semitone: 2
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - &12 !ruby/object:Music::Transcription::Pitch
+        octave: 4
+        semitone: 4
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
       pitches:
       - *12
-      links:
-        *12: !ruby/object:Music::Transcription::Link::Slur
-          target_pitch: *9
-      accent: *1
-    - !ruby/object:Music::Transcription::Note::Eighth
-      duration: !ruby/object:Rational
-        denominator: 8
-        numerator: 1
-      pitches:
-      - *9
+      articulation: :slur
+      accented: false
       links: {}
-      accent: *1
-    start_dynamic: *13
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 4
+        semitone: 2
+      articulation: :slur
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    - !ruby/object:Music::Transcription::Note
+      duration: *6
+      pitches:
+      - *10
+      articulation: :normal
+      accented: false
+      links: {}
+      check_methods:
+      - :ensure_positive_duration
+    start_dynamic: 0.625
     dynamic_changes: {}
+    check_methods:
+    - :ensure_start_dynamic
+    - :ensure_dynamic_change_values_range
 program: !ruby/object:Music::Transcription::Program
   segments:
   - !ruby/range
@@ -365,3 +423,10 @@ program: !ruby/object:Music::Transcription::Program
     begin: 0
     end: 4.0
     excl: true
+  check_methods:
+  - :ensure_increasing_segments
+  - :ensure_nonnegative_segments
+check_methods:
+- :check_start_tempo
+- :check_tempo_changes
+- :check_meter_changes

@@ -14,39 +14,39 @@ score = Score.new(
     1 => Part.new(
       Dynamics::MF,
       notes: [
-        Note::Whole.new([C4]),
-        Note::Whole.new([Bb3]),
-        Note::Whole.new([Ab3]),
-        Note::Half.new([G3]),
-        Note::Half.new([Bb3]),
+        Note::whole([C4]),
+        Note::whole([Bb3]),
+        Note::whole([Ab3]),
+        Note::half([G3]),
+        Note::half([Bb3]),
       ]
     ), 
     2 => Part.new(
       Dynamics::MF,
       notes: [
-        Note::DottedQuarter.new([E5]),
-        Note::Whole.new([D5]),
-        Note::Whole.new([C5]),
+        Note::dotted_quarter([E5]),
+        Note::whole([D5]),
+        Note::whole([C5]),
         Note::new("5/8".to_r, [C5]),
-        Note::Half.new([C5]),
-        Note::Half.new([D5]),
+        Note::half([C5]),
+        Note::half([D5]),
       ]
     ),
     3 => Part.new(
       Dynamics::MF,
       notes: [
-        Note::Eighth.new,
-        Note::Quarter.new([G5]),
-        Note::Half.new([F5]),
-        Note::Quarter.new,
-        Note::Quarter.new([F5]),
-        Note::Half.new([Eb5]),
-        Note::Quarter.new,
-        Note::Quarter.new([Eb5]),
-        Note::Half.new([Eb5]),
-        Note::Eighth.new,
-        Note::Half.new([Eb5]),
-        Note::Half.new([F5]),
+        Note::eighth,
+        Note::quarter([G5]),
+        Note::half([F5]),
+        Note::quarter,
+        Note::quarter([F5]),
+        Note::half([Eb5]),
+        Note::quarter,
+        Note::quarter([Eb5]),
+        Note::half([Eb5]),
+        Note::eighth,
+        Note::half([Eb5]),
+        Note::half([F5]),
       ]
     )
   }

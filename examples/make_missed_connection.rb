@@ -3,6 +3,7 @@ require 'yaml'
 
 include Music::Transcription
 include Pitches
+include Articulations
 
 score = Score.new(
   Meter.new(4,"1/4".to_r),
@@ -13,46 +14,46 @@ score = Score.new(
       Dynamics::MF,
       notes: [
         # 0.0
-        Note::Quarter.new([Eb2]),
-        Note::Quarter.new,
-        Note::Quarter.new([Bb2]),
-        Note::Quarter.new,
-        Note::Quarter.new([Eb2]),
-        Note::Eighth.new,
-        Note::Eighth.new([B2]),
-        Note::Quarter.new([Bb2]),
-        Note::Quarter.new([Ab2]),
+        Note::quarter([Eb2]),
+        Note::quarter,
+        Note::quarter([Bb2]),
+        Note::quarter,
+        Note::quarter([Eb2]),
+        Note::eighth,
+        Note::eighth([B2]),
+        Note::quarter([Bb2]),
+        Note::quarter([Ab2]),
         
         # 2.0
-        Note::Quarter.new([Eb2]),
-        Note::Quarter.new,
-        Note::Quarter.new([Bb2]),
-        Note::Quarter.new,
-        Note::Quarter.new([Eb2]),
-        Note::Eighth.new,
-        Note::Eighth.new([B2]),
-        Note::Quarter.new([Bb2]),
-        Note::Quarter.new([Ab2]),
+        Note::quarter([Eb2]),
+        Note::quarter,
+        Note::quarter([Bb2]),
+        Note::quarter,
+        Note::quarter([Eb2]),
+        Note::eighth,
+        Note::eighth([B2]),
+        Note::quarter([Bb2]),
+        Note::quarter([Ab2]),
         
         # 4.0
-        Note::Quarter.new([Bb2]),
-        Note::Eighth.new,
-        Note::Eighth.new([F3], links: { F3 => Link::Slur.new(F3)}),
-        Note::Half.new([F3]),
-        Note::Quarter.new([Bb2]),
-        Note::Eighth.new,
-        Note::Eighth.new([F3], links: { F3 => Link::Slur.new(F3)}),
-        Note::Half.new([F3]),
+        Note::quarter([Bb2]),
+        Note::eighth,
+        Note::eighth([F3], articulation: SLUR),
+        Note::half([F3]),
+        Note::quarter([Bb2]),
+        Note::eighth,
+        Note::eighth([F3], articulation: SLUR),
+        Note::half([F3]),
 
         # 6.0
-        Note::Quarter.new([B2]),
-        Note::Eighth.new,
-        Note::Eighth.new([Gb3], links: { Gb3 => Link::Slur.new(Gb3)}),
-        Note::Half.new([Gb3]),
-        Note::Quarter.new([B2]),
-        Note::Eighth.new,
-        Note::Eighth.new([Gb3], links: { Gb3 => Link::Slur.new(Gb3)}),
-        Note::Half.new([Gb3]),
+        Note::quarter([B2]),
+        Note::eighth,
+        Note::eighth([Gb3], articulation: SLUR),
+        Note::half([Gb3]),
+        Note::quarter([B2]),
+        Note::eighth,
+        Note::eighth([Gb3], articulation: SLUR),
+        Note::half([Gb3]),
         
         #8.0
       ]

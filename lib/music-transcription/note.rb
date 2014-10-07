@@ -7,16 +7,16 @@ class Note
   include Validatable
   
   attr_reader :pitches, :links
-  attr_accessor :articulation, :duration
+  attr_accessor :articulation, :duration, :accented
 
   DEFAULT_ARTICULATION = Articulations::NORMAL
   
-  def initialize duration, pitches = [], links: {}, articulation: DEFAULT_ARTICULATION
-    self.duration = duration
-    @pitches = Set.new(pitches).sort
-    @links = links
+  def initialize duration, pitches = [], articulation: DEFAULT_ARTICULATION, accented: false, links: {}
     @duration = duration
+    @pitches = Set.new(pitches).sort
     @articulation = articulation
+    @accented = accented
+    @links = links
     
     @check_methods = [ :ensure_positive_duration ]
   end
@@ -31,7 +31,8 @@ class Note
     return (@duration == other.duration) &&
     (self.pitches == other.pitches) &&
     (@links.to_a.sort == other.links.to_a.sort) &&
-    (@articulation == other.articulation)
+    (@articulation == other.articulation) &&
+    (@accented == other.accented)
   end
   
   def clone
@@ -67,8 +68,8 @@ class Note
   end
 
   def self.add_note_method(name, dur)
-    self.class.send(:define_method,name.to_sym) do |pitches = [], articulation: DEFAULT_ARTICULATION, links: {}|
-      Note.new(dur, pitches, articulation: articulation, links: links)
+    self.class.send(:define_method,name.to_sym) do |pitches = [], articulation: DEFAULT_ARTICULATION, links: {}, accented: false|
+      Note.new(dur, pitches, articulation: articulation, links: links, accented: accented)
     end
   end
   

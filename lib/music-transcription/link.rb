@@ -7,32 +7,34 @@ module Transcription
 #   @return [Pitch] The pitch of the note which is being connected to.
 #
 class Link
-  attr_accessor :target_pitch
-  
-  def initialize target_pitch
-    @target_pitch = target_pitch
+  def clone
+    Marshal.load(Marshal.dump(self))
   end
 
-  def ==(other)
-    self.class == other.class && self.target_pitch == other.target_pitch
-  end
-  
-  def clone
-    self.class.new @target_pitch.clone
-  end
-  
-  [ :Slur,
-    :Legato,
-    :Glissando,
-    :Portamento,
-  ].each do |name|
-    klass = Class.new(Link) do
-      def initialize target_pitch
-        super(target_pitch)
-      end
+  class Tie < Link
+    def initialize; end
+    
+    def ==(other)
+      self.class == other.class
     end
-    Link.const_set(name.to_sym, klass)
   end
+  
+  class TargetedLink < Link
+    attr_accessor :target_pitch
+    
+    def initialize target_pitch
+      @target_pitch = target_pitch
+    end
+    
+    def ==(other)
+      self.class == other.class && @target_pitch == other.target_pitch
+    end
+  end
+  
+  class Glissando < TargetedLink; end
+  class Portamento < TargetedLink; end
+  class SlurGuide < TargetedLink; end
+  class LegatoGuide < TargetedLink; end
 end
 
 end
