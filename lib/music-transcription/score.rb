@@ -13,10 +13,9 @@ class Score
     @tempo_changes = tempo_changes
     @parts = parts
     @program = program
+    @check_methods = [ :check_start_tempo, :check_tempo_changes, :check_meter_changes ]
     
-    @check_methods = [ :check_start_tempo, :check_tempo_changes,
-      #:check_tempo_change_offsets, :check_meter_change_offsets,
-      :check_meter_changes ]
+    yield(self) if block_given?
   end
   
   def validatables

@@ -12,10 +12,9 @@ class Part
     @notes = notes
     @start_dynamic = start_dynamic
     @dynamic_changes = dynamic_changes
+    @check_methods = [:ensure_start_dynamic, :ensure_dynamic_change_values_range ]
     
-    @check_methods = [:ensure_start_dynamic, :ensure_dynamic_change_values_range 
-      #:ensure_dynamic_change_offsets
-    ]
+    yield(self) if block_given?
   end
   
   def validatables
