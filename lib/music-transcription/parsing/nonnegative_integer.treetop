@@ -1,0 +1,11 @@
+module Music
+module Transcription
+
+grammar NonnegativeInteger
+  rule nonnegative_integer
+    [0-9]*
+  end
+end
+
+end
+end

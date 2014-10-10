@@ -29,4 +29,6 @@ DESCRIPTION
   gem.add_development_dependency 'pry'
   gem.add_development_dependency 'pry-nav'
   gem.add_development_dependency 'pry-stack_explorer'
+  
+  gem.add_dependency 'treetop'
 end
