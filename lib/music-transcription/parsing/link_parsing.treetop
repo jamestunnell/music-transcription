@@ -6,10 +6,10 @@ grammar Link
   include Pitch
   
   rule link
-    slur / tie / legato / glissando / portamento
+    slur_link / tie / legato_link / glissando / portamento
   end
   
-  rule slur
+  rule slur_link
     "=" target:pitch <SlurNode>
   end
 
@@ -17,7 +17,7 @@ grammar Link
     "=" <TieNode>
   end
   
-  rule legato
+  rule legato_link
     "-" target:pitch <LegatoNode>
   end
   

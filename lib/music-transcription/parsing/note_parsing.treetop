@@ -1,0 +1,47 @@
+module Music
+module Transcription
+module Parsing
+
+grammar Note
+  include Pitch
+  include Articulation
+  include Link
+  include Duration
+
+  rule note
+    polyphonic_note / monophonic_note / rest_note
+  end
+
+  rule rest_note
+    duration:duration <RestNoteNode>
+  end
+  
+  rule monophonic_note
+    duration
+    art:articulation?
+    pl:pitch_link
+    acc:accent?
+    <MonophonicNoteNode>
+  end
+  
+  rule polyphonic_note
+    duration
+    art:articulation?
+    pl:pitch_link
+    more_pitches:("," pl:pitch_link)+
+    acc:accent?
+    <PolyphonicNoteNode>
+  end
+
+  rule pitch_link
+    pitch the_link:link?
+  end
+  
+  rule accent
+    "!"
+  end
+end
+
+end
+end
+end

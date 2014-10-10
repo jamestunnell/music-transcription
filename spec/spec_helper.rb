@@ -29,3 +29,15 @@ RSpec::Matchers.define :be_invalid do
     obj.invalid?
   end
 end
+
+RSpec::Matchers.define :parse do |str|
+  match do |parser|
+    !parser.parse(str).nil?
+  end
+end
+
+RSpec::Matchers.define :parse_as do |str,nodeclass|
+  match do |parser|
+    parser.parse(str).is_a?(nodeclass)
+  end
+end

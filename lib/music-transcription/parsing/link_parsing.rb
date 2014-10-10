@@ -26,7 +26,7 @@ module Link
     end
 
     i0 = index
-    r1 = _nt_slur
+    r1 = _nt_slur_link
     if r1
       r1 = SyntaxNode.new(input, (index-1)...index) if r1 == true
       r0 = r1
@@ -36,7 +36,7 @@ module Link
         r2 = SyntaxNode.new(input, (index-1)...index) if r2 == true
         r0 = r2
       else
-        r3 = _nt_legato
+        r3 = _nt_legato_link
         if r3
           r3 = SyntaxNode.new(input, (index-1)...index) if r3 == true
           r0 = r3
@@ -64,18 +64,18 @@ module Link
     r0
   end
 
-  module Slur0
+  module SlurLink0
     def target
       elements[1]
     end
   end
 
-  def _nt_slur
+  def _nt_slur_link
     start_index = index
-    if node_cache[:slur].has_key?(index)
-      cached = node_cache[:slur][index]
+    if node_cache[:slur_link].has_key?(index)
+      cached = node_cache[:slur_link][index]
       if cached
-        node_cache[:slur][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        node_cache[:slur_link][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
         @index = cached.interval.end
       end
       return cached
@@ -96,13 +96,13 @@ module Link
     end
     if s0.last
       r0 = instantiate_node(SlurNode,input, i0...index, s0)
-      r0.extend(Slur0)
+      r0.extend(SlurLink0)
     else
       @index = i0
       r0 = nil
     end
 
-    node_cache[:slur][start_index] = r0
+    node_cache[:slur_link][start_index] = r0
 
     r0
   end
@@ -131,18 +131,18 @@ module Link
     r0
   end
 
-  module Legato0
+  module LegatoLink0
     def target
       elements[1]
     end
   end
 
-  def _nt_legato
+  def _nt_legato_link
     start_index = index
-    if node_cache[:legato].has_key?(index)
-      cached = node_cache[:legato][index]
+    if node_cache[:legato_link].has_key?(index)
+      cached = node_cache[:legato_link][index]
       if cached
-        node_cache[:legato][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        node_cache[:legato_link][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
         @index = cached.interval.end
       end
       return cached
@@ -163,13 +163,13 @@ module Link
     end
     if s0.last
       r0 = instantiate_node(LegatoNode,input, i0...index, s0)
-      r0.extend(Legato0)
+      r0.extend(LegatoLink0)
     else
       @index = i0
       r0 = nil
     end
 
-    node_cache[:legato][start_index] = r0
+    node_cache[:legato_link][start_index] = r0
 
     r0
   end
