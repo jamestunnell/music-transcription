@@ -1,0 +1,35 @@
+module Music
+module Transcription
+module Parsing
+
+grammar Link
+  include Pitch
+  
+  rule link
+    slur / tie / legato / glissando / portamento
+  end
+  
+  rule slur
+    "=" target:pitch <SlurNode>
+  end
+
+  rule tie
+    "=" <TieNode>
+  end
+  
+  rule legato
+    "-" target:pitch <LegatoNode>
+  end
+  
+  rule glissando
+    "~" target:pitch <GlissandoNode>
+  end
+  
+  rule portamento
+    "/" target:pitch <PortamentoNode>
+  end
+end
+
+end
+end
+end

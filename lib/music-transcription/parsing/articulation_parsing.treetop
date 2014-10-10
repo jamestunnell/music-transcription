@@ -1,0 +1,61 @@
+module Music
+module Transcription
+module Parsing
+
+grammar Articulation
+  rule articulation
+    slur / legato / tenuto / portato / staccato / staccatissimo
+  end
+  
+  rule slur
+    "=" {
+      def to_articulation
+        Music::Transcription::Articulations::SLUR
+      end
+    }
+  end
+
+  rule legato
+    "-" {
+      def to_articulation
+        Music::Transcription::Articulations::LEGATO
+      end
+    }
+  end
+  
+  rule tenuto
+    "_" {
+      def to_articulation
+        Music::Transcription::Articulations::TENUTO
+      end
+    }
+  end
+  
+  rule portato
+    "%" {
+      def to_articulation
+        Music::Transcription::Articulations::PORTATO
+      end
+    }
+  end
+
+  rule staccato
+    "." {
+      def to_articulation
+        Music::Transcription::Articulations::STACCATO
+      end
+    }
+  end
+  
+  rule staccatissimo
+    "'" {
+      def to_articulation
+        Music::Transcription::Articulations::STACCATISSIMO
+      end
+    }
+  end
+end
+
+end
+end
+end
