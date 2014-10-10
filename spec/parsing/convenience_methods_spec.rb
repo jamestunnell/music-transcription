@@ -41,6 +41,15 @@ notes_stuff = ['should parse as whitespace-separated notes',
   "/2Db2\t/2C2  \n /2C2" => [Note::half([Db2]), Note::half([C2]), Note::half([C2])]
 }]
 
+meter_stuff = ['should parse as meter',
+{
+  '2/2' => Meter.new(2,"1/2".to_r),
+  "4/4" => Meter.new(4,"1/4".to_r),
+  "6/8" => Meter.new(6,"1/8".to_r),
+  "12/3" => Meter.new(12,"1/3".to_r),
+  "133/55" => Meter.new(133,"1/55".to_r),
+}]
+
 {
   :duration => dur_stuff,
   :dur => dur_stuff,
@@ -49,7 +58,8 @@ notes_stuff = ['should parse as whitespace-separated notes',
   :pitch => pitch_stuff,
   :pitches => pitches_stuff,
   :note => note_stuff,
-  :notes => notes_stuff
+  :notes => notes_stuff,
+  :meter => meter_stuff
 }.each do |mod_fun,descr_cases|
   describe("Parsing::" + mod_fun.to_s) do 
     descr, cases = descr_cases
@@ -75,7 +85,8 @@ end
   :to_n => note_stuff,
   :to_note => note_stuff,
   :to_ns => notes_stuff,
-  :to_notes => notes_stuff
+  :to_notes => notes_stuff,
+  :to_meter => meter_stuff,
 }.each do |inst_meth,descr_cases|
   describe("String#" + inst_meth.to_s) do 
     descr, cases = descr_cases

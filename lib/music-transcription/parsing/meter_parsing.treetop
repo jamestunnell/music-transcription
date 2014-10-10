@@ -1,0 +1,19 @@
+module Music
+module Transcription
+module Parsing
+
+grammar Meter
+  include PositiveInteger
+  
+  rule meter
+    bpm:positive_integer "/" bd:positive_integer {
+      def to_meter
+        Music::Transcription::Meter.new(bpm.to_i, Rational(1,bd.to_i))
+      end
+    }
+  end
+end
+
+end
+end
+end

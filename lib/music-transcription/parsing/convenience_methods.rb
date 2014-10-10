@@ -4,6 +4,7 @@ module Parsing
   DURATION_PARSER = DurationParser.new
   PITCH_PARSER = PitchParser.new
   NOTE_PARSER = NoteParser.new
+  METER_PARSER = MeterParser.new
   
   def duration dur_str
     DURATION_PARSER.parse(dur_str).to_r
@@ -44,6 +45,11 @@ module Parsing
     end
   end
   module_function :notes
+  
+  def meter meter_str
+    METER_PARSER.parse(meter_str).to_meter
+  end
+  module_function :meter
 end
 end
 end
@@ -80,4 +86,8 @@ class String
     Music::Transcription::Parsing::notes(self)
   end
   alias :to_ns :to_notes
+  
+  def to_meter
+    Music::Transcription::Parsing::meter(self)
+  end
 end
