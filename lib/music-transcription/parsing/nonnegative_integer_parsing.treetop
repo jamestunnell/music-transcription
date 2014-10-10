@@ -1,5 +1,6 @@
 module Music
 module Transcription
+module Parsing
 
 grammar NonnegativeInteger
   rule nonnegative_integer
@@ -7,5 +8,6 @@ grammar NonnegativeInteger
   end
 end
 
+end
 end
 end

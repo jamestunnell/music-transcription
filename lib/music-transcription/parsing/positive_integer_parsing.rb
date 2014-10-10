@@ -3,6 +3,7 @@
 
 module Music
 module Transcription
+module Parsing
 
 module PositiveInteger
   include Treetop::Runtime
@@ -89,5 +90,6 @@ class PositiveIntegerParser < Treetop::Runtime::CompiledParser
 end
 
 
+end
 end
 end

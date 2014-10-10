@@ -3,6 +3,7 @@
 
 module Music
 module Transcription
+module Parsing
 
 module NonnegativeInteger
   include Treetop::Runtime
@@ -51,5 +52,6 @@ class NonnegativeIntegerParser < Treetop::Runtime::CompiledParser
 end
 
 
+end
 end
 end

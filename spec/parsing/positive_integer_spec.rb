@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe PositiveIntegerParser do
-  parser = PositiveIntegerParser.new
+describe Parsing::PositiveIntegerParser do
+  parser = Parsing::PositiveIntegerParser.new
 
   ["1","50","05","502530"].each do |str|
     it "should parse '#{str}'" do
