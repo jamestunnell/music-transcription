@@ -3,10 +3,25 @@
 module Validatable
   attr_reader :errors
   
+  def check_methods
+    if instance_variable_defined?(:@check_methods)
+      methods = instance_variable_get(:@check_methods)
+    else
+      methods = []
+    end
+    
+    if self.class.class_variable_defined?(:@@check_methods)
+      methods += self.class.class_variable_get(:@@check_methods)
+    end
+    
+    return methods
+  end
+  
   def validate
     @errors = []
     
-    @check_methods.each do |check_method|
+    
+    check_methods.each do |check_method|
       begin
         send(check_method)
       rescue StandardError => e

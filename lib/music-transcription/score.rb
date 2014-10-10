@@ -6,6 +6,7 @@ class Score
   
   attr_reader :start_meter, :start_tempo, :parts, :program, :meter_changes, :tempo_changes
   
+  @@check_methods = [ :check_start_tempo, :check_tempo_changes, :check_meter_changes ]
   def initialize start_meter, start_tempo, meter_changes: {}, tempo_changes: {}, parts: {}, program: Program.new
     @start_meter = start_meter
     @start_tempo = start_tempo
@@ -13,7 +14,6 @@ class Score
     @tempo_changes = tempo_changes
     @parts = parts
     @program = program
-    @check_methods = [ :check_start_tempo, :check_tempo_changes, :check_meter_changes ]
     
     yield(self) if block_given?
   end

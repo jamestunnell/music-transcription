@@ -10,11 +10,9 @@ class Program
   
   attr_accessor :segments
 
-  # A new instance of Program.
-  # @param [Hash] args Hashed arguments. Required key is :segments.
+  @@check_methods = [:ensure_increasing_segments, :ensure_nonnegative_segments]
   def initialize segments = []
     @segments = segments
-    @check_methods = [:ensure_increasing_segments, :ensure_nonnegative_segments]
   end
 
   # @return [Float] the sum of all program segment lengths
@@ -22,7 +20,6 @@ class Program
     segments.inject(0.0) { |length, segment| length + (segment.last - segment.first) }
   end
   
-    # compare to another Program
   def == other
     return other.respond_to?(:segments) && @segments == other.segments
   end

@@ -18,8 +18,8 @@ class Change
   class Immediate < Change
     include Validatable
     
+    @@check_methods = [ :ensure_zero_duration ]
     def initialize value
-      @check_methods = [ :ensure_zero_duration ]
       super(value,0)
     end
     
@@ -33,8 +33,8 @@ class Change
   class Gradual < Change
     include Validatable
     
+    @@check_methods = [ :ensure_nonnegative_duration ]
     def initialize value, transition_duration
-      @check_methods = [ :ensure_nonnegative_duration ]
       super(value, transition_duration)
     end
     

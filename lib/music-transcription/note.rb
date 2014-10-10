@@ -11,14 +11,13 @@ class Note
 
   DEFAULT_ARTICULATION = Articulations::NORMAL
   
+  @@check_methods = [ :ensure_positive_duration ]
   def initialize duration, pitches = [], articulation: DEFAULT_ARTICULATION, accented: false, links: {}
     @duration = duration
     @pitches = Set.new(pitches).sort
     @articulation = articulation
     @accented = accented
     @links = links
-    
-    @check_methods = [ :ensure_positive_duration ]
   end
   
   def ensure_positive_duration
