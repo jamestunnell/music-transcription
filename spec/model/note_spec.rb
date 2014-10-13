@@ -89,6 +89,13 @@ describe Note do
       end
     end
     
+    context 'with links that have no target pitch' do
+      it 'should not raise error' do
+        n = Note::half([E2],links: {E2 => Link::Tie.new})
+        expect { n.transpose!(1) }.to_not raise_error
+      end
+    end
+    
     it 'should return self' do
       n = Note::quarter
       n.transpose!(0).should eq n

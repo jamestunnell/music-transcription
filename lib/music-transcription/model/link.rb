@@ -17,6 +17,10 @@ class Link
     def ==(other)
       self.class == other.class
     end
+    
+    def transpose! diff
+      # do nothing, of course
+    end
   end
   
   class TargetedLink < Link
@@ -28,6 +32,10 @@ class Link
     
     def ==(other)
       self.class == other.class && @target_pitch == other.target_pitch
+    end
+    
+    def transpose! diff
+      @target_pitch += diff
     end
   end
   

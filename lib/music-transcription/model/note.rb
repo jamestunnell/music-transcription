@@ -50,7 +50,7 @@ class Note
     @pitches = @pitches.map {|pitch| pitch + diff}
     new_links = {}
     @links.each_pair do |k,v|
-      v.target_pitch += diff
+      v.transpose! diff
       new_links[k + diff] = v
     end
     @links = new_links
