@@ -122,6 +122,45 @@ describe Note do
     end
   end
   
+  describe '#to_s' do
+    before :all do
+      @note_parser = Parsing::NoteParser.new
+    end
+    
+    context 
+    it 'should produce string that when parsed produces an equal note' do
+      durations = ["1/8".to_r,"1".to_r,"5/3".to_r]
+      include Articulations
+      articulations = [NORMAL, SLUR, LEGATO, TENUTO, PORTATO, STACCATO, STACCATISSIMO ]
+      pitches_links_sets = [
+        [[],{}],
+        [[C2],{}],
+        [[A5,D6],{ A5 => Link::Tie.new }],
+        [[C5,E6,Gb2],{ C5 => Link::Glissando.new(D5) }],
+        [[A5,D6],{ A5 => Link::Legato.new(B5), D6 => Link::Slur.new(E6) }],
+        [[C5,E6,Gb2],{ C5 => Link::Portamento.new(D5), Gb2 => Link::Tie.new }],
+      ]
+      
+      notes = []
+      durations.each do |d|
+        articulations.each do |art|
+          pitches_links_sets.each do |pitches_links_set|
+            pitches,links = pitches_links_set
+            [true,false].each do |acc|
+              notes.push Note.new(d, pitches, articulation: art, links: links, accented: acc)
+            end
+          end
+        end
+      end
+      
+      notes.each do |note|
+        str = note.to_s
+        note2 = @note_parser.parse(str).to_note
+        note2.should eq(note)
+      end
+    end
+  end
+  
   describe '#to_yaml' do
     it 'should produce YAML that can be loaded' do
       n = Note.new(1,[C2])

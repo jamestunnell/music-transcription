@@ -20,6 +20,40 @@ module Note
 
   include Duration
 
+  module Note0
+    def pl
+      elements[1]
+    end
+  end
+
+  module Note1
+    def first
+      elements[0]
+    end
+
+    def more
+      elements[1]
+    end
+  end
+
+  module Note2
+    def duration
+      elements[0]
+    end
+
+    def art
+      elements[1]
+    end
+
+    def pitch_links
+      elements[2]
+    end
+
+    def acc
+      elements[3]
+    end
+  end
+
   def _nt_note
     start_index = index
     if node_cache[:note].has_key?(index)
@@ -31,95 +65,6 @@ module Note
       return cached
     end
 
-    i0 = index
-    r1 = _nt_polyphonic_note
-    if r1
-      r1 = SyntaxNode.new(input, (index-1)...index) if r1 == true
-      r0 = r1
-    else
-      r2 = _nt_monophonic_note
-      if r2
-        r2 = SyntaxNode.new(input, (index-1)...index) if r2 == true
-        r0 = r2
-      else
-        r3 = _nt_rest_note
-        if r3
-          r3 = SyntaxNode.new(input, (index-1)...index) if r3 == true
-          r0 = r3
-        else
-          @index = i0
-          r0 = nil
-        end
-      end
-    end
-
-    node_cache[:note][start_index] = r0
-
-    r0
-  end
-
-  module RestNote0
-    def duration
-      elements[0]
-    end
-  end
-
-  def _nt_rest_note
-    start_index = index
-    if node_cache[:rest_note].has_key?(index)
-      cached = node_cache[:rest_note][index]
-      if cached
-        node_cache[:rest_note][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0, s0 = index, []
-    r1 = _nt_duration
-    s0 << r1
-    if s0.last
-      r0 = instantiate_node(RestNoteNode,input, i0...index, s0)
-      r0.extend(RestNote0)
-    else
-      @index = i0
-      r0 = nil
-    end
-
-    node_cache[:rest_note][start_index] = r0
-
-    r0
-  end
-
-  module MonophonicNote0
-    def duration
-      elements[0]
-    end
-
-    def art
-      elements[1]
-    end
-
-    def pl
-      elements[2]
-    end
-
-    def acc
-      elements[3]
-    end
-  end
-
-  def _nt_monophonic_note
-    start_index = index
-    if node_cache[:monophonic_note].has_key?(index)
-      cached = node_cache[:monophonic_note][index]
-      if cached
-        node_cache[:monophonic_note][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
     i0, s0 = index, []
     r1 = _nt_duration
     s0 << r1
@@ -132,142 +77,74 @@ module Note
       end
       s0 << r2
       if r2
-        r4 = _nt_pitch_link
-        s0 << r4
-        if r4
-          r6 = _nt_accent
-          if r6
-            r5 = r6
-          else
-            r5 = instantiate_node(SyntaxNode,input, index...index)
-          end
-          s0 << r5
-        end
-      end
-    end
-    if s0.last
-      r0 = instantiate_node(MonophonicNoteNode,input, i0...index, s0)
-      r0.extend(MonophonicNote0)
-    else
-      @index = i0
-      r0 = nil
-    end
-
-    node_cache[:monophonic_note][start_index] = r0
-
-    r0
-  end
-
-  module PolyphonicNote0
-    def pl
-      elements[1]
-    end
-  end
-
-  module PolyphonicNote1
-    def duration
-      elements[0]
-    end
-
-    def art
-      elements[1]
-    end
-
-    def pl
-      elements[2]
-    end
-
-    def more_pitches
-      elements[3]
-    end
-
-    def acc
-      elements[4]
-    end
-  end
-
-  def _nt_polyphonic_note
-    start_index = index
-    if node_cache[:polyphonic_note].has_key?(index)
-      cached = node_cache[:polyphonic_note][index]
-      if cached
-        node_cache[:polyphonic_note][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
-        @index = cached.interval.end
-      end
-      return cached
-    end
-
-    i0, s0 = index, []
-    r1 = _nt_duration
-    s0 << r1
-    if r1
-      r3 = _nt_articulation
-      if r3
-        r2 = r3
-      else
-        r2 = instantiate_node(SyntaxNode,input, index...index)
-      end
-      s0 << r2
-      if r2
-        r4 = _nt_pitch_link
-        s0 << r4
-        if r4
-          s5, i5 = [], index
+        i5, s5 = index, []
+        r6 = _nt_pitch_link
+        s5 << r6
+        if r6
+          s7, i7 = [], index
           loop do
-            i6, s6 = index, []
+            i8, s8 = index, []
             if (match_len = has_terminal?(",", false, index))
-              r7 = true
+              r9 = true
               @index += match_len
             else
               terminal_parse_failure(",")
-              r7 = nil
+              r9 = nil
             end
-            s6 << r7
-            if r7
-              r8 = _nt_pitch_link
-              s6 << r8
+            s8 << r9
+            if r9
+              r10 = _nt_pitch_link
+              s8 << r10
             end
-            if s6.last
-              r6 = instantiate_node(SyntaxNode,input, i6...index, s6)
-              r6.extend(PolyphonicNote0)
+            if s8.last
+              r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+              r8.extend(Note0)
             else
-              @index = i6
-              r6 = nil
+              @index = i8
+              r8 = nil
             end
-            if r6
-              s5 << r6
+            if r8
+              s7 << r8
             else
               break
             end
           end
-          if s5.empty?
-            @index = i5
-            r5 = nil
+          r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
+          s5 << r7
+        end
+        if s5.last
+          r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+          r5.extend(Note1)
+        else
+          @index = i5
+          r5 = nil
+        end
+        if r5
+          r4 = r5
+        else
+          r4 = instantiate_node(SyntaxNode,input, index...index)
+        end
+        s0 << r4
+        if r4
+          r12 = _nt_accent
+          if r12
+            r11 = r12
           else
-            r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+            r11 = instantiate_node(SyntaxNode,input, index...index)
           end
-          s0 << r5
-          if r5
-            r10 = _nt_accent
-            if r10
-              r9 = r10
-            else
-              r9 = instantiate_node(SyntaxNode,input, index...index)
-            end
-            s0 << r9
-          end
+          s0 << r11
         end
       end
     end
     if s0.last
-      r0 = instantiate_node(PolyphonicNoteNode,input, i0...index, s0)
-      r0.extend(PolyphonicNote1)
+      r0 = instantiate_node(NoteNode,input, i0...index, s0)
+      r0.extend(Note2)
     else
       @index = i0
       r0 = nil
     end
 
-    node_cache[:polyphonic_note][start_index] = r0
+    node_cache[:note][start_index] = r0
 
     r0
   end

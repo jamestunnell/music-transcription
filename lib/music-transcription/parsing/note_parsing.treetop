@@ -9,28 +9,11 @@ grammar Note
   include Duration
 
   rule note
-    polyphonic_note / monophonic_note / rest_note
-  end
-
-  rule rest_note
-    duration:duration <RestNoteNode>
-  end
-  
-  rule monophonic_note
     duration
     art:articulation?
-    pl:pitch_link
+    pitch_links:(first:pitch_link more:("," pl:pitch_link)*)?
     acc:accent?
-    <MonophonicNoteNode>
-  end
-  
-  rule polyphonic_note
-    duration
-    art:articulation?
-    pl:pitch_link
-    more_pitches:("," pl:pitch_link)+
-    acc:accent?
-    <PolyphonicNoteNode>
+    <NoteNode>
   end
 
   rule pitch_link

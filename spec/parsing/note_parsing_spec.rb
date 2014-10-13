@@ -7,6 +7,9 @@ describe Parsing::NoteParser do
   
    valid_cases = {
     'duration only' => ['1/4','/2','1','55/33'],
+    'duration + accent' => ['1/4!','/2!'],
+    'duration + articulation' => ['1/4.','/2%','2/3='],
+    'duration + articulation + accent' => ['1/4.!','/2%!','2/3=!'],
     'single pitch' => ['/4C2','5/3Db3','/33E#8'],
     'multiple pitches' => ['/4C2,C3,c5','5/3Db3,Bb2,E5','/33E#8,F1,B9'],
     'with articulation' => ['/4.C2',"5/3'Db3,Bb2,E5",'/33=F3','5-B2','/2_D3,F4'],
