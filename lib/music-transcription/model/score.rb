@@ -4,7 +4,7 @@ module Transcription
 class Score
   include Validatable
   
-  attr_reader :start_meter, :start_tempo, :parts, :program, :meter_changes, :tempo_changes
+  attr_accessor :start_meter, :start_tempo, :parts, :program, :meter_changes, :tempo_changes
   
   @@check_methods = [ :check_start_tempo, :check_tempo_changes, :check_meter_changes ]
   def initialize start_meter, start_tempo, meter_changes: {}, tempo_changes: {}, parts: {}, program: Program.new

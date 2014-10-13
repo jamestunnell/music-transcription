@@ -6,7 +6,7 @@ module Transcription
 class Part
   include Validatable
   
-  attr_reader :start_dynamic, :dynamic_changes, :notes
+  attr_accessor :start_dynamic, :dynamic_changes, :notes
   
   @@check_methods = [:ensure_start_dynamic, :ensure_dynamic_change_values_range ]
   def initialize start_dynamic, notes: [], dynamic_changes: {}
