@@ -4,68 +4,24 @@ require 'yaml'
 include Music::Transcription
 include Pitches
 include Articulations
+include Meters
+include Parsing
 
-score = Score.new(
-  Meter.new(4,"1/4".to_r),
-  120,
-  program: Program.new([ 0...4.0, 0...4.0 ]),
-  parts: {
-    1 => Part.new(
-      Dynamics::MF,
-      notes: [
-        Note::dotted_quarter([C2]),
-        Note::quarter([Eb2]),
-        Note.new("5/16".to_r,[F2]),
-        Note.new("1/16".to_r, [Eb2]),
-        # 1.0
-        Note::eighth,
-        Note::quarter([C2]),
-        Note::quarter([Eb2]),
-        Note::dotted_quarter,
-        # 2.0
-        Note::dotted_quarter([C2]),
-        Note::quarter([Eb2]),
-        Note.new("5/16".to_r,[F2]),
-        Note.new("1/16".to_r, [Eb2]),
-        # 3.0
-        Note::eighth,
-        Note::quarter([C2]),
-        Note::quarter([Eb2]),
-      ]
-    ), 
-    2 => Part.new(
-      Dynamics::MF,
-      notes: [
-        # 0.0
-        Note::eighth,
-        Note::eighth([Bb3]),
-        Note::eighth([Bb3]),
-        Note::eighth([Bb3]),
-        Note::eighth([Bb3]),
-        Note::quarter([C4]),
-        Note::quarter([A3]),
-        Note::eighth([G3]),
-        Note::eighth([F3]),
-        Note.new("5/16".to_r, [G3], articulation: SLUR),
-        Note.new("1/16".to_r, [F3], articulation: SLUR),
-        Note::eighth([E3]),
-        Note::eighth,
-        # 2.0
-        Note::eighth,
-        Note::eighth([Bb3]),
-        Note::eighth([Bb3]),
-        Note::eighth([Bb3]),
-        Note::eighth([Bb3]),
-        Note::quarter([C4]),
-        Note::eighth([A3]),
-        Note::eighth([E4]),
-        Note::eighth([E4], articulation: SLUR),
-        Note::eighth([D4], articulation: SLUR),
-        Note::eighth([C4]),
-      ]
-    )
-  }
-)
+score = Score.new(FOUR_FOUR, 120) do |s|
+  s.program = Program.new([ 0...4.0, 0...4.0 ])
+  
+  s.parts[1] = Part.new(Dynamics::MF) do |p|
+    p.notes = notes("3/8C2 /4Eb2 5/16F2 /16Eb2 \
+                     /8 /4C2 /4Eb2 3/8 \
+                     3/8C2 /4Eb2 5/16F2 /16Eb2 \
+                     /8 /4C2 /4Eb2")
+  end
+  
+  s.parts[2] = Part.new(Dynamics::MF) do |p|
+    p.notes = notes("/8 /8Bb3 /8Bb3 /8Bb3 /8Bb3 /4C4 /4A3 /8G3 /8F3 5/16=G3 /16=F3 /8E3 /8 \
+                     /8 /8Bb3 /8Bb3 /8Bb3 /8Bb3 /4C4 /8A3 /8E4 /8=E4 /8=D4 /8C4")
+  end
+end
 
 File.open("song1.yml", "w") do |file|
   file.write score.to_yaml

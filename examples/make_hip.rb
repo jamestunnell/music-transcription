@@ -4,60 +4,23 @@ require 'yaml'
 include Music::Transcription
 include Pitches
 include Articulations
+include Meters
+include Parsing
 
-bass_riff = [
-  # 0.0
-  Note.new(Rational(1,6), [ Bb2 ]),
-  Note.new(Rational(1,4)),
-  Note.new(Rational(1,3), [ Ab2 ]),
-  Note.new(Rational(1,6), [ F2 ]),
-  Note.new(Rational(1,12), [ Ab2 ]),
-  # 1.0
-  Note.new(Rational(1,6), [ Bb2 ]),
-  Note::quarter,
-  Note.new(Rational(1,3), [ Ab2 ]),
-  Note::quarter([ Ab2 ]),
-]
-
-lead_riff = [
-  # 0.0
-  Note.new(Rational(1,6), [ Bb3 ]),
-  Note.new(Rational(1,4)),
-  Note.new(Rational(1,12), [ Db4 ], articulation: SLUR),
-  Note.new(Rational(1,6), [ Db4 ], articulation: SLUR),
-  Note.new(Rational(1,36), [ Db4 ]),
-  Note.new(Rational(1,36), [ Eb4 ]),
-  Note.new(Rational(1,36), [ Db4 ]),
-  Note.new(Rational(1,6), [ Ab3 ]),
-  Note.new(Rational(1,12), [ Db4 ]),
-  # 1.0
-  Note.new(Rational(1,6), [ Bb3 ]),
-  Note.new(Rational(1,4)),
-  Note.new(Rational(1,12), [ Db4 ], articulation: SLUR),
-  Note::quarter([ Db4 ], articulation: SLUR),
-  Note::eighth([ Db4 ], articulation: SLUR),
-  Note::eighth([ C4 ]),
-]
-
-whole_step = Pitch.new(:semitone => 2)
-bass_notes = bass_riff + bass_riff.map {|note| note.transpose(whole_step) }
-lead_notes = lead_riff + lead_riff.map {|note| note.transpose(whole_step) }
-
-score = Score.new(
-  Meter.new(4,"1/4".to_r),
-  120,
-  program: Program.new([0...2, 0...2,2...4,0...2]),
-  parts: {
-    "lead" => Part.new(
-      Dynamics::MF,
-      notes: lead_notes
-    ),
-    "bass" => Part.new(
-      Dynamics::MP,
-      notes: bass_notes
-    )
-  }
-)
+score = Score.new(FOUR_FOUR,120) do |s|
+  s.program = Program.new([0...2, 0...2,2...4,0...2])
+  s.parts["lead"] = Part.new(Dynamics::MF) do |p|
+    riff = notes("/6Bb3 /4 /12Db4= /6Db4= /36Db4 /36Eb4 /36Db4 /6Ab3 /12Db4 \
+                  /6Bb3 /4 /12Db4= /4Db4=                      /8=Db4 /8C4")
+    p.notes = riff + riff.map {|n| n.transpose(2) }
+  end
+  
+  s.parts["bass"] = Part.new(Dynamics::MP) do |p|
+    riff = notes("/6Bb2 /4 /3Ab2 /6F2 /12Ab2 \
+                  /6Bb2 /4 /3Ab2 /4Ab2")
+    p.notes = riff + riff.map {|n| n.transpose(2) }
+  end
+end
 
 File.open('hip.yml','w') do |file|
   file.write score.to_yaml
