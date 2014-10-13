@@ -32,3 +32,5 @@ require 'music-transcription/parsing/note_parsing'
 require 'music-transcription/parsing/note_nodes'
 require 'music-transcription/parsing/meter_parsing'
 require 'music-transcription/parsing/convenience_methods'
+
+require 'music-transcription/printing/pitch_printing'
