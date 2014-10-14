@@ -36,6 +36,16 @@ class Meter
     return (@beats_per_measure == other.beats_per_measure &&
       @beat_duration == other.beat_duration)
   end
+  
+  def to_s
+    if beat_duration.numerator == 1
+      num = beats_per_measure * beat_duration.numerator
+      den = beat_duration.denominator
+      "#{num}/#{den}"
+    else
+      "#{beats_per_measure}*#{beat_duration}"
+    end
+  end
 end
 
 end

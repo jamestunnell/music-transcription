@@ -48,6 +48,24 @@ describe Meter do
     end
   end
   
+  describe '#to_s' do
+    context 'beat duration with 1 in denominator' do
+      it 'should return string of fraction: beats_per_measure / beat_duration.denom' do
+        FOUR_FOUR.to_s.should eq("4/4")
+        TWO_FOUR.to_s.should eq("2/4")
+        THREE_FOUR.to_s.should eq("3/4")
+        TWO_TWO.to_s.should eq("2/2")
+      end
+    end
+    
+    context 'beat duration with >1 in denominator' do
+      it 'should return beats_per_measure * beat_dur fraction' do
+        SIX_EIGHT.to_s.should eq("2*3/8")
+        Meter.new(3,"3/8".to_r).to_s.should eq("3*3/8")
+      end
+    end
+  end
+  
   describe '#valid?' do
     {
       '4/4 meter' => [4,'1/4'.to_r],
