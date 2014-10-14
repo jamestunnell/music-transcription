@@ -38,3 +38,4 @@ require 'music-transcription/parsing/convenience_methods'
 
 require 'music-transcription/packing/change_packing'
 require 'music-transcription/packing/part_packing'
+require 'music-transcription/packing/program_packing'
