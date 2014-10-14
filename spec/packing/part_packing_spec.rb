@@ -19,7 +19,7 @@ describe Part do
       @h.should be_a Hash
     end
     
-    it 'should produce a hash with keys: "notes", "start_dynamic", and "dynamic_changes"' do
+    it 'should return a hash with keys: "notes", "start_dynamic", and "dynamic_changes"' do
       @h.keys.should include("notes")
       @h.keys.should include("start_dynamic")
       @h.keys.should include("dynamic_changes")
@@ -47,19 +47,19 @@ describe Part do
       @p2 = Part.unpack @h
     end
     
-    it 'should produce a Part' do
+    it 'should return a Part' do
       @p2.should be_a Part
     end
     
-    it 'should produce successfuly unpack the notes' do
+    it 'should successfuly unpack the notes' do
       @p2.notes.should eq @p.notes
     end
     
-    it 'should produce successfuly unpack the start dynamic' do
+    it 'should successfuly unpack the start dynamic' do
       @p2.start_dynamic.should eq @p.start_dynamic
     end
     
-    it 'should produce successfuly unpack the dynamic changes' do
+    it 'should successfuly unpack the dynamic changes' do
       @p2.dynamic_changes.should eq @p.dynamic_changes
     end
   end
