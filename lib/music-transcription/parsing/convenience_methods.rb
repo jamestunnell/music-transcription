@@ -5,6 +5,7 @@ module Parsing
   PITCH_PARSER = PitchParser.new
   NOTE_PARSER = NoteParser.new
   METER_PARSER = MeterParser.new
+  SEGMENT_PARSER = SegmentParser.new
   
   def duration dur_str
     DURATION_PARSER.parse(dur_str).to_r
@@ -50,6 +51,11 @@ module Parsing
     METER_PARSER.parse(meter_str).to_meter
   end
   module_function :meter
+  
+  def segment seg_str
+    SEGMENT_PARSER.parse(seg_str).to_range
+  end
+  module_function :segment
 end
 end
 end
@@ -89,5 +95,9 @@ class String
   
   def to_meter
     Music::Transcription::Parsing::meter(self)
+  end
+  
+  def to_segment
+    Music::Transcription::Parsing::segment(self)
   end
 end

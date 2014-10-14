@@ -4,7 +4,13 @@ module Parsing
 
 grammar NonnegativeInteger
   rule nonnegative_integer
-    [0-9]*
+    [0-9]* {
+      def to_i
+        text_value.to_i
+      end
+      
+      alias :to_num :to_i
+    }
   end
 end
 

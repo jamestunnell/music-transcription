@@ -12,6 +12,14 @@ module NonnegativeInteger
     @root ||= :nonnegative_integer
   end
 
+  module NonnegativeInteger0
+    def to_i
+      text_value.to_i
+    end
+    
+    alias :to_num :to_i
+  end
+
   def _nt_nonnegative_integer
     start_index = index
     if node_cache[:nonnegative_integer].has_key?(index)
@@ -39,6 +47,7 @@ module NonnegativeInteger
       end
     end
     r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+    r0.extend(NonnegativeInteger0)
 
     node_cache[:nonnegative_integer][start_index] = r0
 

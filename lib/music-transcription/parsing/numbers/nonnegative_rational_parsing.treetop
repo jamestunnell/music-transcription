@@ -1,0 +1,22 @@
+module Music
+module Transcription
+module Parsing
+
+grammar NonnegativeRational
+  include NonnegativeInteger
+  include PositiveInteger
+  
+  rule nonnegative_rational
+    nonnegative_integer "/" positive_integer {
+      def to_r
+        text_value.to_r
+      end
+      
+      alias :to_num :to_r
+    }
+  end
+end
+
+end
+end
+end

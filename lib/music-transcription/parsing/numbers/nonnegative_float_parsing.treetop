@@ -1,0 +1,19 @@
+module Music
+module Transcription
+module Parsing
+
+grammar NonnegativeFloat
+  rule nonnegative_float
+    [0-9]+ [.] [0-9]+ ("e" [+-] [0-9]+)? {
+      def to_f
+        text_value.to_f
+      end
+      
+      alias :to_num :to_f
+    }
+  end
+end
+
+end
+end
+end

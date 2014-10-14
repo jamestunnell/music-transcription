@@ -5,9 +5,9 @@ describe Parsing::MeterParser do
   
   {
     '4/4' => FOUR_FOUR,
-    '6/8' => SIX_EIGHT,
+    '2*3/8' => SIX_EIGHT,
     '12/3' => Meter.new(12,"1/3".to_r),
-    '9/8' => Meter.new(9,"1/8".to_r),
+    '3*3/8' => Meter.new(3,"3/8".to_r),
     '3/4' => THREE_FOUR
   }.each do |str,met|
     res = parser.parse(str)
