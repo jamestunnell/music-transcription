@@ -38,7 +38,7 @@ task :make_examples do
   Dir.chdir examples_dir
   
   examples = []
-  Dir.glob('**/make*.rb') do |file|
+  Dir.glob('**/*.rb') do |file|
     examples.push File.expand_path(file)
   end
   

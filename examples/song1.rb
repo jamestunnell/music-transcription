@@ -23,6 +23,12 @@ score = Score.new(FOUR_FOUR, 120) do |s|
   end
 end
 
-File.open("song1.yml", "w") do |file|
+name = File.basename(__FILE__,".rb")
+
+File.open("#{name}.yml", "w") do |file|
   file.write score.to_yaml
+end
+
+File.open("#{name}_packed.yml", "w") do |file|
+  file.write score.pack.to_yaml
 end

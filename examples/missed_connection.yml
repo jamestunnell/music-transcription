@@ -267,8 +267,8 @@ program: !ruby/object:Music::Transcription::Program
   - !ruby/range
     begin: 0
     end: 2
-    excl: false
+    excl: true
   - !ruby/range
     begin: 0
     end: 6
-    excl: false
+    excl: true

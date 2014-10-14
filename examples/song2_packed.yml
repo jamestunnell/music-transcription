@@ -1,0 +1,21 @@
+---
+start_meter: 4/4
+meter_changes: {}
+start_tempo: 120
+tempo_changes: {}
+program:
+- 0...4.0
+- 0...4.0
+parts:
+  1:
+    notes: 1C4 1Bb3 1Ab3 /2G3 /2Bb3
+    start_dynamic: 0.625
+    dynamic_changes: {}
+  2:
+    notes: 3/8E5 1D5 1C5 5/8C5 /2C5 /2D5
+    start_dynamic: 0.625
+    dynamic_changes: {}
+  3:
+    notes: ''
+    start_dynamic: 0.625
+    dynamic_changes: {}

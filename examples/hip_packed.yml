@@ -1,0 +1,22 @@
+---
+start_meter: 4/4
+meter_changes: {}
+start_tempo: 120
+tempo_changes: {}
+program:
+- 0...2
+- 0...2
+- 2...4
+- 0...2
+parts:
+  lead:
+    notes: /6Bb3 /4 /12Db4= /6Db4= /36Db4 /36Eb4 /36Db4 /6Ab3 /12Db4 /6Bb3 /4 /12Db4=
+      /4Db4= /8=Db4 /8C4 /6C4 /4 /12Eb4= /6Eb4= /36Eb4 /36F4 /36Eb4 /6Bb3 /12Eb4 /6C4
+      /4 /12Eb4= /4Eb4= /8=Eb4 /8D4
+    start_dynamic: 0.625
+    dynamic_changes: {}
+  bass:
+    notes: /6Bb2 /4 /3Ab2 /6F2 /12Ab2 /6Bb2 /4 /3Ab2 /4Ab2 /6C3 /4 /3Bb2 /6G2 /12Bb2
+      /6C3 /4 /3Bb2 /4Bb2
+    start_dynamic: 0.5
+    dynamic_changes: {}
