@@ -64,61 +64,44 @@ describe Note do
     end
   end
   
-  describe '#transpose!' do
+  describe '#transpose' do
     context 'given pitch diff' do
       before(:all) do
-        @note = Note::quarter([C2,F2], links:{C2=>Link::Glissando.new(D2)})
-        @diff = Pitch.new(semitone: 4)
-        @note.transpose! @diff
+        @note1 = Note::quarter([C2,F2], links:{C2=>Link::Glissando.new(D2)})
+        @interval = 4
+        @note2 = @note1.transpose(@interval)
       end
         
       it 'should modifiy pitches by adding pitch diff' do
-        @note.pitches[0].should eq E2
-        @note.pitches[1].should eq A2
+        @note2.pitches.each_with_index do |p,i|
+          p.diff(@note1.pitches[i]).should eq(@interval)
+        end
       end
         
       it 'should also affect link targets' do
-        @note.links.should have_key(E2)
-        @note.links[E2].target_pitch.should eq(Gb2)
-      end
-    end
-    
-    context 'given integer diff' do
-      it 'should transpose the given number of semitones' do
-        Note::quarter([C2]).transpose!(4).pitches[0].should eq(E2)
+        @note1.links.each do |k,v|
+          kt = k.transpose(@interval)
+          @note2.links.should have_key kt
+          @note2.links[kt].target_pitch.should eq(v.target_pitch.transpose(@interval))
+        end
       end
     end
     
     context 'with links that have no target pitch' do
       it 'should not raise error' do
         n = Note::half([E2],links: {E2 => Link::Tie.new})
-        expect { n.transpose!(1) }.to_not raise_error
+        expect { n.transpose(1) }.to_not raise_error
       end
-    end
-    
-    it 'should return self' do
-      n = Note::quarter
-      n.transpose!(0).should eq n
     end
   end
   
-  describe '#stretch!' do
+  describe '#stretch' do
     it 'should multiply note duration by ratio' do
-      note = Note::quarter
-      note.stretch!(2)
+      note = Note::quarter.stretch(2)
       note.duration.should eq(Rational(1,2))
       
-      note = Note::quarter
-      note.stretch!(Rational(1,2))
+      note = Note::quarter.stretch(Rational(1,2))
       note.duration.should eq(Rational(1,8))
-      note = Note::quarter
-      note.stretch!(2)
-      note.duration.should eq(Rational(1,2))
-    end
-    
-    it 'should return self' do
-      note = Note::quarter
-      note.stretch!(1).should be note
     end
   end
   

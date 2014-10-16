@@ -20,7 +20,7 @@ module Transcription
 #
 class Pitch
   include Comparable
-  attr_reader :octave, :semitone
+  attr_reader :octave, :semitone, :total_semitone
 
   #The default number of semitones per octave is 12, corresponding to 
   # the twelve-tone equal temperment tuning system.
@@ -33,6 +33,7 @@ class Pitch
     @octave = octave
     @semitone = semitone
     normalize!
+    @total_semitone = @octave*SEMITONES_PER_OCTAVE + @semitone
   end
 
   # Return the pitch's frequency, which is determined by multiplying the base 
@@ -43,40 +44,22 @@ class Pitch
     return self.ratio() * BASE_FREQ
   end
   
-  # Calculate the total semitone count. Converts octave to semitone count
-  # before adding to existing semitone count.
-  # @return [Fixnum] total semitone count
-  def total_semitone
-    return (@octave * SEMITONES_PER_OCTAVE) + @semitone
-  end
-  
   # Calculate the pitch ratio. Raises 2 to the power of the total semitone
   # count divided by semitones-per-octave.
   # @return [Float] ratio
   def ratio
-    2.0**(self.total_semitone.to_f / SEMITONES_PER_OCTAVE)
-  end
-
-  # Round to the nearest semitone.
-  def round
-    self.clone.round!
-  end
-
-  # Calculates the number of semitones which would represent the pitch's
-  # octave and semitone count
-  def total_semitone
-    return (@octave * SEMITONES_PER_OCTAVE) + @semitone
+    2.0**(@total_semitone.to_f / SEMITONES_PER_OCTAVE)
   end
   
   # Override default hash method.
   def hash
-    return self.total_semitone
+    return @total_semitone
   end
   
   # Compare pitch equality using total semitone
   def ==(other)
     return (self.class == other.class &&
-      self.total_semitone == other.total_semitone)
+      @total_semitone == other.total_semitone)
   end
   
   def eql?(other)
@@ -86,29 +69,15 @@ class Pitch
   # Compare pitches. A higher ratio or total semitone is considered larger.
   # @param [Pitch] other The pitch object to compare.
   def <=> (other)
-    self.total_semitone <=> other.total_semitone
+    @total_semitone <=> other.total_semitone
   end
-
-  # Add pitches by adding the total semitone count of each.
-  # @param [Pitch] other The pitch object to add. 
-  def + (other)
-    if other.is_a? Integer
-      return Pitch.new(octave: @octave, semitone: @semitone + other)
-    else
-      return Pitch.new(octave: (@octave + other.octave),
-        semitone: (@semitone + other.semitone))
-    end
+  
+  def diff other
+    @total_semitone - other.total_semitone
   end
-
-  # Add pitches by subtracting the total semitone count.
-  # @param [Pitch] other The pitch object to subtract.
-  def - (other)
-    if other.is_a? Integer
-      return Pitch.new(octave: @octave, semitone: @semitone - other)
-    else
-      return Pitch.new(octave: (@octave - other.octave),
-        semitone: (@semitone - other.semitone))
-    end
+  
+  def transpose interval
+    Pitch.from_semitones @total_semitone + interval
   end
   
   # Produce an identical Pitch object.

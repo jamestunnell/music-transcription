@@ -40,6 +40,23 @@ describe Pitch do
       p.total_semitone.should be case_data[:total_semitone]
     end
   end
+  
+  describe '#diff' do
+    it 'should return the difference between the given pitch, in semitones' do
+      C5.diff(C4).should eq(12)
+      C5.diff(D5).should eq(-2)
+      D5.diff(C5).should eq(2)
+    end
+  end
+  
+  describe '#transpose' do
+    it 'should add the given interval to total semitones' do
+      [0,1,2,5,12,13,-1,-2,-5,-12,-13].each do |interval|
+        pitch = Eb3.transpose(interval)
+        pitch.diff(Eb3).should eq(interval)
+      end
+    end
+  end
 
   describe '.from_ratio' do
     it 'should return a Pitch with given ratio' do
@@ -89,38 +106,6 @@ describe Pitch do
     p3.should be > p2
     p3.should be > p1
     p2.should be > p1
-  end
-
-  it "should be addable and subtractable with other pitches" do
-    p1 = Pitch.new semitone: 1
-    p2 = Pitch.new semitone: 2
-    p3 = Pitch.new semitone: 3
-    
-    (p1 + p2).should eq(Pitch.new semitone: 3) 
-    (p1 + p3).should eq(Pitch.new semitone: 4)
-    (p2 + p3).should eq(Pitch.new semitone: 5)
-    
-    (p1 - p2).should eq(Pitch.new semitone: -1) 
-    (p1 - p3).should eq(Pitch.new semitone: -2)
-    (p2 - p3).should eq(Pitch.new semitone: -1)
-    (p3 - p2).should eq(Pitch.new semitone: 1)
-    (p3 - p1).should eq(Pitch.new semitone: 2)
-  end
-  
-  it "should be addable and subtractable with integers" do
-    p1 = Pitch.new semitone: 1
-    p2 = Pitch.new semitone: 2
-    p3 = Pitch.new semitone: 3
-    
-    (p1 + 2).should eq(Pitch.new semitone: 3) 
-    (p1 + 3).should eq(Pitch.new semitone: 4)
-    (p2 + 3).should eq(Pitch.new semitone: 5)
-    
-    (p1 - 2).should eq(Pitch.new semitone: -1) 
-    (p1 - 3).should eq(Pitch.new semitone: -2)
-    (p2 - 3).should eq(Pitch.new semitone: -1)
-    (p3 - 2).should eq(Pitch.new semitone: 1)
-    (p3 - 1).should eq(Pitch.new semitone: 2)
   end
   
   it "should have freq of 440 for A4" do

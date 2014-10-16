@@ -18,8 +18,12 @@ class Link
       self.class == other.class
     end
     
+    def transpose diff
+      self.clone.transpose! diff
+    end
+    
     def transpose! diff
-      # do nothing, of course
+      return self
     end
     
     def to_s; "="; end
@@ -37,8 +41,12 @@ class Link
       self.class == other.class && @target_pitch == other.target_pitch
     end
     
+    def transpose diff
+      self.clone.transpose! diff
+    end
+    
     def transpose! diff
-      @target_pitch += diff
+      @target_pitch = @target_pitch.transpose(diff)
     end
     
     def to_s

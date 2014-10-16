@@ -43,17 +43,10 @@ class Note
   end
   
   def transpose! diff
-    unless diff.is_a?(Pitch)
-      diff = Pitch.from_semitones(diff)
-    end
-    
-    @pitches = @pitches.map {|pitch| pitch + diff}
-    new_links = {}
-    @links.each_pair do |k,v|
-      v.transpose! diff
-      new_links[k + diff] = v
-    end
-    @links = new_links
+    @pitches = @pitches.map {|pitch| pitch.transpose(diff) }
+    @links = Hash[ @links.map do |k,v|
+      [ k.transpose(diff), v.transpose(diff) ]
+    end ]
     return self
   end
   
