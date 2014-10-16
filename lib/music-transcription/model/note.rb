@@ -44,7 +44,7 @@ class Note
   
   def transpose! diff
     unless diff.is_a?(Pitch)
-      diff = Pitch.make_from_semitone(diff)
+      diff = Pitch.from_semitones(diff)
     end
     
     @pitches = @pitches.map {|pitch| pitch + diff}

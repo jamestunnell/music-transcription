@@ -43,12 +43,6 @@ class Pitch
     return self.ratio() * BASE_FREQ
   end
   
-  # Set the pitch according to the given frequency. Uses the current base_freq 
-  # to determine what the pitch ratio should be, and sets it accordingly.
-  def freq= freq
-    self.ratio = freq / BASE_FREQ
-  end
-
   # Calculate the total semitone count. Converts octave to semitone count
   # before adding to existing semitone count.
   # @return [Fixnum] total semitone count
@@ -56,32 +50,11 @@ class Pitch
     return (@octave * SEMITONES_PER_OCTAVE) + @semitone
   end
   
-  # Set the Pitch ratio according to a total number of semitones.
-  # @param [Fixnum] semitone The total number of semitones to use.
-  # @raise [NonIntegerError] if semitone is not an Integer
-  def total_semitone= semitone
-    unless semitone.is_a?(Integer)
-      raise NonIntegerError, "semitone #{semitone} is not a Integer"
-    end
-    @octave, @semitone = 0, semitone
-    normalize!
-  end
-
   # Calculate the pitch ratio. Raises 2 to the power of the total semitone
   # count divided by semitones-per-octave.
   # @return [Float] ratio
   def ratio
     2.0**(self.total_semitone.to_f / SEMITONES_PER_OCTAVE)
-  end
-
-  # Represent the Pitch ratio according to a ratio.
-  # @param [Numeric] ratio The ratio to represent.
-  # @raise [NonPositiveError] unless ratio is > 0
-  def ratio= ratio
-    raise NonPositiveError, "ratio #{ratio} is not > 0" unless ratio > 0
-    
-    x = Math.log2 ratio
-    self.total_semitone = (x * SEMITONES_PER_OCTAVE).round
   end
 
   # Round to the nearest semitone.
@@ -119,35 +92,28 @@ class Pitch
   # Add pitches by adding the total semitone count of each.
   # @param [Pitch] other The pitch object to add. 
   def + (other)
-    self.class.new(
-      octave: (@octave + other.octave),
-      semitone: (@semitone + other.semitone)
-    )
+    if other.is_a? Integer
+      return Pitch.new(octave: @octave, semitone: @semitone + other)
+    else
+      return Pitch.new(octave: (@octave + other.octave),
+        semitone: (@semitone + other.semitone))
+    end
   end
 
   # Add pitches by subtracting the total semitone count.
   # @param [Pitch] other The pitch object to subtract.
   def - (other)
-    self.class.new(
-      octave: (@octave - other.octave),
-      semitone: (@semitone - other.semitone),
-    )
+    if other.is_a? Integer
+      return Pitch.new(octave: @octave, semitone: @semitone - other)
+    else
+      return Pitch.new(octave: (@octave - other.octave),
+        semitone: (@semitone - other.semitone))
+    end
   end
   
   # Produce an identical Pitch object.
   def clone
     Marshal.load(Marshal.dump(self))  # is this cheating?
-  end
-  
-  # Balance out the octave and semitone count. 
-  def normalize!
-    semitoneTotal = (@octave * SEMITONES_PER_OCTAVE) + @semitone
-    
-    @octave = semitoneTotal / SEMITONES_PER_OCTAVE
-    semitoneTotal -= @octave * SEMITONES_PER_OCTAVE
-    
-    @semitone = semitoneTotal
-    return self
   end
   
   def to_s(sharpit = false)
@@ -169,16 +135,32 @@ class Pitch
     return letter + octave.to_s
   end
   
-  def self.make_from_freq(freq)
-    pitch = Pitch.new()
-    pitch.ratio = freq / BASE_FREQ
-    return pitch
+  def self.from_ratio ratio
+    raise NonPositiveError, "ratio #{ratio} is not > 0" unless ratio > 0
+    x = Math.log2 ratio
+    semitones = (x * SEMITONES_PER_OCTAVE).round
+    from_semitones(semitones)
   end
   
-  def self.make_from_semitone semitones
-    pitch = Pitch.new()
-    pitch.total_semitone = semitones
-    return pitch
+  def self.from_freq freq
+    from_ratio(freq / BASE_FREQ)
+  end
+  
+  def self.from_semitones semitones
+    Pitch.new(semitone: semitones)
+  end
+  
+  private
+  
+  # Balance out the octave and semitone count. 
+  def normalize!
+    semitoneTotal = (@octave * SEMITONES_PER_OCTAVE) + @semitone
+    
+    @octave = semitoneTotal / SEMITONES_PER_OCTAVE
+    semitoneTotal -= @octave * SEMITONES_PER_OCTAVE
+    
+    @semitone = semitoneTotal
+    return self
   end
 end
 

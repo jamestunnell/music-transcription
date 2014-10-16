@@ -17,11 +17,11 @@ describe Pitch do
     ]
   end
   
-  it "should be constructible with no parameters (no error raised)" do
+  it "should be constructable with no parameters (no error raised)" do
     lambda { Pitch.new }.should_not raise_error
   end
   
-  it "should be hash-makeable" do
+  it "should take keyword args" do
     obj = Pitch.new octave: 4, semitone: 3
     obj.octave.should eq(4)
     obj.semitone.should eq(3)
@@ -41,25 +41,36 @@ describe Pitch do
     end
   end
 
-  it "should allow setting by ratio" do
-    @cases.each do |case_data|
-      p = Pitch.new
-      p.ratio = case_data[:ratio]
-            
-      p.octave.should eq case_data[:octave]
-      p.semitone.should eq case_data[:semitone]
-      p.total_semitone.should eq case_data[:total_semitone]
+  describe '.from_ratio' do
+    it 'should return a Pitch with given ratio' do
+      @cases.each do |case_data|
+        p = Pitch.from_ratio case_data[:ratio]
+        
+        p.octave.should eq case_data[:octave]
+        p.semitone.should eq case_data[:semitone]
+        p.total_semitone.should eq case_data[:total_semitone]
+      end
     end
   end
 
-  it "should setting by total_semitone" do    
-    @cases.each do |case_data|
-      p = Pitch.new
-      p.total_semitone = case_data[:total_semitone] 
-      
-      p.octave.should eq case_data[:octave]
-      p.semitone.should eq case_data[:semitone]
-      p.total_semitone.should eq case_data[:total_semitone]
+  describe '.from_semitones' do
+    it 'should return a Pitch with given total semitones' do
+      @cases.each do |case_data|
+        p = Pitch.from_semitones case_data[:total_semitone]
+        
+        p.octave.should eq case_data[:octave]
+        p.semitone.should eq case_data[:semitone]
+        p.total_semitone.should eq case_data[:total_semitone]
+      end
+    end
+  end
+
+  describe '.from_freq' do
+    it 'should make a pitch whose freq is approximately the given freq' do
+      [16.35, 440.0, 987.77].each do |given_freq|
+	pitch = Pitch.from_freq given_freq
+	pitch.freq.should be_within(0.01).of(given_freq)
+      end
     end
   end
   
@@ -94,6 +105,22 @@ describe Pitch do
     (p2 - p3).should eq(Pitch.new semitone: -1)
     (p3 - p2).should eq(Pitch.new semitone: 1)
     (p3 - p1).should eq(Pitch.new semitone: 2)
+  end
+  
+  it "should be addable and subtractable with integers" do
+    p1 = Pitch.new semitone: 1
+    p2 = Pitch.new semitone: 2
+    p3 = Pitch.new semitone: 3
+    
+    (p1 + 2).should eq(Pitch.new semitone: 3) 
+    (p1 + 3).should eq(Pitch.new semitone: 4)
+    (p2 + 3).should eq(Pitch.new semitone: 5)
+    
+    (p1 - 2).should eq(Pitch.new semitone: -1) 
+    (p1 - 3).should eq(Pitch.new semitone: -2)
+    (p2 - 3).should eq(Pitch.new semitone: -1)
+    (p3 - 2).should eq(Pitch.new semitone: 1)
+    (p3 - 1).should eq(Pitch.new semitone: 2)
   end
   
   it "should have freq of 440 for A4" do
@@ -136,25 +163,6 @@ describe Pitch do
             p.to_s(true).should eq s
           end          
         end
-      end
-    end
-  end
-
-  describe '.make_from_freq' do
-    it 'should make a pitch whose freq is approximately the given freq' do
-      [16.35, 440.0, 987.77].each do |given_freq|
-	pitch = Pitch.make_from_freq given_freq
-	pitch.freq.should be_within(0.01).of(given_freq)
-      end
-    end
-  end
-  
-  describe '.make_from_semitone' do
-    context 'given an integer less than 12' do
-      before(:all) { @pitch = Pitch.make_from_semitone(11) }
-      
-      it 'semitone should equal given integer' do
-	@pitch.semitone.should eq 11
       end
     end
   end
