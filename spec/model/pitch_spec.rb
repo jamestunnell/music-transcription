@@ -5,15 +5,19 @@ describe Pitch do
   before :each do
     @cases = 
     [
-      { octave: 1, semitone: 0, :ratio => 2.0, :total_semitone => 12 },
-      { octave: 2, semitone: 0, :ratio => 4.0, :total_semitone => 24 },
-      { octave: 1, semitone: 6, :ratio => 2.828, :total_semitone => 18 },
-      { octave: 2, semitone: 6, :ratio => 5.657, :total_semitone => 30 },
-      { octave: 3, semitone: 7, :ratio => 11.986, :total_semitone => 43 },
-      { octave: -1, semitone: 0, :ratio => 0.5, :total_semitone => -12 },
-      { octave: -2, semitone: 0, :ratio => 0.25, :total_semitone => -24 },
-      { octave: -2, semitone: 7, :ratio => 0.375, :total_semitone => -17 },
-      { octave: -1, semitone: 9, :ratio => 0.841, :total_semitone => -3 },
+      { :octave => 1, :semitone => 0, :cent => 0, :ratio => 2.0, :total_cents => 1200 },
+      { :octave => 2, :semitone => 0, :cent => 0, :ratio => 4.0, :total_cents => 2400 },
+      { :octave => 1, :semitone => 6, :cent => 0, :ratio => 2.828, :total_cents => 1800 },
+      { :octave => 2, :semitone => 6, :cent => 0, :ratio => 5.657, :total_cents => 3000 },
+      { :octave => 3, :semitone => 7, :cent => 0, :ratio => 11.986, :total_cents => 4300 },
+      { :octave => -1, :semitone => 0, :cent => 0, :ratio => 0.5, :total_cents => -1200 },
+      { :octave => -2, :semitone => 0, :cent => 0, :ratio => 0.25, :total_cents => -2400 },
+      { :octave => -2, :semitone => 7, :cent => 0, :ratio => 0.37458, :total_cents => -1700 },
+      { :octave => -1, :semitone => 9, :cent => 0, :ratio => 0.841, :total_cents => -300 },
+      { :octave => 5, :semitone => 0, :cent => 20, :ratio => 32.372, :total_cents => 6020 },
+      { :octave => 3, :semitone => 3, :cent => 95, :ratio => 10.0503, :total_cents => 3995 },
+      { :octave => -3, :semitone => 2, :cent => -20, :ratio => 0.1387, :total_cents => -3420 },
+      { :octave => -5, :semitone => -2, :cent => -77, :ratio => 0.02663, :total_cents => -6277 }
     ]
   end
   
@@ -22,30 +26,38 @@ describe Pitch do
   end
   
   it "should take keyword args" do
-    obj = Pitch.new octave: 4, semitone: 3
+    obj = Pitch.new octave: 4, semitone: 3, cent: 5
     obj.octave.should eq(4)
     obj.semitone.should eq(3)
+    obj.cent.should eq(5)
   end
   
-  it "should use default octave and semitone if none is given" do
+  it "should use default octave, semitone, and cent if none is given" do
     p = Pitch.new
     p.ratio.should be_within(0.01).of(1.0)
-    p.total_semitone.should eq(0)
+    p.total_cents.should eq(0)
   end
   
   it "should use the octave and semitone given during construction" do
     @cases.each do |case_data|
-      p = Pitch.new octave: case_data[:octave], semitone: case_data[:semitone]
+      p = Pitch.new octave: case_data[:octave], semitone: case_data[:semitone], cent: case_data[:cent]
       p.ratio.should be_within(0.01).of case_data[:ratio]
-      p.total_semitone.should be case_data[:total_semitone]
+      p.total_cents.should be case_data[:total_cents]
     end
   end
   
   describe '#diff' do
     it 'should return the difference between the given pitch, in semitones' do
-      C5.diff(C4).should eq(12)
-      C5.diff(D5).should eq(-2)
-      D5.diff(C5).should eq(2)
+      [
+	[C5,C4,12],
+	[C5,D5,-2],
+	[D5,C5,2],
+	[C5,Pitch.new(octave:5, cent:-5),5/100.0],
+	[A5,Pitch.new(octave:5, semitone: 5, cent: 22),378/100.0],
+	[A5,Pitch.new(octave:5, semitone: 11, cent: 85),-285/100.0],
+      ].each do |a,b,c|
+	a.diff(b).should eq(c)
+      end
     end
   end
   
@@ -62,22 +74,7 @@ describe Pitch do
     it 'should return a Pitch with given ratio' do
       @cases.each do |case_data|
         p = Pitch.from_ratio case_data[:ratio]
-        
-        p.octave.should eq case_data[:octave]
-        p.semitone.should eq case_data[:semitone]
-        p.total_semitone.should eq case_data[:total_semitone]
-      end
-    end
-  end
-
-  describe '.from_semitones' do
-    it 'should return a Pitch with given total semitones' do
-      @cases.each do |case_data|
-        p = Pitch.from_semitones case_data[:total_semitone]
-        
-        p.octave.should eq case_data[:octave]
-        p.semitone.should eq case_data[:semitone]
-        p.total_semitone.should eq case_data[:total_semitone]
+        p.total_cents.should eq case_data[:total_cents]
       end
     end
   end
@@ -146,8 +143,18 @@ describe Pitch do
           { Db0 => "C#0", Eb1 => "D#1", Gb7 => "F#7",
             Ab4 => "G#4", Bb1 => "A#1" }.each do |p,s|
             p.to_s(true).should eq s
-          end          
+          end
         end
+      end
+    end
+    
+    context 'non-zero cent value' do
+      it 'should append +n (n = cent value)' do
+	{ C0.transpose(0.01) => "C0+1", E1.transpose(0.15) => "E1+15",
+	  G5.transpose(-0.55) => "Gb5+45"
+	}.each do |p,s|
+	  p.to_s.should eq s
+	end
       end
     end
   end
