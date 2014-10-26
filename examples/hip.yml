@@ -21,6 +21,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 10
+        cent: 0
+        total_cents: 4600
       articulation: :normal
       accented: false
       links: {}
@@ -40,6 +42,8 @@ parts:
       - &1 !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 1
+        cent: 0
+        total_cents: 4900
       articulation: :normal
       accented: false
       links:
@@ -52,6 +56,8 @@ parts:
       - &2 !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 1
+        cent: 0
+        total_cents: 4900
       articulation: :normal
       accented: false
       links:
@@ -64,6 +70,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 1
+        cent: 0
+        total_cents: 4900
       articulation: :normal
       accented: false
       links: {}
@@ -75,6 +83,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 3
+        cent: 0
+        total_cents: 5100
       articulation: :normal
       accented: false
       links: {}
@@ -86,6 +96,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 1
+        cent: 0
+        total_cents: 4900
       articulation: :normal
       accented: false
       links: {}
@@ -97,6 +109,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 8
+        cent: 0
+        total_cents: 4400
       articulation: :normal
       accented: false
       links: {}
@@ -108,6 +122,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 1
+        cent: 0
+        total_cents: 4900
       articulation: :normal
       accented: false
       links: {}
@@ -119,6 +135,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 10
+        cent: 0
+        total_cents: 4600
       articulation: :normal
       accented: false
       links: {}
@@ -138,6 +156,8 @@ parts:
       - &3 !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 1
+        cent: 0
+        total_cents: 4900
       articulation: :normal
       accented: false
       links:
@@ -150,6 +170,8 @@ parts:
       - &4 !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 1
+        cent: 0
+        total_cents: 4900
       articulation: :normal
       accented: false
       links:
@@ -162,6 +184,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 1
+        cent: 0
+        total_cents: 4900
       articulation: :slur
       accented: false
       links: {}
@@ -173,6 +197,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 0
+        cent: 0
+        total_cents: 4800
       articulation: :normal
       accented: false
       links: {}
@@ -184,6 +210,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 0
+        cent: 0
+        total_cents: 4800
       articulation: :normal
       accented: false
       links: {}
@@ -203,12 +231,16 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 3
+        cent: 0
+        total_cents: 5100
       articulation: :normal
       accented: false
       links:
         ? !ruby/object:Music::Transcription::Pitch
           octave: 4
           semitone: 3
+          cent: 0
+          total_cents: 5100
         : !ruby/object:Music::Transcription::Link::Tie {}
     - !ruby/object:Music::Transcription::Note
       duration: !ruby/object:Rational
@@ -218,12 +250,16 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 3
+        cent: 0
+        total_cents: 5100
       articulation: :normal
       accented: false
       links:
         ? !ruby/object:Music::Transcription::Pitch
           octave: 4
           semitone: 3
+          cent: 0
+          total_cents: 5100
         : !ruby/object:Music::Transcription::Link::Tie {}
     - !ruby/object:Music::Transcription::Note
       duration: !ruby/object:Rational
@@ -233,6 +269,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 3
+        cent: 0
+        total_cents: 5100
       articulation: :normal
       accented: false
       links: {}
@@ -244,6 +282,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 5
+        cent: 0
+        total_cents: 5300
       articulation: :normal
       accented: false
       links: {}
@@ -255,6 +295,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 3
+        cent: 0
+        total_cents: 5100
       articulation: :normal
       accented: false
       links: {}
@@ -266,6 +308,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 10
+        cent: 0
+        total_cents: 4600
       articulation: :normal
       accented: false
       links: {}
@@ -277,6 +321,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 3
+        cent: 0
+        total_cents: 5100
       articulation: :normal
       accented: false
       links: {}
@@ -288,6 +334,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 0
+        cent: 0
+        total_cents: 4800
       articulation: :normal
       accented: false
       links: {}
@@ -307,12 +355,16 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 3
+        cent: 0
+        total_cents: 5100
       articulation: :normal
       accented: false
       links:
         ? !ruby/object:Music::Transcription::Pitch
           octave: 4
           semitone: 3
+          cent: 0
+          total_cents: 5100
         : !ruby/object:Music::Transcription::Link::Tie {}
     - !ruby/object:Music::Transcription::Note
       duration: !ruby/object:Rational
@@ -322,12 +374,16 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 3
+        cent: 0
+        total_cents: 5100
       articulation: :normal
       accented: false
       links:
         ? !ruby/object:Music::Transcription::Pitch
           octave: 4
           semitone: 3
+          cent: 0
+          total_cents: 5100
         : !ruby/object:Music::Transcription::Link::Tie {}
     - !ruby/object:Music::Transcription::Note
       duration: !ruby/object:Rational
@@ -337,6 +393,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 3
+        cent: 0
+        total_cents: 5100
       articulation: :slur
       accented: false
       links: {}
@@ -348,6 +406,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 4
         semitone: 2
+        cent: 0
+        total_cents: 5000
       articulation: :normal
       accented: false
       links: {}
@@ -363,6 +423,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 10
+        cent: 0
+        total_cents: 3400
       articulation: :normal
       accented: false
       links: {}
@@ -382,6 +444,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 8
+        cent: 0
+        total_cents: 3200
       articulation: :normal
       accented: false
       links: {}
@@ -393,6 +457,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 5
+        cent: 0
+        total_cents: 2900
       articulation: :normal
       accented: false
       links: {}
@@ -404,6 +470,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 8
+        cent: 0
+        total_cents: 3200
       articulation: :normal
       accented: false
       links: {}
@@ -415,6 +483,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 10
+        cent: 0
+        total_cents: 3400
       articulation: :normal
       accented: false
       links: {}
@@ -434,6 +504,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 8
+        cent: 0
+        total_cents: 3200
       articulation: :normal
       accented: false
       links: {}
@@ -445,6 +517,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 8
+        cent: 0
+        total_cents: 3200
       articulation: :normal
       accented: false
       links: {}
@@ -456,6 +530,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 0
+        cent: 0
+        total_cents: 3600
       articulation: :normal
       accented: false
       links: {}
@@ -475,6 +551,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 10
+        cent: 0
+        total_cents: 3400
       articulation: :normal
       accented: false
       links: {}
@@ -486,6 +564,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 7
+        cent: 0
+        total_cents: 3100
       articulation: :normal
       accented: false
       links: {}
@@ -497,6 +577,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 10
+        cent: 0
+        total_cents: 3400
       articulation: :normal
       accented: false
       links: {}
@@ -508,6 +590,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 0
+        cent: 0
+        total_cents: 3600
       articulation: :normal
       accented: false
       links: {}
@@ -527,6 +611,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 10
+        cent: 0
+        total_cents: 3400
       articulation: :normal
       accented: false
       links: {}
@@ -538,6 +624,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 10
+        cent: 0
+        total_cents: 3400
       articulation: :normal
       accented: false
       links: {}

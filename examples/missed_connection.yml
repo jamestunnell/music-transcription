@@ -21,6 +21,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 3
+        cent: 0
+        total_cents: 2700
       articulation: :normal
       accented: false
       links: {}
@@ -40,6 +42,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 10
+        cent: 0
+        total_cents: 3400
       articulation: :normal
       accented: false
       links: {}
@@ -59,6 +63,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 3
+        cent: 0
+        total_cents: 2700
       articulation: :normal
       accented: false
       links: {}
@@ -78,6 +84,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 11
+        cent: 0
+        total_cents: 3500
       articulation: :normal
       accented: false
       links: {}
@@ -89,6 +97,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 10
+        cent: 0
+        total_cents: 3400
       articulation: :normal
       accented: false
       links: {}
@@ -100,6 +110,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 8
+        cent: 0
+        total_cents: 3200
       articulation: :normal
       accented: false
       links: {}
@@ -111,6 +123,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 10
+        cent: 0
+        total_cents: 3400
       articulation: :normal
       accented: false
       links: {}
@@ -130,6 +144,8 @@ parts:
       - &1 !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 5
+        cent: 0
+        total_cents: 4100
       articulation: :normal
       accented: false
       links:
@@ -142,6 +158,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 5
+        cent: 0
+        total_cents: 4100
       articulation: :normal
       accented: false
       links: {}
@@ -153,6 +171,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 10
+        cent: 0
+        total_cents: 3400
       articulation: :normal
       accented: false
       links: {}
@@ -172,6 +192,8 @@ parts:
       - &2 !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 5
+        cent: 0
+        total_cents: 4100
       articulation: :normal
       accented: false
       links:
@@ -184,6 +206,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 5
+        cent: 0
+        total_cents: 4100
       articulation: :normal
       accented: false
       links: {}
@@ -195,6 +219,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 2
         semitone: 11
+        cent: 0
+        total_cents: 3500
       articulation: :normal
       accented: false
       links: {}
@@ -214,6 +240,8 @@ parts:
       - &3 !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 6
+        cent: 0
+        total_cents: 4200
       articulation: :normal
       accented: false
       links:
@@ -226,6 +254,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 6
+        cent: 0
+        total_cents: 4200
       articulation: :normal
       accented: false
       links: {}
@@ -245,6 +275,8 @@ parts:
       - &4 !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 6
+        cent: 0
+        total_cents: 4200
       articulation: :normal
       accented: false
       links:
@@ -257,6 +289,8 @@ parts:
       - !ruby/object:Music::Transcription::Pitch
         octave: 3
         semitone: 6
+        cent: 0
+        total_cents: 4200
       articulation: :normal
       accented: false
       links: {}
