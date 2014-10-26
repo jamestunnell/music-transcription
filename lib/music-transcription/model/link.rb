@@ -30,11 +30,10 @@ class Link
   end
   
   class TargetedLink < Link
-    attr_accessor :target_pitch, :link_char
+    attr_accessor :target_pitch
     
-    def initialize target_pitch, link_char
+    def initialize target_pitch
       @target_pitch = target_pitch
-      @link_char = link_char
     end
     
     def ==(other)
@@ -47,27 +46,28 @@ class Link
     
     def transpose! diff
       @target_pitch = @target_pitch.transpose(diff)
+      return self
     end
     
     def to_s
-      @link_char + @target_pitch.to_s
+      link_char + @target_pitch.to_s
     end
   end
   
   class Glissando < TargetedLink
-    def initialize(target_pitch); super(target_pitch,"~"); end
+    def link_char; "~"; end
   end
   
   class Portamento < TargetedLink
-    def initialize(target_pitch); super(target_pitch,"/"); end
+    def link_char; "/"; end
   end
   
   class Slur < TargetedLink
-    def initialize(target_pitch); super(target_pitch,"="); end
+    def link_char; "="; end
   end
   
   class Legato < TargetedLink
-    def initialize(target_pitch); super(target_pitch,"-"); end
+    def link_char; "|"; end
   end
 end
 

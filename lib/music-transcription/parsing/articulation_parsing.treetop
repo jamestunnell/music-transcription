@@ -16,7 +16,7 @@ grammar Articulation
   end
 
   rule legato
-    "-" {
+    "|" {
       def to_articulation
         Music::Transcription::Articulations::LEGATO
       end

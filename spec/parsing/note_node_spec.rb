@@ -60,7 +60,7 @@ describe Parsing::NoteNode do
 
   context 'polyphonic note' do
     {
-      '/2C2,D2,E2-F2' => Note.new(Rational(1,2),[C2,D2,E2],links:{E2=>Link::Legato.new(F2)}),
+      '/2C2,D2,E2|F2' => Note.new(Rational(1,2),[C2,D2,E2],links:{E2=>Link::Legato.new(F2)}),
       '4/2.D#6,G4' => Note.new(Rational(4,2),[Eb6,G4], articulation:STACCATO),
       '28_Eb7,D7,G7' => Note.new(Rational(28,1),[Eb7,D7,G7],articulation:TENUTO),
       '56/33B1,B2,B3,B4,B5!' => Note.new(Rational(56,33),[B1,B2,B3,B4,B5], accented: true),

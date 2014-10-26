@@ -5,19 +5,9 @@ describe Parsing::LinkParser do
     @parser = Parsing::LinkParser.new
   end
   
-  it 'should parse a "=C2"' do
-    @parser.parse("=C2").should_not be nil
-  end
-  
-  it 'should parse a "-C2"' do
-    @parser.parse("-C2").should_not be nil
-  end
-  
-  it 'should parse a "~C2"' do
-    @parser.parse("~C2").should_not be nil
-  end
-  
-  it 'should parse a "/C2"' do
-    @parser.parse("/C2").should_not be nil
+  ["=C2","|C2","~C2","/C2"].each do |str|
+    it "should parse #{str}" do
+      @parser.should parse(str)
+    end
   end
 end

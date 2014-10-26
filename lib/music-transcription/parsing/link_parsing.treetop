@@ -18,7 +18,7 @@ grammar Link
   end
   
   rule legato_link
-    "-" target:pitch <LegatoNode>
+    "|" target:pitch <LegatoNode>
   end
   
   rule glissando

@@ -138,7 +138,8 @@ describe Note do
       
       notes.each do |note|
         str = note.to_s
-        note2 = @note_parser.parse(str).to_note
+        res = @note_parser.parse(str)
+        note2 = res.to_note
         note2.should eq(note)
       end
     end

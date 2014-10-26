@@ -5,7 +5,7 @@ describe Parsing::ArticulationParser do
   
   {
     '=' => SLUR,
-    '-' => LEGATO,
+    '|' => LEGATO,
     '_' => TENUTO,
     '%' => PORTATO,
     '.' => STACCATO,

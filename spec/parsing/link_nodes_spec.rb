@@ -7,7 +7,7 @@ describe Parsing::LinkNode do
     '=C4' => Link::Slur.new(C4),
     '/Db2' => Link::Portamento.new(Db2),
     '~C#2' => Link::Glissando.new(Db2),
-    '-Db2' => Link::Legato.new(Db2),
+    '|Db2' => Link::Legato.new(Db2),
   }.each do |str,tgt|
     res = parser.parse(str)
     context str do

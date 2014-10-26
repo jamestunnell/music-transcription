@@ -71,7 +71,7 @@ class Note
     
     art_str = case @articulation
     when Articulations::SLUR then "="
-    when Articulations::LEGATO then "-"
+    when Articulations::LEGATO then "|"
     when Articulations::TENUTO then "_"
     when Articulations::PORTATO then "%"
     when Articulations::STACCATO then "."
