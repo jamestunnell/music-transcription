@@ -5,19 +5,10 @@ describe Parsing::PitchParser do
     @parser = Parsing::PitchParser.new
   end
   
-  it 'should parse "C4"' do
-    @parser.parse("C4").should_not be nil
-  end
-  
-  it 'should parse "C#9"' do
-    @parser.parse("C#9").should_not be nil
-  end
-  
-  it 'should parse "Ab0"' do
-    @parser.parse("Ab0").should_not be nil
-  end
-  
-  it 'should parse "G#2"' do
-    @parser.parse("G#2").should_not be nil
+  ["C4","C#9","Ab0","G#2","E2+22","Cb5-99","G200","Bb9951+3920"
+  ].each do |str|
+    it "should parse #{str}" do
+      @parser.should parse(str)
+    end
   end
 end

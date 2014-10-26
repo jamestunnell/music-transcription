@@ -3,8 +3,17 @@ module Transcription
 module Parsing
 
 grammar Pitch
+  include NonnegativeInteger
   rule pitch
-    pitch_letter mod:[#b]? octn:[0-9] <PitchNode>
+    pitch_letter mod:[#b]? octave cents:cent? <PitchNode>
+  end
+  
+  rule octave
+    n:nonnegative_integer { def to_i; n.to_i; end }
+  end
+  
+  rule cent
+    [+-] n:nonnegative_integer { def to_i; text_value.to_i; end }
   end
   
   rule pitch_letter

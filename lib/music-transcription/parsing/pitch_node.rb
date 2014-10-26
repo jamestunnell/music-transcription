@@ -11,8 +11,13 @@ module Parsing
         when "b" then -1
         end
       end
-      oct = octn.text_value.to_i
-      Music::Transcription::Pitch.new(semitone: sem, octave: oct)
+      oct = octave.to_i
+      ncents = 0
+      unless cents.empty?
+        ncents = cents.to_i
+      end
+      
+      Music::Transcription::Pitch.new(semitone: sem, octave: oct, cent: ncents)
     end
   end
 end

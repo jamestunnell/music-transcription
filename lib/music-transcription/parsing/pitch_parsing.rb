@@ -12,6 +12,8 @@ module Pitch
     @root ||= :pitch
   end
 
+  include NonnegativeInteger
+
   module Pitch0
     def pitch_letter
       elements[0]
@@ -21,8 +23,12 @@ module Pitch
       elements[1]
     end
 
-    def octn
+    def octave
       elements[2]
+    end
+
+    def cents
+      elements[3]
     end
   end
 
@@ -55,14 +61,17 @@ module Pitch
       end
       s0 << r2
       if r2
-        if has_terminal?(@regexps[gr = '\A[0-9]'] ||= Regexp.new(gr), :regexp, index)
-          r4 = true
-          @index += 1
-        else
-          terminal_parse_failure('[0-9]')
-          r4 = nil
-        end
+        r4 = _nt_octave
         s0 << r4
+        if r4
+          r6 = _nt_cent
+          if r6
+            r5 = r6
+          else
+            r5 = instantiate_node(SyntaxNode,input, index...index)
+          end
+          s0 << r5
+        end
       end
     end
     if s0.last
@@ -74,6 +83,92 @@ module Pitch
     end
 
     node_cache[:pitch][start_index] = r0
+
+    r0
+  end
+
+  module Octave0
+    def n
+      elements[0]
+    end
+  end
+
+  module Octave1
+    def to_i; n.to_i; end
+  end
+
+  def _nt_octave
+    start_index = index
+    if node_cache[:octave].has_key?(index)
+      cached = node_cache[:octave][index]
+      if cached
+        node_cache[:octave][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_nonnegative_integer
+    s0 << r1
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(Octave0)
+      r0.extend(Octave1)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:octave][start_index] = r0
+
+    r0
+  end
+
+  module Cent0
+    def n
+      elements[1]
+    end
+  end
+
+  module Cent1
+    def to_i; text_value.to_i; end
+  end
+
+  def _nt_cent
+    start_index = index
+    if node_cache[:cent].has_key?(index)
+      cached = node_cache[:cent][index]
+      if cached
+        node_cache[:cent][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    if has_terminal?(@regexps[gr = '\A[+-]'] ||= Regexp.new(gr), :regexp, index)
+      r1 = true
+      @index += 1
+    else
+      terminal_parse_failure('[+-]')
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      r2 = _nt_nonnegative_integer
+      s0 << r2
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(Cent0)
+      r0.extend(Cent1)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:cent][start_index] = r0
 
     r0
   end
