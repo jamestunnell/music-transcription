@@ -40,7 +40,7 @@ class Pitch
     @semitone = semitone
     @cent = cent
     @total_cents = (@octave*SEMITONES_PER_OCTAVE + @semitone)*CENTS_PER_SEMITONE + @cent
-    normalize!
+    balance!
   end
 
   # Return the pitch's frequency, which is determined by multiplying the base
@@ -96,7 +96,15 @@ class Pitch
   def transpose semitones
     Pitch.new(cent: (@total_cents + semitones * CENTS_PER_SEMITONE).round)
   end
-
+  
+  def total_semitones
+    Rational(@total_cents, CENTS_PER_SEMITONE)
+  end
+  
+  def self.from_semitones semitones
+    Pitch.new(cent: (semitones * CENTS_PER_SEMITONE).round)
+  end
+  
   def clone
     Pitch.new(cent: @total_cents)
   end
@@ -139,7 +147,7 @@ class Pitch
   private
 
   # Balance out the octave and semitone count.
-  def normalize!
+  def balance!
     centsTotal = @total_cents
     
     @octave = centsTotal / CENTS_PER_OCTAVE

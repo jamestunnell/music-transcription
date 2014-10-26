@@ -70,6 +70,25 @@ describe Pitch do
     end
   end
 
+  describe '.total_semitones' do
+    it 'should convert to whole/fractional total semitones value' do
+      C4.total_semitones.should eq(48)
+      C5.total_semitones.should eq(60)
+      C4.transpose(0.1).total_semitones.should eq(48.1)
+      C5.transpose(0.19).total_semitones.should eq(60.19)
+      C5.transpose(-0.19).total_semitones.should eq(59.81)
+    end
+  end
+  
+  describe '.from_semitones' do
+    it 'should convert (rounded) fractional part to cent value' do
+      Pitch.from_semitones(4).total_cents.should eq(400)
+      Pitch.from_semitones(4.11).total_cents.should eq(411)
+      Pitch.from_semitones(57.123).total_cents.should eq(5712)
+      Pitch.from_semitones(57.125).total_cents.should eq(5713)
+    end
+  end
+  
   describe '.from_ratio' do
     it 'should return a Pitch with given ratio' do
       @cases.each do |case_data|
