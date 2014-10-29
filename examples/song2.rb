@@ -18,7 +18,7 @@ score = Score.new(FOUR_FOUR, 120) do |s|
   end
   
   s.parts[3] = Part.new(Dynamics::MF) do |p|
-    notes = notes("/8 /4G5 /2F5 /4 /4F5 /2Eb5 /4 /4Eb5 /2Eb5 /8 /2Eb5 /2F5")
+    p.notes = notes("/8 /4G5 /2F5 /4 /4F5 /2Eb5 /4 /4Eb5 /2Eb5 /8 /2Eb5 /2F5")
   end
 end
 

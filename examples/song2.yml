@@ -163,7 +163,143 @@ parts:
     start_dynamic: 0.625
     dynamic_changes: {}
   3: !ruby/object:Music::Transcription::Part
-    notes: []
+    notes:
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 8
+        numerator: 1
+      pitches: []
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 7
+        cent: 0
+        total_cents: 6700
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 5
+        cent: 0
+        total_cents: 6500
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
+      pitches: []
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 5
+        cent: 0
+        total_cents: 6500
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 3
+        cent: 0
+        total_cents: 6300
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
+      pitches: []
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 4
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 3
+        cent: 0
+        total_cents: 6300
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 3
+        cent: 0
+        total_cents: 6300
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 8
+        numerator: 1
+      pitches: []
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 3
+        cent: 0
+        total_cents: 6300
+      articulation: :normal
+      accented: false
+      links: {}
+    - !ruby/object:Music::Transcription::Note
+      duration: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      pitches:
+      - !ruby/object:Music::Transcription::Pitch
+        octave: 5
+        semitone: 5
+        cent: 0
+        total_cents: 6500
+      articulation: :normal
+      accented: false
+      links: {}
     start_dynamic: 0.625
     dynamic_changes: {}
 program: !ruby/object:Music::Transcription::Program
