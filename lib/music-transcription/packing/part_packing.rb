@@ -16,7 +16,7 @@ class Part
   end
   
   def self.unpack packing
-    unpacked_notes = Parsing::notes(packing["notes"])
+    unpacked_notes = Note.split_parse(packing["notes"])
     unpacked_dcs = Hash[ packing["dynamic_changes"].map do |offset,change|
       [ offset,Change.unpack(change) ]
     end ]

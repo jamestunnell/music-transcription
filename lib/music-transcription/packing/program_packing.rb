@@ -9,7 +9,7 @@ class Program
   end
   
   def self.unpack packing
-    segments = packing.map {|str| Parsing::segment(str) }
+    segments = packing.map {|str| Segment.parse(str) }
     new segments
   end
 end

@@ -34,6 +34,7 @@ require 'music-transcription/parsing/note_parsing'
 require 'music-transcription/parsing/note_node'
 require 'music-transcription/parsing/meter_parsing'
 require 'music-transcription/parsing/segment_parsing'
+require 'music-transcription/parsing/parseable'
 require 'music-transcription/parsing/convenience_methods'
 
 require 'music-transcription/packing/change_packing'

@@ -31,10 +31,10 @@ class Score
   end
   
   def self.unpack packing
-    unpacked_start_meter = Parsing::meter(packing["start_meter"])
+    unpacked_start_meter = Meter.parse(packing["start_meter"])
     unpacked_mcs = Hash[ packing["meter_changes"].map do |k,v|
       v = v.clone
-      v[0] = Parsing::meter(v[0])
+      v[0] = Meter.parse(v[0])
       [k, Change.from_ary(v) ]
     end ]
     

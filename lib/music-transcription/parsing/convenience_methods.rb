@@ -1,103 +1,76 @@
 module Music
 module Transcription
-module Parsing
-  DURATION_PARSER = DurationParser.new
-  PITCH_PARSER = PitchParser.new
-  NOTE_PARSER = NoteParser.new
-  METER_PARSER = MeterParser.new
-  SEGMENT_PARSER = SegmentParser.new
-  
-  def duration dur_str
-    DURATION_PARSER.parse(dur_str).to_r
-  end
-  alias :dur :duration
-  module_function :duration
-  module_function :dur
-  
-  def durations durs_str
-    durs_str.split.map do |dur_str|
-      duration(dur_str)
-    end
-  end
-  alias :durs :durations
-  module_function :durs
-  module_function :durations
-  
-  def pitch p_str
-    PITCH_PARSER.parse(p_str).to_pitch
-  end
-  module_function :pitch
 
-  def pitches ps_str
-    ps_str.split.map do |p_str|
-      pitch(p_str)
-    end
+  class Duration
+    PARSER = Parsing::DurationParser.new
+    CONVERSION_METHOD = :to_r
+    include Parseable
   end
-  module_function :pitches
   
-  def note note_str
-    NOTE_PARSER.parse(note_str).to_note
+  class Pitch
+    PARSER = Parsing::PitchParser.new
+    CONVERSION_METHOD = :to_pitch
+    include Parseable
   end
-  module_function :note
   
-  def notes notes_str
-    notes_str.split.map do |note_str|
-      note(note_str)
-    end
+  class Note
+    PARSER = Parsing::NoteParser.new
+    CONVERSION_METHOD = :to_note
+    include Parseable
   end
-  module_function :notes
+
+  class Meter
+    PARSER = Parsing::MeterParser.new
+    CONVERSION_METHOD = :to_meter
+    include Parseable
+  end
   
-  def meter meter_str
-    METER_PARSER.parse(meter_str).to_meter
+  class Segment
+    PARSER = Parsing::SegmentParser.new
+    CONVERSION_METHOD = :to_range
+    include Parseable
   end
-  module_function :meter
-  
-  def segment seg_str
-    SEGMENT_PARSER.parse(seg_str).to_range
-  end
-  module_function :segment
-end
 end
 end
 
 class String
   def to_duration
-    Music::Transcription::Parsing::duration(self)
+    Music::Transcription::Duration.parse(self)
   end
   alias :to_dur :to_duration
   alias :to_d :to_duration
   
-  def to_durations
-    Music::Transcription::Parsing::durations(self)
+  def to_durations pattern=" "
+    Music::Transcription::Duration.split_parse(self, pattern)
   end
   alias :to_durs :to_durations
   alias :to_ds :to_durations
   
-  def to_pitch
-    Music::Transcription::Parsing::pitch(self)
+  def to_pitch 
+    Music::Transcription::Pitch.parse(self)
   end
   alias :to_p :to_pitch
   
-  def to_pitches
-    Music::Transcription::Parsing::pitches(self)
+  def to_pitches pattern=" "
+    Music::Transcription::Pitch.split_parse(self, pattern)
   end
   alias :to_ps :to_pitches
   
   def to_note
-    Music::Transcription::Parsing::note(self)
+    Music::Transcription::Note.parse(self)
   end
   alias :to_n :to_note
   
-  def to_notes
-    Music::Transcription::Parsing::notes(self)
+  def to_notes pattern=" "
+    Music::Transcription::Note.split_parse(self, pattern)
   end
   alias :to_ns :to_notes
   
   def to_meter
-    Music::Transcription::Parsing::meter(self)
+    Music::Transcription::Meter.parse(self)
   end
   
   def to_segment
-    Music::Transcription::Parsing::segment(self)
+    Music::Transcription::Segment.parse(self)
   end
 end
