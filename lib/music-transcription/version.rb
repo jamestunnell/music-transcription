@@ -2,6 +2,6 @@
 module Music
 module Transcription
   # music-transcription version
-  VERSION = "0.17.1"
+  VERSION = "0.18.1"
 end
 end
