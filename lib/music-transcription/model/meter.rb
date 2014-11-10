@@ -3,13 +3,17 @@ module Transcription
 
 class Meter
   include Validatable
+
   attr_reader :measure_duration, :beat_duration, :beats_per_measure
   
-  @@check_methods = [ :check_beats_per_measure, :check_beat_duration ]
   def initialize beats_per_measure, beat_duration
     @beats_per_measure = beats_per_measure
     @beat_duration = beat_duration
     @measure_duration = beats_per_measure * beat_duration    
+  end
+  
+  def check_methods
+    [ :check_beats_per_measure, :check_beat_duration ]
   end
   
   def check_beats_per_measure

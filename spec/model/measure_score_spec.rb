@@ -1,16 +1,16 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe Score do
+describe MeasureScore do
   describe '#initialize' do
     it 'should use empty containers for parameters not given' do
-      s = Score.new(FOUR_FOUR,120)
+      s = MeasureScore.new(FOUR_FOUR,120)
       s.parts.should be_empty
       s.program.segments.should be_empty
     end
     
     it 'should assign given parameters' do
       m = FOUR_FOUR
-      s = Score.new(m,120)
+      s = MeasureScore.new(m,120)
       s.start_meter.should eq m
       s.start_tempo.should eq 120
       
@@ -19,7 +19,7 @@ describe Score do
       mcs = { 1 => Change::Immediate.new(THREE_FOUR) }
       tcs = { 1 => Change::Immediate.new(100) }
       
-      s = Score.new(m,120,
+      s = MeasureScore.new(m,120,
         parts: parts,
         program: program,
         meter_changes: mcs,
@@ -44,7 +44,7 @@ describe Score do
     }.each do |context_str,args|
       context context_str do
         it 'should return true' do
-          Score.new(*args).should be_valid
+          MeasureScore.new(*args).should be_valid
         end
       end
     end
@@ -61,7 +61,7 @@ describe Score do
     }.each do |context_str,args|
       context context_str do
         it 'should return false' do
-          Score.new(*args).should be_invalid
+          MeasureScore.new(*args).should be_invalid
         end
       end      
     end

@@ -8,13 +8,16 @@ class Part
   
   attr_accessor :start_dynamic, :dynamic_changes, :notes
   
-  @@check_methods = [:ensure_start_dynamic, :ensure_dynamic_change_values_range ]
   def initialize start_dynamic, notes: [], dynamic_changes: {}
     @notes = notes
     @start_dynamic = start_dynamic
     @dynamic_changes = dynamic_changes
     
     yield(self) if block_given?
+  end
+  
+  def check_methods
+    [:ensure_start_dynamic, :ensure_dynamic_change_values_range ]
   end
   
   def validatables

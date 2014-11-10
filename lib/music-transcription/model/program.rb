@@ -9,12 +9,15 @@ class Program
   include Validatable
   
   attr_accessor :segments
-
-  @@check_methods = [:ensure_increasing_segments, :ensure_nonnegative_segments]
+  
   def initialize segments = []
     @segments = segments
   end
 
+  def check_methods
+    [:ensure_increasing_segments, :ensure_nonnegative_segments]
+  end
+  
   # @return [Float] the sum of all program segment lengths
   def length
     segments.inject(0.0) { |length, segment| length + (segment.last - segment.first) }

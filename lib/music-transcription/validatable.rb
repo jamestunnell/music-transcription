@@ -3,19 +3,8 @@
 module Validatable
   attr_reader :errors
   
-  def check_methods
-    if instance_variable_defined?(:@check_methods)
-      methods = instance_variable_get(:@check_methods)
-    else
-      methods = []
-    end
-    
-    if self.class.class_variable_defined?(:@@check_methods)
-      methods += self.class.class_variable_get(:@@check_methods)
-    end
-    
-    return methods
-  end
+  def check_methods; []; end
+  def validatables; []; end
   
   def validate
     @errors = []
@@ -34,10 +23,6 @@ module Validatable
     end
     
     return @errors
-  end
-  
-  def validatables
-    []
   end
   
   def valid?
