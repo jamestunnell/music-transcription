@@ -21,6 +21,10 @@ class MeasureScore < NoteScore
       @meter_changes.values.map {|v| v.value}
   end
   
+  def valid_tempo_types
+    super() + [ Tempo::BPM ]
+  end
+  
   def check_startmeter_type
     unless @start_meter.is_a? Meter
       raise TypeError, "start meter #{@start_meter} is not a Meter object"

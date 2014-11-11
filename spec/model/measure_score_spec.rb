@@ -34,7 +34,18 @@ describe MeasureScore do
   
   describe '#valid?' do
     {
-      'just valid start meter and tempo' => [ FOUR_FOUR, Tempo::BPM.new(120) ],
+      'QNPM start tempo' => [ FOUR_FOUR, Tempo::QNPM.new(40) ],
+      'NPM start tempo' => [ FOUR_FOUR, Tempo::NPM.new(40) ],
+      'NPS start tempo' => [ FOUR_FOUR, Tempo::NPS.new(40) ],
+      'BPM start tempo' => [ FOUR_FOUR, Tempo::BPM.new(40) ],
+      'QNPM tempo changes' => [ FOUR_FOUR, Tempo::BPM.new(30),
+        :tempo_changes => { 1 => Change::Gradual.new(Tempo::QNPM.new(40), 2), 2 => Change::Immediate.new(Tempo::QNPM.new(50)) } ],
+      'NPM tempo changes' => [ FOUR_FOUR, Tempo::BPM.new(30),
+        :tempo_changes => { 1 => Change::Gradual.new(Tempo::NPM.new(40), 2), 2 => Change::Immediate.new(Tempo::QNPM.new(50)) } ],
+      'NPS tempo changes' => [ FOUR_FOUR, Tempo::BPM.new(30),
+        :tempo_changes => { 1 => Change::Gradual.new(Tempo::NPS.new(40), 2), 2 => Change::Immediate.new(Tempo::QNPM.new(50)) } ],
+      'BPM tempo changes' => [ FOUR_FOUR, Tempo::BPM.new(30),
+        :tempo_changes => { 1 => Change::Gradual.new(Tempo::BPM.new(40), 2), 2 => Change::Immediate.new(Tempo::QNPM.new(50)) } ],
       'valid meter changes' => [ FOUR_FOUR, Tempo::BPM.new(120),
         :meter_changes => { 1 => Change::Immediate.new(TWO_FOUR) } ],
       'valid tempo changes' => [ FOUR_FOUR, Tempo::BPM.new(120),

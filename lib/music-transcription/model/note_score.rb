@@ -16,23 +16,27 @@ class NoteScore
   end
 
   def check_methods
-    [ :check_start_tempo, :check_tempo_changes ]
+    [ :check_start_tempo_type, :check_tempo_change_types ]
   end
   
   def validatables
     [ @program ] + @tempo_changes.values + @parts.values
   end
-    
-  def check_start_tempo
-    unless @start_tempo.is_a? Tempo
-      raise TypeError, "start tempo #{@start_tempo} is not a Tempo object"
-    end
+  
+  def valid_tempo_types
+    [ Tempo::QNPM, Tempo::NPM, Tempo::NPS ]
   end
   
-  def check_tempo_changes
-    non_tempos = @tempo_changes.select {|k,v| !v.value.is_a?(Tempo) }
-    if non_tempos.any?
-      raise NonPositiveError, "tempo change values #{non_tempos} are not Tempo objects"
+  def check_start_tempo_type
+    unless valid_tempo_types.include?(@start_tempo.class)
+      raise TypeError, "type of start tempo #{@start_tempo} is not one of valid tempo types: #{valid_tempo_types}"
+    end
+  end
+
+  def check_tempo_change_types
+    baddtypes = @tempo_changes.select {|k,v| !valid_tempo_types.include?(v.value.class) }
+    if baddtypes.any?
+      raise NonPositiveError, "type of tempo change values #{baddtypes} are not one of valid tempo types: #{valid_tempo_types}"
     end
   end
   
