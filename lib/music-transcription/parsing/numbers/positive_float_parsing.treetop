@@ -1,0 +1,31 @@
+module Music
+module Transcription
+module Parsing
+
+grammar PositiveFloat
+  rule positive_float
+    (float_pre1 / float_pre2) exponent? {
+      def to_f
+        text_value.to_f
+      end
+      
+      alias :to_num :to_f
+    }
+  end
+
+  rule float_pre1
+    [0]* [1-9]+ [0-9]* [.] [0-9]+
+  end
+  
+  rule float_pre2
+    [0]+ [.] [0]* [1-9]+ [0-9]*
+  end
+  
+  rule exponent
+    "e" [+-] [0-9]+
+  end
+end
+
+end
+end
+end

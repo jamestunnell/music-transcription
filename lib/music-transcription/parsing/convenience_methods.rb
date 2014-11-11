@@ -30,6 +30,12 @@ module Transcription
     CONVERSION_METHOD = :to_range
     include Parseable
   end
+  
+  class Tempo
+    PARSER = Parsing::TempoParser.new
+    CONVERSION_METHOD = :to_tempo
+    include Parseable
+  end
 end
 end
 

@@ -24,6 +24,8 @@ module PositiveInteger
     def to_i
       text_value.to_i
     end
+    
+    alias :to_num :to_i
   end
 
   def _nt_positive_integer
