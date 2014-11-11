@@ -13,12 +13,6 @@ module NonnegativeFloat
   end
 
   module NonnegativeFloat0
-  end
-
-  module NonnegativeFloat1
-  end
-
-  module NonnegativeFloat2
     def to_f
       text_value.to_f
     end
@@ -32,6 +26,100 @@ module NonnegativeFloat
       cached = node_cache[:nonnegative_float][index]
       if cached
         node_cache[:nonnegative_float][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0 = index
+    r1 = _nt_float1
+    if r1
+      r1 = SyntaxNode.new(input, (index-1)...index) if r1 == true
+      r0 = r1
+      r0.extend(NonnegativeFloat0)
+    else
+      r2 = _nt_float2
+      if r2
+        r2 = SyntaxNode.new(input, (index-1)...index) if r2 == true
+        r0 = r2
+        r0.extend(NonnegativeFloat0)
+      else
+        @index = i0
+        r0 = nil
+      end
+    end
+
+    node_cache[:nonnegative_float][start_index] = r0
+
+    r0
+  end
+
+  module Float10
+    def exponent
+      elements[1]
+    end
+  end
+
+  def _nt_float1
+    start_index = index
+    if node_cache[:float1].has_key?(index)
+      cached = node_cache[:float1][index]
+      if cached
+        node_cache[:float1][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    s1, i1 = [], index
+    loop do
+      if has_terminal?(@regexps[gr = '\A[0-9]'] ||= Regexp.new(gr), :regexp, index)
+        r2 = true
+        @index += 1
+      else
+        terminal_parse_failure('[0-9]')
+        r2 = nil
+      end
+      if r2
+        s1 << r2
+      else
+        break
+      end
+    end
+    if s1.empty?
+      @index = i1
+      r1 = nil
+    else
+      r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+    end
+    s0 << r1
+    if r1
+      r3 = _nt_exponent
+      s0 << r3
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(Float10)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:float1][start_index] = r0
+
+    r0
+  end
+
+  module Float20
+  end
+
+  def _nt_float2
+    start_index = index
+    if node_cache[:float2].has_key?(index)
+      cached = node_cache[:float2][index]
+      if cached
+        node_cache[:float2][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
         @index = cached.interval.end
       end
       return cached
@@ -93,56 +181,7 @@ module NonnegativeFloat
         end
         s0 << r4
         if r4
-          i7, s7 = index, []
-          if (match_len = has_terminal?("e", false, index))
-            r8 = true
-            @index += match_len
-          else
-            terminal_parse_failure("e")
-            r8 = nil
-          end
-          s7 << r8
-          if r8
-            if has_terminal?(@regexps[gr = '\A[+-]'] ||= Regexp.new(gr), :regexp, index)
-              r9 = true
-              @index += 1
-            else
-              terminal_parse_failure('[+-]')
-              r9 = nil
-            end
-            s7 << r9
-            if r9
-              s10, i10 = [], index
-              loop do
-                if has_terminal?(@regexps[gr = '\A[0-9]'] ||= Regexp.new(gr), :regexp, index)
-                  r11 = true
-                  @index += 1
-                else
-                  terminal_parse_failure('[0-9]')
-                  r11 = nil
-                end
-                if r11
-                  s10 << r11
-                else
-                  break
-                end
-              end
-              if s10.empty?
-                @index = i10
-                r10 = nil
-              else
-                r10 = instantiate_node(SyntaxNode,input, i10...index, s10)
-              end
-              s7 << r10
-            end
-          end
-          if s7.last
-            r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
-            r7.extend(NonnegativeFloat0)
-          else
-            @index = i7
-            r7 = nil
-          end
+          r7 = _nt_exponent
           if r7
             r6 = r7
           else
@@ -154,14 +193,88 @@ module NonnegativeFloat
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(NonnegativeFloat1)
-      r0.extend(NonnegativeFloat2)
+      r0.extend(Float20)
     else
       @index = i0
       r0 = nil
     end
 
-    node_cache[:nonnegative_float][start_index] = r0
+    node_cache[:float2][start_index] = r0
+
+    r0
+  end
+
+  module Exponent0
+  end
+
+  def _nt_exponent
+    start_index = index
+    if node_cache[:exponent].has_key?(index)
+      cached = node_cache[:exponent][index]
+      if cached
+        node_cache[:exponent][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    if (match_len = has_terminal?("e", false, index))
+      r1 = true
+      @index += match_len
+    else
+      terminal_parse_failure("e")
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      if has_terminal?(@regexps[gr = '\A[+-]'] ||= Regexp.new(gr), :regexp, index)
+        r3 = true
+        @index += 1
+      else
+        terminal_parse_failure('[+-]')
+        r3 = nil
+      end
+      if r3
+        r2 = r3
+      else
+        r2 = instantiate_node(SyntaxNode,input, index...index)
+      end
+      s0 << r2
+      if r2
+        s4, i4 = [], index
+        loop do
+          if has_terminal?(@regexps[gr = '\A[0-9]'] ||= Regexp.new(gr), :regexp, index)
+            r5 = true
+            @index += 1
+          else
+            terminal_parse_failure('[0-9]')
+            r5 = nil
+          end
+          if r5
+            s4 << r5
+          else
+            break
+          end
+        end
+        if s4.empty?
+          @index = i4
+          r4 = nil
+        else
+          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+        end
+        s0 << r4
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(Exponent0)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:exponent][start_index] = r0
 
     r0
   end

@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 describe Parsing::PositiveFloatParser do
   parser = Parsing::PositiveFloatParser.new
 
-  ["1.0","0.50","05.003e-10","1.555e+2","3.443214","0.001","0000.0030000"].each do |str|
+  ["2e2","1.0","0.50","05.003e-10","1.555e+2","3.443214","0.001","0000.0030000"].each do |str|
     res = parser.parse(str)
     f = str.to_f
     
@@ -20,7 +20,7 @@ describe Parsing::PositiveFloatParser do
     end
   end
   
-  ["0.0","0e1"].each do |str|
+  ["-2.0","-1.55e-2","0.0","0e1"].each do |str|
     it "should not parse '#{str}'" do
       parser.should_not parse(str)
     end    

@@ -13,9 +13,6 @@ module PositiveFloat
   end
 
   module PositiveFloat0
-  end
-
-  module PositiveFloat1
     def to_f
       text_value.to_f
     end
@@ -34,39 +31,29 @@ module PositiveFloat
       return cached
     end
 
-    i0, s0 = index, []
-    i1 = index
-    r2 = _nt_float_pre1
-    if r2
-      r2 = SyntaxNode.new(input, (index-1)...index) if r2 == true
-      r1 = r2
-    else
-      r3 = _nt_float_pre2
-      if r3
-        r3 = SyntaxNode.new(input, (index-1)...index) if r3 == true
-        r1 = r3
-      else
-        @index = i1
-        r1 = nil
-      end
-    end
-    s0 << r1
+    i0 = index
+    r1 = _nt_float1
     if r1
-      r5 = _nt_exponent
-      if r5
-        r4 = r5
-      else
-        r4 = instantiate_node(SyntaxNode,input, index...index)
-      end
-      s0 << r4
-    end
-    if s0.last
-      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r1 = SyntaxNode.new(input, (index-1)...index) if r1 == true
+      r0 = r1
       r0.extend(PositiveFloat0)
-      r0.extend(PositiveFloat1)
     else
-      @index = i0
-      r0 = nil
+      r2 = _nt_float2
+      if r2
+        r2 = SyntaxNode.new(input, (index-1)...index) if r2 == true
+        r0 = r2
+        r0.extend(PositiveFloat0)
+      else
+        r3 = _nt_float3
+        if r3
+          r3 = SyntaxNode.new(input, (index-1)...index) if r3 == true
+          r0 = r3
+          r0.extend(PositiveFloat0)
+        else
+          @index = i0
+          r0 = nil
+        end
+      end
     end
 
     node_cache[:positive_float][start_index] = r0
@@ -74,15 +61,110 @@ module PositiveFloat
     r0
   end
 
-  module FloatPre10
+  module Float10
+    def exponent
+      elements[3]
+    end
   end
 
-  def _nt_float_pre1
+  def _nt_float1
     start_index = index
-    if node_cache[:float_pre1].has_key?(index)
-      cached = node_cache[:float_pre1][index]
+    if node_cache[:float1].has_key?(index)
+      cached = node_cache[:float1][index]
       if cached
-        node_cache[:float_pre1][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        node_cache[:float1][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    s1, i1 = [], index
+    loop do
+      if has_terminal?(@regexps[gr = '\A[0]'] ||= Regexp.new(gr), :regexp, index)
+        r2 = true
+        @index += 1
+      else
+        terminal_parse_failure('[0]')
+        r2 = nil
+      end
+      if r2
+        s1 << r2
+      else
+        break
+      end
+    end
+    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+    s0 << r1
+    if r1
+      s3, i3 = [], index
+      loop do
+        if has_terminal?(@regexps[gr = '\A[1-9]'] ||= Regexp.new(gr), :regexp, index)
+          r4 = true
+          @index += 1
+        else
+          terminal_parse_failure('[1-9]')
+          r4 = nil
+        end
+        if r4
+          s3 << r4
+        else
+          break
+        end
+      end
+      if s3.empty?
+        @index = i3
+        r3 = nil
+      else
+        r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+      end
+      s0 << r3
+      if r3
+        s5, i5 = [], index
+        loop do
+          if has_terminal?(@regexps[gr = '\A[0-9]'] ||= Regexp.new(gr), :regexp, index)
+            r6 = true
+            @index += 1
+          else
+            terminal_parse_failure('[0-9]')
+            r6 = nil
+          end
+          if r6
+            s5 << r6
+          else
+            break
+          end
+        end
+        r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
+        s0 << r5
+        if r5
+          r7 = _nt_exponent
+          s0 << r7
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(Float10)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:float1][start_index] = r0
+
+    r0
+  end
+
+  module Float20
+  end
+
+  def _nt_float2
+    start_index = index
+    if node_cache[:float2].has_key?(index)
+      cached = node_cache[:float2][index]
+      if cached
+        node_cache[:float2][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
         @index = cached.interval.end
       end
       return cached
@@ -179,32 +261,41 @@ module PositiveFloat
               r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
             end
             s0 << r8
+            if r8
+              r11 = _nt_exponent
+              if r11
+                r10 = r11
+              else
+                r10 = instantiate_node(SyntaxNode,input, index...index)
+              end
+              s0 << r10
+            end
           end
         end
       end
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(FloatPre10)
+      r0.extend(Float20)
     else
       @index = i0
       r0 = nil
     end
 
-    node_cache[:float_pre1][start_index] = r0
+    node_cache[:float2][start_index] = r0
 
     r0
   end
 
-  module FloatPre20
+  module Float30
   end
 
-  def _nt_float_pre2
+  def _nt_float3
     start_index = index
-    if node_cache[:float_pre2].has_key?(index)
-      cached = node_cache[:float_pre2][index]
+    if node_cache[:float3].has_key?(index)
+      cached = node_cache[:float3][index]
       if cached
-        node_cache[:float_pre2][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        node_cache[:float3][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
         @index = cached.interval.end
       end
       return cached
@@ -301,19 +392,28 @@ module PositiveFloat
             end
             r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
             s0 << r8
+            if r8
+              r11 = _nt_exponent
+              if r11
+                r10 = r11
+              else
+                r10 = instantiate_node(SyntaxNode,input, index...index)
+              end
+              s0 << r10
+            end
           end
         end
       end
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(FloatPre20)
+      r0.extend(Float30)
     else
       @index = i0
       r0 = nil
     end
 
-    node_cache[:float_pre2][start_index] = r0
+    node_cache[:float3][start_index] = r0
 
     r0
   end
@@ -343,36 +443,41 @@ module PositiveFloat
     s0 << r1
     if r1
       if has_terminal?(@regexps[gr = '\A[+-]'] ||= Regexp.new(gr), :regexp, index)
-        r2 = true
+        r3 = true
         @index += 1
       else
         terminal_parse_failure('[+-]')
-        r2 = nil
+        r3 = nil
+      end
+      if r3
+        r2 = r3
+      else
+        r2 = instantiate_node(SyntaxNode,input, index...index)
       end
       s0 << r2
       if r2
-        s3, i3 = [], index
+        s4, i4 = [], index
         loop do
           if has_terminal?(@regexps[gr = '\A[0-9]'] ||= Regexp.new(gr), :regexp, index)
-            r4 = true
+            r5 = true
             @index += 1
           else
             terminal_parse_failure('[0-9]')
-            r4 = nil
+            r5 = nil
           end
-          if r4
-            s3 << r4
+          if r5
+            s4 << r5
           else
             break
           end
         end
-        if s3.empty?
-          @index = i3
-          r3 = nil
+        if s4.empty?
+          @index = i4
+          r4 = nil
         else
-          r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+          r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
         end
-        s0 << r3
+        s0 << r4
       end
     end
     if s0.last
