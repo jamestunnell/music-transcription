@@ -52,8 +52,11 @@ describe MeasureScore do
     {
       'invalid start tempo' => [ FOUR_FOUR, -1],
       'invalid start meter' => [ Meter.new(-1,"1/4".to_r), 120],
+      'non-meter start meter' => [ 1, 120 ],
       'invalid meter in change' => [ FOUR_FOUR, 120,
         :meter_changes => { 1 => Change::Immediate.new(Meter.new(-2,"1/4".to_r)) } ],
+      'non-meter values in meter changes' => [ FOUR_FOUR, 120,
+        :meter_changes => { 1 => Change::Immediate.new(5) } ],
       'non-immediate meter change' => [ FOUR_FOUR, 120,
         :meter_changes => { 1 => Change::Gradual.new(TWO_FOUR,1) } ],
       'invalid part' => [ FOUR_FOUR, 120, :parts => { "piano" => Part.new(-0.1) }],

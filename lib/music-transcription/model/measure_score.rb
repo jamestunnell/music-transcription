@@ -13,7 +13,7 @@ class MeasureScore < NoteScore
   end
   
   def check_methods
-    super() + [:check_meter_changes]
+    super() + [:check_startmeter_type, :check_meterchange_types, :check_meterchange_durs]
   end
   
   def validatables
@@ -21,7 +21,20 @@ class MeasureScore < NoteScore
       @meter_changes.values.map {|v| v.value}
   end
   
-  def check_meter_changes
+  def check_startmeter_type
+    unless @start_meter.is_a? Meter
+      raise TypeError, "start meter #{@start_meter} is not a Meter object"
+    end
+  end
+  
+  def check_meterchange_types
+    badtypes = @meter_changes.select {|k,v| !v.value.is_a?(Meter) }
+    if badtypes.any?
+      raise TypeError, "meter change values #{nonmeter_values} are not Meter objects"
+    end
+  end
+  
+  def check_meterchange_durs
     nonzero_duration = @meter_changes.select {|k,v| v.duration != 0 }
     if nonzero_duration.any?
       raise NonZeroError, "meter changes #{nonzero_duration} have non-zero duration"

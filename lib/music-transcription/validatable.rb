@@ -19,7 +19,9 @@ module Validatable
     end
     
     validatables.each do |v|
-      @errors += v.validate
+      if v.respond_to?(:validate)
+        @errors += v.validate
+      end
     end
     
     return @errors
