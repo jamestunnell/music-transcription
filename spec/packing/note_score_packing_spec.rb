@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe NoteScore do
   before :all do
-    @score = NoteScore.new(30) do |s|
+    @score = NoteScore.new(Tempo::QNPM.new(30)) do |s|
       s.program = Program.new([0...2, 0...2,2...4,0...2])
       s.parts["lead"] = Part.new(Dynamics::MF) do |p|
         riff = "/6Bb3 /4 /12Db4= /6Db4= /36Db4 /36Eb4 /36Db4 /6Ab3 /12Db4 \
@@ -32,8 +32,8 @@ describe NoteScore do
       @h.keys.should include("program")
     end
     
-    it 'should pack start tempo as plain numeric value' do
-      @h['start_tempo'].should be_a Numeric
+    it 'should pack start tempo as string' do
+      @h['start_tempo'].should be_a String
     end
     
     it 'should pack tempo changes as whatver type Change#pack returns' do
@@ -44,6 +44,12 @@ describe NoteScore do
       end
     end
     
+    it 'should pack tempo change values as strings' do
+      @h['tempo_changes'].each do |offset,packed_v|
+        packed_v[0].should be_a String
+      end
+    end
+
     it 'should pack program as whatever type Program#pack returns' do
       t = @score.program.pack.class
       @h['program'].should be_a t
