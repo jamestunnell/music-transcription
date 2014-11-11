@@ -24,15 +24,15 @@ class NoteScore
   end
     
   def check_start_tempo
-    unless @start_tempo > 0
-      raise NonPositiveError, "start tempo #{@start_tempo} is not positive"
+    unless @start_tempo.is_a? Tempo
+      raise TypeError, "start tempo #{@start_tempo} is not a Tempo object"
     end
   end
   
   def check_tempo_changes
-    not_positive = @tempo_changes.select {|k,v| v.value <= 0}
-    if not_positive.any?
-      raise NonPositiveError, "tempo changes #{not_positive} are not positive"
+    non_tempos = @tempo_changes.select {|k,v| !v.value.is_a?(Tempo) }
+    if non_tempos.any?
+      raise NonPositiveError, "tempo change values #{non_tempos} are not Tempo objects"
     end
   end
   
