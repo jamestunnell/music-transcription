@@ -70,6 +70,8 @@ describe MeasureScore do
         :meter_changes => { 1 => Change::Immediate.new(5) } ],
       'non-immediate meter change' => [ FOUR_FOUR, Tempo::BPM.new(120),
         :meter_changes => { 1 => Change::Gradual.new(TWO_FOUR,1) } ],
+      'non-integer meter change offset' => [ FOUR_FOUR, Tempo::BPM.new(120),
+        :meter_changes => { 1.1 => Change::Immediate.new(TWO_FOUR) } ],
       'tempo change value is not a Tempo object' => [ FOUR_FOUR, Tempo::QNPM.new(120),
         :tempo_changes => { 1 => Change::Gradual.new(140,1) } ],
       'invalid part' => [ FOUR_FOUR, 120, :parts => { "piano" => Part.new(-0.1) }],
@@ -80,6 +82,15 @@ describe MeasureScore do
           MeasureScore.new(*args).should be_invalid
         end
       end      
+    end
+  end
+  
+  describe '#to_note_score' do
+    context 'current score is invalid' do
+      it 'should raise NotValidError' do
+        score = MeasureScore.new(1, Tempo::BPM.new(120))
+        expect { score.to_note_score }.to raise_error(NotValidError)
+      end
     end
   end
 end

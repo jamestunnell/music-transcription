@@ -8,12 +8,14 @@ class MeasureScore < NoteScore
     @start_meter = start_meter
     @meter_changes = meter_changes
     
-    super(start_tempo, tempo_changes: tempo_changes, program: program, parts: parts)
+    super(start_tempo, tempo_changes: tempo_changes,
+          program: program, parts: parts)
     yield(self) if block_given?
   end
   
   def check_methods
-    super() + [:check_startmeter_type, :check_meterchange_types, :check_meterchange_durs]
+    super() + [:check_startmeter_type, :check_meterchange_types,
+               :check_meterchange_durs, :check_meterchange_offsets]
   end
   
   def validatables
@@ -38,6 +40,13 @@ class MeasureScore < NoteScore
     end
   end
   
+  def check_meterchange_offsets
+    badoffsets = @meter_changes.select {|k,v| k != k.to_i }
+    if badoffsets.any?
+      raise NonIntegerError, "meter changes #{badoffsets} have non-integer offsets"
+    end
+  end
+  
   def check_meterchange_durs
     nonzero_duration = @meter_changes.select {|k,v| v.duration != 0 }
     if nonzero_duration.any?
@@ -54,7 +63,10 @@ class MeasureScore < NoteScore
   # note-based offsets, and eliminating the use of meters. Also, tempo is
   # converted from beats-per-minute to notes-per-minute.
   def to_note_score
-    
+    unless valid?
+      raise NotValidError, "Current MeasureScore is invalid, so it can not be \
+                            converted to a NoteScore. Validation errors: #{self.errors}"
+    end
   end
 end
 
