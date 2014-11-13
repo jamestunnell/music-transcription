@@ -45,6 +45,38 @@ class Change
       Gradual.new(@value,newdur)
     end
   end
+  
+  class Partial < Change
+    attr_reader :elapsed, :stop
+    
+    def initialize value, total_dur, elapsed, stop
+      if elapsed < 0
+        raise NegativeError, "elapsed (#{elapsed}) is < 0"
+      end
+      
+      if stop <= 0
+        raise NonPositiveError, "stop (#{stop}) is < 0"
+      end
+
+      if stop > total_dur
+        raise ArgumentError, "stop (#{stop}) is > total duration (#{total_dur})"
+      end
+      
+      if stop <= elapsed
+        raise ArgumentError, "stop (#{stop}) is <= elapsed (#{elapsed})"
+      end
+
+      @elapsed = elapsed
+      @stop = stop
+      super(value,stop - elapsed)
+    end
+    
+    def ==(other)
+      super() &&
+      @elapsed == other.elapsed &&
+      @stop == other.stop
+    end
+  end
 end
 
 end
