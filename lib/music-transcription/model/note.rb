@@ -13,6 +13,9 @@ class Note
   
   def initialize duration, pitches = [], articulation: DEFAULT_ARTICULATION, accented: false, links: {}
     @duration = duration
+    if !pitches.is_a? Enumerable
+      pitches = [ pitches ]
+    end
     @pitches = Set.new(pitches).sort
     @articulation = articulation
     @accented = accented
