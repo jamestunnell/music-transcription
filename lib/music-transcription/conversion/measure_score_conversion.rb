@@ -20,7 +20,26 @@ class MeasureScore
     # convert parts
     # convert program
     # convert start tempo
+    start_tempo = convert_tempo(0,@start_tempo,desired_tempo_class)
     # convert tempo changes
+    NoteScore.new(start_tempo)
+  end
+  
+  def convert_tempo moff, src_tempo, dest_class
+    args = (src_tempo.class == Tempo::BPM) ? [beat_duration_at(moff)] : []
+    
+    return case dest_class.new(1)
+    when src_tempo.class then src_tempo.clone
+    when Tempo::QNPM then @start_tempo.to_qnpm(*args)
+    when Tempo::NPM then @start_tempo.to_npm(*args)
+    when Tempo::NPS then @start_tempo.to_nps(*args)
+    else
+      raise TypeError, "Unexpected destination tempo class #{dest_class}"
+    end
+  end
+  
+  def beat_duration_at moff
+    beat_durations.select {|k,v| k <= moff }.max[1]
   end
   
   def measure_offsets
@@ -50,6 +69,18 @@ class MeasureScore
     end
     
     return moffs.sort
+  end
+
+  def beat_durations
+    bdurs = @meter_changes.map do |offset,change|
+      [ offset, change.value.beat_duration ]
+    end.sort
+    
+    if bdurs.empty? || bdurs[0][0] != 0
+      bdurs.unshift([0,@start_meter.beat_duration])
+    end
+  
+    return bdurs
   end
   
   def measure_durations

@@ -211,7 +211,20 @@ describe MeasureScore do
       end
     end
     
-    it 'should return a NoteScore'
+    it 'should return a NoteScore' do
+      score = MeasureScore.new(FOUR_FOUR, Tempo::BPM.new(120))
+      score.to_note_score(Tempo::QNPM).should be_a NoteScore
+    end
+
+    it 'should convert start tempo according to given desired tempo class' do
+      score = MeasureScore.new(FOUR_FOUR, Tempo::BPM.new(120))
+      { Tempo::QNPM => 120, Tempo::NPM => 30, Tempo::NPS => 0.5 }.each do |tempo_class, tgt_val|
+        nscore = score.to_note_score(tempo_class)
+        nscore.start_tempo.should be_a tempo_class
+        nscore.start_tempo.value.should eq(tgt_val)
+      end
+    end
+    
     it 'should map measure-based offsets to note-based offsets'
   end
 end

@@ -12,6 +12,10 @@ class Tempo
     self.class == other.class && self.value == other.value
   end
   
+  def clone
+    self.class.new(@value)
+  end
+  
   class QNPM < Tempo; def to_s; "#{@value}qnpm" end; end
   class NPM < Tempo; def to_s; "#{@value}npm" end; end
   class BPM < Tempo; def to_s; "#{@value}bpm" end; end
