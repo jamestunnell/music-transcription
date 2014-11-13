@@ -19,12 +19,11 @@ class MeasureScore < NoteScore
   end
   
   def validatables
-    super() + [ @start_meter ] + @meter_changes.values +
-      @meter_changes.values.map {|v| v.value}
+    super() + [ @start_meter ] + @meter_changes.values.map {|v| v.value}
   end
   
-  def valid_tempo_types
-    super() + [ Tempo::BPM ]
+  def self.valid_tempo_types
+    NoteScore.valid_tempo_types + [ Tempo::BPM ]
   end
   
   def check_startmeter_type
@@ -48,26 +47,16 @@ class MeasureScore < NoteScore
   end
   
   def check_meterchange_durs
-    nonzero_duration = @meter_changes.select {|k,v| v.duration != 0 }
+    nonzero_duration = @meter_changes.select {|k,v| !v.is_a?(Change::Immediate) }
     if nonzero_duration.any?
-      raise NonZeroError, "meter changes #{nonzero_duration} have non-zero duration"
+      raise NonZeroError, "meter changes #{nonzero_duration} are not immediate"
     end
   end
   
   def ==(other)
     return super() && @start_meter == other.start_meter &&
       @meter_changes == other.meter_changes
-  end
-    
-  # Convert to NoteScore object by first converting measure-based offsets to
-  # note-based offsets, and eliminating the use of meters. Also, tempo is
-  # converted from beats-per-minute to notes-per-minute.
-  def to_note_score
-    unless valid?
-      raise NotValidError, "Current MeasureScore is invalid, so it can not be \
-                            converted to a NoteScore. Validation errors: #{self.errors}"
-    end
-  end
+  end    
 end
 
 end

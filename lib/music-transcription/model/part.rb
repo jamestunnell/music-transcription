@@ -21,7 +21,7 @@ class Part
   end
   
   def validatables
-    @notes + @dynamic_changes.values
+    @notes
   end
   
   def clone

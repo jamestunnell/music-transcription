@@ -2,7 +2,7 @@ module Music
 module Transcription
 
 class Change
-  attr_accessor :value, :duration
+  attr_reader :value, :duration
   
   def initialize value, duration
     @value = value
@@ -16,38 +16,17 @@ class Change
   end
 
   class Immediate < Change
-    include Validatable
-
     def initialize value
       super(value,0)
-    end
-    
-    def check_methods
-      [ :ensure_zero_duration ]
-    end
-    
-    def ensure_zero_duration
-      unless @duration == 0
-        raise NonZeroError, "immediate change duration #{self.duration} must be 0"
-      end
     end
   end
   
   class Gradual < Change
-    include Validatable
-    
-    def initialize value, transition_duration
-      super(value, transition_duration)
-    end
-    
-    def check_methods
-      [ :ensure_nonnegative_duration ]
-    end
-    
-    def ensure_nonnegative_duration
-      if @duration < 0
-        raise NegativeError, "gradual change duration #{self.duration} must be non-negative"
+    def initialize value, transition_dur
+      if transition_dur <= 0
+        raise NotPositiveError, "transition duration #{transition_dur} must be positive"
       end
+      super(value, transition_dur)
     end
   end
 end
