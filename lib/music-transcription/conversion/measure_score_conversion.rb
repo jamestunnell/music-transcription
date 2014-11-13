@@ -17,12 +17,24 @@ class MeasureScore
     
     mnoff_map = measure_note_offset_map
     
-    # convert parts
-    # convert program
-    # convert start tempo
+    parts = Hash[ @parts.map do |name,part|
+      new_dcs = Hash[ part.dynamic_changes.map do |moff,change|
+        noff = mnoff_map[moff]
+        noff2 = mnoff_map[moff + change.duration]
+        [noff, change.resize(noff2-noff)]
+      end ]
+      new_notes = part.notes.map {|n| n.clone }
+      [name, Part.new(part.start_dynamic,
+        notes: new_notes, dynamic_changes: new_dcs)]
+    end ]
+    prog = Program.new(
+      @program.segments.map do |seg|
+        mnoff_map[seg.first]...mnoff_map[seg.last]
+      end
+    )
     start_tempo = convert_tempo(0,@start_tempo,desired_tempo_class)
-    # convert tempo changes
-    NoteScore.new(start_tempo)
+    #tempo_changes = TODO
+    NoteScore.new(start_tempo, parts: parts, program: prog)
   end
   
   def convert_tempo moff, src_tempo, dest_class

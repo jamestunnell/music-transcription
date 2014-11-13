@@ -225,7 +225,54 @@ describe MeasureScore do
       end
     end
     
-    it 'should map measure-based offsets to note-based offsets'
+    it 'should convert program segments offsets from measure-based to note-based' do
+      score = MeasureScore.new(FOUR_FOUR, Tempo::BPM.new(120),
+        program: Program.new([0...4,2...5]))
+      nscore = score.to_note_score(Tempo::QNPM)
+      nscore.program.segments.size.should eq(2)
+      nscore.program.segments[0].first.should eq(0)
+      nscore.program.segments[0].last.should eq(4)
+      nscore.program.segments[1].first.should eq(2)
+      nscore.program.segments[1].last.should eq(5)
+      
+      score.start_meter = THREE_FOUR
+      nscore = score.to_note_score(Tempo::QNPM)
+      nscore.program.segments.size.should eq(2)
+      nscore.program.segments[0].first.should eq(0)
+      nscore.program.segments[0].last.should eq(3)
+      nscore.program.segments[1].first.should eq(1.5)
+      nscore.program.segments[1].last.should eq(3.75)
+    end
+    
+    it 'should convert part dynamic change offsets from measure-based to note-based' do
+      changeA = Change::Immediate.new(Dynamics::PP)
+      changeB = Change::Gradual.new(Dynamics::F, 2)
+      score = MeasureScore.new(FOUR_FOUR, Tempo::BPM.new(120),
+        parts: {"simple" => Part.new(Dynamics::MP, dynamic_changes: { 1 => changeA, 3 => changeB })}
+      )
+      nscore = score.to_note_score(Tempo::QNPM)
+      nscore.parts.should have_key("simple")
+      part = nscore.parts["simple"]
+      part.dynamic_changes.keys.sort.should eq([1,3])
+      change = part.dynamic_changes[Rational(1,1)]
+      change.value.should eq(changeA.value)
+      change.duration.should eq(0)
+      change = part.dynamic_changes[Rational(3,1)]
+      change.value.should eq(changeB.value)
+      change.duration.should eq(2)
+      
+      score.start_meter = THREE_FOUR
+      nscore = score.to_note_score(Tempo::QNPM)
+      nscore.parts.should have_key("simple")
+      part = nscore.parts["simple"]
+      part.dynamic_changes.keys.sort.should eq([Rational(3,4),Rational(9,4)])
+      change = part.dynamic_changes[Rational(3,4)]
+      change.value.should eq(changeA.value)
+      change.duration.should eq(0)
+      change = part.dynamic_changes[Rational(9,4)]
+      change.value.should eq(changeB.value)
+      change.duration.should eq(1.5)
+    end
   end
 end
 

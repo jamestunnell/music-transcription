@@ -19,6 +19,14 @@ class Change
     def initialize value
       super(value,0)
     end
+    
+    def clone
+      Immediate.new(@value)
+    end
+    
+    def resize newdur
+      self.clone
+    end
   end
   
   class Gradual < Change
@@ -27,6 +35,14 @@ class Change
         raise NonPositiveError, "transition duration #{transition_dur} must be positive"
       end
       super(value, transition_dur)
+    end
+    
+    def clone
+      Gradual.new(@value,@duration)
+    end
+    
+    def resize newdur
+      Gradual.new(@value,newdur)
     end
   end
 end
