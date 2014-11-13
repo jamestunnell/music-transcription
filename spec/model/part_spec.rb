@@ -41,9 +41,6 @@ describe Part do
         :dynamic_changes => { 0.2 => Change::Immediate.new(-0.01), 0.3 => Change::Gradual.new(1.01,0.2) }],
       'notes with 0 duration' => [ 0.5, :notes => [ Note.new(0) ]],
       'notes with negative duration' => [ 0.5, :notes => [ Note.new(-1) ]],
-      'gradual change with negative duration' => [
-        0.5, :notes => [ Note.new(1) ],
-        :dynamic_changes => { 0.2 => Change::Gradual.new(0.6,-0.1) }]
     }.each do |context_str, args|
       context context_str do
         it 'should return false' do

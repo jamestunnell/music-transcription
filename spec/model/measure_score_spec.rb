@@ -84,13 +84,4 @@ describe MeasureScore do
       end      
     end
   end
-  
-  describe '#to_note_score' do
-    context 'current score is invalid' do
-      it 'should raise NotValidError' do
-        score = MeasureScore.new(1, Tempo::BPM.new(120))
-        expect { score.to_note_score }.to raise_error(NotValidError)
-      end
-    end
-  end
 end

@@ -48,3 +48,4 @@ require 'music-transcription/packing/note_score_packing'
 require 'music-transcription/packing/measure_score_packing'
 
 require 'music-transcription/conversion/tempo_conversion'
+require 'music-transcription/conversion/measure_score_conversion'

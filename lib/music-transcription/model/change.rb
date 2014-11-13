@@ -24,7 +24,7 @@ class Change
   class Gradual < Change
     def initialize value, transition_dur
       if transition_dur <= 0
-        raise NotPositiveError, "transition duration #{transition_dur} must be positive"
+        raise NonPositiveError, "transition duration #{transition_dur} must be positive"
       end
       super(value, transition_dur)
     end
