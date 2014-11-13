@@ -12,15 +12,10 @@ class Tempo
     self.class == other.class && self.value == other.value
   end
   
-  [ :qnpm, :bpm, :npm, :nps ].each do |sym|
-    klass = Class.new(Tempo) do
-      def to_s
-        "#{@value}#{self.class::PRINT_SYM}"
-      end
-    end
-    klass.const_set(:PRINT_SYM,sym)
-    Tempo.const_set(sym.upcase,klass)
-  end
+  class QNPM < Tempo; def to_s; "#{@value}qnpm" end; end
+  class NPM < Tempo; def to_s; "#{@value}npm" end; end
+  class BPM < Tempo; def to_s; "#{@value}bpm" end; end
+  class NPS < Tempo; def to_s; "#{@value}nps" end; end
 end
 
 end
