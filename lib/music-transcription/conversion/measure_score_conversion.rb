@@ -69,7 +69,7 @@ class MeasureScore
             next_noff = mnoff_map[next_moff]
             tcs[cur_noff] = Change::Partial.new(
               convert_tempo(tempo, desired_tempo_class, cur_bdur), dur,
-              cur_noff - start_noff, next_noff - cur_noff)
+              cur_noff - start_noff, next_noff - start_noff)
             cur_noff, cur_bdur = next_noff, next_bdur
           end
           tcs[cur_noff] = Change::Partial.new(

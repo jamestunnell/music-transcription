@@ -354,6 +354,54 @@ describe MeasureScore do
           pc2_end_noff.should eq(@mnoff_map[@tc_moff + @tc_dur])
         end
       end
+
+      context 'two meter changes within tempo change duration' do
+        before :all do
+          @tc_moff, @mc1_moff, @mc2_moff = 2, 4, 5
+          @tc_dur = 5
+          @score = MeasureScore.new(THREE_FOUR, Tempo::BPM.new(120),
+            tempo_changes: { @tc_moff => Change::Gradual.new(Tempo::BPM.new(100),@tc_dur) },
+            meter_changes: { @mc1_moff => Change::Immediate.new(SIX_EIGHT),
+                             @mc2_moff => Change::Immediate.new(TWO_FOUR) }
+          )
+          @tempo_type = Tempo::QNPM
+          @tcs = @score.convert_tempo_changes(@tempo_type)
+          @mnoff_map = @score.measure_note_offset_map
+        end
+  
+        it 'should split the one gradual change into three partial changes' do
+          @tcs.size.should eq(3)
+          @tcs.values.each {|x| x.should be_a Change::Partial }
+        end
+        
+        it 'should start first partial change where gradual change would start' do
+          @tcs.should have_key(@mnoff_map[@tc_moff])
+        end
+        
+        it 'should stop first partial, and start second partial change where 1st meter change occurs' do
+          pc1_start_noff = @mnoff_map[@tc_moff]
+          pc1_end_noff  = pc1_start_noff + @tcs[pc1_start_noff].duration
+          
+          pc2_start_noff = @mnoff_map[@mc1_moff]
+          @tcs.should have_key(pc2_start_noff)
+          pc1_end_noff.should eq(pc2_start_noff)
+        end
+        
+        it 'should stop second partial, and start third partial change where 2st meter change occurs' do
+          pc2_start_noff = @mnoff_map[@mc1_moff]
+          pc2_end_noff  = pc2_start_noff + @tcs[pc2_start_noff].duration
+          
+          pc3_start_noff = @mnoff_map[@mc2_moff]
+          @tcs.should have_key(pc3_start_noff)
+          pc2_end_noff.should eq(pc3_start_noff)
+        end
+        
+        it 'should stop third partial change where gradual change would end' do
+          pc3_start_noff = @mnoff_map[@mc2_moff]
+          pc3_end_noff = pc3_start_noff + @tcs[pc3_start_noff].duration
+          pc3_end_noff.should eq(@mnoff_map[@tc_moff + @tc_dur])
+        end
+      end
     end
     
     context 'partial tempo changes' do
