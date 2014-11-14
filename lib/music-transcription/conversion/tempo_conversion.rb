@@ -2,6 +2,20 @@ module Music
 module Transcription
 
 class Tempo
+  def convert tgt_class, bdur = nil
+    args = (is_a?(BPM) || tgt_class == BPM) ? [bdur] : []
+    
+    return case tgt_class.new(1)
+    when self.class then self.clone
+    when Tempo::QNPM then to_qnpm(*args)
+    when Tempo::NPM then to_npm(*args)
+    when Tempo::NPS then to_nps(*args)
+    when Tempo::BPM then to_bpm(*args)
+    else
+      raise TypeError, "Unexpected target tempo class #{tgt_class}"
+    end
+  end
+  
   class QNPM < Tempo
     def to_npm
       Tempo::NPM.new(Rational(@value,4))
