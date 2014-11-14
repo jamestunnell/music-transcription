@@ -47,7 +47,7 @@ class Change
   end
   
   class Partial < Change
-    attr_reader :elapsed, :stop
+    attr_reader :total_duration, :elapsed, :stop
     
     def initialize value, total_dur, elapsed, stop
       if elapsed < 0
@@ -66,6 +66,7 @@ class Change
         raise ArgumentError, "stop (#{stop}) is <= elapsed (#{elapsed})"
       end
 
+      @total_duration = total_dur
       @elapsed = elapsed
       @stop = stop
       super(value,stop - elapsed)
