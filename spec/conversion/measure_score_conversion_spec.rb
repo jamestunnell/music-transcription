@@ -73,9 +73,8 @@ describe MeasureScore do
   describe '#measure_durations' do
     before(:all){ @mdurs = @score.measure_durations }
     
-    it 'should return array of two-element arrays' do
-      @mdurs.should be_a Array
-      @mdurs.each {|x| x.should be_a Array; x.size.should eq(2) }
+    it 'should return a Hash' do
+      @mdurs.should be_a Hash
     end
     
     context 'no meter change at offset 0' do
@@ -84,11 +83,11 @@ describe MeasureScore do
       end
       
       it 'should begin with offset 0' do
-        @mdurs[0][0].should eq(0)
+        @mdurs.keys.min.should eq(0)
       end
       
       it 'should map start meter to offset 0' do
-        @mdurs[0][1].should eq(@score.start_meter.measure_duration)
+        @mdurs[0].should eq(@score.start_meter.measure_duration)
       end
     end
     
@@ -104,11 +103,11 @@ describe MeasureScore do
       end
       
       it 'should begin with offset 0' do
-        @mdurs2[0][0].should eq(0)
+        @mdurs2.keys.min.should eq(0)
       end
       
       it 'should begin with meter change at offset 0, instead of start meter' do
-        @mdurs2[0][1].should eq(@change.value.measure_duration)
+        @mdurs2[0].should eq(@change.value.measure_duration)
       end
     end
     
@@ -123,82 +122,15 @@ describe MeasureScore do
       end
       
       it 'should begin with offset 0' do
-        @mdurs3[0][0].should eq(0)
+        @mdurs3.keys.min.should eq(0)
       end
       
       it 'should begin with start meter' do
-        @mdurs3[0][1].should eq(@score3.start_meter.measure_duration)
-      end      
-    end
-  end
-  
-  describe '#measure_note_offset_map' do
-    before(:all){ @mnoff_map = @score.measure_note_offset_map }
-    
-    it 'should return a Hash' do
-      @mnoff_map.should be_a Hash
-    end
-    
-    it 'should have same size as array returned by #measure_offsets' do
-      @mnoff_map.size.should eq(@score.measure_offsets.size)
-    end
-    
-    it 'should have a key for each offset in the array returned by #measure_offsets' do
-      @mnoff_map.keys.sort.should eq(@score.measure_offsets)
-    end
-    
-    context 'no meter changes' do
-      it 'should mutiply all measure offsets by start measure duration' do
-        [TWO_FOUR,SIX_EIGHT,FOUR_FOUR,THREE_FOUR].each do |start_meter|
-          score = MeasureScore.new(start_meter, Tempo::BPM.new(120))
-          tgt = score.measure_offsets.map do |moff|
-            moff * score.start_meter.measure_duration
-          end.sort
-          score.measure_note_offset_map.values.sort.should eq(tgt)
-        end
-      end
-    end
-    
-    context '1 meter change' do
-      before :all do
-        @first_mc_off = 3
-        @start_meter = THREE_FOUR
-        @new_meter = TWO_FOUR
-        @score2 = MeasureScore.new(@start_meter, Tempo::BPM.new(120),
-          meter_changes: { @first_mc_off => Change::Immediate.new(@new_meter) },
-          tempo_changes: {
-            "1/2".to_r => Change::Gradual.new(Tempo::BPM.new(100),1),
-            2 => Change::Immediate.new(Tempo::BPM.new(120)),
-            3 => Change::Immediate.new(Tempo::BPM.new(100)),
-            3.1 => Change::Gradual.new(Tempo::BPM.new(100),1),
-            5 => Change::Immediate.new(Tempo::BPM.new(120)),
-            6 => Change::Immediate.new(Tempo::BPM.new(100)),
-          }
-        )
-        @mnoff_map2 = @score2.measure_note_offset_map
-      end
-      
-      it 'should mutiply all measure offsets that occur on or before 1st meter change offset by start measure duration' do
-        moffs = @score2.measure_offsets.select{ |x| x <= @first_mc_off }
-        tgt = moffs.map do |moff|
-          moff * @score2.start_meter.measure_duration
-        end.sort
-        src = @mnoff_map2.select {|k,v| k <= @first_mc_off }
-        src.values.sort.should eq(tgt)
-      end
-      
-      it 'should, for any measure offsets occurring after 1st meter change offset, add 1st_meter_change_offset * 1st_measure_duration to \
-          new_measure_duration * (offset - 1st_meter_change_offset)' do
-        moffs = @score2.measure_offsets.select{ |x| x > @first_mc_off }
-        tgt = moffs.map do |moff|
-          @first_mc_off * @start_meter.measure_duration + (moff - @first_mc_off) * @new_meter.measure_duration
-        end.sort
-        src = @mnoff_map2.select {|k,v| k > @first_mc_off }
-        src.values.sort.should eq(tgt)
+        @mdurs3[0].should eq(@score3.start_meter.measure_duration)
       end
     end
   end
-  
+    
   describe '#covert_parts' do
     before :each do
       @changeA = Change::Immediate.new(Dynamics::PP)
@@ -327,7 +259,7 @@ describe MeasureScore do
           )
           @tempo_type = Tempo::QNPM
           @tcs = @score.convert_tempo_changes(@tempo_type)
-          @mnoff_map = @score.measure_note_offset_map
+          @mnoff_map = @score.measure_note_map
         end
   
         it 'should split the one gradual change into two partial changes' do
@@ -366,7 +298,7 @@ describe MeasureScore do
           )
           @tempo_type = Tempo::QNPM
           @tcs = @score.convert_tempo_changes(@tempo_type)
-          @mnoff_map = @score.measure_note_offset_map
+          @mnoff_map = @score.measure_note_map
         end
   
         it 'should split the one gradual change into three partial changes' do
@@ -471,4 +403,3 @@ describe MeasureScore do
     end
   end
 end
-

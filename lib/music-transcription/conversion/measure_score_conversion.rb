@@ -15,7 +15,7 @@ class MeasureScore
       raise TypeError, "The desired tempo class #{desired_tempo_class} is not valid for a NoteScore."
     end
     
-    mnoff_map = measure_note_offset_map
+    mnoff_map = self.measure_note_map
     parts = convert_parts(mnoff_map)
     prog = convert_program(mnoff_map)
     tcs = convert_tempo_changes(desired_tempo_class, mnoff_map)
@@ -24,7 +24,11 @@ class MeasureScore
     NoteScore.new(start_tempo, parts: parts, program: prog, tempo_changes: tcs)
   end
   
-  def convert_parts mnoff_map = measure_note_offset_map
+  def measure_note_map
+    Conversion::measure_note_map(measure_offsets,measure_durations)
+  end
+  
+  def convert_parts mnoff_map = self.measure_note_map
     Hash[ @parts.map do |name,part|
       new_dcs = Hash[ part.dynamic_changes.map do |moff,change|
         noff = mnoff_map[moff]
@@ -37,7 +41,7 @@ class MeasureScore
     end ]
   end
   
-  def convert_program mnoff_map = measure_note_offset_map
+  def convert_program mnoff_map = self.measure_note_map
     Program.new(
       @program.segments.map do |seg|
         mnoff_map[seg.first]...mnoff_map[seg.last]
@@ -45,7 +49,7 @@ class MeasureScore
     )
   end
   
-  def convert_tempo_changes desired_tempo_class, mnoff_map = measure_note_offset_map
+  def convert_tempo_changes desired_tempo_class, mnoff_map = self.measure_note_map
     tcs = {}
     bdurs = beat_durations
     
@@ -154,41 +158,8 @@ class MeasureScore
       mdurs.unshift([0,@start_meter.measure_duration])
     end
   
-    return mdurs
-  end
-  
-  def measure_note_offset_map
-    mnoff_map = {}
-    
-    moffs = measure_offsets
-    mdurs = measure_durations
-    
-    cur_noff = 0.to_r
-    j = 0 # next measure offset to be converted
-    
-    if mdurs[0][0] != 0
-      raise NonZeroError, "measure offset of 1st measure duration must be 0, not #{mdurs[0][0]}"
-    end
-    
-    (0...mdurs.size).each do |i|
-      cur_moff, cur_mdur = mdurs[i]
-      if i < (mdurs.size - 1)
-        next_moff = mdurs[i+1][0]        
-      else
-        next_moff = Float::INFINITY
-      end
-      
-      while(j < moffs.size && moffs[j] <= next_moff) do
-        moff = moffs[j]
-        mnoff_map[moff] = cur_noff + (moff - cur_moff)*cur_mdur
-        j += 1
-      end
-      
-      cur_noff += (next_moff - cur_moff) * cur_mdur
-    end
-    
-    return mnoff_map
-  end
+    return Hash[ mdurs ]
+  end  
 end
   
 end
