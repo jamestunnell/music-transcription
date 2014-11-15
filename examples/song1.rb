@@ -5,9 +5,8 @@ include Music::Transcription
 include Pitches
 include Articulations
 include Meters
-include Parsing
 
-score = Score.new(FOUR_FOUR, 120) do |s|
+score = MeasureScore.new(FOUR_FOUR, Tempo::BPM.new(120)) do |s|
   s.program = Program.new([ 0...4.0, 0...4.0 ])
   
   s.parts[1] = Part.new(Dynamics::MF) do |p|
@@ -30,5 +29,5 @@ File.open("#{name}.yml", "w") do |file|
 end
 
 File.open("#{name}_packed.yml", "w") do |file|
-  file.write score.pack.to_yaml
+  file.write pack_score(score).to_yaml
 end

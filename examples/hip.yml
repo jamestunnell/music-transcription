@@ -1,4 +1,4 @@
---- !ruby/object:Music::Transcription::Score
+--- !ruby/object:Music::Transcription::MeasureScore
 start_meter: !ruby/object:Music::Transcription::Meter
   beats_per_measure: 4
   beat_duration: !ruby/object:Rational
@@ -7,8 +7,9 @@ start_meter: !ruby/object:Music::Transcription::Meter
   measure_duration: !ruby/object:Rational
     denominator: 1
     numerator: 1
-start_tempo: 120
 meter_changes: {}
+start_tempo: !ruby/object:Music::Transcription::Tempo::BPM
+  value: 120
 tempo_changes: {}
 parts:
   lead: !ruby/object:Music::Transcription::Part

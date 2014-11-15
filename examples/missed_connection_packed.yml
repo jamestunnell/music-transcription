@@ -1,7 +1,5 @@
 ---
-start_meter: 4/4
-meter_changes: {}
-start_tempo: 120
+start_tempo: 120bpm
 tempo_changes: {}
 program:
 - 0...2
@@ -12,3 +10,6 @@ parts:
       /8F3= /2F3 /4B2 /8 /8Gb3= /2Gb3 /8 /8Gb3= /2Gb3
     start_dynamic: 0.625
     dynamic_changes: {}
+start_meter: 4/4
+meter_changes: {}
+type: Music::Transcription::MeasureScore
