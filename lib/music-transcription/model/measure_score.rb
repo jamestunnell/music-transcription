@@ -54,7 +54,7 @@ class MeasureScore < NoteScore
   end
   
   def ==(other)
-    return super() && @start_meter == other.start_meter &&
+    return super(other) && @start_meter == other.start_meter &&
       @meter_changes == other.meter_changes
   end    
 end

@@ -46,6 +46,7 @@ require 'music-transcription/packing/part_packing'
 require 'music-transcription/packing/program_packing'
 require 'music-transcription/packing/note_score_packing'
 require 'music-transcription/packing/measure_score_packing'
+require 'music-transcription/packing/score_packing'
 
 require 'music-transcription/conversion/tempo_conversion'
 require 'music-transcription/conversion/measure_note_map'
